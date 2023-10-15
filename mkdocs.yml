@@ -1,7 +1,7 @@
 site_name: ModShardLauncher Modding Documentation
 repo_url: https://github.com/DDDDDragon/ModShardLauncher
 repo_name: DDDDDragon/ModShardLauncher
-edit_uri: edit/master/docs/
+edit_uri: edit/main/docs/
 copyright: All rights belong to Ink Stains Games. <br> This is a community
   project and is not affiliated with Ink Stains Games.
 
@@ -61,22 +61,8 @@ plugins:
     - table-reader
     - glightbox
 
-
-extra:
-  social:
-    - icon: fontawesome/brands/discord 
-      link: https://discord.gg/YxfRKYUuht
-      name: Stoneshard Mod Hub Discord
-    - icon: fontawesome/brands/github
-      link: https://github.com/Nylux/StoneshardModding
-      name: GitHub Repository
-    - icon: fontawesome/brands/steam
-      link: https://store.steampowered.com/app/625960/Stoneshard/
-      name: Stoneshard on Steam
-    - icon: simple/gogdotcom
-      link: https://www.gog.com/game/stoneshard
-      name: Stoneshard on GOG
-
 nav:
   - Index:
       - "Welcome": "index.md"
+  - Guides:
+      - "Getting Started": "Start Modding.md"
