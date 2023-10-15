@@ -1,0 +1,82 @@
+site_name: ModShardLauncher Modding Documentation
+repo_url: https://github.com/DDDDDragon/ModShardLauncher
+repo_name: DDDDDragon/ModShardLauncher
+edit_uri: edit/master/docs/
+copyright: All rights belong to Ink Stains Games. <br> This is a community
+  project and is not affiliated with Ink Stains Games.
+
+
+
+theme:
+    name: material
+    favicon: img/Stoneshard.ico
+    features: 
+    - navigation.path
+    - navigation.top
+    - header.autohide
+    - toc.integrate
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+    - content.action.edit
+    - content.action.view
+    language: en
+    palette:
+        - scheme: default
+          toggle:
+            icon: material/brightness-7
+            name: Switch to Dark Mode
+        - scheme: slate
+          toggle:
+            icon: material/brightness-4
+            name: Switch to Light Mode
+
+
+markdown_extensions:
+  - attr_list
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+
+
+plugins:
+    - search
+    - table-reader
+    - glightbox
+
+
+extra:
+  social:
+    - icon: fontawesome/brands/discord 
+      link: https://discord.gg/YxfRKYUuht
+      name: Stoneshard Mod Hub Discord
+    - icon: fontawesome/brands/github
+      link: https://github.com/Nylux/StoneshardModding
+      name: GitHub Repository
+    - icon: fontawesome/brands/steam
+      link: https://store.steampowered.com/app/625960/Stoneshard/
+      name: Stoneshard on Steam
+    - icon: simple/gogdotcom
+      link: https://www.gog.com/game/stoneshard
+      name: Stoneshard on GOG
+
+nav:
+  - Index:
+      - "Welcome": "index.md"
