@@ -65,4 +65,5 @@ nav:
   - Index:
       - "Welcome": "index.md"
   - Guides:
-      - "Getting Started": "Start Modding.md"
+      - "Introduction": "Introduction.md"
+      - "Getting Started": "Start-Modding.md"

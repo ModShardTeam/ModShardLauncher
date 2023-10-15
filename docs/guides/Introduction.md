@@ -12,4 +12,4 @@ In fact, **UTMT** is made by C#.Using **UTMT**'s source code, **ModShardLauncher
 
 ## I want to mod now!
 
-[Just see guide here!](../guides/Start%20Modding.md)
+[Just see guide here!](../guides/Start-Modding.md)
