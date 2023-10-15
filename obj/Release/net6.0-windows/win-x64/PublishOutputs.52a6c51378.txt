@@ -1,0 +1,5 @@
+E:\紫色晶石MOD工具\Repos\ModShardLauncher\bin\Release\net6.0-windows\publish\win-x64\ModShardLauncher.pdb
+E:\紫色晶石MOD工具\Repos\ModShardLauncher\bin\Release\net6.0-windows\publish\win-x64\System.Drawing.Common.xml
+E:\紫色晶石MOD工具\Repos\ModShardLauncher\bin\Release\net6.0-windows\publish\win-x64\UndertaleModLib.xml
+E:\紫色晶石MOD工具\Repos\ModShardLauncher\bin\Release\net6.0-windows\publish\win-x64\UndertaleModTool.xml
+E:\紫色晶石MOD工具\Repos\ModShardLauncher\bin\Release\net6.0-windows\publish\win-x64\ModShardLauncher.exe
