@@ -3,10 +3,12 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ModShardLauncher.Mods" 
+      xmlns:mod="clr-namespace:ModShardLauncher.Mods" 
+      xmlns:local="clr-namespace:ModShardLauncher"
       xmlns:undertale="clr-namespace:UndertaleModTool;assembly=UndertaleModTool"
+      xmlns:hc="https://handyorg.github.io/handycontrol"       
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance local:Mod}">
+      d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance local:ModFile}">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -22,19 +24,29 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <GridSplitter Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Width="20"/>
-
         <TextBlock Grid.Row="0" Grid.Column="0" Margin="3" Text="{DynamicResource ModName}"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding Name, Mode=OneWay}" IsReadOnly="True"/>
-        <TextBlock Grid.Row="1" Grid.Column="0" Margin="3" Text="{DynamicResource ModDescription}"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="3" Grid.ColumnSpan="3" Text="{Binding Description, Mode=OneWay}" IsReadOnly="True"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding instance.Name, Mode=OneWay}" IsReadOnly="True"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Margin="3" Text="{DynamicResource ModVersion}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding instance.Version, Mode=OneWay}" IsReadOnly="True"/>
+        <TextBlock Grid.Row="1" Grid.Column="3" Margin="3" Text="{DynamicResource GameVersion}"/>
+        <TextBox Grid.Row="1" Grid.Column="4" Margin="3" Text="{Binding Version, Mode=OneWay}" IsReadOnly="True"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Margin="3" Text="{DynamicResource ModDescription}"/>
+        <TextBox Grid.Row="3" Grid.Column="0" Margin="3" Grid.ColumnSpan="4" Grid.RowSpan="2"
+                 Text="{Binding instance.Description, Mode=OneWay}" IsReadOnly="True"
+                 MaxWidth="605" TextWrapping="Wrap"/>
         <TextBlock Grid.Row="0" Grid.Column="3" Margin="3" Text="{DynamicResource ModAuthor}"/>
-        <TextBox Grid.Row="0" Grid.Column="4" Margin="3" Text="{Binding Author, Mode=OneWay}" IsReadOnly="True"/>
-
-        <CheckBox Grid.Row="1" Grid.Column="4" Content="{DynamicResource EnableMod}" 
+        <TextBox Grid.Row="0" Grid.Column="4" Margin="3" Text="{Binding instance.Author, Mode=OneWay}" IsReadOnly="True"/>
+        <GridSplitter Grid.Row="0" Grid.Column="2" Width="20"></GridSplitter>
+        <CheckBox Grid.Row="2" Grid.Column="4" Content="{DynamicResource EnableMod}" 
                   VerticalAlignment="Center" HorizontalAlignment="Center"
                   IsChecked="{Binding isEnabled, Mode=TwoWay}"/>
     </Grid>
+
+    <!--
+    <Grid Background="#2C2D39">
+    </Grid>
+    -->
 </UserControl>

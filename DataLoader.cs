@@ -14,12 +14,15 @@ using UndertaleModLib.ModelsDebug;
 using UndertaleModLib.Util;
 using System.Linq;
 using Microsoft.Win32;
+using System.Windows.Documents;
+using System.Collections.Generic;
 
 namespace ModShardLauncher
 {
     public class DataLoader
     {
-        public static UndertaleData data = new UndertaleData();
+        public static UndertaleData data = null;
+        internal static string DataPath = "";
         public delegate void FileMessageEventHandler(string message);
         public static event FileMessageEventHandler FileMessageEvent;
         public static void ShowWarning(string warning, string title)
@@ -29,6 +32,18 @@ namespace ModShardLauncher
         public static void ShowError(string error, string title)
         {
             Console.WriteLine(title + ":" + error);
+        }
+        public static string GetVersion()
+        {
+            var version = data.Strings.First(t => t.Content.EndsWith(" Build date: ")).Content;
+            var sp = version.Replace(" Build date: ", "").Replace("Verison: ", "").Split(".").ToList();
+            var sp2 = new List<string>();
+            sp.ForEach(i =>
+            {
+                if (i.Length < 2) sp2.Add(0 + i);
+            });
+            version = "v" + string.Join(".", sp2);
+            return version;
         }
         public static async Task<bool> DoOpenDialog()
         {
@@ -44,10 +59,11 @@ namespace ModShardLauncher
             }
             return false;
         }
-        public static async Task LoadFile(string filename)
+        public static async Task LoadFile(string filename, bool re = false)
         {
-            LoadingDialog loader = new LoadingDialog("加载中", "加载中 请稍候...");
+            LoadingDialog loader = new LoadingDialog(re ? "重新加载中" :"加载中", "加载中 请稍候...");
             loader.PreventClose = true;
+            DataPath = filename;
             Task t = Task.Run(() =>
             {
                 bool hadWarnings = false;
@@ -74,6 +90,7 @@ namespace ModShardLauncher
                 }
                 catch (Exception e)
                 {
+                    throw e;
                     //this.ShowError("An error occured while trying to load:\n" + e.Message, "Load error");
                 }
                 MainWindow.Instance.Dispatcher.Invoke(async () =>
@@ -84,7 +101,7 @@ namespace ModShardLauncher
 
             loader.ShowDialog();
             await t;
-            await ModLoader.Initalize();
+            ModLoader.Initalize();
         }
         public static async Task<bool> DoSaveDialog()
         {
@@ -174,6 +191,7 @@ namespace ModShardLauncher
             });
             dialog.ShowDialog();
             await t;
+            ModLoader.LoadFiles();
         }
     }
 }

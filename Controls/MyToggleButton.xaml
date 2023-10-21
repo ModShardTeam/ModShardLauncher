@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="ModShardLauncher.Controls.MyToggleButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ModShardLauncher.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Height="40" Background="#1B1926" Name="MyGrid">
+        <Grid.Triggers>
+            <EventTrigger RoutedEvent="ToggleButton.Checked">
+                <BeginStoryboard>
+                    <Storyboard x:Name="setBackground">
+                        <ColorAnimation BeginTime="0:0:0"
+                                    Storyboard.TargetProperty="Background.Color"
+                                    Storyboard.TargetName="MyGrid"
+                                    From="#1B1926"
+                                    To="#2C2D39"
+                                    Duration="0:0:0.2"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                <BeginStoryboard>
+                    <Storyboard x:Name="resetBackground">
+                        <ColorAnimation BeginTime="0:0:0"
+                                    Storyboard.TargetProperty="Background.Color"
+                                    Storyboard.TargetName="MyGrid"
+                                    From="#2C2D39"
+                                    To="#1B1926"
+                                    Duration="0:0:0.2"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Grid.Triggers>
+        <TextBlock Grid.Row="1" Grid.Column="0" Margin="72,0,0,0" 
+                   Text="{Binding Path=Text, RelativeSource={RelativeSource AncestorType=local:MyToggleButton}}"
+               Foreground="White" FontSize="22" Background="Transparent"
+               HorizontalAlignment="Left" VerticalAlignment="Center">
+        </TextBlock>
+        <ToggleButton x:Name="MyButton" Grid.Column="0" VerticalAlignment="Center"
+                  HorizontalAlignment="Left" Margin="16,0,0,0"
+                  Height="32" Width="32" BorderThickness="0"
+                      Checked="MyButton_Checked">
+            <ToggleButton.Style>
+                <Style TargetType="{x:Type ToggleButton}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                <Border x:Name="border" BorderThickness="{TemplateBinding BorderThickness}"
+                                        Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" TargetName="border" Value="{DynamicResource OverSource}"/>
+                                        <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource OverSource}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" TargetName="border" Value="{DynamicResource DownSource}"/>
+                                        <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource DownSource}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ToggleButton.Style>
+            <ToggleButton.Background>
+                <ImageBrush ImageSource="{Binding Path=ImageSource, RelativeSource={RelativeSource AncestorType=local:MyToggleButton}}"/>
+            </ToggleButton.Background>
+        </ToggleButton>
+    </Grid>
+</UserControl>

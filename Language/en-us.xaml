@@ -17,4 +17,11 @@
     <sys:String x:Key="ModAuthor">Mod Author</sys:String>
     <sys:String x:Key="ModDescription">Mod Description</sys:String>
     <sys:String x:Key="EnableMod">Enable</sys:String>
+    <sys:String x:Key="ModVersion">ModVersion</sys:String>
+    <sys:String x:Key="GameVersion">GameVersion</sys:String>
+    <sys:String x:Key="Compile">Compile</sys:String>
+    <sys:String x:Key="LoadDataWarning">Please load a game data file first!</sys:String>
+    <sys:String x:Key="VersionDifferentWarningTitle">Mod version is different from game version</sys:String>
+    <sys:String x:Key="VersionDifferentWarning">Mod version is different from game version, maybe it will crash if you load it.Still want to load?</sys:String>
+    <sys:String x:Key="ModLostWarning">Mod file lost.</sys:String>
 </ResourceDictionary>

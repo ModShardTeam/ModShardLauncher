@@ -1,0 +1,121 @@
+﻿<Window x:Class="ModShardLauncher.Main"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ModShardLauncher.Controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="960"
+      Title="Main"
+      ResizeMode="NoResize"
+      WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <ImageBrush x:Key="menu_mouse_over"
+                    ImageSource="Resources/menu_over.png"/>
+        <ImageBrush x:Key="menu_mouse_down"
+                    ImageSource="Resources/menu_down.png"/>
+        <Style x:Key="menu_Style" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="border" BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="border"
+                                        Value="{StaticResource menu_mouse_over}"/>
+                                <Setter Property="BorderBrush" TargetName="border"
+                                        Value="{StaticResource menu_mouse_over}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="border"
+                                        Value="{StaticResource menu_mouse_down}"/>
+                                <Setter Property="BorderBrush" TargetName="border"
+                                        Value="{StaticResource menu_mouse_down}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid Background="#2C2D39" Grid.Row="1">
+            <Grid x:Name="LeftPanel" HorizontalAlignment="Left" Width="64">
+                <Grid.Background>
+                    <ImageBrush ImageSource="/Resources/leftPanel.png"></ImageBrush>
+                </Grid.Background>
+                <StackPanel x:Name="stackPanel">
+                    <Grid Height="90">
+                        <TextBlock Grid.Row="1" Grid.Column="0" Margin="72,0,0,0" Text="Menu"
+                                   Foreground="White" FontSize="22" Background="Transparent"
+                                   HorizontalAlignment="Left" VerticalAlignment="Center">
+                        </TextBlock>
+                        <ToggleButton x:Name="menuButton" Grid.Column="0" VerticalAlignment="Center"
+                                      HorizontalAlignment="Left" Margin="16,0,0,0"
+                                      Height="32" Width="32" BorderThickness="0"
+                                      Style="{StaticResource menu_Style}">
+                            <ToggleButton.Background>
+                                <ImageBrush ImageSource="/Resources/menu.png"/>
+                            </ToggleButton.Background>
+                            <ToggleButton.Triggers>
+                                <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                                    <BeginStoryboard>
+                                        <Storyboard x:Name="HideStackPanel">
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="LeftPanel"
+                                                Storyboard.TargetProperty="Width"
+                                                BeginTime="0:0:0"
+                                                From="230" To="64"
+                                                Duration="0:0:0.2">
+
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                                    <BeginStoryboard>
+                                        <Storyboard x:Name="ShowStackPanel">
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="LeftPanel"
+                                                Storyboard.TargetProperty="Width"
+                                                BeginTime="0:0:0"
+                                                From="64" To="230"
+                                                Duration="0:0:0.2">
+
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </ToggleButton.Triggers>
+                        </ToggleButton>
+                    </Grid>
+                    <GridSplitter HorizontalAlignment="Stretch" Background="AliceBlue" Height="1"
+                                  IsEnabled="False"/>
+                    <Grid Height="40"/>
+                    <local:MyToggleButton ImageSource="/Resources/mod.png" Text="Mods" Checked="MyToggleButton_Checked">
+                        <local:MyToggleButton.Resources>
+                            <ImageBrush x:Key="DownSource"  ImageSource="/Resources/mod_down.png"/>
+                            <ImageBrush x:Key="OverSource"  ImageSource="/Resources/mod_over.png"/>
+                        </local:MyToggleButton.Resources>
+                    </local:MyToggleButton>
+                    <Grid Height="40"/>
+                    <local:MyToggleButton ImageSource="/Resources/source.png" Text="ModSources" Checked="MyToggleButton_Checked">
+                        <local:MyToggleButton.Resources>
+                            <ImageBrush x:Key="DownSource"  ImageSource="/Resources/source_down.png"/>
+                            <ImageBrush x:Key="OverSource"  ImageSource="/Resources/source_over.png"/>
+                        </local:MyToggleButton.Resources>
+                    </local:MyToggleButton>
+                </StackPanel>
+            </Grid>
+            <ScrollViewer HorizontalAlignment="Right" Width="896" VerticalScrollBarVisibility="Auto">
+                <ContentControl Margin="10" Name="Viewer">
+                </ContentControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Window>

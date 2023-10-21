@@ -15,4 +15,11 @@
     <sys:String x:Key="ModAuthor">Mod作者</sys:String>
     <sys:String x:Key="ModDescription">Mod描述</sys:String>
     <sys:String x:Key="EnableMod">是否启用</sys:String>
+    <sys:String x:Key="ModVersion">Mod版本</sys:String>
+    <sys:String x:Key="GameVersion">游戏版本</sys:String>
+    <sys:String x:Key="Compile">编译</sys:String>
+    <sys:String x:Key="LoadDataWarning">请先加载游戏文件!</sys:String>
+    <sys:String x:Key="VersionDifferentWarningTitle">Mod版本与游戏版本不一致</sys:String>
+    <sys:String x:Key="VersionDifferentWarning">Mod版本与游戏版本不一致, 如果执意加载可能会崩溃.仍然要加载吗?</sys:String>
+    <sys:String x:Key="ModLostWarning">Mod文件丢失</sys:String>
 </ResourceDictionary>

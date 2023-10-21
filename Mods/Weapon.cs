@@ -11,9 +11,33 @@ namespace ModShardLauncher.Mods
     {
         public Weapon()
         {
+            NameList = new Dictionary<ModLanguage, string>();
             Description = new Dictionary<ModLanguage, string>();
+            foreach(ModLanguage lan in Enum.GetValues(typeof(ModLanguage)))
+            {
+                NameList.Add(lan, "None");
+                Description.Add(lan, "None");
+            } 
+        }
+        public Weapon(string property, List<string> description = null, List<string> names = null)
+        {
+            NameList = new Dictionary<ModLanguage, string>();
+            Description = new Dictionary<ModLanguage, string>();
+            Name = property.Split(";")[0];
+            ID = property.Split(";")[1];
+            Set(property);
+            int index = 0;
+            foreach (ModLanguage lan in Enum.GetValues(typeof(ModLanguage)))
+            {
+                if (description != null) Description.Add(lan, description[index]);
+                else Description.Add(lan, "None");
+                if (names != null) NameList.Add(lan, names[index]);
+                else NameList.Add(lan, "None");
+                index++;
+            }
         }
         public string? Name;
+        public Dictionary<ModLanguage, string>? NameList;
         public Dictionary<ModLanguage, string>? Description;
         public string? ID;
         public string? Slot;
@@ -89,8 +113,47 @@ namespace ModShardLauncher.Mods
         public int Balance;
         public int OffhandEfficiency;
         public int SlayingChance;
+        public (string, string, string) AsString()
+        {
+            return Weapon2String(this);
+        }
+        public void CloneDefaults(string name)
+        {
+            var weapon = ModLoader.GetWeapon(name);
+            Set(Weapon2String(weapon).Item1);
+        }
 
-        public static (string, string) Weapon2String(Weapon weapon)
+        public virtual void SetDefaults()
+        {
+
+        }
+        public void Set(string property)
+        {
+            var attributes = property.Split(";").ToList();
+            attributes.RemoveAt(attributes.Count - 1);
+            var str2 =
+            "Name;ID;Slot;Rare;Material;MaxDuration;Lv;E;Price;Rng;WeaponDamage;ArmorDamage;" +
+            "ArmorPiercing;BodypartDamage;SlashingDamage;PiercingDamage;BluntDamage;RendingDamage;" +
+            "FireDamage;ShockDamage;PoisonDamage;CausticDamage;FrostDamage;ArcaneDamage;" +
+            "UnholyDamage;SacredDamage;PsionicDamage;HitChance;CRT;CRTD;PRR;BlockPower;CTA;FMB;EVS;" +
+            "BleedingChance;DazeChance;StunChance;KnockbackChance;ImmobChance;StaggerChance;MP;MPRestoration;" +
+            "CooldownReduction;SkillsEnergyCost;SpellsEnergyCost;MagicPower;MiscastChance;MiracleChance;" +
+            "MiraclePower;BackfireDamage;PyromanticPower;GeomanticPower;VenomanticPower;ElectromanticPower;" +
+            "CryomanticPower;ArcanisticPower;AstromanticPower;PsimanticPower;ChronomanticPower;HealthRestoration;" +
+            "Lifesteal;Manasteal;BonusRange;RangeModifier;DamageReceived;DamageReturned;HealingReceived;" +
+            "STL;NoiseProduced;Balance;OffhandEfficiency;SlayingChance;tags;NoDrop;";
+            var attributes2 = str2.Split(";").ToList();
+            attributes2.Remove("");
+            foreach (var attr in attributes2)
+            {
+                if (attr == "Name" || attr == "ID") continue;
+                var field = typeof(Weapon).GetField(attr, BindingFlags.Public | BindingFlags.Instance);
+                if (field.FieldType == typeof(string)) field?.SetValue(this, attributes[attributes2.IndexOf(attr)]);
+                else if (attributes[attributes2.IndexOf(attr)] == "") field?.SetValue(this, 0);
+                else field?.SetValue(this, int.Parse(attributes[attributes2.IndexOf(attr)]));
+            }
+        }
+        public static (string, string, string) Weapon2String(Weapon weapon)
         {
             var type = typeof(Weapon);
             var str =
@@ -119,13 +182,14 @@ namespace ModShardLauncher.Mods
                 }
                 else ret += ";";
             }
-            var des = string.Join(";", weapon.Description.Values.ToList());
-            return (ret, des);
+            var des = weapon.Name + ";" + string.Join(";", weapon.Description.Values.ToList());
+            var name = weapon.Name + ";" + string.Join(";", weapon.NameList.Values.ToList());
+            return (ret, des, name);
         }
-        public static Weapon String2Weapon(string str)
+        public static Weapon String2Weapon(string property)
         {
             var weapon = new Weapon();
-            var attributes = str.Split(";").ToList();
+            var attributes = property.Split(";").ToList();
             attributes.RemoveAt(attributes.Count - 1);
             var str2 =
             "Name;ID;Slot;Rare;Material;MaxDuration;Lv;E;Price;Rng;WeaponDamage;ArmorDamage;" +
@@ -148,10 +212,6 @@ namespace ModShardLauncher.Mods
                 else field?.SetValue(weapon, int.Parse(attributes[attributes2.IndexOf(attr)]));
             }
             return weapon;
-        }
-        public void SetDefaults()
-        {
-
         }
     }
 }

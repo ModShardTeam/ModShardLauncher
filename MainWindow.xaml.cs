@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using ModShardLauncher.Mods;
 using UndertaleModLib;
 using UndertaleModTool;
@@ -23,16 +24,26 @@ namespace ModShardLauncher
     {
         public static MainWindow Instance;
         public UndertaleData Data => DataLoader.data;
+        DispatcherTimer timer = new DispatcherTimer();
         public object Selected;
         public MainWindow()
         {
             InitializeComponent();
             if (!Directory.Exists(ModLoader.ModPath))
                 Directory.CreateDirectory(ModLoader.ModPath);
+            if (!Directory.Exists(ModLoader.ModSourcesPath))
+                Directory.CreateDirectory(ModLoader.ModSourcesPath);
             Instance = this;
-            Dispatcher.Invoke(async () => await ModLoader.LoadAssemblies());
+            Dispatcher.Invoke(async () => ModLoader.LoadFiles());
+            timer.Tick += tick;
+            timer.Interval = new TimeSpan(0, 0, 0, 1);
+            //timer.Start();
             ModThings.Content = new DescriptionView(Application.Current.FindResource("Welcome_Use").ToString(),
                 Application.Current.FindResource("Welcome_Desc").ToString());
+        }
+        private void tick(object sender, EventArgs e)
+        {
+            ModLoader.LoadFiles();
         }
         public async void Command_Open(object sender, ExecutedRoutedEventArgs e)
         {
@@ -58,7 +69,7 @@ namespace ModShardLauncher
             if (ModThings.Content.GetType() == typeof(DescriptionView))
                 ModThings.Content = new DescriptionView(Application.Current.FindResource("Welcome_Use").ToString(),
                 Application.Current.FindResource("Welcome_Desc").ToString());
-            else OpenInTab(Selected.ToString());
+            else if(Selected != null) OpenInTab(Selected.ToString());
             ((SearchBox.Style.Resources.Values.Cast<object>().ToList()[0] as VisualBrush)
                 .Visual as Label).Content = Application.Current.FindResource("SearchBoxText").ToString();
         }
@@ -78,7 +89,7 @@ namespace ModShardLauncher
         {
             if (Selected != null)
             {
-                OpenInTab(Selected.ToString());
+                OpenInTab(Selected);
                 TabLabel.Content = Selected.ToString();
             }
         }
@@ -107,11 +118,11 @@ namespace ModShardLauncher
 
         private async void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            await ModLoader.LoadAssemblies();
+            ModLoader.LoadFiles();
         }
-        private void OpenInTab(string obj)
+        private void OpenInTab(object obj)
         {
-            ModThings.Content = ModLoader.Mods[obj];
+            ModThings.Content = obj;
             ModThings.InvalidateVisual();
         }
 
@@ -122,7 +133,13 @@ namespace ModShardLauncher
 
         private async void PatchButton_Click(object sender, RoutedEventArgs e)
         {
-            await ModLoader.PatchFile();
+            if (DataLoader.data == null)
+            {
+                MessageBox.Show(Application.Current.FindResource("LoadDataWarning").ToString());
+                return;
+            }
+            ModLoader.PatchFile();
+            DataLoader.DoSaveDialog();
         }
     }
 }

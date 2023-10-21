@@ -124,7 +124,9 @@
                           VirtualizingStackPanel.VirtualizationMode="Recycling">
                     <TreeView.Resources>
                     </TreeView.Resources>
-                    <TreeViewItem Header="Mods" IsExpanded="True">
+                    <TreeViewItem Header="Mods" IsExpanded="True" Name="ModsList">
+                    </TreeViewItem>
+                    <TreeViewItem Header="ModSources" IsExpanded="True" Name="ModSourcesList">
                     </TreeViewItem>
                 </TreeView>
                 <GridSplitter Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Stretch" ShowsPreview="True" Width="3"/>
@@ -155,8 +157,11 @@
                                     </StackPanel>
                                 </DataTemplate>
                                 
-                                <DataTemplate DataType="{x:Type mod:Mod}">
+                                <DataTemplate DataType="{x:Type local:ModFile}">
                                     <mod:ModInfos/>
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type local:ModSource}">
+                                    <mod:ModSources/>
                                 </DataTemplate>
                             </ContentControl.Resources>
                         </ContentControl>

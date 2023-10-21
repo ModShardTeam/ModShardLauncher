@@ -12,6 +12,11 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Windows.Controls;
+using UndertaleModLib.Models;
+using ModShardLauncher.Extensions;
+using UndertaleModLib.Compiler;
+using System.Text;
+using System.Xml.Linq;
 
 namespace ModShardLauncher
 {
@@ -19,38 +24,89 @@ namespace ModShardLauncher
     {
         internal static UndertaleData Data => DataLoader.data;
         public static string ModPath => Path.Join(Environment.CurrentDirectory, "Mods");
-        public static GlobalDecompileContext context = new GlobalDecompileContext(Data, false);
-        public static Dictionary<string, Mod> Mods = new Dictionary<string, Mod>();
+        public static string ModSourcesPath => Path.Join(Environment.CurrentDirectory, "ModSources");
+        public static Dictionary<string, ModFile> Mods = new Dictionary<string, ModFile>();
+        public static Dictionary<string, ModSource> ModSources = new Dictionary<string, ModSource>();
         private static List<Assembly> Assemblies = new List<Assembly>();
+        private static bool patched = false;
         public static List<string> Weapons;
         public static List<string> WeaponDescriptions;
         public static void ShowMessage(string msg)
         {
             Trace.Write(msg);
         }
-        public async static Task Initalize()
+        public static void Initalize()
         {
-            Weapons = await GetTable("gml_GlobalScript_table_weapons");
-            WeaponDescriptions = await GetTable("gml_GlobalScript_table_weapons_text");
+            Weapons = GetTable("gml_GlobalScript_table_weapons");
+            WeaponDescriptions = GetTable("gml_GlobalScript_table_weapons_text");
         }
-        public async static Task<List<string>> GetTable(string name)
+        public static UndertaleGameObject AddObject(string name)
+        {
+            var obj = new UndertaleGameObject()
+            {
+                Name = Data.Strings.MakeString(name)
+            };
+            if(Data.GameObjects.FirstOrDefault(t => t.Name.Content == name) == default)
+                Data.GameObjects.Add(obj);
+            return obj;
+        }
+        public static UndertaleGameObject GetObject(string name)
+        {
+            return Data.GameObjects.First(t => t.Name.Content.IndexOf(name) != -1);
+        }
+        public static void SetObject(string name, UndertaleGameObject o)
+        {
+            var obj = Data.GameObjects.First(t => t.Name.Content.IndexOf(name) != -1);
+            Data.GameObjects[Data.GameObjects.IndexOf(obj)] = o;
+        }
+        public static UndertaleCode AddCode(string Code, string name)
+        {
+            var code = new UndertaleCode();
+            var locals = new UndertaleCodeLocals();
+            code.Name = Data.Strings.MakeString(name);
+            locals.Name = code.Name;
+            UndertaleCodeLocals.LocalVar argsLocal = new UndertaleCodeLocals.LocalVar();
+            argsLocal.Name = Data.Strings.MakeString("arguments");
+            argsLocal.Index = 0;
+            locals.Locals.Add(argsLocal);
+            code.LocalsCount = 1;
+            Data.CodeLocals.Add(locals);
+            code.ReplaceGML(Code, Data);
+            Data.Code.Add(code);
+            return code;
+        }
+        public static UndertaleCode AddFunction(string Code, string name)
+        {
+            var scriptCode = AddCode(Code, name);
+            Data.Code.Add(Data.Code[0]);
+            Data.Code.RemoveAt(0);
+            return scriptCode;
+        }
+        public static List<string> GetTable(string name)
         {
             var table = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
+            GlobalDecompileContext context = new GlobalDecompileContext(Data, false);
             var text = Decompiler.Decompile(table, context);
             var ret = Regex.Match(text, "return (\\[.*\\])").Groups[1].Value;
             return JsonConvert.DeserializeObject<List<string>>(ret);
         }
-        public async static Task<string> GetDecompiledFunction(string name)
+        public static string GetDecompiledCode(string name)
         {
             var func = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
+            GlobalDecompileContext context = new GlobalDecompileContext(Data, false);
             var text = Decompiler.Decompile(func, context);
             return text;
         }
-        public async static Task<string> GetDisassemblyFunction(string name)
+        public static string GetDisassemblyCode(string name)
         {
             var func = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
             var text = func.Disassemble(Data.Variables, Data.CodeLocals.For(func));
             return text;
+        }
+        public static void SetCode(string Code, string name)
+        {
+            var code = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
+            code.ReplaceGML(Code, Data);
         }
         public static void SetTable(List<string> table, string name)
         {
@@ -64,34 +120,53 @@ namespace ModShardLauncher
         public static Weapon GetWeapon(string ID)
         {
             var str = Weapons.First(t => t.StartsWith(ID));
-            var weapon = Weapon.String2Weapon(str);
-            var descs = WeaponDescriptions.First(t => t.StartsWith(ID)).Split(";").ToList();
+            var descs = WeaponDescriptions.FindAll(t => t.StartsWith(ID))[1].Split(";").ToList();
             descs.Remove("");
-            foreach (var desc in descs)
-            {
-                if (descs.IndexOf(desc) != 0)
-                    weapon.Description.Add((ModLanguage)(descs.IndexOf(desc) - 1), desc);
-            }
+            descs.RemoveAt(0);
+            var names = WeaponDescriptions.First(t => t.StartsWith(ID)).Split(";").ToList();
+            names.Remove("");
+            names.RemoveAt(0);
+            var weapon = new Weapon(str, descs, names);
             return weapon;
         }
         public static void SetWeapon(string ID, Weapon weapon)
         {
             var target = Weapons.First(t => t.StartsWith(ID));
-            var desc = WeaponDescriptions.First(t => t.StartsWith(ID));
+            var name = WeaponDescriptions.First(t => t.StartsWith(ID));
+            var desc = WeaponDescriptions.FindAll(t => t.StartsWith(ID))[1];
             var index = Weapons.IndexOf(target);
             var index2 = WeaponDescriptions.IndexOf(desc);
+            var index3 = WeaponDescriptions.IndexOf(name);
             Weapons[index] = Weapon.Weapon2String(weapon).Item1;
-            WeaponDescriptions[index] = Weapon.Weapon2String(weapon).Item2;
+            WeaponDescriptions[index2] = Weapon.Weapon2String(weapon).Item2;
+            WeaponDescriptions[index3] = Weapon.Weapon2String(weapon).Item3;
         }
-        public static async Task LoadAssemblies()
+        public static void LoadFiles()
         {
-            var mods = MainWindow.Instance.MainTree.Items[0] as TreeViewItem;
-            mods.Items.Clear();
+            var mods = MainWindow.Instance.ModsList;
+            var modSources = MainWindow.Instance.ModSourcesList;
+            foreach(ModFile i in mods.Items)
+                if(i.Stream != null) i.Stream.Close();
+            var modCaches = new List<object>();
             Mods.Clear();
-            var files = Directory.GetFiles(ModPath, "*.dll");
-            foreach (var item in files)
+            modSources.Items.Clear();
+            ModSources.Clear();
+            var sources = Directory.GetDirectories(ModSourcesPath);
+            foreach(var i in sources)
             {
-                Assembly assembly = Assembly.LoadFrom(item);
+                var info = new ModSource()
+                {
+                    Name = i.Split("\\").Last(),
+                    Path = i
+                };
+                modSources.Items.Add(info);
+            }
+            var files = Directory.GetFiles(ModPath, "*.sml");
+            foreach (var file in files)
+            {
+                var f = FileReader.Read(file);
+                if (f == null) continue;
+                Assembly assembly = f.Assembly;
                 if (assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(Mod))).Count() == 0)
                 {
                     MessageBox.Show("加载错误: " + assembly.GetName().Name + " 此Mod需要一个Mod类");
@@ -102,50 +177,131 @@ namespace ModShardLauncher
                     var type = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(Mod))).ToList()[0];
                     var mod = Activator.CreateInstance(type) as Mod;
                     mod.LoadAssembly();
-                    AddMod(mod);
+                    f.instance = mod;
+                    var old = mods.Items.Cast<ModFile>().FirstOrDefault(t => t.Name == f.Name);
+                    if (old != null) f.isEnabled = old.isEnabled;
+                    modCaches.Add(f);
                 }
                 Assemblies.Add(assembly);
             }
+            mods.Items.Clear();
+            modCaches.ForEach(i => mods.Items.Add(i));
         }
-        private static void AddMod(Mod mod)
-        {
-            var mods = MainWindow.Instance.MainTree.Items[0] as TreeViewItem;
-            mods.Items.Add(mod);
-            Mods.Add(mod.Name, mod);
-        }
-        public static async Task LoadMods()
+        public static void PatchMods()
         {
             Assembly ass = Assembly.GetEntryAssembly();
-            foreach (var assembly in Assemblies)
+            var mods = MainWindow.Instance.ModsList;
+            foreach (ModFile mod in mods.Items)
             {
-                if (assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(Mod))).Count() == 0)
+                if (!mod.isEnabled) continue;
+                if (!mod.isExisted)
                 {
-                    MessageBox.Show("加载错误: " + assembly.GetName().Name + " 此Mod需要一个Mod类");
+                    MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + mod.Name);
                     continue;
                 }
-                Type[] types = assembly.GetTypes().Where(t => !t.IsAbstract).ToArray();
+                var version = DataLoader.GetVersion();
+                var reg = new Regex("0([0-9])");
+                version = reg.Replace(version, "$1");
+                if (mod.Version != version)
+                {
+                    var result = MessageBox.Show(Application.Current.FindResource("VersionDifferentWarning").ToString(),
+                        Application.Current.FindResource("VersionDifferentWarningTitle").ToString() + " : " + mod.Name, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.No) continue;
+                }
+                mod.instance.PatchMod();
+                TextureLoader.LoadTextures(mod);
+                var modAss = mod.Assembly;
+                Type[] types = modAss.GetTypes().Where(t => !t.IsAbstract).ToArray();
                 foreach (var type in types)
                 {
-                    //if (type.IsSubclassOf(typeof(Item))) LoadItem(type);
-                    //if (type.IsSubclassOf(typeof(RPGNPC))) LoadNPC(type);
-                    if (type.IsSubclassOf(typeof(Mod)))
-                    {
-                        var mod = Activator.CreateInstance(type) as Mod;
-                        mod.LoadAssembly();
-                        //Mods.Add(mod);
-                    }
+                    if (type.IsSubclassOf(typeof(Weapon))) 
+                        LoadWeapon(type);
                 }
             }
         }
-        public static async Task PatchFile()
+        public static void LoadWeapon(Type type)
         {
-            await PatchInnerFile();
+            var weapon = Activator.CreateInstance(type) as Weapon;
+            weapon.SetDefaults();
+            var strs = weapon.AsString();
+            Weapons.Insert(Weapons.IndexOf("SWORDS - BLADES;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;") + 1, strs.Item1);
+            WeaponDescriptions.Insert(WeaponDescriptions.IndexOf(";;SWORDS;;;;;;SWORDS;SWORDS;;;;") + 1, weapon.Name + ";" + string.Join(";", weapon.NameList.Values));
+            WeaponDescriptions.Insert(WeaponDescriptions.IndexOf(";weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;") + 1,
+                weapon.Name + ";" + string.Join(";", weapon.Description.Values));
+            WeaponDescriptions.Insert(WeaponDescriptions.IndexOf(";weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;") + 1,
+                weapon.Name + ";He;;;It;She;She;She;She;He;;;;");
+        }
+        public static async void PatchFile()
+        {
+            if (patched) await DataLoader.LoadFile(DataLoader.DataPath);
+            PatchInnerFile();
+            PatchMods();
             SetTable(Weapons, "gml_GlobalScript_table_weapons");
             SetTable(WeaponDescriptions, "gml_GlobalScript_table_weapons_text");
+            patched = true;
+            LoadFiles();
         }
-        private static async Task PatchInnerFile()
+        internal static void PatchInnerFile()
         {
+            AddExtension(new ModShard());
+            var engine = AddObject("o_ScriptEngine");
+            engine.Persistent = true;
+            var ev = new UndertaleGameObject.Event();
+            ev.EventSubtypeStep = EventSubtypeStep.Step;
+            ev.Actions.Add(new UndertaleGameObject.EventAction()
+            {
+                CodeId = AddCode(@"if(GetScript() != ""NoScript"")
+{
+    var scr = string_split(GetScript(),"" "")
+    var scriptID = asset_get_index(scr[0])
+    array_delete(scr, 0, 1)
+    for(i = 0;i<array_length(scr);i++)
+        scr[i]=string_replace(scr[i],""_"","" "")
+    var ret = """"
+    if(scriptID == -1)
+        ret = (""script is wrong: "" + GetScript())
+    else
+    {
+        if(array_length(scr) > 0)
+            ret = script_execute_ext(scriptID, scr)
+        else ret = script_execute(scriptID)
+    }
+    RunCallBack(string(ret))
+    PopScript()
+}", "ScriptEngine_step")
+            });
+            engine.Events[3].Add(ev);
+            AddFunction(@"function print(argument0)
+{
+    show_message(argument0)
+}","print");
+            AddFunction(@"function give(argument0)
+{
+    with (o_inventory)
+    {
+        with (scr_inventory_add_weapon(argument0, (1 << 0)))
+            scr_inv_atr_set(""Duration"", 100)
+    }
+}", "give");
+            var create = new UndertaleGameObject.Event();
+            create.Actions.Add(new UndertaleGameObject.EventAction()
+            {
+                CodeId = AddCode(@"ScriptThread()", "ScriptEngine_create")
+            });
+            engine.Events[0].Add(create);
+            var start = Data.Rooms.First(t => t.Name.Content == "START");
+            var newObj = new UndertaleRoom.GameObject()
+            {
+                ObjectDefinition = engine,
+                InstanceID = Data.GeneralInfo.LastObj++
+            };
 
+            start.GameObjects.Add(newObj);
+        }
+        public static void AddExtension(UndertaleExtensionFile file)
+        {
+            var ext = Data.Extensions.First(t => t.Name.Content == "display_mouse_lock");
+            ext.Files.Add(file);
         }
     }
 }
