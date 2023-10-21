@@ -63,7 +63,10 @@ plugins:
 
 nav:
   - Index:
-      - "Welcome": "index.md"
+    - "Welcome": "index.md"
   - Guides:
-      - "Introduction": "guides/introduction.md"
-      - "Getting Started": "guides/start-modding.md"
+    - "Introduction": "guides/introduction.md"
+    - "Getting Started": "guides/start-modding.md"
+  - 中文:
+    - "介绍": "zh/guides/introduction.md"
+    - "开始使用": "zh/guides/start-modding.md"
