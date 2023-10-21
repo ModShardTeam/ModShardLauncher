@@ -14,4 +14,4 @@
 
 ## 太棒辣 我现在就想开发一个自己的mod!
 
-[那就从这里开始吧!](../guide/start-modding.md)
+[那就从这里开始吧!](../guides/start-modding.md)

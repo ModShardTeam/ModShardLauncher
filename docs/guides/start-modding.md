@@ -4,7 +4,7 @@
 
 If you want to make mods, please make sure you have basis of C#, or you won't understand how the api works.
 
-## Download Visual Studio
+## Download
 
 In order to make **mods**, you can download **Visual Studio Community** first to easily make mod.
 
@@ -14,7 +14,7 @@ During installation, check the `.NET Desktop Development` workload.Nothing else 
 
 In the end, install `.NET 6.0 SDK` by visiting the dotnet download site, downloading the installer, and running the installer. You might need to restart Visual Studio or your computer after the install.
 
-The other option is **Visual Studio Code**, in my opinion it's better than **Visual Studio** when making StoneShard mod
+The other option is **Visual Studio Code**, in my opinion it's better than **Visual Studio** when making StoneShard mod.
 
 ## Create Your First Mod Project
 

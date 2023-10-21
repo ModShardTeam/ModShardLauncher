@@ -41,6 +41,7 @@ namespace ModShardLauncher
             sp.ForEach(i =>
             {
                 if (i.Length < 2) sp2.Add(0 + i);
+                else sp2.Add(i);
             });
             version = "v" + string.Join(".", sp2);
             return version;
