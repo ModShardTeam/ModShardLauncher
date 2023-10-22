@@ -6,7 +6,7 @@
     <Application.Resources>
         
         <ResourceDictionary>
-            <FontFamily x:Key="ssFont">/Resources/#Mystery Font</FontFamily>
+            <!--<FontFamily x:Key="ssFont">/Resources/#Mystery Font</FontFamily>-->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Language/zh-cn.xaml"/>
                 <ResourceDictionary Source="Language/en-us.xaml"/>
