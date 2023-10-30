@@ -26,29 +26,29 @@ Let's start our journey by launching **ModShardLauncher.exe**. Once you launch i
 
 There are many ways to create your mod, if you use Visual Studio, you can run it then click Create New Project. Search Class Library, click Next.
 
-<center><img src="../../img/create_project_0.png" width=50%></center>
+<center><img src="../img/create_project_0.png" width=50%></center>
 
 Give a name to your mod, then select the path Mods that **ModShardLauncher.exe** just create.
-<center><img src="../../img/create_project_1.png" width=50%></center>
+<center><img src="../img/create_project_1.png" width=50%></center>
 
 Choose **.Net 6.0**, and that's it! easy right?
-<center><img src="../../img/create_project_2.png" width=50%></center>
+<center><img src="../img/create_project_2.png" width=50%></center>
 
 ### Assembly Reference!
 
 First we should add reference for the tool's assembly, just the .dll file.
 
 Open the solution explorer.
-<center><img src="../../img/mod_0.png" width=50%></center>
+<center><img src="../img/mod_0.png" width=50%></center>
 
 Right click the "References", then click "Add Project Reference"
-<center><img src="../../img/mod_1.png" width=50%></center>
+<center><img src="../img/mod_1.png" width=50%></center>
 
 Click browse.
-<center><img src="../../img/mod_2.png" width=50%></center>
+<center><img src="../img/mod_2.png" width=50%></center>
 
 In the end, select ModShardLauncher.dll and then click add.
-<center><img src="../../img/mod_3.png" width=50%></center>
+<center><img src="../img/mod_3.png" width=50%></center>
 
 ### Main class
 
@@ -57,7 +57,7 @@ Now we need to create a Main Class for the mod.
 If you have basis for C#, then you must know about **Class**.Then we will create a Mod's main class.
 
 While you create a new project, VS should create a class named Class1. We should add reference for `ModShardLauncher` and `ModShardLauncher.Mods` namespace. Then edit the code into:
-<center><img src="../../img/class_0.png" width=50%></center>
+<center><img src="../img/class_0.png" width=50%></center>
 
 As you can see, we changed the prefix from `internal` to `public`, so that when loading the mods it can read this class. Then we change the name of class into `MyFirstMod`, and let this class extend `Mod` class.
 
@@ -77,7 +77,7 @@ Once you've done this, the information of the mod name, creator and brief descri
 ### Compile the Mod
 
 Launch **ModShardLauncher**. As you can see, the source code of the mod has been loaded.
-<center><img src="../../img/compile_0.png" width=50%></center>
+<center><img src="../img/compile_0.png" width=50%></center>
 
 Before we compile the mod, we need to click File - Open on top left, and choose data.win file in **Vanilla** file.
 
@@ -92,7 +92,7 @@ Before we compile the mod, we need to click File - Open on top left, and choose 
 Then we can double click `MyFirstMod` and compile the mod.
 
 Result of compiling: 
-<center><img src="../../img/compile_1.png" width=50%></center>
+<center><img src="../img/compile_1.png" width=50%></center>
 
 ## Create your first weapon
 
@@ -101,7 +101,7 @@ You have compiled your first mod just now! Let's add some content next.
 ### Create Weapon Class
 
 Right click the Solution Explorer, right click your project, click 'add', and click 'add new'
-<center><img src="../../img/weapon_0.png" width=50%></center>
+<center><img src="../img/weapon_0.png" width=50%></center>
 
 Name your weapon. In this tutorial I will name it as `MyFirstWeapon`. Same as above, change `internal` into `public` so that it can read the information of this weapon while loading the mod. Then add the reference for `ModShardLauncher` and `ModShardLauncher.Mod` namespace, and let the weapon extend the `Weapon` class.
 
@@ -163,7 +163,7 @@ This is the most painful part. In StoneShard, you need 6 sprites for a weapon, w
 
 If you don't have any sprites, you can export vanilla sprites by UTMT, and put them in the mod path except `.vs, bin and obj`. They will be patched in data.win automatically.
 
-<center><img src="../../img/weapon_1.png" width=50%></center>
+<center><img src="../img/weapon_1.png" width=50%></center>
 
 From top to bottom is: weapon on right hand, weapon on left hand, weapon in backpack (there are 3 sprites for this, since the weapon in StoneShard can be broken. If you don't want to sprite it ,just copy 3 times), and loot weapon.
 
@@ -197,4 +197,4 @@ If you want to get other weapon in this way, please edit space in the weapon nam
 give Homemade_Blade
 ```
 Once it process the give script, you will find that there is a mod weapon in your backpack.
-<center><img src="../../img/weapon_2.png" width=50%></center>
+<center><img src="../img/weapon_2.png" width=50%></center>
