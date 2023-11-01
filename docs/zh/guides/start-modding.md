@@ -18,7 +18,7 @@
 
 最后, 到微软官网查找 `.NET 6.0 SDK` 来下载安装包. 然后重启你的电脑来应用这些更改.
 
-另一个选择是**Visual Studio Code**, 在我看来其实用VSCode就足以制作StoneShard的mod了. 但是我们此处先不详细叙述.
+另一个选择是**Visual Studio Code**, 在我看来其实用VSCode就足以制作StoneShard的mod了. 但是我们此处先不详细叙述.~~实际上是我没写完教程哒~~
 
 ## 创建你的第一个mod
 
@@ -36,7 +36,7 @@
 然后输入你mod的名字, 选择路径为刚才 **ModShardLauncher.exe** 创建的 Mods 文件夹.
 <center><img src="../../img/create_project_1.png" width=50%></center>
 
-最后选择.Net 6.0即可
+最后选择 .Net 6.0即可
 <center><img src="../../img/create_project_2.png" width=50%></center>
 
 ### 程序集引用!
@@ -81,7 +81,7 @@ public override string Description => "我的第一个mod";
 接下来我们启动**ModShardLauncher**.  可以看到我们的Mod源码已经被加载出来了.
 <center><img src="../../img/compile_0.png" width=50%></center>
 
-在编译mod之前, 我们需要先点击左上角的File - Open, 并选择 **原版** 的data.win文件进行加载.
+在编译mod之前, 我们需要先点击模组界面左上角的文件夹按钮, 并选择 **原版** 的data.win文件进行加载.
 
 ??? reason "为什么要使用原版文件?"
 
@@ -91,7 +91,7 @@ public override string Description => "我的第一个mod";
 
     为了获取游戏版本, 防止极小可能出现的版本不同而崩溃现象(确信)
 
-然后我们就可以双击 `MyFirstMod` , 再点击编译辣! (我知道这个UI确实非常丑, 在改了在改了呜呜)
+然后我们就可以点击 `MyFirstMod` 栏位右下角的编译辣! (UI现在嘎嘎好看是不是)
 
 编译成功后的结果: 
 <center><img src="../../img/compile_1.png" width=50%></center>
@@ -132,7 +132,7 @@ public override void SetDefaults()
 
 接下来我们隆重介绍---- **`CloneDefaults`** 方法!
 
-没错, 为了防止玩家累死(不是) 我们modder开发时经常忘记各种属性, 我提供了一个方法来让当前这把武器的除 `Name` 与 `ID` 两个属性之外的所有属性全部照抄另外一把原版武器的方法----**`CloneDefaults`**! 因此, 只需把代码改成这样:
+没错, 为了防止玩家累死(不是) 我们modder开发时经常忘记各种属性, 我提供了一个方法来让当前这把武器的除 `Name` 与 `ID` 两个属性之外的所有属性全部照抄另外一把原版武器----**`CloneDefaults`**! 因此, 只需把代码改成这样:
 ```C#
 public override void SetDefaults()
 {
@@ -180,11 +180,11 @@ StoneShard做mod最痛苦的一部分就是这里了. 贴图, 一把最基础的
 !!! notice "**注意!!!**"
     有一点很重要, 你需要把工具目录下一个叫做 `ModShard.dll` 的文件移动到游戏的根目录, 他是该工具内置的一个游戏插件. 否则你将无法启动游戏!
 
-最后一步, 也就是加载Mod了, 在你编译完mod之后, 你会发现上方的Mods栏中多出了你的mod, 双击它打开Mod界面, 选择右下角的Enable. 最后点击左上角的X形Patch按钮, 就可以把mod数据打包进你刚才加载的那个原版data.win了. 把打包好的数据随便存在什么地方, 把原版的data.win挪走, 再进入游戏, 就会提示你选择数据文件. 选择我们刚才保存的那个数据文件即可.
+最后一步, 也就是加载Mod了, 在你编译完mod之后, 你会发现上方的模组界面中多出了你的mod, 选择它右下角的启用. 最后点击左上角的保存按钮, 就可以把mod数据打包进你刚才加载的那个原版data.win了. 把打包好的数据随便存在什么地方, 把原版的data.win挪走, 再进入游戏, 就会提示你选择数据文件. 选择我们刚才保存的那个数据文件即可.
 
 ### 进入游戏!
 
-打开游戏后, 你会发现打开了一个除游戏之外的窗口, 那是刚才的插件打开的, 它的作用是类似于一个控制台, 可以在游戏过程中运行一些内置函数.
+打开游戏后, 你会发现打开了一个除游戏之外的窗口, 那是刚才的插件打开的, 它的作用是类似于一个控制台, 可以在游戏过程中运行一些内置函数.(如果没打开记得联系我 一定是哪里出问题了)
 
 正常进入游戏, 插件内置了一个give函数, 你可以在插件窗口的下方 `Script` 文本框中输入
 ```

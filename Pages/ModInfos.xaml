@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="ModShardLauncher.Pages.ModInfos"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:pages="clr-namespace:ModShardLauncher.Pages"
+      xmlns:controls="clr-namespace:ModShardLauncher.Controls"
+             mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="896">
+
+    <Grid RenderOptions.BitmapScalingMode="NearestNeighbor">
+        <Grid.Background>
+            <ImageBrush ImageSource="/Resources/ModInfosBG.png"/>
+        </Grid.Background>
+        <Grid Margin="30">
+            <Grid Height="64" VerticalAlignment="Top">
+                <controls:MyToggleButton ImageSource="/Resources/open.png" Click="Open_Click">
+                    <controls:MyToggleButton.Resources>
+                        <ImageBrush x:Key="DownSource"  ImageSource="/Resources/open_down.png"/>
+                        <ImageBrush x:Key="OverSource"  ImageSource="/Resources/open_over.png"/>
+                    </controls:MyToggleButton.Resources>
+                </controls:MyToggleButton>
+                <controls:MyToggleButton ImageSource="/Resources/save.png" Click="Save_Click"
+                                         Margin="64,0,0,0">
+                    <controls:MyToggleButton.Resources>
+                        <ImageBrush x:Key="DownSource"  ImageSource="/Resources/save_down.png"/>
+                        <ImageBrush x:Key="OverSource"  ImageSource="/Resources/save_over.png"/>
+                    </controls:MyToggleButton.Resources>
+                </controls:MyToggleButton>
+                <Border BorderBrush="#43424D" BorderThickness="2"/>
+            </Grid>
+            <controls:MyItemsControl MaxHeight="672" Height="672" x:Name="ModList"
+                                     VerticalAlignment="Bottom" 
+                                     ItemsSource="{Binding Path=Mods, RelativeSource={RelativeSource AncestorType=pages:ModInfos, Mode=FindAncestor}}"/>
+        </Grid>
+    </Grid>
+</UserControl>

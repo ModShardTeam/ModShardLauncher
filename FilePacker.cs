@@ -51,7 +51,8 @@ namespace ModShardLauncher
                 Write(fs, tex);
             foreach (var scr in scripts)
                 Write(fs, scr);
-            CompileMod(dir.Name, path, out var code, out _);
+            var successful = CompileMod(dir.Name, path, out var code, out _, fs);
+            if (!successful) return;
             Write(fs, code.Length);
             Write(fs, code);
             fs.Close();
@@ -110,6 +111,7 @@ namespace ModShardLauncher
                     MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
                     MetadataReference.CreateFromFile(refPath("System.Collections.dll")),//System.Core.dll
                     MetadataReference.CreateFromFile(refPath("ModShardLauncher.dll")),
+                    MetadataReference.CreateFromFile(refPath("UndertaleModLib.dll")),
                     MetadataReference.CreateFromFile(refPath("System.Runtime.dll")),
                     MetadataReference.CreateFromFile(refPath("netstandard.dll"))
                 };
@@ -126,11 +128,25 @@ namespace ModShardLauncher
 
             return results.Diagnostics.Where(d => d.Severity >= DiagnosticSeverity.Warning).ToArray();
         }
-        public static void CompileMod(string name, string path, out byte[] code, out byte[] pdb)
+        public static bool CompileMod(string name, string path, out byte[] code, out byte[] pdb, FileStream fs)
         {
             var files = Directory.GetFiles(path, "*.cs", SearchOption.AllDirectories).Where(file => !IgnoreCompletely(name, file)).ToArray();
             var preprocessorSymbols = new List<string>() { "FNA" };
             var result = RoslynCompile(name, files, preprocessorSymbols.ToArray(), out code, out pdb);
+
+            var WarningsCount = result.Count(e => e.Severity == DiagnosticSeverity.Warning);
+            var ErrorsCount = result.Length - WarningsCount;
+
+            if(ErrorsCount > 0)
+            {
+                var firstError = result.First(e => e.Severity == DiagnosticSeverity.Error);
+                fs.Close();
+                File.Delete(fs.Name);
+                MessageBox.Show(Application.Current.FindResource("CompileError").ToString() +
+                    "\n" + name + " : " + firstError);
+                return false;
+            }
+            return true;
         }
         public static bool IgnoreCompletely(string name, string file)
         {

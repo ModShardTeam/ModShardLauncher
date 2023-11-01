@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="ToolDescription">A tool for StoneShard modding.</sys:String>
+    <sys:String x:Key="ToolStart">Start your first mod from here.</sys:String>
     <sys:String x:Key="FileHeader">File</sys:String>
     <sys:String x:Key="SettingHeader">Settings</sys:String>
     <sys:String x:Key="FileHeader_Open">Open</sys:String>
@@ -9,6 +11,8 @@
     <sys:String x:Key="PatchButtonText">Patch</sys:String>
     <sys:String x:Key="SearchBoxText">Search by mod's name...</sys:String>
     <sys:String x:Key="Welcome">Welcome!</sys:String>
+    <sys:String x:Key="Enable">Enable</sys:String>
+    <sys:String x:Key="Disable">Disable</sys:String>
     <sys:String x:Key="Welcome_Use">Welcome to use ModShardLauncher!</sys:String>
     <sys:String x:Key="Welcome_Desc" xml:space="preserve">if you want to refresh mods, just paste them into the /Mods path and click the refresh button on the left
     First, click File button and open a original data file then select Mods you want to enable.
@@ -24,4 +28,15 @@
     <sys:String x:Key="VersionDifferentWarningTitle">Mod version is different from game version</sys:String>
     <sys:String x:Key="VersionDifferentWarning">Mod version is different from game version, maybe it will crash if you load it.Still want to load?</sys:String>
     <sys:String x:Key="ModLostWarning">Mod file lost.</sys:String>
+    <sys:String x:Key="CompileError">Compile Error:</sys:String>
+    <sys:String x:Key="LoadPath">Save this path as default LoadPath?</sys:String>
+    <sys:String x:Key="SavePath">Save this path as default SavePath?</sys:String>
+    <sys:String x:Key="GeneralSettings">General</sys:String>
+    <sys:String x:Key="Mod">Mods</sys:String>
+    <sys:String x:Key="ModSource">ModSources</sys:String>
+    <sys:String x:Key="Settings">Settings</sys:String>
+    <sys:String x:Key="Menu">Menu</sys:String>
+    <sys:String x:Key="Close">Close</sys:String>
+    <sys:String x:Key="Minimize">Minimize</sys:String>
+    <sys:String x:Key="Loading">Loading...</sys:String>
 </ResourceDictionary>

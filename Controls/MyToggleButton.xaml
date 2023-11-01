@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:ModShardLauncher.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Height="40" Background="#1B1926" Name="MyGrid">
+    <Grid Height="60" Background="#1B1926" Name="MyGrid">
         <Grid.Triggers>
             <EventTrigger RoutedEvent="ToggleButton.Checked">
                 <BeginStoryboard>
@@ -33,15 +33,18 @@
                 </BeginStoryboard>
             </EventTrigger>
         </Grid.Triggers>
-        <TextBlock Grid.Row="1" Grid.Column="0" Margin="72,0,0,0" 
+        <TextBlock Grid.Row="1" Grid.Column="0" Margin="64,4,0,0" 
                    Text="{Binding Path=Text, RelativeSource={RelativeSource AncestorType=local:MyToggleButton}}"
-               Foreground="White" FontSize="22" Background="Transparent"
-               HorizontalAlignment="Left" VerticalAlignment="Center">
+                   Foreground="White" FontSize="18" Background="Transparent"
+                   HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Style="{StaticResource sFont}">
         </TextBlock>
         <ToggleButton x:Name="MyButton" Grid.Column="0" VerticalAlignment="Center"
-                  HorizontalAlignment="Left" Margin="16,0,0,0"
-                  Height="32" Width="32" BorderThickness="0"
-                      Checked="MyButton_Checked">
+                  HorizontalAlignment="Left" Margin="8,0,0,0"
+                  Height="48" Width="48" BorderThickness="0"
+                  RenderOptions.BitmapScalingMode="NearestNeighbor"
+                  Checked="MyButton_Checked"
+                  Click="MyButton_Click">
             <ToggleButton.Style>
                 <Style TargetType="{x:Type ToggleButton}">
                     <Setter Property="Template">

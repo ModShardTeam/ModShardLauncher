@@ -48,6 +48,11 @@ namespace ModShardLauncher
         }
         public static async Task<bool> DoOpenDialog()
         {
+            if(Main.Settings.LoadPos != "")
+            {
+                await LoadFile(Main.Settings.LoadPos);
+                return true;
+            }
             OpenFileDialog dlg = new OpenFileDialog();
 
             dlg.DefaultExt = "win";
@@ -62,8 +67,8 @@ namespace ModShardLauncher
         }
         public static async Task LoadFile(string filename, bool re = false)
         {
-            LoadingDialog loader = new LoadingDialog(re ? "重新加载中" :"加载中", "加载中 请稍候...");
-            loader.PreventClose = true;
+            LoadingDialog dialog = new LoadingDialog();
+            dialog.Owner = Main.Instance;
             DataPath = filename;
             Task t = Task.Run(() =>
             {
@@ -94,18 +99,32 @@ namespace ModShardLauncher
                     throw e;
                     //this.ShowError("An error occured while trying to load:\n" + e.Message, "Load error");
                 }
-                MainWindow.Instance.Dispatcher.Invoke(async () =>
+                Main.Instance.Dispatcher.Invoke(async () =>
                 {
-                    loader.Hide();
+                    dialog.Hide();
                 });
             });
 
-            loader.ShowDialog();
+            dialog.ShowDialog();
             await t;
             ModLoader.Initalize();
+            if(Main.Settings.LoadPos == "")
+            {
+                var result = MessageBox.Show(Application.Current.FindResource("LoadPath").ToString(),
+                        Application.Current.FindResource("LoadPath").ToString(), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if(result == MessageBoxResult.Yes)
+                {
+                    Main.Settings.LoadPos = filename;
+                }
+            }
         }
         public static async Task<bool> DoSaveDialog()
         {
+            if (Main.Settings.SavePos != "")
+            {
+                await SaveFile(Main.Settings.SavePos);
+                return true;
+            }
             SaveFileDialog dlg = new SaveFileDialog();
             dlg.DefaultExt = "win";
             dlg.Filter = "Game Maker Studio data files (.win, .unx, .ios, .droid, audiogroup*.dat)|*.win;*.unx;*.ios;*.droid;audiogroup*.dat|All files|*";
@@ -120,10 +139,8 @@ namespace ModShardLauncher
         }
         public static async Task SaveFile(string filename)
         {
-            LoadingDialog dialog = new LoadingDialog("保存中", "保存中 请稍候...");
-            dialog.PreventClose = true;
-            IProgress<Tuple<int, string>> progress = new Progress<Tuple<int, string>>(i => { dialog.ReportProgress(i.Item2, i.Item1); });
-            IProgress<double?> setMax = new Progress<double?>(i => { dialog.Maximum = i; });
+            LoadingDialog dialog = new LoadingDialog();
+            dialog.Owner = Main.Instance;
             Task t = Task.Run(async () =>
             {
                 bool SaveSucceeded = true;
@@ -156,7 +173,7 @@ namespace ModShardLauncher
                         }
                         catch { }
                     }
-                    MainWindow.Instance.Dispatcher.Invoke(() =>
+                    Main.Instance.Dispatcher.Invoke(() =>
                     {
                         ShowError("An error occured while trying to save:\n" + e.Message, "Save error");
                     });
@@ -178,14 +195,14 @@ namespace ModShardLauncher
                 }
                 catch (Exception exc)
                 {
-                    MainWindow.Instance.Dispatcher.Invoke(() =>
+                    Main.Instance.Dispatcher.Invoke(() =>
                     {
                         ShowError("An error occured while trying to save:\n" + exc.Message, "Save error");
                     });
 
                     SaveSucceeded = false;
                 }
-                MainWindow.Instance.Dispatcher.Invoke(() =>
+                Main.Instance.Dispatcher.Invoke(() =>
                 {
                     dialog.Hide();
                 });
@@ -193,6 +210,15 @@ namespace ModShardLauncher
             dialog.ShowDialog();
             await t;
             ModLoader.LoadFiles();
+            if (Main.Settings.SavePos == "")
+            {
+                var result = MessageBox.Show(Application.Current.FindResource("SavePath").ToString(),
+                        Application.Current.FindResource("SavePath").ToString(), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Main.Settings.SavePos = filename;
+                }
+            }
         }
     }
 }

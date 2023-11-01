@@ -4,12 +4,22 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ModShardLauncher.Controls"
-      mc:Ignorable="d" 
+      xmlns:base="clr-namespace:ModShardLauncher"
+      xmlns:mod="clr-namespace:ModShardLauncher.Mods"
+      xmlns:undertale="clr-namespace:UndertaleModTool;assembly=UndertaleModTool" 
+      xmlns:pages="clr-namespace:ModShardLauncher.Pages"
+        mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="960"
+      WindowStyle="None"
+      MinHeight="800" MinWidth="960"  
+      MaxHeight="800" MaxWidth="960"
       Title="Main"
       ResizeMode="NoResize"
-      WindowStartupLocation="CenterScreen">
-
+      WindowStartupLocation="CenterScreen"
+      Closing="Window_Closing">
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="1" CaptionHeight="30" CornerRadius="0"/>
+    </WindowChrome.WindowChrome>
     <Window.Resources>
         <ImageBrush x:Key="menu_mouse_over"
                     ImageSource="Resources/menu_over.png"/>
@@ -45,19 +55,24 @@
 
     <Grid>
         <Grid Background="#2C2D39" Grid.Row="1">
+            <ScrollViewer HorizontalAlignment="Right" Width="896" VerticalScrollBarVisibility="Auto">
+                <ContentControl Name="Viewer"/>
+            </ScrollViewer>
             <Grid x:Name="LeftPanel" HorizontalAlignment="Left" Width="64">
                 <Grid.Background>
                     <ImageBrush ImageSource="/Resources/leftPanel.png"></ImageBrush>
                 </Grid.Background>
                 <StackPanel x:Name="stackPanel">
                     <Grid Height="90">
-                        <TextBlock Grid.Row="1" Grid.Column="0" Margin="72,0,0,0" Text="Menu"
-                                   Foreground="White" FontSize="22" Background="Transparent"
-                                   HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <TextBlock Grid.Row="1" Grid.Column="0" Margin="72,4,0,0" Text="{DynamicResource Menu}"
+                                   Foreground="White" FontSize="24" Background="Transparent"
+                                   HorizontalAlignment="Left" VerticalAlignment="Center"
+                                   Style="{StaticResource sFont}">
                         </TextBlock>
                         <ToggleButton x:Name="menuButton" Grid.Column="0" VerticalAlignment="Center"
-                                      HorizontalAlignment="Left" Margin="16,0,0,0"
-                                      Height="32" Width="32" BorderThickness="0"
+                                      HorizontalAlignment="Left" Margin="8,0,0,0"
+                                      Height="48" Width="48" BorderThickness="0"
+                                      RenderOptions.BitmapScalingMode="NearestNeighbor"
                                       Style="{StaticResource menu_Style}">
                             <ToggleButton.Background>
                                 <ImageBrush ImageSource="/Resources/menu.png"/>
@@ -97,25 +112,51 @@
                     <GridSplitter HorizontalAlignment="Stretch" Background="AliceBlue" Height="1"
                                   IsEnabled="False"/>
                     <Grid Height="40"/>
-                    <local:MyToggleButton ImageSource="/Resources/mod.png" Text="Mods" Checked="MyToggleButton_Checked">
+                    <local:MyToggleButton ImageSource="/Resources/mod.png" Text="{DynamicResource Mod}" 
+                                          Checked="MyToggleButton_Checked"
+                                          Click="MyToggleButton_Click_1">
                         <local:MyToggleButton.Resources>
                             <ImageBrush x:Key="DownSource"  ImageSource="/Resources/mod_down.png"/>
                             <ImageBrush x:Key="OverSource"  ImageSource="/Resources/mod_over.png"/>
                         </local:MyToggleButton.Resources>
                     </local:MyToggleButton>
-                    <Grid Height="40"/>
-                    <local:MyToggleButton ImageSource="/Resources/source.png" Text="ModSources" Checked="MyToggleButton_Checked">
+                    <Grid Height="30"/>
+                    <local:MyToggleButton ImageSource="/Resources/source.png" Text="{DynamicResource ModSource}" 
+                                          Checked="MyToggleButton_Checked"
+                                          Click="MyToggleButton_Click_2">
                         <local:MyToggleButton.Resources>
                             <ImageBrush x:Key="DownSource"  ImageSource="/Resources/source_down.png"/>
                             <ImageBrush x:Key="OverSource"  ImageSource="/Resources/source_over.png"/>
                         </local:MyToggleButton.Resources>
                     </local:MyToggleButton>
+                    <Grid Height="30"/>
+                    <local:MyToggleButton ImageSource="/Resources/settings.png" Text="{DynamicResource Settings}" 
+                                          Checked="MyToggleButton_Checked"
+                                          Click="MyToggleButton_Click_4">
+                        <local:MyToggleButton.Resources>
+                            <ImageBrush x:Key="DownSource"  ImageSource="/Resources/settings_down.png"/>
+                            <ImageBrush x:Key="OverSource"  ImageSource="/Resources/settings_over.png"/>
+                        </local:MyToggleButton.Resources>
+                    </local:MyToggleButton>
+                    <Grid Height="256"/>
+                    <local:MyToggleButton ImageSource="/Resources/min.png" Text="{DynamicResource Minimize}" Click="MyToggleButton_Click_3">
+                        <local:MyToggleButton.Resources>
+                            <ImageBrush x:Key="DownSource"  ImageSource="/Resources/min_down.png"/>
+                            <ImageBrush x:Key="OverSource"  ImageSource="/Resources/min_over.png"/>
+                        </local:MyToggleButton.Resources>
+                    </local:MyToggleButton>
+                    <local:MyToggleButton ImageSource="/Resources/close.png" Text="{DynamicResource Close}" Click="MyToggleButton_Click">
+                        <local:MyToggleButton.Resources>
+                            <ImageBrush x:Key="DownSource"  ImageSource="/Resources/close_down.png"/>
+                            <ImageBrush x:Key="OverSource"  ImageSource="/Resources/close_over.png"/>
+                        </local:MyToggleButton.Resources>
+                    </local:MyToggleButton>
                 </StackPanel>
+                <Border BorderBrush="#43424D" BorderThickness="4"/>
+                <Border BorderBrush="#2C2D39" BorderThickness="3"/>
+                <Border BorderBrush="#43424D" BorderThickness="2"/>
+                <Border BorderBrush="#1B1926" BorderThickness="1"/>
             </Grid>
-            <ScrollViewer HorizontalAlignment="Right" Width="896" VerticalScrollBarVisibility="Auto">
-                <ContentControl Margin="10" Name="Viewer">
-                </ContentControl>
-            </ScrollViewer>
         </Grid>
     </Grid>
 </Window>

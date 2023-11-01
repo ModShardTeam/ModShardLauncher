@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="ToolDescription">一款用于StoneShard的模组工具.</sys:String>
+    <sys:String x:Key="ToolStart">模组之旅从这里启程.</sys:String>
     <sys:String x:Key="FileHeader">文件</sys:String>
     <sys:String x:Key="SettingHeader">设置</sys:String>
     <sys:String x:Key="FileHeader_Open">打开</sys:String>
@@ -9,6 +11,8 @@
     <sys:String x:Key="PatchButtonText">加载</sys:String>
     <sys:String x:Key="SearchBoxText">以模组名称搜索...</sys:String>
     <sys:String x:Key="Welcome">欢迎</sys:String>
+    <sys:String x:Key="Enable">启用</sys:String>
+    <sys:String x:Key="Disable">禁用</sys:String>
     <sys:String x:Key="Welcome_Use">欢迎使用ModShardLauncher!</sys:String>
     <sys:String x:Key="Welcome_Desc">若想重新加载mod 请在启动器目录下的Mods文件夹内放入你想加载的Mod 并点击左上角的刷新按钮</sys:String>
     <sys:String x:Key="ModName">Mod名称</sys:String>
@@ -22,4 +26,15 @@
     <sys:String x:Key="VersionDifferentWarningTitle">Mod版本与游戏版本不一致</sys:String>
     <sys:String x:Key="VersionDifferentWarning">Mod版本与游戏版本不一致, 如果执意加载可能会崩溃.仍然要加载吗?</sys:String>
     <sys:String x:Key="ModLostWarning">Mod文件丢失</sys:String>
+    <sys:String x:Key="CompileError">编译错误:</sys:String>
+    <sys:String x:Key="LoadPath">将此路径保存为默认加载路径?</sys:String>
+    <sys:String x:Key="SavePath">将此路径保存为默认保存路径?</sys:String>
+    <sys:String x:Key="GeneralSettings">常规</sys:String>
+    <sys:String x:Key="Mod">模组</sys:String>
+    <sys:String x:Key="ModSource">模组源码</sys:String>
+    <sys:String x:Key="Settings">设置</sys:String>
+    <sys:String x:Key="Menu">菜单</sys:String>
+    <sys:String x:Key="Close">关闭</sys:String>
+    <sys:String x:Key="Minimize">最小化</sys:String>
+    <sys:String x:Key="Loading">加载中...</sys:String>
 </ResourceDictionary>

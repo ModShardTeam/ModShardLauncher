@@ -17,6 +17,7 @@ using ModShardLauncher.Extensions;
 using UndertaleModLib.Compiler;
 using System.Text;
 using System.Xml.Linq;
+using ModShardLauncher.Pages;
 
 namespace ModShardLauncher
 {
@@ -52,7 +53,7 @@ namespace ModShardLauncher
         }
         public static UndertaleGameObject GetObject(string name)
         {
-            return Data.GameObjects.First(t => t.Name.Content.IndexOf(name) != -1);
+            return Data.GameObjects.FirstOrDefault(t => t.Name.Content.IndexOf(name) != -1);
         }
         public static void SetObject(string name, UndertaleGameObject o)
         {
@@ -101,9 +102,10 @@ namespace ModShardLauncher
         {
             var func = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
             var text = func.Disassemble(Data.Variables, Data.CodeLocals.For(func));
+            
             return text;
         }
-        public static void SetCode(string Code, string name)
+        public static void SetDecompiledCode(string Code, string name)
         {
             var code = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
             code.ReplaceGML(Code, Data);
@@ -143,13 +145,13 @@ namespace ModShardLauncher
         }
         public static void LoadFiles()
         {
-            var mods = MainWindow.Instance.ModsList;
-            var modSources = MainWindow.Instance.ModSourcesList;
-            foreach(ModFile i in mods.Items)
+            var mods = Main.Instance.ModPage.Mods;
+            var modSources = Main.Instance.ModSourcePage.ModSources;
+            foreach(ModFile i in mods)
                 if(i.Stream != null) i.Stream.Close();
-            var modCaches = new List<object>();
+            var modCaches = new List<ModFile>();
             Mods.Clear();
-            modSources.Items.Clear();
+            modSources.Clear();
             ModSources.Clear();
             var sources = Directory.GetDirectories(ModSourcesPath);
             foreach(var i in sources)
@@ -159,7 +161,8 @@ namespace ModShardLauncher
                     Name = i.Split("\\").Last(),
                     Path = i
                 };
-                modSources.Items.Add(info);
+                modSources.Add(info);
+                ModSources.Add(info.Name, info);
             }
             var files = Directory.GetFiles(ModPath, "*.sml");
             foreach (var file in files)
@@ -178,20 +181,23 @@ namespace ModShardLauncher
                     var mod = Activator.CreateInstance(type) as Mod;
                     mod.LoadAssembly();
                     f.instance = mod;
-                    var old = mods.Items.Cast<ModFile>().FirstOrDefault(t => t.Name == f.Name);
+                    var old = mods.FirstOrDefault(t => t.Name == f.Name);
                     if (old != null) f.isEnabled = old.isEnabled;
                     modCaches.Add(f);
                 }
                 Assemblies.Add(assembly);
             }
-            mods.Items.Clear();
-            modCaches.ForEach(i => mods.Items.Add(i));
+            mods.Clear();
+            modCaches.ForEach(i => {
+                mods.Add(i);
+                Mods.Add(i.Name, i);
+            });
         }
         public static void PatchMods()
         {
             Assembly ass = Assembly.GetEntryAssembly();
-            var mods = MainWindow.Instance.ModsList;
-            foreach (ModFile mod in mods.Items)
+            var mods = ModInfos.Instance.Mods;
+            foreach (ModFile mod in mods)
             {
                 if (!mod.isEnabled) continue;
                 if (!mod.isExisted)
@@ -199,6 +205,7 @@ namespace ModShardLauncher
                     MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + mod.Name);
                     continue;
                 }
+                Main.Settings.EnableMods.Add(mod.instance.Name);
                 var version = DataLoader.GetVersion();
                 var reg = new Regex("0([0-9])");
                 version = reg.Replace(version, "$1");
@@ -208,8 +215,8 @@ namespace ModShardLauncher
                         Application.Current.FindResource("VersionDifferentWarningTitle").ToString() + " : " + mod.Name, MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (result == MessageBoxResult.No) continue;
                 }
-                mod.instance.PatchMod();
                 TextureLoader.LoadTextures(mod);
+                mod.instance.PatchMod();
                 var modAss = mod.Assembly;
                 Type[] types = modAss.GetTypes().Where(t => !t.IsAbstract).ToArray();
                 foreach (var type in types)

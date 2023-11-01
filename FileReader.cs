@@ -13,7 +13,7 @@ using System.Windows;
 
 namespace ModShardLauncher
 {
-    public class FileChunk
+    public class FileChunk 
     {
         public string name;
         public int offset;
@@ -41,6 +41,7 @@ namespace ModShardLauncher
         public Mod instance { get; set; }
         public bool isEnabled { get; set; }
         public bool isExisted => File.Exists(Path);
+        public byte[] Icon { get; set; } = new byte[0];
         public override string ToString()
         {
             return instance.ToString();
@@ -54,7 +55,8 @@ namespace ModShardLauncher
                 return new byte[0];
             }
             var file = Files.FirstOrDefault(t => t.name == name);
-            if(file != default)
+            if(file == default) file = Files.FirstOrDefault(t => t.name.Split("\\").Last() == name);
+            if (file != default)
             {
                 if(!Stream.CanRead) Stream = new FileStream(Path, FileMode.Open);
                 Stream.Position = FileOffset;
@@ -62,6 +64,10 @@ namespace ModShardLauncher
                 return FileReader.Read(Stream, file.length);
             }
             else return new byte[0];
+        }
+        public bool FileExist(string name)
+        {
+            return GetFile(name).Length > 0;
         }
     }
     public class FileReader
@@ -109,12 +115,19 @@ namespace ModShardLauncher
             count = BitConverter.ToInt32(Read(fs, 4), 0);
             file.Assembly = Assembly.Load(Read(fs, count));
             file.Path = path;
+            if (file.FileExist(file.Name + "\\icon.png"))
+                file.Icon = file.GetFile(file.Name + "\\icon.png");
             fs.Close();
             return file;
         }
         public static byte[] Read(FileStream fs, int length, int offset = 0)
         {
             byte[] bytes = new byte[length];
+            if(fs.Length - fs.Position < length)
+            {
+                fs.Close();
+                throw new Exception("Mod File Error: " + fs.Name.Split("\\").Last());
+            }
             fs.Read(bytes, 0, length);
             return bytes;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,7 @@ namespace ModShardLauncher.Mods
         public virtual string Name { get => GetType().Name; }
         public virtual string Author { get => "未知"; }
         public virtual string Description { get => "未知"; }
+        public virtual string ShortDesc { get => "未知"; }
         public virtual string Version { get => "v0.0.0.0"; }
         public List<Weapon> ModWeapons;
         public Mod() { }

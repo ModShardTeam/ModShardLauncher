@@ -68,3 +68,4 @@ nav:
   - 中文:
       - "介绍": "zh/guides/introduction.md"
       - "开始使用": "zh/guides/start-modding.md"
+      - "API": "zh/guides/api.md"
