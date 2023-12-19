@@ -29,7 +29,8 @@ namespace ModShardLauncher.Pages
             }*/
             Languages.Add("中文");
             Languages.Add("English");
-            switch(Main.Settings.Language)
+            //Languages.Add("Русский");
+            switch (Main.Settings.Language)
             {
                 case "Chinese":
                     LangSelector.SelectedIndex = 0;
@@ -38,6 +39,10 @@ namespace ModShardLauncher.Pages
                 case "English":
                     LangSelector.SelectedIndex = 1;
                     Main.Settings.ChangeLanguage(1);
+                    break;
+                case "Russian":
+                    LangSelector.SelectedIndex = 2;
+                    Main.Settings.ChangeLanguage(2);
                     break;
             }
         }

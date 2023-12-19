@@ -30,12 +30,18 @@
                    RenderOptions.BitmapScalingMode="NearestNeighbor"/>
         </Grid>
         <Grid HorizontalAlignment="Right" MaxWidth="688" Grid.Column="1">
+            <Border HorizontalAlignment="Left" VerticalAlignment="Top"
+                    Height="6" IsEnabled="False" Margin="20,38,20,0" Width="Auto">
+                <Image Source="/Resources/splitter.png" Stretch="Fill"
+                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                       RenderOptions.ClearTypeHint="Enabled"/>
+            </Border>
             <Label Name="ModName" HorizontalAlignment="Left"
-                   Margin="16,16,0,0" VerticalAlignment="Top"
+                   Margin="16,14,0,0" VerticalAlignment="Top"
                    Content="{Binding instance.Name}" Foreground="White"
                    FontSize="15" Style="{StaticResource xFont}"/>
             <Label Name="ModAuthor" HorizontalAlignment="Right"
-                   Margin="0,16,16,0" VerticalAlignment="Top"
+                   Margin="0,14,16,0" VerticalAlignment="Top"
                    Content="{Binding instance.Author}" Foreground="White"
                    FontSize="15" Style="{StaticResource xFont}"/>
             <TextBlock x:Name="ModDescription" HorizontalAlignment="Left"
@@ -96,12 +102,6 @@
                     <Run Text="{Binding Version, Mode=OneWay}"/>
                 </TextBlock>
             </Label>
-            <Border HorizontalAlignment="Left" VerticalAlignment="Top"
-                          Height="6" IsEnabled="False" Margin="20,38,20,0" Width="Auto">
-                <Image Source="/Resources/splitter.png" Stretch="Fill"
-                        RenderOptions.BitmapScalingMode="NearestNeighbor"
-                        RenderOptions.ClearTypeHint="Enabled"/>
-            </Border>
             <Border BorderBrush="#43424D" BorderThickness="4"/>
             <Border BorderBrush="#2C2D39" BorderThickness="3"/>
             <Border BorderBrush="#43424D" BorderThickness="2"/>

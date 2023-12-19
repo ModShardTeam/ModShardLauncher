@@ -11,16 +11,16 @@
              MinHeight="112" MinWidth="800"
              d:DataContext="{d:DesignInstance main:ModSource}">
     <Grid Background="#1B1926">
+        <Border HorizontalAlignment="Left" VerticalAlignment="Top"
+                Height="6" IsEnabled="False" Margin="20,38,20,0" Width="Auto">
+            <Image Source="/Resources/splitter.png" Stretch="Fill"
+                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                   RenderOptions.ClearTypeHint="Enabled"/>
+        </Border>
         <Label Name="ModName" HorizontalAlignment="Left"
                Margin="16,16,0,0" VerticalAlignment="Top"
                Content="{Binding Name}" Foreground="White"
                FontSize="15" Style="{StaticResource xFont}"/>
-        <Border HorizontalAlignment="Left" VerticalAlignment="Top"
-              Height="6" IsEnabled="False" Margin="20,38,20,0" Width="Auto">
-            <Image Source="/Resources/splitter.png" Stretch="Fill"
-            RenderOptions.BitmapScalingMode="NearestNeighbor"
-            RenderOptions.ClearTypeHint="Enabled"/>
-        </Border>
         <Button x:Name="CompileButton" Width="120" Height="39"
                 VerticalAlignment="Bottom" HorizontalAlignment="Right"
                 Margin="0,0,168,12" Padding="0" BorderBrush="Transparent"
@@ -32,7 +32,7 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="border" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                                    <TextBlock Text="{DynamicResource Compile}" FontSize="13" Foreground="White"
+                                    <TextBlock Text="{DynamicResource Compile}" FontSize="10" Foreground="White"
                                        VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,13,0,0"
                                        Style="{StaticResource sFont}"/>
                                 </Border>
@@ -72,7 +72,7 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="border" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                                    <TextBlock Text="{DynamicResource FileHeader_Open}" FontSize="13" Foreground="White"
+                                    <TextBlock Text="{DynamicResource FileHeader_Open}" FontSize="10" Foreground="White"
                                VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,13,0,0"
                                Style="{StaticResource sFont}"/>
                                 </Border>

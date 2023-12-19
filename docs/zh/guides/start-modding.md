@@ -18,7 +18,9 @@
 
 最后, 到微软官网查找 `.NET 6.0 SDK` 来下载安装包. 然后重启你的电脑来应用这些更改.
 
-另一个选择是**Visual Studio Code**, 在我看来其实用VSCode就足以制作StoneShard的mod了. 但是我们此处先不详细叙述.~~实际上是我没写完教程哒~~
+另一个选择是**Visual Studio Code**, 在我看来其实用VSCode就足以制作StoneShard的mod了.
+
+对于**Visual Studio Code**的教程, 请移步[这里](../guides/start-modding-with-vsc.md)
 
 ## 创建你的第一个mod
 

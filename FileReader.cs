@@ -65,6 +65,18 @@ namespace ModShardLauncher
             }
             else return new byte[0];
         }
+        public string GetCode(string name)
+        {
+            var data = GetFile(name);
+            var text = Encoding.UTF8.GetString(data);
+            if(text.Length == 0)
+            {
+                MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + name);
+                return "";
+            }
+            text = text.Remove(0,1);
+            return text;
+        }
         public bool FileExist(string name)
         {
             return GetFile(name).Length > 0;
@@ -89,6 +101,16 @@ namespace ModShardLauncher
             for(int i = 0; i < count; i++)
             {
                 var len = BitConverter.ToInt32(Read(fs, 4));
+                var chunk = new FileChunk();
+                chunk.name = Encoding.UTF8.GetString(Read(fs, len));
+                chunk.offset = BitConverter.ToInt32(Read(fs, 4));
+                chunk.length = BitConverter.ToInt32(Read(fs, 4));
+                file.Files.Add(chunk);
+            }
+            count = BitConverter.ToInt32(Read(fs, 4), 0);
+            for (int i = 0; i < count; i++)
+            {
+                var len = BitConverter.ToInt32(Read(fs, 4), 0);
                 var chunk = new FileChunk();
                 chunk.name = Encoding.UTF8.GetString(Read(fs, len));
                 chunk.offset = BitConverter.ToInt32(Read(fs, 4));

@@ -268,6 +268,7 @@ namespace ModShardLauncher
             foreach (FileChunk fi in mod.Files)
             {
                 if (!fi.name.EndsWith("png")) continue;
+                if (fi.name == mod.Name + "\\" + "icon.png") continue;
                 var ms = new MemoryStream(mod.GetFile(fi.name));
                 Image img = Image.FromStream(ms);
                 if (img != null)

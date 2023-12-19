@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.Emit;
 using ModShardLauncher.Mods;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -20,6 +21,7 @@ namespace ModShardLauncher
             var dir = new DirectoryInfo(path);
             var textures = dir.GetFiles("*.png", SearchOption.AllDirectories).ToList();
             var scripts = dir.GetFiles("*.lua", SearchOption.AllDirectories).ToList();
+            var codes = dir.GetFiles("*.gml", SearchOption.AllDirectories).ToList();
             FileStream fs = new FileStream(Path.Join(ModLoader.ModPath, dir.Name + ".sml"), FileMode.Create);
             Write(fs, "MSLM");
             var version = DataLoader.GetVersion();
@@ -46,10 +48,24 @@ namespace ModShardLauncher
                 var len = CalculateBytesLength(scr);
                 Write(fs, len);
                 offset += len;
+                
+            }
+            Write(fs, codes.Count);
+            foreach (var scr in codes)
+            {
+                var name = dir.Name + scr.FullName.Replace(path, "");
+                Write(fs, name.Length);
+                Write(fs, name);
+                Write(fs, offset);
+                var len = CalculateBytesLength(scr);
+                Write(fs, len);
+                offset += len;
             }
             foreach (var tex in textures)
                 Write(fs, tex);
             foreach (var scr in scripts)
+                Write(fs, scr);
+            foreach (var scr in codes)
                 Write(fs, scr);
             var successful = CompileMod(dir.Name, path, out var code, out _, fs);
             if (!successful) return;
@@ -109,6 +125,7 @@ namespace ModShardLauncher
                     MetadataReference.CreateFromFile(typeof(object).Assembly.Location),//mscorlib.dll
                     MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location),//System.dll
                     MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
+                    MetadataReference.CreateFromFile(typeof(ObservableCollection<>).Assembly.Location),
                     MetadataReference.CreateFromFile(refPath("System.Collections.dll")),//System.Core.dll
                     MetadataReference.CreateFromFile(refPath("ModShardLauncher.dll")),
                     MetadataReference.CreateFromFile(refPath("UndertaleModLib.dll")),

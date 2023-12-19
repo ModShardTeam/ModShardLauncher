@@ -26,14 +26,14 @@ namespace ModShardLauncher.Mods
         {
             InitializeComponent();
         }
-        public ImageSource Icon;
+        public ImageSource Icon = null;
     }
     public class ByteArrayToImageSourceConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             byte[] imageData = (byte[])value;
-            if (imageData.Length == 0) return new object();
+            if (imageData.Length == 0) return new BitmapImage(new Uri("/Resources/icon_default.png", UriKind.Relative));
 
             var biImg = new BitmapImage();
             MemoryStream ms = new MemoryStream(imageData);
@@ -42,9 +42,7 @@ namespace ModShardLauncher.Mods
             biImg.EndInit();
             biImg.Freeze();
 
-            ImageSource imgSrc = biImg as ImageSource;
-
-            return imgSrc;
+            return biImg;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

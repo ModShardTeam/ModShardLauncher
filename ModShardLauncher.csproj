@@ -26,6 +26,7 @@
     <None Remove="Resources\enable_button_down.png" />
     <None Remove="Resources\enable_button_over.png" />
     <None Remove="Resources\icon.gif" />
+    <None Remove="Resources\icon_default.png" />
     <None Remove="Resources\leftPanel.png" />
     <None Remove="Resources\menu.png" />
     <None Remove="Resources\menu_down.png" />
@@ -71,6 +72,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\icon_default.png" />
     <Resource Include="Resources\settings_button_over.png" />
   </ItemGroup>
 

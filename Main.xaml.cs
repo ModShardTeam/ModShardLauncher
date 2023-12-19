@@ -26,10 +26,11 @@ namespace ModShardLauncher
         public Main()
         {
             Instance = this;
-            Settings.LoadSettings();
             MainPage = new MainPage();
             ModPage = new ModInfos();
             ModSourcePage = new ModSourceInfos();
+            ModLoader.LoadFiles();
+            Settings.LoadSettings();
             SettingsPage = new Settings();
             InitializeComponent();
             if (!Directory.Exists(ModLoader.ModPath))
@@ -38,7 +39,7 @@ namespace ModShardLauncher
                 Directory.CreateDirectory(ModLoader.ModSourcesPath);
 
             
-            ModLoader.LoadFiles();
+            
             Viewer.Content = MainPage;
 
             
@@ -141,6 +142,12 @@ namespace ModShardLauncher
                     Application.Current.Resources.MergedDictionaries.Remove(resDict);
                     Application.Current.Resources.MergedDictionaries.Add(resDict);
                     Main.Settings.Language = "English";
+                    break;
+                case 2:
+                    resDict = Application.Current.Resources.MergedDictionaries.First(t => t.Source.OriginalString == @"Language/ru-ru.xaml");
+                    Application.Current.Resources.MergedDictionaries.Remove(resDict);
+                    Application.Current.Resources.MergedDictionaries.Add(resDict);
+                    Main.Settings.Language = "Русский";
                     break;
             }
             

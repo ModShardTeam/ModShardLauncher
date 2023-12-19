@@ -53,7 +53,11 @@ namespace ModShardLauncher
         }
         public static UndertaleGameObject GetObject(string name)
         {
-            return Data.GameObjects.FirstOrDefault(t => t.Name.Content.IndexOf(name) != -1);
+            return Data.GameObjects.FirstOrDefault(t => t.Name.Content == name);
+        }
+        public static UndertaleSprite GetSprite(string name)
+        {
+            return Data.Sprites.FirstOrDefault(t => t.Name.Content == name);
         }
         public static void SetObject(string name, UndertaleGameObject o)
         {
@@ -91,6 +95,11 @@ namespace ModShardLauncher
             var ret = Regex.Match(text, "return (\\[.*\\])").Groups[1].Value;
             return JsonConvert.DeserializeObject<List<string>>(ret);
         }
+        public static UndertaleCode GetCode(string name)
+        {
+            var code = Data.Code.First(t => t.Name.Content == name);
+            return code;
+        }
         public static string GetDecompiledCode(string name)
         {
             var func = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
@@ -106,6 +115,23 @@ namespace ModShardLauncher
             return text;
         }
         public static void SetDecompiledCode(string Code, string name)
+        {
+            var code = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
+            code.ReplaceGML(Code, Data);
+        }
+        public static void InsertDecompiledCode(string Code, string name, int pos)
+        {
+            var code = GetDecompiledCode(name).Split("\n").ToList();
+            code.Insert(pos, Code);
+            SetDecompiledCode(string.Join("\n", code), name);
+        }
+        public static void ReplaceDecompiledCode(string Code, string name, int pos)
+        {
+            var code = GetDecompiledCode(name).Split("\n").ToList();
+            code[pos] = Code;
+            SetDecompiledCode(string.Join("\n", code), name);
+        }
+        public static void SetDisassemblyCode(string Code, string name)
         {
             var code = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
             code.ReplaceGML(Code, Data);
@@ -180,6 +206,7 @@ namespace ModShardLauncher
                     var type = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(Mod))).ToList()[0];
                     var mod = Activator.CreateInstance(type) as Mod;
                     mod.LoadAssembly();
+                    mod.ModFiles = f;
                     f.instance = mod;
                     var old = mods.FirstOrDefault(t => t.Name == f.Name);
                     if (old != null) f.isEnabled = old.isEnabled;
@@ -205,7 +232,7 @@ namespace ModShardLauncher
                     MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + mod.Name);
                     continue;
                 }
-                Main.Settings.EnableMods.Add(mod.instance.Name);
+                Main.Settings.EnableMods.Add(mod.Name);
                 var version = DataLoader.GetVersion();
                 var reg = new Regex("0([0-9])");
                 version = reg.Replace(version, "$1");
@@ -234,18 +261,16 @@ namespace ModShardLauncher
             Weapons.Insert(Weapons.IndexOf("SWORDS - BLADES;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;") + 1, strs.Item1);
             WeaponDescriptions.Insert(WeaponDescriptions.IndexOf(";;SWORDS;;;;;;SWORDS;SWORDS;;;;") + 1, weapon.Name + ";" + string.Join(";", weapon.NameList.Values));
             WeaponDescriptions.Insert(WeaponDescriptions.IndexOf(";weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;") + 1,
-                weapon.Name + ";" + string.Join(";", weapon.Description.Values));
+                weapon.Name + ";" + string.Join(";", weapon.WeaponDescriptions.Values));
             WeaponDescriptions.Insert(WeaponDescriptions.IndexOf(";weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;") + 1,
                 weapon.Name + ";He;;;It;She;She;She;She;He;;;;");
         }
         public static async void PatchFile()
         {
-            if (patched) await DataLoader.LoadFile(DataLoader.DataPath);
             PatchInnerFile();
             PatchMods();
             SetTable(Weapons, "gml_GlobalScript_table_weapons");
             SetTable(WeaponDescriptions, "gml_GlobalScript_table_weapons_text");
-            patched = true;
             LoadFiles();
         }
         internal static void PatchInnerFile()

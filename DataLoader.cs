@@ -22,6 +22,7 @@ namespace ModShardLauncher
     public class DataLoader
     {
         public static UndertaleData data = null;
+        public static UndertaleData dataCache = null;
         internal static string DataPath = "";
         public delegate void FileMessageEventHandler(string message);
         public static event FileMessageEventHandler FileMessageEvent;
@@ -87,6 +88,19 @@ namespace ModShardLauncher
 
                             hadWarnings = true;
                         },delegate (string message)
+                        {
+                            FileMessageEvent?.Invoke(message);
+                        });
+                        dataCache = UndertaleIO.Read(stream, warning =>
+                        {
+                            ShowWarning(warning, "Loading warning");
+
+                            if (warning.Contains("unserializeCountError.txt")
+                                || warning.Contains("object pool size"))
+                                return;
+
+                            hadWarnings = true;
+                        }, delegate (string message)
                         {
                             FileMessageEvent?.Invoke(message);
                         });

@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="FileHeader">Файл</sys:String>
+    <sys:String x:Key="SettingHeader">Настройки</sys:String>
+    <sys:String x:Key="FileHeader_Open">Открыть</sys:String>
+    <sys:String x:Key="SettingHeader_Lang">Язык</sys:String>
+    <sys:String x:Key="RefreshButtonText">Обновить</sys:String>
+    <sys:String x:Key="PatchButtonText">Загрузить</sys:String>
+    <sys:String x:Key="SearchBoxText">Поиск по названию мода...</sys:String>
+    <sys:String x:Key="Welcome">Добро пожаловать</sys:String>
+    <sys:String x:Key="Welcome_Use">Добро пожаловать в ModShardLauncher!</sys:String>
+    <sys:String x:Key="Welcome_Desc">Если вы хотите обновить моды, просто вставьте их в папку /Mods и нажмите кнопку "Обновить" слева. 
+    Сначала нажмите кнопку "Файл" и откройте исходный файл данных, затем выберите моды, которые вы хотите включить. 
+    Затем нажмите кнопку "Загрузить", чтобы загрузить моды в файл данных.</sys:String>
+    <sys:String x:Key="ModName">Название мода</sys:String>
+    <sys:String x:Key="ModAuthor">Автор мода</sys:String>
+    <sys:String x:Key="ModDescription">Описание мода</sys:String>
+    <sys:String x:Key="EnableMod">Включить мод</sys:String>
+    <sys:String x:Key="ModVersion">Версия мода</sys:String>
+    <sys:String x:Key="GameVersion">Версия игры</sys:String>
+    <sys:String x:Key="Compile">Компилировать</sys:String>
+    <sys:String x:Key="LoadDataWarning">Пожалуйста, загрузите файл данных игры сначала!</sys:String>
+    <sys:String x:Key="VersionDifferentWarningTitle">Версия мода отличается от версии игры</sys:String>
+    <sys:String x:Key="VersionDifferentWarning">Версия мода отличается от версии игры, возможно, это вызовет сбой. Вы всё равно хотите загрузить его?</sys:String>
+    <sys:String x:Key="ModLostWarning">Файл мода отсутствует</sys:String>
+</ResourceDictionary>

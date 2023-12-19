@@ -22,7 +22,7 @@
                                     <ControlTemplate TargetType="ToggleButton">
                                         <Border x:Name="border" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                                             <TextBlock Text="{DynamicResource GeneralSettings}" FontSize="15" Foreground="White"
-                                                       VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,18,0,0"
+                                                       VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,14,0,0"
                                                        Style="{StaticResource sFont}"/>
                                         </Border>
                                         <ControlTemplate.Triggers>
