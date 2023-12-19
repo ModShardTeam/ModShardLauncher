@@ -122,7 +122,7 @@ namespace ModShardLauncher
             dialog.ShowDialog();
             await t;
             ModLoader.Initalize();
-            if(Main.Settings.LoadPos == "")
+            if(Main.Settings.LoadPos == "" && !re)
             {
                 var result = MessageBox.Show(Application.Current.FindResource("LoadPath").ToString(),
                         Application.Current.FindResource("LoadPath").ToString(), MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -149,6 +149,7 @@ namespace ModShardLauncher
                 await SaveFile(dlg.FileName);
                 return true;
             }
+            else await LoadFile(DataPath, true);
             return false;
         }
         public static async Task SaveFile(string filename)
@@ -223,6 +224,7 @@ namespace ModShardLauncher
             });
             dialog.ShowDialog();
             await t;
+            await LoadFile(DataPath, true);
             ModLoader.LoadFiles();
             if (Main.Settings.SavePos == "")
             {
