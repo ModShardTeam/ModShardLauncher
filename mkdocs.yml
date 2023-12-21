@@ -65,6 +65,7 @@ nav:
   - Guides:
       - "Introduction": "guides/introduction.md"
       - "Getting Started": "guides/start-modding.md"
+      - "How to play mod": "guides/how-to-play-mod.md"
   - 中文:
       - "介绍": "zh/guides/introduction.md"
       - "开始使用": "zh/guides/start-modding.md"
