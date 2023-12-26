@@ -68,7 +68,11 @@ namespace ModShardLauncher
         public string GetCode(string name)
         {
             var data = GetFile(name);
-            if (data[0] == 239 && data[1] == 187 && data[2] == 191) data = data.Skip(3).ToArray();
+
+            // if a BOM is found aka: 0xEF 0xBB 0xBF at the beginning of the file, remove it since UTMT will not understand these characters.
+            // BOM are produced if a script is made through Visual Studio
+            if (data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF) data = data.Skip(3).ToArray();
+            
             var text = Encoding.UTF8.GetString(data);
             if(text.Length == 0)
             {
