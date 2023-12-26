@@ -112,26 +112,30 @@ namespace ModShardLauncher
         }
         public static Diagnostic[] RoslynCompile(string name, string[] files, string[] preprocessorSymbols, out byte[] code, out byte[] pdb)
         {
-            var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
-                assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default,
+            IEnumerable<string> DefaultNamespaces =
+            new[]
+            {
+                "System.Collections.Generic"
+            };
+        var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
+                checkOverflow: true,
                 optimizationLevel: OptimizationLevel.Release,
-                allowUnsafe: false);
+                allowUnsafe: false).WithUsings(DefaultNamespaces);
 
             var parseOptions = new CSharpParseOptions(LanguageVersion.Preview, preprocessorSymbols: preprocessorSymbols);
             var emitOptions = new EmitOptions(debugInformationFormat: DebugInformationFormat.PortablePdb);
-            IEnumerable<MetadataReference> DefaultReferences =
-                new[]
+
+            var Dlls = Directory.GetFiles(Environment.CurrentDirectory, "*.dll").ToList();
+
+            List<MetadataReference> DefaultReferences = Dlls.ConvertAll<MetadataReference>(new Converter<string, MetadataReference>(
+                delegate(string str)
                 {
-                    MetadataReference.CreateFromFile(typeof(object).Assembly.Location),//mscorlib.dll
-                    MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location),//System.dll
-                    MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
-                    MetadataReference.CreateFromFile(typeof(ObservableCollection<>).Assembly.Location),
-                    MetadataReference.CreateFromFile(refPath("System.Collections.dll")),//System.Core.dll
-                    MetadataReference.CreateFromFile(refPath("ModShardLauncher.dll")),
-                    MetadataReference.CreateFromFile(refPath("UndertaleModLib.dll")),
-                    MetadataReference.CreateFromFile(refPath("System.Runtime.dll")),
-                    MetadataReference.CreateFromFile(refPath("netstandard.dll"))
-                };
+                    return MetadataReference.CreateFromFile(str);
+                })).ToList();
+            DefaultReferences.AddRange(new List<MetadataReference>()
+            {
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location)
+            });
             var src = files.Select(f => SyntaxFactory.ParseSyntaxTree(File.ReadAllText(f), parseOptions, f, Encoding.UTF8));
             var comp = CSharpCompilation.Create(name, src, DefaultReferences, options);
 

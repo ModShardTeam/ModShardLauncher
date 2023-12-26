@@ -180,6 +180,7 @@ namespace ModShardLauncher
                     }
                 }
             }
+            Atlasses.Clear();
         }
         public static void Process(ModFile mod, int _AtlasSize, int _Padding, bool _DebugMode)
         {

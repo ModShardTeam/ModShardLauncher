@@ -29,17 +29,15 @@ namespace ModShardLauncher
             MainPage = new MainPage();
             ModPage = new ModInfos();
             ModSourcePage = new ModSourceInfos();
-            ModLoader.LoadFiles();
-            Settings.LoadSettings();
-            SettingsPage = new Settings();
-            InitializeComponent();
             if (!Directory.Exists(ModLoader.ModPath))
                 Directory.CreateDirectory(ModLoader.ModPath);
             if (!Directory.Exists(ModLoader.ModSourcesPath))
                 Directory.CreateDirectory(ModLoader.ModSourcesPath);
+            ModLoader.LoadFiles();
+            Settings.LoadSettings();
+            SettingsPage = new Settings();
+            InitializeComponent();
 
-            
-            
             Viewer.Content = MainPage;
 
             
