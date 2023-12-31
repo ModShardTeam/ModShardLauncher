@@ -2,14 +2,28 @@
 
 ## What is **ModShardLauncher**?
 
-**ModShardLauncher** is a tool to patch **mods** into StoneShard original data files.
-In the past we modders use **UTMT** to edit the source code and save them.But if the game was updated, all the mods will be broken and different cannot work together unless you combine them by yourself.
-To deal with these questions, I want to make a tool.It's **ModShardLauncher**.
+---
 
-## How **ModShardLauncher** works?
+**ModShardLauncher** is a tool to patch **mods** into StoneShard original data files. <br>
 
-In fact, **UTMT** is made by C#.Using **UTMT**'s source code, **ModShardLauncher** can load data files.And with C#'s reflection, **ModShardLauncher** can load .dll files as mods and patch the modthings into data file.Then save them.
+In the past, we modders used a tool called **UndertaleModTool (UTMT)** to edit the source code and save it. <br>
+But if the game received even the most insignificant of updates, all mods would break. <br> 
+Additionally, multiple mods couldn't work together unless you actually combined them by hand. <br>
 
-## I want to mod now!
+To deal with these issues and limitations, I wanted to make a tool. <br>
+That's what **ModShardLauncher** is.
 
-[Just see guide here!](../guides/start-modding.md)
+## How does **ModShardLauncher** work?
+
+---
+
+Did you know that **UTMT** was made in C# ? <br>
+
+Using **UTMT**'s source code, **ModShardLauncher** can load data files. <br>
+And with C#'s reflection, **ModShardLauncher** can load .dll files as mods and patch the '**modthings**' into data files, then save them.
+
+## I want to start modding now!
+
+---
+
+[Just check out the guides here !](../guides/start-modding.md)
