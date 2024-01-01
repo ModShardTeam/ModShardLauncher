@@ -18,6 +18,7 @@ using UndertaleModLib.Compiler;
 using System.Text;
 using System.Xml.Linq;
 using ModShardLauncher.Pages;
+using Serilog;
 
 namespace ModShardLauncher
 {
@@ -97,15 +98,30 @@ namespace ModShardLauncher
         }
         public static UndertaleCode GetCode(string name)
         {
-            var code = Data.Code.First(t => t.Name.Content == name);
-            return code;
+            try {
+                var code = Data.Code.First(t => t.Name.Content == name);
+                Log.Information(string.Format("Find function: {0}", code.ToString()));
+
+                return code;
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
         public static string GetDecompiledCode(string name)
         {
-            var func = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
-            GlobalDecompileContext context = new GlobalDecompileContext(Data, false);
-            var text = Decompiler.Decompile(func, context);
-            return text;
+            try {
+                var func = GetCode(name);
+                GlobalDecompileContext context = new GlobalDecompileContext(Data, false);
+                var text = Decompiler.Decompile(func, context);
+                
+                return text;
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
         public static string GetDisassemblyCode(string name)
         {
@@ -116,14 +132,22 @@ namespace ModShardLauncher
         }
         public static void SetDecompiledCode(string Code, string name)
         {
-            var code = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
+            var code = GetCode(name);
             code.ReplaceGML(Code, Data);
         }
         public static void InsertDecompiledCode(string Code, string name, int pos)
         {
-            var code = GetDecompiledCode(name).Split("\n").ToList();
-            code.Insert(pos, Code);
-            SetDecompiledCode(string.Join("\n", code), name);
+            try {
+                Log.Information(string.Format("Trying insert code in: {0}", name.ToString()));
+                var code = GetDecompiledCode(name).Split("\n").ToList();
+                code.Insert(pos, Code);
+                SetDecompiledCode(string.Join("\n", code), name);
+                Log.Information(string.Format("Patched function with InsertDecompiledCode: {0}", name.ToString()));
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
         public static void ReplaceDecompiledCode(string Code, string name, int pos)
         {

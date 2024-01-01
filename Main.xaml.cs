@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using UndertaleModLib;
+using Serilog;
 
 namespace ModShardLauncher
 {
@@ -25,6 +26,12 @@ namespace ModShardLauncher
         public static UserSettings Settings = new UserSettings();
         public Main()
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("logs/myapp.txt")
+                .CreateLogger();
+
             Instance = this;
             MainPage = new MainPage();
             ModPage = new ModInfos();
