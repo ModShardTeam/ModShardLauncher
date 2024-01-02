@@ -29,7 +29,7 @@ namespace ModShardLauncher
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
-                .WriteTo.File("logs/myapp.txt")
+                .WriteTo.File("logs/msl_log.txt")
                 .CreateLogger();
 
             Instance = this;
