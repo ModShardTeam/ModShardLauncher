@@ -132,8 +132,14 @@ namespace ModShardLauncher
         }
         public static void SetDecompiledCode(string Code, string name)
         {
-            var code = GetCode(name);
-            code.ReplaceGML(Code, Data);
+            try {
+                var code = GetCode(name);
+                code.ReplaceGML(Code, Data);
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
         public static void InsertDecompiledCode(string Code, string name, int pos)
         {
