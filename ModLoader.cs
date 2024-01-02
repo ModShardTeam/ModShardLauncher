@@ -139,9 +139,11 @@ namespace ModShardLauncher
         {
             try {
                 Log.Information(string.Format("Trying insert code in: {0}", name.ToString()));
+
                 var code = GetDecompiledCode(name).Split("\n").ToList();
                 code.Insert(pos, Code);
                 SetDecompiledCode(string.Join("\n", code), name);
+
                 Log.Information(string.Format("Patched function with InsertDecompiledCode: {0}", name.ToString()));
             }
             catch(Exception ex) {
@@ -151,9 +153,19 @@ namespace ModShardLauncher
         }
         public static void ReplaceDecompiledCode(string Code, string name, int pos)
         {
-            var code = GetDecompiledCode(name).Split("\n").ToList();
-            code[pos] = Code;
-            SetDecompiledCode(string.Join("\n", code), name);
+            try {
+                Log.Information(string.Format("Trying replace code in: {0}", name.ToString()));
+
+                var code = GetDecompiledCode(name).Split("\n").ToList();
+                code[pos] = Code;
+                SetDecompiledCode(string.Join("\n", code), name);
+
+                Log.Information(string.Format("Patched function with ReplaceDecompiledCode: {0}", name.ToString()));
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
         public static void SetDisassemblyCode(string Code, string name)
         {
