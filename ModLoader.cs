@@ -96,6 +96,9 @@ namespace ModShardLauncher
             var ret = Regex.Match(text, "return (\\[.*\\])").Groups[1].Value;
             return JsonConvert.DeserializeObject<List<string>>(ret);
         }
+        /// <summary>
+        /// Return the UndertaleCode from <c>name</c>.
+        /// </summary>
         public static UndertaleCode GetCode(string name)
         {
             try {
@@ -122,13 +125,6 @@ namespace ModShardLauncher
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
-        }
-        public static string GetDisassemblyCode(string name)
-        {
-            var func = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
-            var text = func.Disassemble(Data.Variables, Data.CodeLocals.For(func));
-            
-            return text;
         }
         public static void SetDecompiledCode(string Code, string name)
         {
@@ -173,10 +169,96 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        public static void ReplaceRangeDecompiledCode(string Code, string name, int start, int len)
+        {
+            try {
+                Log.Information(string.Format("Trying replace code in: {0}", name.ToString()));
+
+                var code = GetDecompiledCode(name).Split("\n").ToList();
+                code[start] = Code;
+                for (int i = 1; i < len; i++) {
+                    code[start + i] = "";
+                }
+
+                SetDecompiledCode(string.Join("\n", code), name);
+
+                Log.Information(string.Format("Patched function with ReplaceRangeDecompiledCode: {0}", name.ToString()));
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static string GetDisassemblyCode(string name)
+        {
+            try {
+                var func = GetCode(name);
+                var text = func.Disassemble(Data.Variables, Data.CodeLocals.For(func));
+                
+                return text;
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
         public static void SetDisassemblyCode(string Code, string name)
         {
-            var code = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
-            code.ReplaceGML(Code, Data);
+            try {
+                var code = GetCode(name);
+                code.Replace(Assembler.Assemble(Code, Data));
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static void PatchDisassemblyCode(string name, Func<IEnumerable<UndertaleInstruction>, IEnumerable<UndertaleInstruction>> patch)
+        {
+            try {
+                Log.Information(string.Format("Trying patch assembly in: {0}", name.ToString()));
+
+                var code = GetCode(name);
+                code.Replace(patch(code.Instructions).ToList());
+
+                Log.Information(string.Format("Patched function with PatchDisassemblyCode: {0}", name.ToString()));
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static void InsertDisassemblyCode(string Code, string name, int pos)
+        {
+            try {
+                Log.Information(string.Format("Trying insert assembly in: {0}", name.ToString()));
+
+                var code = GetDisassemblyCode(name).Split("\n").ToList();
+                code.Insert(pos, Code);
+                SetDisassemblyCode(string.Join("\n", code), name);
+
+                Log.Information(string.Format("Patched function with InsertDisassemblyCode: {0}", name.ToString()));
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static void ReplaceDisassemblyCode(string Code, string name, int pos)
+        {
+            try {
+                Log.Information(string.Format("Trying replace assembly in: {0}", name.ToString()));
+
+                var code = GetDisassemblyCode(name).Split("\n").ToList();
+                code[pos] = Code;
+                SetDisassemblyCode(string.Join("\n", code), name);
+
+                Log.Information(string.Format("Patched function with ReplaceDisassemblyCode: {0}", name.ToString()));
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
         public static void SetTable(List<string> table, string name)
         {
