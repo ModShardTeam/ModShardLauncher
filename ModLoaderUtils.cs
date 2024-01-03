@@ -99,7 +99,7 @@ namespace ModShardLauncher
                         (instruction.Value as UndertaleInstruction.Reference<UndertaleVariable>)?.Type.ToString(),
                         (instruction.Value as UndertaleInstruction.Reference<UndertaleVariable>)?.Target.Name.ToString(),
                         (instruction.Value as UndertaleInstruction.Reference<UndertaleVariable>)?.Target.InstanceType.ToString()) : 
-                    instruction.Value != null ? instruction.Value.ToString() : "<null>",
+                    instruction.Value?.ToString() ?? "<null>",
 
                 (instruction.Function != null) ? 
                     string.Format(@"(
