@@ -41,5 +41,37 @@ namespace ModShardLauncher
                 TypeInst = UndertaleInstruction.InstanceType.Global,
             };
         }
+
+        public static UndertaleInstruction PopIntGlb(string val)
+        {
+            return new() {
+                Kind = UndertaleInstruction.Opcode.Pop,
+                Destination = ModLoader.GetRefVariableOrCreate(val, UndertaleInstruction.InstanceType.Global),
+                Type1 = UndertaleInstruction.DataType.Variable,
+                Type2 = UndertaleInstruction.DataType.Int32,
+                TypeInst = UndertaleInstruction.InstanceType.Global,
+            };
+        }
+        public static UndertaleInstruction PopIntLcl(string val)
+        {
+            return new() {
+                Kind = UndertaleInstruction.Opcode.Pop,
+                Destination = ModLoader.GetRefVariableOrCreate(val, UndertaleInstruction.InstanceType.Local),
+                Type1 = UndertaleInstruction.DataType.Variable,
+                Type2 = UndertaleInstruction.DataType.Int32,
+                TypeInst = UndertaleInstruction.InstanceType.Local,
+            };
+        }
+        
+        public static UndertaleInstruction PopIntSelf(string val)
+        {
+            return new() {
+                Kind = UndertaleInstruction.Opcode.Pop,
+                Destination = ModLoader.GetRefVariableOrCreate(val, UndertaleInstruction.InstanceType.Self),
+                Type1 = UndertaleInstruction.DataType.Variable,
+                Type2 = UndertaleInstruction.DataType.Int32,
+                TypeInst = UndertaleInstruction.InstanceType.Self,
+            };
+        }
     }
 }
