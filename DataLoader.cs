@@ -96,7 +96,8 @@ namespace ModShardLauncher
                                 FileMessageEvent?.Invoke(message);
                             }
                         );
-                        File.WriteAllText("json_dump.json", JsonConvert.SerializeObject(data.Code.Select(t => t.Name.Content)));
+                        File.WriteAllText("json_dump_code.json", JsonConvert.SerializeObject(data.Code.Select(t => t.Name.Content)));
+                        File.WriteAllText("json_dump_variables.json", JsonConvert.SerializeObject(data.Variables.Select(t => t.Name.Content)));
 
                         dataCache = UndertaleIO.Read(
                             stream, warning =>
@@ -160,7 +161,7 @@ namespace ModShardLauncher
                 await SaveFile(dlg.FileName);
                 return true;
             }
-            else await LoadFile(DataPath, true);
+            // else await LoadFile(DataPath, true);
             return false;
         }
         public static async Task SaveFile(string filename)
