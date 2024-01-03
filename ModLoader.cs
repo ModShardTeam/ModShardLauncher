@@ -96,13 +96,139 @@ namespace ModShardLauncher
             var ret = Regex.Match(text, "return (\\[.*\\])").Groups[1].Value;
             return JsonConvert.DeserializeObject<List<string>>(ret);
         }
+        public static UndertaleVariable GetVariable(string name)
+        {
+            try {
+                UndertaleVariable variable = Data.Variables.First(t => t.Name?.Content == name);
+                Log.Information(string.Format("Find variable: {0}", variable.ToString()));
+
+                return variable;
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static UndertaleInstruction.Reference<UndertaleVariable> CreateRefVariable(string name, UndertaleInstruction.InstanceType instanceType) 
+        {
+            if (Data == null) {
+                throw new ArgumentNullException("Data is null");
+            }
+
+            UndertaleString str = Data.Strings.MakeString(name, out int id);
+            bool bytecode14 = Data.GeneralInfo?.BytecodeVersion <= 14;
+            uint oldId = Data.VarCount1;
+
+            if (bytecode14)
+			    instanceType = UndertaleInstruction.InstanceType.Undefined;
+
+            if (!bytecode14)
+            {
+                if (Data.IsVersionAtLeast(2, 3))
+                {
+                    Data.VarCount1++;
+                    Data.VarCount2 = Data.VarCount1;
+                    oldId = (uint)id;
+                }
+                else if (!Data.DifferentVarCounts)
+                {
+                    // Bytecode 16+
+                    Data.VarCount1++;
+                    Data.VarCount2++;
+                }
+                else
+                {
+                    // Bytecode 15
+                    if (instanceType == UndertaleInstruction.InstanceType.Self)
+                    {
+                        oldId = Data.VarCount2;
+                        Data.VarCount2++;
+                    }
+                    else if (instanceType == UndertaleInstruction.InstanceType.Global)
+                    {
+                        Data.VarCount1++;
+                    }
+                }
+            }
+
+            UndertaleVariable variable = new()
+            {
+                Name = str,
+                InstanceType = instanceType,
+                VarID = bytecode14 ? 0 : (int)oldId,
+                NameStringID = id
+            };
+            Data.Variables.Add(variable);
+            Log.Information(string.Format("Created variable: {0}", variable.ToString()));
+
+            return new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
+        }
+        public static UndertaleInstruction.Reference<UndertaleVariable> GetRefVariableOrCreate(string name, UndertaleInstruction.InstanceType instanceType)
+        {
+            try {
+                UndertaleInstruction.Reference<UndertaleVariable> refVariable;
+                UndertaleVariable? variable = Data.Variables.FirstOrDefault(t => t.Name?.Content == name);
+                
+                if (variable == null) 
+                    refVariable = CreateRefVariable(name, instanceType);
+                else
+                    refVariable = new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
+
+                Log.Information(string.Format("Find variable: {0}", refVariable.ToString()));
+
+                return refVariable;
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static UndertaleString GetString(string name)
+        {
+            try {
+                UndertaleString variable = Data.Strings.First(t => t.Content == name);
+                Log.Information(string.Format("Find string: {0}", variable.ToString()));
+
+                return variable;
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> CreateString(string name) 
+        {
+            UndertaleString str = Data.Strings.MakeString(name, out int ind);
+            Log.Information(string.Format("Created string: {0}", str.ToString()));
+            return new UndertaleResourceById<UndertaleString, UndertaleChunkSTRG>(str, ind);
+        }
+        public static UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> GetStringOrCreate(string name)
+        {
+            try {
+                UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> stringById;
+                (int ind, UndertaleString str) = Data.Strings.Enumerate().FirstOrDefault(x => x.Item2.Content == name);
+                
+                if (str == null)
+                    stringById = CreateString(name);
+                else
+                    stringById = new UndertaleResourceById<UndertaleString, UndertaleChunkSTRG>(str, ind);
+
+                Log.Information(string.Format("Find string: {0}", stringById.ToString()));
+
+                return stringById;
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
         /// <summary>
         /// Return the UndertaleCode from <c>name</c>.
         /// </summary>
         public static UndertaleCode GetCode(string name)
         {
             try {
-                var code = Data.Code.First(t => t.Name.Content == name);
+                UndertaleCode code = Data.Code.First(t => t.Name?.Content == name);
                 Log.Information(string.Format("Find function: {0}", code.ToString()));
 
                 return code;
@@ -115,8 +241,8 @@ namespace ModShardLauncher
         public static string GetDecompiledCode(string name)
         {
             try {
-                var func = GetCode(name);
-                GlobalDecompileContext context = new GlobalDecompileContext(Data, false);
+                UndertaleCode func = GetCode(name);
+                GlobalDecompileContext context = new(Data, false);
                 var text = Decompiler.Decompile(func, context);
                 
                 return text;
@@ -129,7 +255,7 @@ namespace ModShardLauncher
         public static void SetDecompiledCode(string Code, string name)
         {
             try {
-                var code = GetCode(name);
+                UndertaleCode code = GetCode(name);
                 code.ReplaceGML(Code, Data);
             }
             catch(Exception ex) {
