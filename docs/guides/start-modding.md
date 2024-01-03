@@ -1,200 +1,311 @@
 #  Let's begin!
 
-[TOC]
-
 ## Before we start
 
-If you want to create a mod, PLEASE make sure you know how C# works, otherwise you may not understand how to use tool's API.
+---
+
+Before creating a mod, you should have a basic understanding of C# and Visual Studio. <br>
+If you do not know how to use them, please learn them first, as the tool's API can be a bit complex. <br>
+
+Here are some resources to get you started on that :
+
+- [C# Tutorial](https://www.w3schools.com/cs/index.php)
+- [Visual Studio Tutorial](https://www.youtube.com/watch?v=VcU2HGsxeII&t=34s)
 
 ## Tools
 
-You need a tool to write your mod code, such as **Visual Studio**. It's a professional development tool that can help you a lot.
+---
 
-[Download here](https://visualstudio.microsoft.com/)
+In order to write your mod's code, you will need a tool such as [**Visual Studio**](https://visualstudio.microsoft.com/). <br> 
+It's a professional development tool that can help you a lot.
 
-While installation, make sure you choose `.NET Desktop Development` workload. You don't need to download other workloads.
+While installing, make sure you choose the `.NET Desktop Development` workload. <br>
+You do not need to download any other workload.
 
-At last, find `.NET 6.0 SDK` on official Microsoft website, install it and reboot your PC.
+At last, find `.NET 6.0 SDK` on official Microsoft website, install it and when it's done, reboot your PC.
 
-You can also use **Visual Studio Code** as your tool, but this tutorial won't introduce this tool. ~~Cuz I havent done it~~.
+You can also use **Visual Studio Code** as your tool, but this tutorial won't cover it ~~cuz I havent tried it~~.
 
-## Create your first mod!
+## Create your first mod
 
-Let's start our journey by launching **ModShardLauncher.exe**. Once you launch it, two files will be created in the folder, one is **Mods**, another is **ModSource**. Create new folder in **ModSource**.
+---
 
-### Create your mod!
+Let's start our journey by launching **ModShardLauncher.exe**. <br>
+Once you start it, two folders should be created : the first is `Mods`, the other is `ModSource`. <br>
 
-There are many ways to create your mod, if you use Visual Studio, you can run it then click Create New Project. Search Class Library, click Next.
+Move into the `ModSource` folder and create a **new folder** there. <br>
+You can name this new folder whatever you want.
 
-<center><img src="../img/create_project_0.png" width=50%></center>
+### Create your mod
 
-Give a name to your mod, then select the path Mods that **ModShardLauncher.exe** just create.
-<center><img src="../img/create_project_1.png" width=50%></center>
+There are many ways to create your mod. <br>
+If you use **Visual Studio**, you can click `Create a New Project`, search `Class Library` and click `Next` :
 
-Choose **.Net 6.0**, and that's it! easy right?
-<center><img src="../img/create_project_2.png" width=50%></center>
+<center><img src="../img/create_project_0_EN.png" width=50%></center>
 
-### Assembly Reference!
+Give a name to your mod, then select the `ModSources` folder that **ModShardLauncher.exe** created earlier :
+<center><img src="../img/create_project_1_EN.png" width=50%></center>
 
-First we should add reference for the tool's assembly, just the .dll file.
+Choose **.Net 6.0**, and that's it!
+<center><img src="../img/create_project_2_EN.png" width=50%></center>
 
-Open the solution explorer.
-<center><img src="../img/mod_0.png" width=50%></center>
+<br>
 
-Right click the "References", then click "Add Project Reference"
-<center><img src="../img/mod_1.png" width=50%></center>
+### Assembly Reference
 
-Click browse.
-<center><img src="../img/mod_2.png" width=50%></center>
+Next we should add a **reference** to the tool's **assembly**, which means the `ModShardLauncher.dll` file. <br><br>
 
-In the end, select ModShardLauncher.dll and then click add.
-<center><img src="../img/mod_3.png" width=50%></center>
+Open the **solution explorer** on the right :
+<center><img src="../img/mod_0_EN.png" width=50%></center>
+
+Right click `Dependencies`, then click `Add Project Reference` :
+<center><img src="../img/mod_1_EN.png" width=30%></center>
+
+Click `Browse...` :
+<center><img src="../img/mod_2_EN.png" width=50%></center>
+
+Finally, select `ModShardLauncher.dll` and click `Add` :
+<center><img src="../img/mod_3_EN.png" width=50%></center>
+
+<br>
 
 ### Main class
 
-Now we need to create a Main Class for the mod.
+Now we need to create a **Main Class** for our mod.
 
-If you have basis for C#, then you must know about **Class**.Then we will create a Mod's main class.
+If you're familiar with **C#**, then you probably already know about **Classes**. <br>
+We will now create our Mod's **main class**.
 
-While you create a new project, VS should create a class named Class1. We should add reference for `ModShardLauncher` and `ModShardLauncher.Mods` namespace. Then edit the code into:
-<center><img src="../img/class_0.png" width=50%></center>
+When you created your project, **Visual Studio** should have added a class named `Class1`. <br> 
+We should add a reference to `ModShardLauncher` and to the `ModShardLauncher.Mods` namespace. <br>
 
-As you can see, we changed the prefix from `internal` to `public`, so that when loading the mods it can read this class. Then we change the name of class into `MyFirstMod`, and let this class extend `Mod` class.
+Let's change the code to the following :
+<center><img src="../img/class_0_EN.png" width=50%></center>
+
+As you can see, we changed the name of the class from `Class1` to `MyFirstMod`, and made this class extend the `Mod` class.
+
+<br>
 
 ### Information of your mod
 
-Now we need to add the basic information to the mod.
+Now we need to add some basic information to our mod.
 
-Add code in `MyFirstMod`:
-```C#
-public override string Name => "MyFirstMod";
-public override string Author => "Mantodea";
-public override string Description => "My first mod";
-```
+Let's add the following code to `MyFirstMod`:
+<center><img src="../img/class_1_EN.png" width=50%></center>
 
-Once you've done this, the information of the mod name, creator and brief description will be set.
+Once you've done this, the mod's name, creator and brief description will be set.
+
+<br>
 
 ### Compile the Mod
 
-Launch **ModShardLauncher**. As you can see, the source code of the mod has been loaded.
+Launch **ModShardLauncher**. <br>
+As you can see, the mod's source code has been loaded.
 <center><img src="../img/compile_0.png" width=50%></center>
 
-Before we compile the mod, we need to click File - Open on top left, and choose data.win file in **Vanilla** file.
+In order to **compile** the mod, we need to click the **folder icon** on the top left, and choose our **vanilla** `data.win` file.
 
-??? reason "Why vanilla file?"
+??? question "Why does it need the vanilla `data.win` ?"
 
-    This tool works based on the names of objects in data.win file
+    This tool works based on the names of the objects in the **vanilla** `data.win` file.
 
-??? reason "Why loading game file before compiling?"
+??? question "Why do we need to load the `data.win` before compiling?"
 
-    To access the right game virsion, and prevent the little chance of collapse if the game crashes when loading a different version.
+    To prevent potential mismatch (and issues) between the **game version** and your **mod's version**.
 
-Then we can double click `MyFirstMod` and compile the mod.
+We can now double click `MyFirstMod` to compile the mod.
 
-Result of compiling: 
+Result of compiling : 
 <center><img src="../img/compile_1.png" width=50%></center>
+
+<br>
 
 ## Create your first weapon
 
-You have compiled your first mod just now! Let's add some content next.
+---
+
+You have compiled your first mod just now! <br> 
+It's great but it's a bit empty right now, so let's add some content next.
 
 ### Create Weapon Class
 
-Right click the Solution Explorer, right click your project, click 'add', and click 'add new'
-<center><img src="../img/weapon_0.png" width=50%></center>
+Right click the **Solution Explorer**, right click your **project** (_the one highlighted in purple in the image_), <br>
+click `Add`, and click `New Item...`
+<center><img src="../img/weapon_0_EN.png" width=30%></center>
 
-Name your weapon. In this tutorial I will name it as `MyFirstWeapon`. Same as above, change `internal` into `public` so that it can read the information of this weapon while loading the mod. Then add the reference for `ModShardLauncher` and `ModShardLauncher.Mod` namespace, and let the weapon extend the `Weapon` class.
+Now you can name your weapon. For this tutorial I will name it `MyFirstWeapon`. <br>
 
-### Change the information of your weapon!
+Just like before, we can now add the reference for `ModShardLauncher` and the `ModShardLauncher.Mod` namespace. <br> 
+However this time, we'll be extending the `Weapon` class rather than the `Mod` class.
 
-In StoneShard, there are many properties for a single weapon. It is painful to set them all and if you forget to set some properties, mod may not be loaded as expected.
+??? note "MyFirstWeapon.cs"
+    ```C# linenums="1"
+    using ModShardLauncher;
+    using ModShardLauncher.Mod;
 
-??? why "You know too much"
-    ~~Actually cuz the source code of StoneShard is kinda messy.~~
+    namespace MyFirstMod
+    {
+        public class MyFirstWeapon : Weapon
+        {
+            
+        }
+    }
+    ```
+<br>
+
+### Change the information of your weapon
+
+In StoneShard, there are many properties for a single weapon. <br>
+It is painful to set them all by hand, and if you forget to set any of them, your mod may not load as expected.
+
+??? question "Why is that ?"
+    ~~Actually, cuz the source code of StoneShard is kinda messy...~~
 
 Then, are there any ways that can help us easily change the properties of a weapon?
 
-First, let's add some code to edit `SetDefaults` method
-```C#
-public override void SetDefaults()
-{
-    
-}
-```
-??? why "You know too much"
-    ~~looks like the codes are from tModLoader, right? ugh, well, you know, I'm a modder.~~
+First, let's override the `SetDefaults` method :
 
-As you can see, this method can set weapon's properties while loading it.
+??? note "MyFirstWeapon.cs"
+    ```C# linenums="1" hl_lines="8-11"
+    using ModShardLauncher;
+    using ModShardLauncher.Mod;
 
-Now, let's introduce **`CloneDefaults`** method.
+    namespace MyFirstMod
+    {
+        public class MyFirstWeapon : Weapon
+        {
+            public override void SetDefaults()
+            {
+                
+            }
+        }
+    }
+    ```
 
-That's right, to prevent modders from forgetting setting those properties, we offer a new method so that every properties will be copied from another vanilla weapon except `Name` and `ID`. Just like this:
+??? info "If you feel like the code reminds you of tModLoader..."
+    ~~It's because I may or may not come from the Terraria modding community.~~
 
-```C#
-public override void SetDefaults()
-{
-    CloneDefaults("Homemade Blade");
-    Name = "MyFirstWeapon";
-    ID = "MyFirstMod1";
-}
-```
+As you can see, this method's purpose is to set a weapon's properties.
+Now, let's introduce the **`CloneDefaults`** method.
 
-Now, we have a new weapon with the same properties except the name.
+That's right, to prevent modders from forgetting setting those properties, we offer a new method so that every properties will be copied from another vanilla weapon except `Name` and `ID`. <br>
 
-Notice: `CloneDefaults` won't set value on the name and description in different languages. You need to change them by yourself, like this:
+All you have to do is add the following code :
 
-```C#
-public override void SetDefaults()
-{
-    CloneDefaults("Homemade Blade");
-    Name = "MyFirstWeapon";
-    ID = "MyFirstMod1";
-    Description[ModLanguage.English] = "this is my first weapon";
-    NameList[ModLanguage.English] = "FuckingGreatSword";
-}
-```
+??? note "MyFirstWeapon.cs"
+    ```C# linenums="1" hl_lines="10-12"
+    using ModShardLauncher;
+    using ModShardLauncher.Mod;
 
-That's the first step of creating a weapon.
+    namespace MyFirstMod
+    {
+        public class MyFirstWeapon : Weapon
+        {
+            public override void SetDefaults()
+            {
+                CloneDefaults("Homemade Blade");
+                Name = "MyFirstWeapon";
+                ID = "MyFirstMod1";
+            }
+        }
+    }
+    ```
+
+Now, we have a brand new weapon with the exact same properties as the `Homemade Blade` except for its **name** and **ID**.
+
+!!! info "Notice"
+    `CloneDefaults` won't set a value for the name or description in other languages.<br> 
+    You need to change them manually, like so :
+    ```C# linenums="1" hl_lines="13 14"
+    using ModShardLauncher;
+    using ModShardLauncher.Mod;
+
+    namespace MyFirstMod
+    {
+        public class MyFirstWeapon : Weapon
+        {
+            public override void SetDefaults()
+            {
+                CloneDefaults("Homemade Blade");
+                Name = "MyFirstWeapon";
+                ID = "MyFirstMod1";
+                Description[ModLanguage.English] = "This is my first weapon";
+                NameList[ModLanguage.English] = "GreatFuckingSword";
+            }
+        }
+    }
+    ```
+
+That's the first step of creating a weapon done.
 
 ### Sprite of your weapon
 
-This is the most painful part. In StoneShard, you need 6 sprites for a weapon, which adds tons of work to modders.
+This is the most painful part. <br>
+In StoneShard, you need 6 sprites for a weapon, which adds tons of work for modders.
 
 
-If you don't have any sprites, you can export vanilla sprites by UTMT, and put them in the mod path except `.vs, bin and obj`. They will be patched in data.win automatically.
+If you don't have any sprites, you can export some of the vanilla sprites with **UTMT**. <br>
+You can put them in your mod's folder or its subfolders, except in `.vs`, `bin` or `obj`. <br>
+They will be patched into the `data.win` automatically.
 
 <center><img src="../img/weapon_1.png" width=50%></center>
 
-From top to bottom is: weapon on right hand, weapon on left hand, weapon in backpack (there are 3 sprites for this, since the weapon in StoneShard can be broken. If you don't want to sprite it ,just copy 3 times), and loot weapon.
+From top to bottom : <br>
 
-??? why "notice"
+- weapon in right hand
+- weapon in left hand
+- weapon in inventory (there are 3 sprites for this, since the weapon in StoneShard can be broken. <br> If you don't want to sprite it , just copy it 3 times)
+- weapon as loot (dropped on the ground)
+
+??? info "Notice"
     
-    The length of sprites of weapon in the bag must be 27n cuz an unit of StoneShard inventory is 27*27 pixels.
+    - The sprite size for weapons **in the inventory** must be at most `27*27 pixels` since a cell in StoneShard's inventory is exactly `27*27 pixels`. <br>
+      Going above that would simply mean your weapon's sprite will be **too big to fit in a single cell**.
+    - If making sprites for a **two-handed weapon**, you don't need `char_left`, as two-handed weapons cannot be used by just the left hand.
 
-The sprites above are just for one-hand weapon, if for two-hand ones, you don't need char_left, cuz two-hand weapons can only be used by two hands.
+You can now run **ModShardLauncher.exe** again and repeat the compile steps described previously.
 
-Get ready for all these things, you can run **ModShardLauncher.exe** again and repeat the compile steps above.
+### Loading your mod
 
-### Loading your mod!
+!!! warning "Important"
+    You need to move the `ModShard.dll` file from the tool's root path to the root folder of the game. <br>
+    This is how the tool hooks into Stoneshard. <br>
 
-!!! warn "**notice !!!**"
-    You need to move a `ModShard.dll` file under the tool's root path to root folder of the game. It is an inner extension of the tool. Otherwise you can't launch the game. 
+    Trying to load a modded data file without this will cause the game to crash. 
 
-The last step is loading the mod. Once you compile your mod, it will pop up in Mod page. Double click it and click Enable down below. Then click Patch on top left corner, and your mod data will be patched in vanilla data.win that is loaded before. You can save the patched data into any folder, move the vanilla data.win file away, start the game, and it will ask you to select a data file, choose the file that we save before.
+The last step is loading the mod. <br>
 
-### Launch your game!
+Once you've **compiled** your mod, it should pop up in the **mod list**. <br>
+Head there and **tick the box** next to your mod to **enable** it. <br>
+Next, click on the **floppy disk icon** in the **top left**, and **save** the new data file under any name. <br>
 
-After launching the game, there is a new window that is opened by the plugins. It is a control pannel that runs some inner script in game.
+!!! info "Notice"
+    Make sure you keep the vanilla `data.win` untouched, as you will need it to **make more mods** and to **play the game** vanilla.
 
-Enter the game as usual, the plugin set a inner give script, type in
+I also recommend **renaming** your original `data.win` to `vanilla.win`. <br>
+
+The reason for this is that at launch, Stoneshard looks for a `data.win` to load. <br>
+If it doesn't find one, it will **ask you** to **select a data file**, which is is when we can tell it to **load** the **patched data file** we just saved. <br>
+
+
+### Launch your game !
+
+After launching the game, a new window should open alongside Stoneshard. <br> 
+It is a control panel for the `Script Engine` that runs some inner script in game.
+
+Enter the game as usual. <br> 
+
+The script engine has a `give` script, so simply type the following in the new window's text box :
 ```
 give MyFirstWeapon
 ```
-to get the mod weapon you created in the `Script` textbox under the plugin window.
 
-If you want to get other weapon in this way, please edit space in the weapon name into `_`, such as:
+
+You can give yourself **any weapon** in this way, but keep in mind you need to **replace any space** in the weapon's name with an **underscore** `_` :
 ```
 give Homemade_Blade
 ```
-Once it process the give script, you will find that there is a mod weapon in your backpack.
+
+Once you run the command, your weapon should be added to your inventory. <br>
+
 <center><img src="../img/weapon_2.png" width=50%></center>
