@@ -71,9 +71,11 @@ namespace ModShardLauncher
             var locals = new UndertaleCodeLocals();
             code.Name = Data.Strings.MakeString(name);
             locals.Name = code.Name;
-            UndertaleCodeLocals.LocalVar argsLocal = new UndertaleCodeLocals.LocalVar();
-            argsLocal.Name = Data.Strings.MakeString("arguments");
-            argsLocal.Index = 0;
+            UndertaleCodeLocals.LocalVar argsLocal = new()
+            {
+                Name = Data.Strings.MakeString("arguments"),
+                Index = 0
+            };
             locals.Locals.Add(argsLocal);
             code.LocalsCount = 1;
             Data.CodeLocals.Add(locals);
@@ -112,7 +114,7 @@ namespace ModShardLauncher
         public static UndertaleInstruction.Reference<UndertaleVariable> CreateRefVariable(string name, UndertaleInstruction.InstanceType instanceType) 
         {
             if (Data == null) {
-                throw new ArgumentNullException("Data is null");
+                throw new NullReferenceException("Data is null");
             }
 
             UndertaleString str = Data.Strings.MakeString(name, out int id);

@@ -78,6 +78,7 @@ namespace ModShardLauncher
 
         private void MyToggleButton_Click(object sender, EventArgs e)
         {
+            Log.CloseAndFlushAsync();
             Close();
         }
 
