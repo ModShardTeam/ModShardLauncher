@@ -49,7 +49,7 @@ namespace ModShardLauncher
         }
         public static async Task<bool> DoOpenDialog()
         {
-            if(Main.Settings.LoadPos != "")
+            if(Main.Settings.LoadPos != "" && File.Exists(Main.Settings.LoadPos))
             {
                 await LoadFile(Main.Settings.LoadPos);
                 return true;

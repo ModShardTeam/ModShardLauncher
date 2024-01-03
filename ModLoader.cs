@@ -179,7 +179,20 @@ namespace ModShardLauncher
             Mods.Clear();
             modSources.Clear();
             ModSources.Clear();
-            var sources = Directory.GetDirectories(ModSourcesPath);
+
+            // List all folders being a C# project
+            // Currently only test the existence of a .csproj file
+            // TODO: test framework
+            // TODO: test inclusion of ModShardLauncher as a reference
+            IEnumerable<string> sources = Directory
+                .GetDirectories(ModSourcesPath)
+                .Where(
+                    x => Directory
+                        .EnumerateFiles(x, "*.csproj", SearchOption.TopDirectoryOnly)
+                        .FirstOrDefault() 
+                        != null
+            );
+
             foreach(var i in sources)
             {
                 var info = new ModSource()
