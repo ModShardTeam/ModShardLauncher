@@ -227,10 +227,10 @@ namespace ModShardLauncher
         /// <summary>
         /// Return the UndertaleCode from <c>name</c>.
         /// </summary>
-        public static UndertaleCode GetCode(string name)
+        public static UndertaleCode GetUMTCodeFromFile(string file_name)
         {
             try {
-                UndertaleCode code = Data.Code.First(t => t.Name?.Content == name);
+                UndertaleCode code = Data.Code.First(t => t.Name?.Content == file_name);
                 Log.Information(string.Format("Find function: {0}", code.ToString()));
 
                 return code;
@@ -240,77 +240,120 @@ namespace ModShardLauncher
                 throw;
             }
         }
-        public static string GetDecompiledCode(string name)
+        public static string GetStringGMLFromFile(string file_name)
         {
             try {
-                UndertaleCode func = GetCode(name);
+                UndertaleCode code = GetUMTCodeFromFile(file_name);
                 GlobalDecompileContext context = new(Data, false);
-                var text = Decompiler.Decompile(func, context);
-                
-                return text;
+
+                return Decompiler.Decompile(code, context);
             }
             catch(Exception ex) {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
-        public static void SetDecompiledCode(string Code, string name)
+        public static void SetStringGMLInFile(string code_as_string, string file_name)
         {
             try {
-                UndertaleCode code = GetCode(name);
-                code.ReplaceGML(Code, Data);
+                UndertaleCode code = GetUMTCodeFromFile(file_name);
+                code.ReplaceGML(code_as_string, Data);
             }
             catch(Exception ex) {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
-        public static void InsertDecompiledCode(string Code, string name, int pos)
+        /// <summary>
+        /// Insert GML <paramref name="code"/> from a string in <paramref name="file"/> at a given <paramref name="position"/>.
+        /// <para>
+        /// <example>For example:
+        /// <code>
+        /// InsertGMLString("scr_atr("LVL") == global.max_level", "gml_Object_o_character_panel_mask_Draw_0", 3);
+        /// </code>
+        /// results in gml_Object_o_character_panel_mask_Draw_0 line 3 being <c>scr_atr("LVL") == global.max_level</c>.
+        /// </example>
+        /// </para>
+        /// </summary>
+        /// <param name="code">The code to insert.</param>
+        /// <param name="file">The file to be patched.</param>
+        /// <param name="position">The exact position to insert.</param>
+        public static void InsertGMLString(string code_as_string, string file_name, int position)
         {
             try {
-                Log.Information(string.Format("Trying insert code in: {0}", name.ToString()));
+                Log.Information(string.Format("Trying insert code in: {0}", file_name.ToString()));
 
-                var code = GetDecompiledCode(name).Split("\n").ToList();
-                code.Insert(pos, Code);
-                SetDecompiledCode(string.Join("\n", code), name);
+                List<string>? original_code = GetStringGMLFromFile(file_name).Split("\n").ToList();
+                original_code.Insert(position, code_as_string);
+                SetStringGMLInFile(string.Join("\n", original_code), file_name);
 
-                Log.Information(string.Format("Patched function with InsertDecompiledCode: {0}", name.ToString()));
+                Log.Information(string.Format("Patched function with InsertGMLString: {0}", file_name.ToString()));
             }
             catch(Exception ex) {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
-        public static void ReplaceDecompiledCode(string Code, string name, int pos)
+        /// <summary>
+        /// Replace an existing GML code by another <paramref name="code"/> from a string in <paramref name="file"/> at a given <paramref name="position"/>.
+        /// <para>
+        /// <example>For example:
+        /// <code>
+        /// ReplaceGMLString("scr_atr("LVL") == global.max_level", "gml_Object_o_character_panel_mask_Draw_0", 3);
+        /// </code>
+        /// results in gml_Object_o_character_panel_mask_Draw_0 line 3 being replaced by <c>scr_atr("LVL") == global.max_level</c>.
+        /// </example>
+        /// </para>
+        /// </summary>
+        /// <param name="code">The code to insert.</param>
+        /// <param name="file">The file to be patched.</param>
+        /// <param name="position">The exact position to insert.</param>
+        public static void ReplaceGMLString(string code_as_string, string file_name, int position)
         {
             try {
-                Log.Information(string.Format("Trying replace code in: {0}", name.ToString()));
+                Log.Information(string.Format("Trying replace code in: {0}", file_name.ToString()));
 
-                var code = GetDecompiledCode(name).Split("\n").ToList();
-                code[pos] = Code;
-                SetDecompiledCode(string.Join("\n", code), name);
+                List<string>? original_code = GetStringGMLFromFile(file_name).Split("\n").ToList();
+                original_code[position] = code_as_string;
+                SetStringGMLInFile(string.Join("\n", original_code), file_name);
 
-                Log.Information(string.Format("Patched function with ReplaceDecompiledCode: {0}", name.ToString()));
+                Log.Information(string.Format("Patched function with ReplaceGMLString: {0}", file_name.ToString()));
             }
             catch(Exception ex) {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
-        public static void ReplaceRangeDecompiledCode(string Code, string name, int start, int len)
+        /// <summary>
+        /// Replace an existing GML code by another <paramref name="code"/> from a string in <paramref name="file"/> at a given <paramref name="position"/>
+        /// and remove the next len-1 lines.
+        /// <para>
+        /// <example>For example:
+        /// <code>
+        /// ReplaceGMLString("scr_atr("LVL") == global.max_level", "gml_Object_o_character_panel_mask_Draw_0", 3, 2);
+        /// </code>
+        /// results in gml_Object_o_character_panel_mask_Draw_0 line 3 being replaced by <c>scr_atr("LVL") == global.max_level</c>
+        /// and line 4 being removed.
+        /// </example>
+        /// </para>
+        /// </summary>
+        /// <param name="code">The code to insert.</param>
+        /// <param name="file">The file to be patched.</param>
+        /// <param name="position">The exact position to insert.</param>
+        public static void ReplaceGMLString(string code_as_string, string file_name, int start, int len)
         {
             try {
-                Log.Information(string.Format("Trying replace code in: {0}", name.ToString()));
+                Log.Information(string.Format("Trying replace code in: {0}", file_name.ToString()));
 
-                var code = GetDecompiledCode(name).Split("\n").ToList();
-                code[start] = Code;
-                for (int i = 1; i < len; i++) {
-                    code[start + i] = "";
+                List<string>? original_code = GetStringGMLFromFile(file_name).Split("\n").ToList();
+                original_code[start] = code_as_string;
+                for (int i = 1; i < Math.Min(len, original_code.Count - start); i++) {
+                    original_code[start + i] = "";
                 }
 
-                SetDecompiledCode(string.Join("\n", code), name);
+                SetStringGMLInFile(string.Join("\n", original_code), file_name);
 
-                Log.Information(string.Format("Patched function with ReplaceRangeDecompiledCode: {0}", name.ToString()));
+                Log.Information(string.Format("Patched function with ReplaceGMLString: {0}", file_name.ToString()));
             }
             catch(Exception ex) {
                 Log.Error(ex, "Something went wrong");
@@ -320,7 +363,7 @@ namespace ModShardLauncher
         public static string GetDisassemblyCode(string name)
         {
             try {
-                var func = GetCode(name);
+                var func = GetUMTCodeFromFile(name);
                 var text = func.Disassemble(Data.Variables, Data.CodeLocals.For(func));
                 
                 return text;
@@ -333,7 +376,7 @@ namespace ModShardLauncher
         public static void SetDisassemblyCode(string Code, string name)
         {
             try {
-                var code = GetCode(name);
+                var code = GetUMTCodeFromFile(name);
                 code.Replace(Assembler.Assemble(Code, Data));
             }
             catch(Exception ex) {
@@ -346,7 +389,7 @@ namespace ModShardLauncher
             try {
                 Log.Information(string.Format("Trying patch assembly in: {0}", name.ToString()));
 
-                var code = GetCode(name);
+                var code = GetUMTCodeFromFile(name);
                 code.Replace(patch(code.Instructions).ToList());
 
                 Log.Information(string.Format("Patched function with PatchDisassemblyCode: {0}", name.ToString()));
