@@ -367,6 +367,5 @@
                 <ResourceDictionary Source="Language/en-us.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-        
     </Application.Resources>
 </Application>

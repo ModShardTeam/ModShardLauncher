@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -126,15 +127,20 @@ namespace ModShardLauncher
             var emitOptions = new EmitOptions(debugInformationFormat: DebugInformationFormat.PortablePdb);
 
             var Dlls = Directory.GetFiles(Environment.CurrentDirectory, "*.dll").ToList();
+            var path = Path.GetDirectoryName(typeof(object).Assembly.Location);
 
-            List<MetadataReference> DefaultReferences = Dlls.ConvertAll<MetadataReference>(new Converter<string, MetadataReference>(
+            List<MetadataReference> DefaultReferences = Dlls.ConvertAll(new Converter<string, MetadataReference>(
                 delegate(string str)
                 {
                     return MetadataReference.CreateFromFile(str);
                 })).ToList();
             DefaultReferences.AddRange(new List<MetadataReference>()
             {
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(Path.Combine(path, "Microsoft.CSharp.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(path, "mscorlib.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(path, "System.Dynamic.Runtime.dll")),
+                MetadataReference.CreateFromFile(typeof(ExpressionType).GetTypeInfo().Assembly.Location),
             });
             var src = files.Select(f => SyntaxFactory.ParseSyntaxTree(File.ReadAllText(f), parseOptions, f, Encoding.UTF8));
             var comp = CSharpCompilation.Create(name, src, DefaultReferences, options);

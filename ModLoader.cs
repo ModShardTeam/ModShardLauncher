@@ -18,6 +18,8 @@ using UndertaleModLib.Compiler;
 using System.Text;
 using System.Xml.Linq;
 using ModShardLauncher.Pages;
+using System.Windows.Navigation;
+using System.Net;
 
 namespace ModShardLauncher
 {
@@ -26,12 +28,14 @@ namespace ModShardLauncher
         internal static UndertaleData Data => DataLoader.data;
         public static string ModPath => Path.Join(Environment.CurrentDirectory, "Mods");
         public static string ModSourcesPath => Path.Join(Environment.CurrentDirectory, "ModSources");
+        public static List<string> ModScripts = new List<string>();
         public static Dictionary<string, ModFile> Mods = new Dictionary<string, ModFile>();
         public static Dictionary<string, ModSource> ModSources = new Dictionary<string, ModSource>();
         private static List<Assembly> Assemblies = new List<Assembly>();
         private static bool patched = false;
         public static List<string> Weapons;
         public static List<string> WeaponDescriptions;
+        public static Dictionary<string, Action<string>> ScriptCallbacks = new Dictionary<string, Action<string>>();
         public static void ShowMessage(string msg)
         {
             Trace.Write(msg);
@@ -40,6 +44,103 @@ namespace ModShardLauncher
         {
             Weapons = GetTable("gml_GlobalScript_table_weapons");
             WeaponDescriptions = GetTable("gml_GlobalScript_table_weapons_text");
+            ScriptCallbacks.Add("getInstances", (str) =>
+            {
+                var DynamicObject = JsonConvert.DeserializeObject<dynamic>(str);
+                NavigationWindow nw = new NavigationWindow();
+                var page = new InstanceInfos();
+                var nodes = page.Infos.Items;
+                nodes.Clear();
+
+                var root = new TreeViewItem() { Header = "Instances" };
+                nodes.Add(root);
+
+                foreach (var item in DynamicObject.Children())
+                {
+                    var data = item.ToString().Split(' ');
+                    List<byte> bytes = new List<byte>();
+                    foreach (var i in data[0].Split('|'))
+                        bytes.AddRange(BitConverter.GetBytes(int.Parse(i)));
+                    bytes.RemoveAll(t => t == 0);
+                    var instance = new TreeViewItem()
+                    {
+                        Header = (data[0].Split('|')[0].Length <= 3
+                        ? Encoding.UTF8.GetString(bytes.ToArray())
+                        : Encoding.Unicode.GetString(bytes.ToArray()))
+                        + " : " + data[1] + " " + data[2]
+                    };
+                    root.Items.Add(instance);
+                }
+
+                root.IsExpanded = true;
+                nw.Width = 300;
+                nw.Height = 450;
+                nw.Navigate(page);
+                nw.Show();
+            });
+            ScriptCallbacks.Add("getInstanceById", (str) =>
+            {
+                var DynamicObject = JsonConvert.DeserializeObject<string[]>(str);
+                NavigationWindow nw = new NavigationWindow();
+                var page = new InstanceInfos();
+                var nodes = page.Infos.Items;
+                nodes.Clear();
+
+                var root = new TreeViewItem() { Header = "Instance" };
+                nodes.Add(root);
+
+                foreach (var item in DynamicObject)
+                {
+                    var data = item.Split(' ');
+                    var instance = new TreeViewItem();
+                    var bytes = new List<byte>();
+                    if (data[2].Contains("|"))
+                    {
+                        foreach (var i in data[2].Split('|'))
+                            bytes.AddRange(BitConverter.GetBytes(int.Parse(i)));
+                        instance = new TreeViewItem() { Header = data[0] + " : " + Encoding.Unicode.GetString(bytes.ToArray()) };
+                    }
+                    else instance = new TreeViewItem() { Header = item };
+                    root.Items.Add(instance);
+                }
+
+                root.IsExpanded = true;
+                nw.Width = 300;
+                nw.Height = 450;
+                nw.Navigate(page);
+                nw.Show();
+            });
+            ScriptCallbacks.Add("getWeaponDataById", (str) =>
+            {
+                var DynamicObject = JsonConvert.DeserializeObject<dynamic>(str);
+                NavigationWindow nw = new NavigationWindow();
+                var page = new InstanceInfos();
+                var nodes = page.Infos.Items;
+                nodes.Clear();
+
+                var root = new TreeViewItem() { Header = "Weapon" };
+                nodes.Add(root);
+                foreach (var item in DynamicObject.Children())
+                {
+                    var data = item.ToString();
+                    if (data.Contains("|"))
+                    {
+                        var bytes = new List<byte>();
+                        var value = data.Split(' ')[1].Replace("\"", "").Split('|');
+                        foreach (var i in value)
+                            bytes.AddRange(BitConverter.GetBytes(int.Parse(i)));
+                        data = data.Split(' ')[0] + " " + Encoding.Unicode.GetString(bytes.ToArray());
+                    }
+                    var node = new TreeViewItem() { Header = data };
+                    root.Items.Add(node);
+                }
+
+                root.IsExpanded = true;
+                nw.Width = 300;
+                nw.Height = 450;
+                nw.Navigate(page);
+                nw.Show();
+            });
         }
         public static UndertaleGameObject AddObject(string name)
         {
@@ -80,13 +181,16 @@ namespace ModShardLauncher
             Data.Code.Add(code);
             return code;
         }
+        internal static UndertaleCode AddInnerCode(string name) => AddCode(GetCodeRes(name), name);
         public static UndertaleCode AddFunction(string Code, string name)
         {
             var scriptCode = AddCode(Code, name);
+            ModScripts.Add(name);
             Data.Code.Add(Data.Code[0]);
             Data.Code.RemoveAt(0);
             return scriptCode;
         }
+        internal static UndertaleCode AddInnerFunction(string name) => AddFunction(GetCodeRes(name), name);
         public static List<string> GetTable(string name)
         {
             var table = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
@@ -102,21 +206,21 @@ namespace ModShardLauncher
         }
         public static string GetDecompiledCode(string name)
         {
-            var func = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
+            var func = Data.Code.First(t => t.Name.Content == name);
             GlobalDecompileContext context = new GlobalDecompileContext(Data, false);
             var text = Decompiler.Decompile(func, context);
             return text;
         }
         public static string GetDisassemblyCode(string name)
         {
-            var func = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
+            var func = Data.Code.First(t => t.Name.Content == name);
             var text = func.Disassemble(Data.Variables, Data.CodeLocals.For(func));
             
             return text;
         }
         public static void SetDecompiledCode(string Code, string name)
         {
-            var code = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
+            var code = Data.Code.First(t => t.Name.Content == name);
             code.ReplaceGML(Code, Data);
         }
         public static void InsertDecompiledCode(string Code, string name, int pos)
@@ -133,7 +237,7 @@ namespace ModShardLauncher
         }
         public static void SetDisassemblyCode(string Code, string name)
         {
-            var code = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
+            var code = Data.Code.First(t => t.Name.Content == name);
             code.ReplaceGML(Code, Data);
         }
         public static void SetTable(List<string> table, string name)
@@ -250,6 +354,20 @@ namespace ModShardLauncher
                 {
                     if (type.IsSubclassOf(typeof(Weapon))) 
                         LoadWeapon(type);
+                    if (type.IsSubclassOf(typeof(ModHooks)))
+                    {
+                        var hooks = Activator.CreateInstance(type);
+                        var instance = ModInterfaceEngine.Instance as ModInterfaceEngine;
+                        foreach (var hook in type.GetMethods())
+                        {
+                            if (instance.HookDelegates.ContainsKey(hook.Name))
+                                instance.HookDelegates[hook.Name] += (object[] obj) =>
+                                {
+                                    hook.Invoke(hooks, new object[] {obj});
+                                };
+                        }
+                        instance.IsLoadHooks = true;
+                    }
                 }
             }
         }
@@ -269,56 +387,44 @@ namespace ModShardLauncher
         {
             PatchInnerFile();
             PatchMods();
+            AddFunction("function ModScripts() \n{ \n\treturn " + new UndertaleString(string.Join(",", ModScripts)) + "\n}", "ModScripts");
+            AddFunction("function ModPath() \n{ \n\treturn " + new UndertaleString(ModPath) + "\n}", "ModPath");
+            AddFunction("function EnableMods() \n{ \n\treturn " + new UndertaleString(string.Join(",", Main.Settings.EnableMods)) + "\n}", "EnableMods");
+            foreach (var item in ModScripts)
+            {
+                ModInterfaceEngine.Instance.SetPropertyValue(item, new Action<object[]>((object[] objects) =>
+                {
+                    var script = item + " " + string.Join(" ", objects);
+                    ModInterfaceServer.SendScript(script);
+                }));
+            }
             SetTable(Weapons, "gml_GlobalScript_table_weapons");
             SetTable(WeaponDescriptions, "gml_GlobalScript_table_weapons_text");
             LoadFiles();
         }
         internal static void PatchInnerFile()
         {
+            AddInnerFunction("print");
+            AddInnerFunction("give");
+            AddInnerFunction("getInstances");
+            AddInnerFunction("getInstanceById");
+            AddInnerFunction("getWeaponDataById");
+            AddInnerFunction("editWeaponDataById");
+            AddInnerFunction("SendMsg");
             AddExtension(new ModShard());
             var engine = AddObject("o_ScriptEngine");
             engine.Persistent = true;
             var ev = new UndertaleGameObject.Event();
-            ev.EventSubtypeStep = EventSubtypeStep.Step;
+            ev.EventSubtypeOther = EventSubtypeOther.AsyncNetworking;
             ev.Actions.Add(new UndertaleGameObject.EventAction()
             {
-                CodeId = AddCode(@"if(GetScript() != ""NoScript"")
-{
-    var scr = string_split(GetScript(),"" "")
-    var scriptID = asset_get_index(scr[0])
-    array_delete(scr, 0, 1)
-    for(i = 0;i<array_length(scr);i++)
-        scr[i]=string_replace(scr[i],""_"","" "")
-    var ret = """"
-    if(scriptID == -1)
-        ret = (""script is wrong: "" + GetScript())
-    else
-    {
-        if(array_length(scr) > 0)
-            ret = script_execute_ext(scriptID, scr)
-        else ret = script_execute(scriptID)
-    }
-    RunCallBack(string(ret))
-    PopScript()
-}", "ScriptEngine_step")
+                CodeId = AddInnerCode("ScriptEngine_server")
             });
-            engine.Events[3].Add(ev);
-            AddFunction(@"function print(argument0)
-{
-    show_message(argument0)
-}","print");
-            AddFunction(@"function give(argument0)
-{
-    with (o_inventory)
-    {
-        with (scr_inventory_add_weapon(argument0, (1 << 0)))
-            scr_inv_atr_set(""Duration"", 100)
-    }
-}", "give");
+            engine.Events[7].Add(ev);
             var create = new UndertaleGameObject.Event();
             create.Actions.Add(new UndertaleGameObject.EventAction()
             {
-                CodeId = AddCode(@"ScriptThread()", "ScriptEngine_create")
+                CodeId = AddInnerCode("ScriptEngine_create")
             });
             engine.Events[0].Add(create);
             var start = Data.Rooms.First(t => t.Name.Content == "START");
@@ -334,6 +440,13 @@ namespace ModShardLauncher
         {
             var ext = Data.Extensions.First(t => t.Name.Content == "display_mouse_lock");
             ext.Files.Add(file);
+        }
+        internal static string GetCodeRes(string name)
+        {
+            var data = CodeResources.ResourceManager.GetObject(name, CodeResources.Culture) as byte[];
+            if (data?[0] == 239 && data[1] == 187 && data[2] == 191) data = data.Skip(3).ToArray();
+            var text = Encoding.UTF8.GetString(data);
+            return text;
         }
     }
 }

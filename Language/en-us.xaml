@@ -39,4 +39,5 @@
     <sys:String x:Key="Close">Close</sys:String>
     <sys:String x:Key="Minimize">Minimize</sys:String>
     <sys:String x:Key="Loading">Loading...</sys:String>
+    <sys:String x:Key="ServerStart">Mod Interface Server starts at port {0}.</sys:String>
 </ResourceDictionary>

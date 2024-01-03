@@ -27,6 +27,13 @@
                         <ImageBrush x:Key="OverSource"  ImageSource="/Resources/save_over.png"/>
                     </controls:MyToggleButton.Resources>
                 </controls:MyToggleButton>
+                <controls:MyToggleButton ImageSource="/Resources/server.png" Click="Server_Click"
+                                         Margin="128,0,0,0">
+                    <controls:MyToggleButton.Resources>
+                        <ImageBrush x:Key="DownSource"  ImageSource="/Resources/server_down.png"/>
+                        <ImageBrush x:Key="OverSource"  ImageSource="/Resources/server_over.png"/>
+                    </controls:MyToggleButton.Resources>
+                </controls:MyToggleButton>
                 <Border BorderBrush="#43424D" BorderThickness="2"/>
             </Grid>
             <controls:MyItemsControl MaxHeight="672" Height="672" x:Name="ModList"

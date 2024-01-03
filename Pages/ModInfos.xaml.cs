@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModShardLauncher.Mods;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.RightsManagement;
@@ -43,6 +44,11 @@ namespace ModShardLauncher.Pages
             }
             ModLoader.PatchFile();
             DataLoader.DoSaveDialog();
+            Main.Instance.Refresh();
+        }
+        private async void Server_Click(object sender, EventArgs e)
+        {
+            ModInterfaceServer.StartServer(1333);
             Main.Instance.Refresh();
         }
     }

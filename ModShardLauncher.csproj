@@ -49,6 +49,9 @@
     <None Remove="Resources\save_over.png" />
     <None Remove="Resources\scrollbar_vertical.png" />
     <None Remove="Resources\scrollbar_vertical_over.png" />
+    <None Remove="Resources\server.png" />
+    <None Remove="Resources\server_down.png" />
+    <None Remove="Resources\server_over.png" />
     <None Remove="Resources\settings.png" />
     <None Remove="Resources\settings_button.png" />
     <None Remove="Resources\settings_button_down.png" />
@@ -73,6 +76,9 @@
 
   <ItemGroup>
     <Resource Include="Resources\icon_default.png" />
+    <Resource Include="Resources\server.png" />
+    <Resource Include="Resources\server_down.png" />
+    <Resource Include="Resources\server_over.png" />
     <Resource Include="Resources\settings_button_over.png" />
   </ItemGroup>
 
@@ -154,6 +160,21 @@
     <Resource Include="Resources\SSFont.ttf" />
     <Resource Include="Resources\SSicon.png" />
     <Resource Include="Resources\zpix.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="CodeResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CodeResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="CodeResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CodeResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
