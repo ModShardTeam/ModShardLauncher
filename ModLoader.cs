@@ -22,7 +22,7 @@ using Serilog;
 
 namespace ModShardLauncher
 {
-    public class ModLoader
+    public static class ModLoader
     {
         internal static UndertaleData Data => DataLoader.data;
         public static string ModPath => Path.Join(Environment.CurrentDirectory, "Mods");
@@ -253,11 +253,57 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        public static IEnumerable<string> LoadGML(string file_name)
+        {
+            try {
+                UndertaleCode code = GetUMTCodeFromFile(file_name);
+                GlobalDecompileContext context = new(Data, false);
+
+                return Decompiler.Decompile(code, context).Split("\n");
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static IEnumerable<string> LoadAssemblyString(string file_name)
+        {
+            try {
+                UndertaleCode code = GetUMTCodeFromFile(file_name);
+                return code.Disassemble(Data.Variables, Data.CodeLocals.For(code)).Split("\n");
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
         public static void SetStringGMLInFile(string code_as_string, string file_name)
         {
             try {
                 UndertaleCode code = GetUMTCodeFromFile(file_name);
                 code.ReplaceGML(code_as_string, Data);
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static void SaveGML(this IEnumerable<string> ienumerable, string file_name)
+        {
+            try {
+                UndertaleCode code = GetUMTCodeFromFile(file_name);
+                code.ReplaceGML(string.Join("\n", ienumerable), Data);
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static void SaveAssemblyString(this IEnumerable<string> ienumerable, string file_name)
+        {
+            try {
+                UndertaleCode code = GetUMTCodeFromFile(file_name);
+                code.Replace(Assembler.Assemble(string.Join("\n", ienumerable), Data));
             }
             catch(Exception ex) {
                 Log.Error(ex, "Something went wrong");
