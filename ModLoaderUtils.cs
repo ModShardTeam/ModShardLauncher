@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Interop;
 using Serilog;
 using UndertaleModLib.Models;
 
@@ -13,13 +16,155 @@ namespace ModShardLauncher
         /// <returns>
         /// Return for each element a tuple of the current index and the element.
         /// </returns>
-        public static IEnumerable<(int, T)> Enumerate<T>(
-            this IEnumerable<T> ienumerable
-        ) {
+        public static IEnumerable<(int, T)> Enumerate<T>(this IEnumerable<T> ienumerable) 
+        {
             int ind = 0;
             foreach(T element in ienumerable) {
                 yield return (ind++, element);
             }
+        }
+        public enum Match 
+        {
+            Before,
+            Matching,
+            After,
+        }
+        public static IEnumerable<(Match, string)> MatchFrom(this IEnumerable<string> ienumerable, IEnumerable<string> other) 
+        {
+            Match m = Match.Before;
+            string? otherString = null;
+            IEnumerator<string> otherEnumerator = other.GetEnumerator();
+            if(otherEnumerator.MoveNext())
+                otherString = otherEnumerator.Current;
+
+            foreach (string element in ienumerable)
+            {
+                if (m != Match.After && otherString != null && element.Contains(otherString)) 
+                {
+                    m = Match.Matching;
+                    yield return (m, element);
+                    if(otherEnumerator.MoveNext())
+                        otherString = otherEnumerator.Current;
+                    else {
+                        m = Match.After;
+                    }
+                }
+                else {
+                    if (m == Match.Matching)
+                        m = Match.After;
+                    yield return (m, element);
+                }
+            }
+        }
+        public static IEnumerable<(Match, string)> MatchFrom(this IEnumerable<string> ienumerable, string other) 
+        {
+            return ienumerable.MatchFrom(other.Split("\n"));
+        }
+        public static IEnumerable<T> Peek<T>(this IEnumerable<T> ienumerable)
+        {
+            foreach(T element in ienumerable)
+            {
+                Log.Information(element?.ToString() ?? "<null>");
+                yield return element;
+            }
+        }
+        public static IEnumerable<string> Remove(this IEnumerable<(Match, string)> ienumerable)
+        {
+            foreach((Match matched, string element) in ienumerable)
+            {
+                if(matched != Match.Matching)
+                    yield return element;
+            }
+        }
+        public static IEnumerable<string> KeepOnly(this IEnumerable<(Match, string)> ienumerable)
+        {
+            foreach((Match matched, string element) in ienumerable)
+            {
+                if(matched == Match.Matching)
+                    yield return element;
+            }
+        }
+        public static IEnumerable<string> FilterMatch(this IEnumerable<(Match, string)> ienumerable, Predicate<Match> predicate)
+        {
+            foreach((Match matched, string element) in ienumerable)
+            {
+                if(predicate(matched))
+                    yield return element;
+            }
+        }
+        public static IEnumerable<string> InsertBelow(this IEnumerable<(Match, string)> ienumerable, IEnumerable<string> inserting)
+        {
+            bool foundAfter = false;
+            Match lastMatched = Match.Before;
+            foreach((Match matched, string element) in ienumerable)
+            {
+                if(!foundAfter && matched == Match.After)
+                {
+                    foundAfter = true;
+                    foreach(string elementInserted in inserting)
+                    {
+                        yield return elementInserted;
+                    }
+                } 
+                yield return element;
+                lastMatched = matched;
+            }
+
+            if (!foundAfter && lastMatched == Match.Matching)
+            {
+                foreach(string element in inserting)
+                {
+                    yield return element;
+                }
+            }
+        }
+        public static IEnumerable<string> InsertBelow(this IEnumerable<(Match, string)> ienumerable, string inserting)
+        {
+            return ienumerable.InsertBelow(inserting.Split("\n"));
+        }
+        public static IEnumerable<string> InsertAbove(this IEnumerable<(Match, string)> ienumerable, IEnumerable<string> inserting)
+        {
+            bool alreadyInserted = false;
+            foreach((Match matched, string element) in ienumerable)
+            {
+                if(!alreadyInserted && matched == Match.Matching)
+                {
+                    foreach(string elementInserted in inserting)
+                    {
+                        yield return elementInserted;
+                    }
+                    alreadyInserted = true;
+                } 
+                yield return element;
+            }
+        }
+        public static IEnumerable<string> InsertAbove(this IEnumerable<(Match, string)> ienumerable, string inserting)
+        {
+            return ienumerable.InsertAbove(inserting.Split("\n"));
+        }
+        public static IEnumerable<string> ReplaceBy(this IEnumerable<(Match, string)> ienumerable, IEnumerable<string> replacing)
+        {
+            bool alreadyReplaced = false;
+            foreach((Match matched, string element) in ienumerable)
+            {
+                if(matched == Match.Matching)
+                {
+                    if (!alreadyReplaced) {
+                        foreach(string elementInserted in replacing)
+                        {
+                            yield return elementInserted;
+                        }
+                        alreadyReplaced = true;
+                    }
+                } 
+                else {
+                    yield return element;
+                }
+            }
+        }
+        public static IEnumerable<string> ReplaceBy(this IEnumerable<(Match, string)> ienumerable, string replacing)
+        {
+            return ienumerable.ReplaceBy(replacing.Split("\n"));
         }
     }
     /// <summary>
