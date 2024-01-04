@@ -1,69 +1,101 @@
-# So how can I play mod with this tool?
 
-[TOC]
 
-## Download it
+# So how can I install mods with this tool?
 
-You should download **ModShardLauncher** in the github page first. 
-[Just here](https://github.com/DDDDDragon/ModShardLauncher/releases)
+!!! info "Rewrite needed"
+    This guide should be rewritten soon. <br>
+    It is still accurate, but it is not as clear as it could be.
 
-After you download it, you should run this tool once to load something.
+## Downloading ModShardLauncher
 
-If you run it successfully, you can find two new folders in this tool's path. They are Mods and ModSources.
+---
 
-Then let's have a look with the tool itself.
+First let's download [**ModShardLauncher**](https://github.com/DDDDDragon/ModShardLauncher/releases) on Github.
 
-## Tool UI
+Once downloaded, you should run it once to generate the required folders. <br>
+You should be able to see two new folders in ModShardLauncher's directory : `Mods` and `ModSources`.
+
+Now let's have a look at the tool itself.
+
+## ModShardLauncher's UI
+
+---
 
 <center><img src="../img/tool_UI.png" width=50%></center>
 
-First, I will introduce the buttons on the left side.
-
-The top one is the Menu Button, click this button can show what the other buttons mean, like this:
+First, let's introduce the buttons on the left side. <br> <br>
+The top one is the `Menu` button. <br> 
+Clicking this button extends the panel to show the different pages' names :
 
 <center><img src="../img/tool_UI2.png" width=50%></center>
 
-Then the second button, Mods Button direct to a new page which can show you all the mods you have now, like this:
+The second button is the `Mods` button. <br> 
+It opens a new page where you can see which mods you currently have installed :
 
 <center><img src="../img/tool_UI3.png" width=50%></center>
 <center style="color:Gray">
-the test version speed shard mod and i draw a icon for it
+Here's an exemple of this page with a loaded mod (here SpeedShard by Zizani)
 </center>
 
-The third button is ModSources Button, it shows all the sources code of mods for modders.
+The third button is the `ModSources` button. <br> 
+There you can find the source code for mods you're making. <br>
+If you're a player, and not a modder, you can ignore this page as you won't need it.
 
 <center><img src="../img/tool_UI4.png" width=50%></center>
 
-And the last one is Settings Button, it directs to the settings page.
+And the last one is the `Settings` button. <br> 
+It opens the settings page, where you can configure ModShardLauncher, and one day mods as well.
 
 <center><img src="../img/tool_UI5.png" width=50%></center>
 
-## Patch mod
+## Patching mods into the game
 
-Then we can patch the mods we want into the game file.
+---
 
-First, you should go to the Mods page and select which mod you want to patch into the game. Just select the enable box under the mod bar. Don't forget to make sure that the mod's game version is the same as yours.
+Now that we know how the UI works, let's patch some mods into the game's files.
 
-Second, click the first button on the top of this page, just the one looks like a folder icon. Then select a original edition of game file(data.win).
+???+ info "Keeping a backup"
+    It is strongly advised to rename the `data.win` file in the `Stoneshard` folder to `vanilla.win`.
 
-You'd better move your game file(data.win) to another place to make sure you have a original edition forever.
+    ---
 
-??? reason "Why vanilla file?"
+    This is done so the game lets you load either your **modded** or your **vanilla** game files. <br> 
+    It also helps make sure you keep your **original** game files **safe**.
 
-    This tool works based on the names of objects in data.win file
+!!! warning "Mod version"
+    Make sure that the mod's **game version** is the **same as yours**. <br>
+    While mods ***may*** work with different game versions, it is **not guaranteed**.
 
-??? reason "Why loading game file before compiling?"
 
-    To access the right game virsion, and prevent the little chance of collapse if the game crashes when loading a different version.
+
+- First, click the "**folder**" button at the top of this page. <br>
+Navigate to your `Stoneshard` folder and select your vanilla `data.win`.
 
 <center><img src="../img/tool_UI6.png" width=50%></center>
+<center style="color:Gray">
+A loading window should appear.
+</center>
 
-After the loading box disappear, you can start next step.
+- Next, head to the `Mods` page and select the mod(s) you want to enable. <br>
+Just tick the box next to a mod to enable it. <br>
 
-Click the second button which seems like a save icon, then select the game's root path to save the patched game file.
 
-The last step, move the ModShard.dll file in this tool's root path to the game's root path. It's an inner extension of this tool. Otherwise you can't launch the game. 
+- Once it's done, click on the ``Save`` button to **save** your **modded game files**. <br>
+    You can **save** it under **any name** you want, but it is **strongly recommended** to **not overwrite** your **original** `data.win`.
+
+
+- For the final step, move the `ModShard.dll` file to the `Stoneshard` folder. <br>
+
+!!! warning "ModShard.dll"
+    This file is **required** for the game to **load mods**. <br>
+    Trying to load a **modded data file** without it will cause the game to **crash**.
+
 
 ## Launch your game!
 
-After launching the game, there is a new window that is opened by the extension. It is a control pannel that runs some inner script in game. If you see this, that means mods have been patched into your game.
+---
+
+After launching the game, a new window should open alongside Stoneshard. <br>
+You can safely **ignore** this window, as it is only used as a **debugging tool** / **console**.
+
+Once you're in the game, you should be able to see the mod's changes. <br>
