@@ -1,0 +1,1102 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="introduction.html">
+      
+      
+        <link rel="next" href="how-to-play-mod.html">
+      
+      
+      <link rel="icon" href="../img/Stoneshard.ico">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+    
+    
+      
+        <title>Getting Started - ModShardLauncher Modding Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.50c56a3b.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+        html.glightbox-open { overflow: initial; height: 100%; }
+        .gslide-title { margin-top: 0px; user-select: text; }
+        .gslide-desc { color: #666; user-select: text; }
+        .gslide-image img { background: white; }
+        
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
+            </style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lets-begin" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ModShardLauncher Modding Documentation" class="md-header__button md-logo" aria-label="ModShardLauncher Modding Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ModShardLauncher Modding Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Getting Started
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to Dark Mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to Dark Mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to Light Mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to Light Mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/DDDDDragon/ModShardLauncher" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    DDDDDragon/ModShardLauncher
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ModShardLauncher Modding Documentation" class="md-nav__button md-logo" aria-label="ModShardLauncher Modding Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    ModShardLauncher Modding Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/DDDDDragon/ModShardLauncher" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    DDDDDragon/ModShardLauncher
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Index
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Index
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Guides
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="introduction.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="start-modding.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#before-we-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      Before we start
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-your-first-mod" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create your first mod
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Create your first mod">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-your-mod" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create your mod
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assembly-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assembly Reference
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Main class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#information-of-your-mod" class="md-nav__link">
+    <span class="md-ellipsis">
+      Information of your mod
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compile-the-mod" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compile the Mod
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-your-first-weapon" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create your first weapon
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Create your first weapon">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-weapon-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create Weapon Class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#change-the-information-of-your-weapon" class="md-nav__link">
+    <span class="md-ellipsis">
+      Change the information of your weapon
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sprite-of-your-weapon" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sprite of your weapon
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loading-your-mod" class="md-nav__link">
+    <span class="md-ellipsis">
+      Loading your mod
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch-your-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      Launch your game !
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="how-to-play-mod.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    How to play mod
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    中文
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            中文
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zh/guides/introduction.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zh/guides/start-modding.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    开始使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zh/guides/api.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/DDDDDragon/ModShardLauncher/edit/main/docs/guides/start-modding.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/DDDDDragon/ModShardLauncher/raw/main/docs/guides/start-modding.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
+
+
+<h1 id="lets-begin">Let's begin!</h1>
+<h2 id="before-we-start">Before we start</h2>
+<hr />
+<p>Before creating a mod, you should have a basic understanding of C# and Visual Studio. <br>
+If you do not know how to use them, please learn them first, as the tool's API can be a bit complex. <br></p>
+<p>Here are some resources to get you started on that :</p>
+<ul>
+<li><a href="https://www.w3schools.com/cs/index.php">C# Tutorial</a></li>
+<li><a href="https://www.youtube.com/watch?v=VcU2HGsxeII&amp;t=34s">Visual Studio Tutorial</a></li>
+</ul>
+<h2 id="tools">Tools</h2>
+<hr />
+<p>In order to write your mod's code, you will need a tool such as <a href="https://visualstudio.microsoft.com/"><strong>Visual Studio</strong></a>. <br> 
+It's a professional development tool that can help you a lot.</p>
+<p>While installing, make sure you choose the <code>.NET Desktop Development</code> workload. <br>
+You do not need to download any other workload.</p>
+<p>At last, find <code>.NET 6.0 SDK</code> on official Microsoft website, install it and when it's done, reboot your PC.</p>
+<p>You can also use <strong>Visual Studio Code</strong> as your tool, but this tutorial won't cover it <del>cuz I havent tried it</del>.</p>
+<h2 id="create-your-first-mod">Create your first mod</h2>
+<hr />
+<p>Let's start our journey by launching <strong>ModShardLauncher.exe</strong>. <br>
+Once you start it, two folders should be created : the first is <code>Mods</code>, the other is <code>ModSource</code>. <br></p>
+<p>Move into the <code>ModSource</code> folder and create a <strong>new folder</strong> there. <br>
+You can name this new folder whatever you want.</p>
+<h3 id="create-your-mod">Create your mod</h3>
+<p>There are many ways to create your mod. <br>
+If you use <strong>Visual Studio</strong>, you can click <code>Create a New Project</code>, search <code>Class Library</code> and click <code>Next</code> :</p>
+<p><center><a class="glightbox" href="../img/create_project_0_EN.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/create_project_0_EN.png" width=50%></a></center></p>
+<p>Give a name to your mod, then select the <code>ModSources</code> folder that <strong>ModShardLauncher.exe</strong> created earlier :
+<center><a class="glightbox" href="../img/create_project_1_EN.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/create_project_1_EN.png" width=50%></a></center></p>
+<p>Choose <strong>.Net 6.0</strong>, and that's it!
+<center><a class="glightbox" href="../img/create_project_2_EN.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/create_project_2_EN.png" width=50%></a></center></p>
+<p><br></p>
+<h3 id="assembly-reference">Assembly Reference</h3>
+<p>Next we should add a <strong>reference</strong> to the tool's <strong>assembly</strong>, which means the <code>ModShardLauncher.dll</code> file. <br><br></p>
+<p>Open the <strong>solution explorer</strong> on the right :
+<center><a class="glightbox" href="../img/mod_0_EN.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/mod_0_EN.png" width=50%></a></center></p>
+<p>Right click <code>Dependencies</code>, then click <code>Add Project Reference</code> :
+<center><a class="glightbox" href="../img/mod_1_EN.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/mod_1_EN.png" width=30%></a></center></p>
+<p>Click <code>Browse...</code> :
+<center><a class="glightbox" href="../img/mod_2_EN.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/mod_2_EN.png" width=50%></a></center></p>
+<p>Finally, select <code>ModShardLauncher.dll</code> and click <code>Add</code> :
+<center><a class="glightbox" href="../img/mod_3_EN.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/mod_3_EN.png" width=50%></a></center></p>
+<p><br></p>
+<h3 id="main-class">Main class</h3>
+<p>Now we need to create a <strong>Main Class</strong> for our mod.</p>
+<p>If you're familiar with <strong>C#</strong>, then you probably already know about <strong>Classes</strong>. <br>
+We will now create our Mod's <strong>main class</strong>.</p>
+<p>When you created your project, <strong>Visual Studio</strong> should have added a class named <code>Class1</code>. <br> 
+We should add a reference to <code>ModShardLauncher</code> and to the <code>ModShardLauncher.Mods</code> namespace. <br></p>
+<p>Let's change the code to the following :
+<center><a class="glightbox" href="../img/class_0_EN.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/class_0_EN.png" width=50%></a></center></p>
+<p>As you can see, we changed the name of the class from <code>Class1</code> to <code>MyFirstMod</code>, and made this class extend the <code>Mod</code> class.</p>
+<p><br></p>
+<h3 id="information-of-your-mod">Information of your mod</h3>
+<p>Now we need to add some basic information to our mod.</p>
+<p>Let's add the following code to <code>MyFirstMod</code>:
+<center><a class="glightbox" href="../img/class_1_EN.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/class_1_EN.png" width=50%></a></center></p>
+<p>Once you've done this, the mod's name, creator and brief description will be set.</p>
+<p><br></p>
+<h3 id="compile-the-mod">Compile the Mod</h3>
+<p>Launch <strong>ModShardLauncher</strong>. <br>
+As you can see, the mod's source code has been loaded.
+<center><a class="glightbox" href="../img/compile_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/compile_0.png" width=50%></a></center></p>
+<p>In order to <strong>compile</strong> the mod, we need to click the <strong>folder icon</strong> on the top left, and choose our <strong>vanilla</strong> <code>data.win</code> file.</p>
+<details class="question">
+<summary>Why does it need the vanilla <code>data.win</code> ?</summary>
+<p>This tool works based on the names of the objects in the <strong>vanilla</strong> <code>data.win</code> file.</p>
+</details>
+<details class="question">
+<summary>Why do we need to load the <code>data.win</code> before compiling?</summary>
+<p>To prevent potential mismatch (and issues) between the <strong>game version</strong> and your <strong>mod's version</strong>.</p>
+</details>
+<p>We can now double click <code>MyFirstMod</code> to compile the mod.</p>
+<p>Result of compiling : 
+<center><a class="glightbox" href="../img/compile_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/compile_1.png" width=50%></a></center></p>
+<p><br></p>
+<h2 id="create-your-first-weapon">Create your first weapon</h2>
+<hr />
+<p>You have compiled your first mod just now! <br> 
+It's great but it's a bit empty right now, so let's add some content next.</p>
+<h3 id="create-weapon-class">Create Weapon Class</h3>
+<p>Right click the <strong>Solution Explorer</strong>, right click your <strong>project</strong> (<em>the one highlighted in purple in the image</em>), <br>
+click <code>Add</code>, and click <code>New Item...</code>
+<center><a class="glightbox" href="../img/weapon_0_EN.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/weapon_0_EN.png" width=30%></a></center></p>
+<p>Now you can name your weapon. For this tutorial I will name it <code>MyFirstWeapon</code>. <br></p>
+<p>Just like before, we can now add the reference for <code>ModShardLauncher</code> and the <code>ModShardLauncher.Mod</code> namespace. <br> 
+However this time, we'll be extending the <code>Weapon</code> class rather than the <code>Mod</code> class.</p>
+<details class="note">
+<summary>MyFirstWeapon.cs</summary>
+<div class="language-C# highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher</span><span class="p">;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher.Mod</span><span class="p">;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">MyFirstMod</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="p">{</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MyFirstWeapon</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Weapon</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+</details>
+<p><br></p>
+<h3 id="change-the-information-of-your-weapon">Change the information of your weapon</h3>
+<p>In StoneShard, there are many properties for a single weapon. <br>
+It is painful to set them all by hand, and if you forget to set any of them, your mod may not load as expected.</p>
+<details class="question">
+<summary>Why is that ?</summary>
+<p><del>Actually, cuz the source code of StoneShard is kinda messy...</del></p>
+</details>
+<p>Then, are there any ways that can help us easily change the properties of a weapon?</p>
+<p>First, let's override the <code>SetDefaults</code> method :</p>
+<details class="note">
+<summary>MyFirstWeapon.cs</summary>
+<div class="language-C# highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-1-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-1-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-1-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-1-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-1-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-1-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-1-10">10</a></span>
+<span class="normal"><a href="#__codelineno-1-11">11</a></span>
+<span class="normal"><a href="#__codelineno-1-12">12</a></span>
+<span class="normal"><a href="#__codelineno-1-13">13</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher</span><span class="p">;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher.Mod</span><span class="p">;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">MyFirstMod</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="p">{</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MyFirstWeapon</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Weapon</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="hll"><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">SetDefaults</span><span class="p">()</span>
+</span></span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="hll"><span class="w">        </span><span class="p">{</span>
+</span></span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="hll">
+</span></span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="hll"><span class="w">        </span><span class="p">}</span>
+</span></span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+</details>
+<details class="info">
+<summary>If you feel like the code reminds you of tModLoader...</summary>
+<p><del>It's because I may or may not come from the Terraria modding community.</del></p>
+</details>
+<p>As you can see, this method's purpose is to set a weapon's properties.
+Now, let's introduce the <strong><code>CloneDefaults</code></strong> method.</p>
+<p>That's right, to prevent modders from forgetting setting those properties, we offer a new method so that every properties will be copied from another vanilla weapon except <code>Name</code> and <code>ID</code>. <br></p>
+<p>All you have to do is add the following code :</p>
+<details class="note">
+<summary>MyFirstWeapon.cs</summary>
+<div class="language-C# highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-2-10">10</a></span>
+<span class="normal"><a href="#__codelineno-2-11">11</a></span>
+<span class="normal"><a href="#__codelineno-2-12">12</a></span>
+<span class="normal"><a href="#__codelineno-2-13">13</a></span>
+<span class="normal"><a href="#__codelineno-2-14">14</a></span>
+<span class="normal"><a href="#__codelineno-2-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher</span><span class="p">;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher.Mod</span><span class="p">;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">MyFirstMod</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="p">{</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MyFirstWeapon</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Weapon</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">SetDefaults</span><span class="p">()</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="hll"><span class="w">            </span><span class="n">CloneDefaults</span><span class="p">(</span><span class="s">&quot;Homemade Blade&quot;</span><span class="p">);</span>
+</span></span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="hll"><span class="w">            </span><span class="n">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyFirstWeapon&quot;</span><span class="p">;</span>
+</span></span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12"></a><span class="hll"><span class="w">            </span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyFirstMod1&quot;</span><span class="p">;</span>
+</span></span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+</details>
+<p>Now, we have a brand new weapon with the exact same properties as the <code>Homemade Blade</code> except for its <strong>name</strong> and <strong>ID</strong>.</p>
+<div class="admonition info">
+<p class="admonition-title">Notice</p>
+<p><code>CloneDefaults</code> won't set a value for the name or description in other languages.<br> 
+You need to change them manually, like so :
+<div class="language-C# highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-3-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-3-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-3-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-3-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-3-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-3-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-3-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-3-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-3-10">10</a></span>
+<span class="normal"><a href="#__codelineno-3-11">11</a></span>
+<span class="normal"><a href="#__codelineno-3-12">12</a></span>
+<span class="normal"><a href="#__codelineno-3-13">13</a></span>
+<span class="normal"><a href="#__codelineno-3-14">14</a></span>
+<span class="normal"><a href="#__codelineno-3-15">15</a></span>
+<span class="normal"><a href="#__codelineno-3-16">16</a></span>
+<span class="normal"><a href="#__codelineno-3-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher</span><span class="p">;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher.Mod</span><span class="p">;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">MyFirstMod</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="p">{</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MyFirstWeapon</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Weapon</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">SetDefaults</span><span class="p">()</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="w">            </span><span class="n">CloneDefaults</span><span class="p">(</span><span class="s">&quot;Homemade Blade&quot;</span><span class="p">);</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11"></a><span class="w">            </span><span class="n">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyFirstWeapon&quot;</span><span class="p">;</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12"></a><span class="w">            </span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyFirstMod1&quot;</span><span class="p">;</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13"></a><span class="hll"><span class="w">            </span><span class="n">Description</span><span class="p">[</span><span class="n">ModLanguage</span><span class="p">.</span><span class="n">English</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;This is my first weapon&quot;</span><span class="p">;</span>
+</span></span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14"></a><span class="hll"><span class="w">            </span><span class="n">NameList</span><span class="p">[</span><span class="n">ModLanguage</span><span class="p">.</span><span class="n">English</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;GreatFuckingSword&quot;</span><span class="p">;</span>
+</span></span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div></p>
+</div>
+<p>That's the first step of creating a weapon done.</p>
+<h3 id="sprite-of-your-weapon">Sprite of your weapon</h3>
+<p>This is the most painful part. <br>
+In StoneShard, you need 6 sprites for a weapon, which adds tons of work for modders.</p>
+<p>If you don't have any sprites, you can export some of the vanilla sprites with <strong>UTMT</strong>. <br>
+You can put them in your mod's folder or its subfolders, except in <code>.vs</code>, <code>bin</code> or <code>obj</code>. <br>
+They will be patched into the <code>data.win</code> automatically.</p>
+<p><center><a class="glightbox" href="../img/weapon_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/weapon_1.png" width=50%></a></center></p>
+<p>From top to bottom : <br></p>
+<ul>
+<li>weapon in right hand</li>
+<li>weapon in left hand</li>
+<li>weapon in inventory (there are 3 sprites for this, since the weapon in StoneShard can be broken. <br> If you don't want to sprite it , just copy it 3 times)</li>
+<li>weapon as loot (dropped on the ground)</li>
+</ul>
+<details class="info">
+<summary>Notice</summary>
+<ul>
+<li>The sprite size for weapons <strong>in the inventory</strong> must be at most <code>27*27 pixels</code> since a cell in StoneShard's inventory is exactly <code>27*27 pixels</code>. <br>
+  Going above that would simply mean your weapon's sprite will be <strong>too big to fit in a single cell</strong>.</li>
+<li>If making sprites for a <strong>two-handed weapon</strong>, you don't need <code>char_left</code>, as two-handed weapons cannot be used by just the left hand.</li>
+</ul>
+</details>
+<p>You can now run <strong>ModShardLauncher.exe</strong> again and repeat the compile steps described previously.</p>
+<h3 id="loading-your-mod">Loading your mod</h3>
+<div class="admonition warning">
+<p class="admonition-title">Important</p>
+<p>You need to move the <code>ModShard.dll</code> file from the tool's root path to the root folder of the game. <br>
+This is how the tool hooks into Stoneshard. <br></p>
+<p>Trying to load a modded data file without this will cause the game to crash. </p>
+</div>
+<p>The last step is loading the mod. <br></p>
+<p>Once you've <strong>compiled</strong> your mod, it should pop up in the <strong>mod list</strong>. <br>
+Head there and <strong>tick the box</strong> next to your mod to <strong>enable</strong> it. <br>
+Next, click on the <strong>floppy disk icon</strong> in the <strong>top left</strong>, and <strong>save</strong> the new data file under any name. <br></p>
+<div class="admonition info">
+<p class="admonition-title">Notice</p>
+<p>Make sure you keep the vanilla <code>data.win</code> untouched, as you will need it to <strong>make more mods</strong> and to <strong>play the game</strong> vanilla.</p>
+</div>
+<p>I also recommend <strong>renaming</strong> your original <code>data.win</code> to <code>vanilla.win</code>. <br></p>
+<p>The reason for this is that at launch, Stoneshard looks for a <code>data.win</code> to load. <br>
+If it doesn't find one, it will <strong>ask you</strong> to <strong>select a data file</strong>, which is is when we can tell it to <strong>load</strong> the <strong>patched data file</strong> we just saved. <br></p>
+<h3 id="launch-your-game">Launch your game !</h3>
+<p>After launching the game, a new window should open alongside Stoneshard. <br> 
+It is a control panel for the <code>Script Engine</code> that runs some inner script in game.</p>
+<p>Enter the game as usual. <br> </p>
+<p>The script engine has a <code>give</code> script, so simply type the following in the new window's text box :
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>give MyFirstWeapon
+</span></code></pre></div></p>
+<p>You can give yourself <strong>any weapon</strong> in this way, but keep in mind you need to <strong>replace any space</strong> in the weapon's name with an <strong>underscore</strong> <code>_</code> :
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>give Homemade_Blade
+</span></code></pre></div></p>
+<p>Once you run the command, your weapon should be added to your inventory. <br></p>
+<p><center><a class="glightbox" href="../img/weapon_2.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../img/weapon_2.png" width=50%></a></center></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      All rights belong to Ink Stains Games. <br> This is a community project and is not affiliated with Ink Stains Games.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.path", "navigation.top", "header.autohide", "toc.integrate", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annotate", "content.code.copy", "content.action.edit", "content.action.view"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      
+    
+  <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>
