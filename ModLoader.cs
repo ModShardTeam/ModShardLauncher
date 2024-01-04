@@ -18,11 +18,10 @@ using UndertaleModLib.Compiler;
 using System.Text;
 using System.Xml.Linq;
 using ModShardLauncher.Pages;
-using Serilog;
 
 namespace ModShardLauncher
 {
-    public static class ModLoader
+    public class ModLoader
     {
         internal static UndertaleData Data => DataLoader.data;
         public static string ModPath => Path.Join(Environment.CurrentDirectory, "Mods");
@@ -71,11 +70,9 @@ namespace ModShardLauncher
             var locals = new UndertaleCodeLocals();
             code.Name = Data.Strings.MakeString(name);
             locals.Name = code.Name;
-            UndertaleCodeLocals.LocalVar argsLocal = new()
-            {
-                Name = Data.Strings.MakeString("arguments"),
-                Index = 0
-            };
+            UndertaleCodeLocals.LocalVar argsLocal = new UndertaleCodeLocals.LocalVar();
+            argsLocal.Name = Data.Strings.MakeString("arguments");
+            argsLocal.Index = 0;
             locals.Locals.Add(argsLocal);
             code.LocalsCount = 1;
             Data.CodeLocals.Add(locals);
@@ -98,384 +95,46 @@ namespace ModShardLauncher
             var ret = Regex.Match(text, "return (\\[.*\\])").Groups[1].Value;
             return JsonConvert.DeserializeObject<List<string>>(ret);
         }
-        public static UndertaleVariable GetVariable(string name)
+        public static UndertaleCode GetCode(string name)
         {
-            try {
-                UndertaleVariable variable = Data.Variables.First(t => t.Name?.Content == name);
-                Log.Information(string.Format("Find variable: {0}", variable.ToString()));
-
-                return variable;
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            var code = Data.Code.First(t => t.Name.Content == name);
+            return code;
         }
-        public static UndertaleInstruction.Reference<UndertaleVariable> CreateRefVariable(string name, UndertaleInstruction.InstanceType instanceType) 
+        public static string GetDecompiledCode(string name)
         {
-            if (Data == null) {
-                throw new NullReferenceException("Data is null");
-            }
-
-            UndertaleString str = Data.Strings.MakeString(name, out int id);
-            bool bytecode14 = Data.GeneralInfo?.BytecodeVersion <= 14;
-            uint oldId = Data.VarCount1;
-
-            if (bytecode14)
-			    instanceType = UndertaleInstruction.InstanceType.Undefined;
-
-            if (!bytecode14)
-            {
-                if (Data.IsVersionAtLeast(2, 3))
-                {
-                    Data.VarCount1++;
-                    Data.VarCount2 = Data.VarCount1;
-                    oldId = (uint)id;
-                }
-                else if (!Data.DifferentVarCounts)
-                {
-                    // Bytecode 16+
-                    Data.VarCount1++;
-                    Data.VarCount2++;
-                }
-                else
-                {
-                    // Bytecode 15
-                    if (instanceType == UndertaleInstruction.InstanceType.Self)
-                    {
-                        oldId = Data.VarCount2;
-                        Data.VarCount2++;
-                    }
-                    else if (instanceType == UndertaleInstruction.InstanceType.Global)
-                    {
-                        Data.VarCount1++;
-                    }
-                }
-            }
-
-            UndertaleVariable variable = new()
-            {
-                Name = str,
-                InstanceType = instanceType,
-                VarID = bytecode14 ? 0 : (int)oldId,
-                NameStringID = id
-            };
-            Data.Variables.Add(variable);
-            Log.Information(string.Format("Created variable: {0}", variable.ToString()));
-
-            return new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
-        }
-        public static UndertaleInstruction.Reference<UndertaleVariable> GetRefVariableOrCreate(string name, UndertaleInstruction.InstanceType instanceType)
-        {
-            try {
-                UndertaleInstruction.Reference<UndertaleVariable> refVariable;
-                UndertaleVariable? variable = Data.Variables.FirstOrDefault(t => t.Name?.Content == name);
-                
-                if (variable == null) 
-                    refVariable = CreateRefVariable(name, instanceType);
-                else
-                    refVariable = new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
-
-                Log.Information(string.Format("Find variable: {0}", refVariable.ToString()));
-
-                return refVariable;
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        public static UndertaleString GetString(string name)
-        {
-            try {
-                UndertaleString variable = Data.Strings.First(t => t.Content == name);
-                Log.Information(string.Format("Find string: {0}", variable.ToString()));
-
-                return variable;
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        public static UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> CreateString(string name) 
-        {
-            UndertaleString str = Data.Strings.MakeString(name, out int ind);
-            Log.Information(string.Format("Created string: {0}", str.ToString()));
-            return new UndertaleResourceById<UndertaleString, UndertaleChunkSTRG>(str, ind);
-        }
-        public static UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> GetStringOrCreate(string name)
-        {
-            try {
-                UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> stringById;
-                (int ind, UndertaleString str) = Data.Strings.Enumerate().FirstOrDefault(x => x.Item2.Content == name);
-                
-                if (str == null)
-                    stringById = CreateString(name);
-                else
-                    stringById = new UndertaleResourceById<UndertaleString, UndertaleChunkSTRG>(str, ind);
-
-                Log.Information(string.Format("Find string: {0}", stringById.ToString()));
-
-                return stringById;
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        /// <summary>
-        /// Return the UndertaleCode from <c>name</c>.
-        /// </summary>
-        public static UndertaleCode GetUMTCodeFromFile(string file_name)
-        {
-            try {
-                UndertaleCode code = Data.Code.First(t => t.Name?.Content == file_name);
-                Log.Information(string.Format("Find function: {0}", code.ToString()));
-
-                return code;
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        public static string GetStringGMLFromFile(string file_name)
-        {
-            try {
-                UndertaleCode code = GetUMTCodeFromFile(file_name);
-                GlobalDecompileContext context = new(Data, false);
-
-                return Decompiler.Decompile(code, context);
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        public static IEnumerable<string> LoadGML(string file_name)
-        {
-            try {
-                UndertaleCode code = GetUMTCodeFromFile(file_name);
-                GlobalDecompileContext context = new(Data, false);
-
-                return Decompiler.Decompile(code, context).Split("\n");
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        public static IEnumerable<string> LoadAssemblyString(string file_name)
-        {
-            try {
-                UndertaleCode code = GetUMTCodeFromFile(file_name);
-                return code.Disassemble(Data.Variables, Data.CodeLocals.For(code)).Split("\n");
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        public static void SetStringGMLInFile(string code_as_string, string file_name)
-        {
-            try {
-                UndertaleCode code = GetUMTCodeFromFile(file_name);
-                code.ReplaceGML(code_as_string, Data);
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        public static void SaveGML(this IEnumerable<string> ienumerable, string file_name)
-        {
-            try {
-                UndertaleCode code = GetUMTCodeFromFile(file_name);
-                code.ReplaceGML(string.Join("\n", ienumerable), Data);
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        public static void SaveAssemblyString(this IEnumerable<string> ienumerable, string file_name)
-        {
-            try {
-                UndertaleCode code = GetUMTCodeFromFile(file_name);
-                code.Replace(Assembler.Assemble(string.Join("\n", ienumerable), Data));
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        /// <summary>
-        /// Insert GML <paramref name="code"/> from a string in <paramref name="file"/> at a given <paramref name="position"/>.
-        /// <para>
-        /// <example>For example:
-        /// <code>
-        /// InsertGMLString("scr_atr("LVL") == global.max_level", "gml_Object_o_character_panel_mask_Draw_0", 3);
-        /// </code>
-        /// results in gml_Object_o_character_panel_mask_Draw_0 line 3 being <c>scr_atr("LVL") == global.max_level</c>.
-        /// </example>
-        /// </para>
-        /// </summary>
-        /// <param name="code">The code to insert.</param>
-        /// <param name="file">The file to be patched.</param>
-        /// <param name="position">The exact position to insert.</param>
-        public static void InsertGMLString(string code_as_string, string file_name, int position)
-        {
-            try {
-                Log.Information(string.Format("Trying insert code in: {0}", file_name.ToString()));
-
-                List<string>? original_code = GetStringGMLFromFile(file_name).Split("\n").ToList();
-                original_code.Insert(position, code_as_string);
-                SetStringGMLInFile(string.Join("\n", original_code), file_name);
-
-                Log.Information(string.Format("Patched function with InsertGMLString: {0}", file_name.ToString()));
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        /// <summary>
-        /// Replace an existing GML code by another <paramref name="code"/> from a string in <paramref name="file"/> at a given <paramref name="position"/>.
-        /// <para>
-        /// <example>For example:
-        /// <code>
-        /// ReplaceGMLString("scr_atr("LVL") == global.max_level", "gml_Object_o_character_panel_mask_Draw_0", 3);
-        /// </code>
-        /// results in gml_Object_o_character_panel_mask_Draw_0 line 3 being replaced by <c>scr_atr("LVL") == global.max_level</c>.
-        /// </example>
-        /// </para>
-        /// </summary>
-        /// <param name="code">The code to insert.</param>
-        /// <param name="file">The file to be patched.</param>
-        /// <param name="position">The exact position to insert.</param>
-        public static void ReplaceGMLString(string code_as_string, string file_name, int position)
-        {
-            try {
-                Log.Information(string.Format("Trying replace code in: {0}", file_name.ToString()));
-
-                List<string>? original_code = GetStringGMLFromFile(file_name).Split("\n").ToList();
-                original_code[position] = code_as_string;
-                SetStringGMLInFile(string.Join("\n", original_code), file_name);
-
-                Log.Information(string.Format("Patched function with ReplaceGMLString: {0}", file_name.ToString()));
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        /// <summary>
-        /// Replace an existing GML code by another <paramref name="code"/> from a string in <paramref name="file"/> at a given <paramref name="position"/>
-        /// and remove the next len-1 lines.
-        /// <para>
-        /// <example>For example:
-        /// <code>
-        /// ReplaceGMLString("scr_atr("LVL") == global.max_level", "gml_Object_o_character_panel_mask_Draw_0", 3, 2);
-        /// </code>
-        /// results in gml_Object_o_character_panel_mask_Draw_0 line 3 being replaced by <c>scr_atr("LVL") == global.max_level</c>
-        /// and line 4 being removed.
-        /// </example>
-        /// </para>
-        /// </summary>
-        /// <param name="code">The code to insert.</param>
-        /// <param name="file">The file to be patched.</param>
-        /// <param name="position">The exact position to insert.</param>
-        public static void ReplaceGMLString(string code_as_string, string file_name, int start, int len)
-        {
-            try {
-                Log.Information(string.Format("Trying replace code in: {0}", file_name.ToString()));
-
-                List<string>? original_code = GetStringGMLFromFile(file_name).Split("\n").ToList();
-                original_code[start] = code_as_string;
-                for (int i = 1; i < Math.Min(len, original_code.Count - start); i++) {
-                    original_code[start + i] = "";
-                }
-
-                SetStringGMLInFile(string.Join("\n", original_code), file_name);
-
-                Log.Information(string.Format("Patched function with ReplaceGMLString: {0}", file_name.ToString()));
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            var func = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
+            GlobalDecompileContext context = new GlobalDecompileContext(Data, false);
+            var text = Decompiler.Decompile(func, context);
+            return text;
         }
         public static string GetDisassemblyCode(string name)
         {
-            try {
-                var func = GetUMTCodeFromFile(name);
-                var text = func.Disassemble(Data.Variables, Data.CodeLocals.For(func));
-                
-                return text;
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            var func = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
+            var text = func.Disassemble(Data.Variables, Data.CodeLocals.For(func));
+            
+            return text;
+        }
+        public static void SetDecompiledCode(string Code, string name)
+        {
+            var code = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
+            code.ReplaceGML(Code, Data);
+        }
+        public static void InsertDecompiledCode(string Code, string name, int pos)
+        {
+            var code = GetDecompiledCode(name).Split("\n").ToList();
+            code.Insert(pos, Code);
+            SetDecompiledCode(string.Join("\n", code), name);
+        }
+        public static void ReplaceDecompiledCode(string Code, string name, int pos)
+        {
+            var code = GetDecompiledCode(name).Split("\n").ToList();
+            code[pos] = Code;
+            SetDecompiledCode(string.Join("\n", code), name);
         }
         public static void SetDisassemblyCode(string Code, string name)
         {
-            try {
-                var code = GetUMTCodeFromFile(name);
-                code.Replace(Assembler.Assemble(Code, Data));
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        public static void PatchDisassemblyCode(string name, Func<IEnumerable<UndertaleInstruction>, IEnumerable<UndertaleInstruction>> patch)
-        {
-            try {
-                Log.Information(string.Format("Trying patch assembly in: {0}", name.ToString()));
-
-                var code = GetUMTCodeFromFile(name);
-                code.Replace(patch(code.Instructions).ToList());
-
-                Log.Information(string.Format("Patched function with PatchDisassemblyCode: {0}", name.ToString()));
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        public static void InsertDisassemblyCode(string Code, string name, int pos)
-        {
-            try {
-                Log.Information(string.Format("Trying insert assembly in: {0}", name.ToString()));
-
-                var code = GetDisassemblyCode(name).Split("\n").ToList();
-                code.Insert(pos, Code);
-                SetDisassemblyCode(string.Join("\n", code), name);
-
-                Log.Information(string.Format("Patched function with InsertDisassemblyCode: {0}", name.ToString()));
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        public static void ReplaceDisassemblyCode(string Code, string name, int pos)
-        {
-            try {
-                Log.Information(string.Format("Trying replace assembly in: {0}", name.ToString()));
-
-                var code = GetDisassemblyCode(name).Split("\n").ToList();
-                code[pos] = Code;
-                SetDisassemblyCode(string.Join("\n", code), name);
-
-                Log.Information(string.Format("Patched function with ReplaceDisassemblyCode: {0}", name.ToString()));
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            var code = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
+            code.ReplaceGML(Code, Data);
         }
         public static void SetTable(List<string> table, string name)
         {
