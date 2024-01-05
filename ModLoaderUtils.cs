@@ -35,7 +35,24 @@ namespace ModShardLauncher
             this.patchingWay = patchingWay;
         }
     }
+    public class ModSummary
+    {
+        public readonly string fileName;
+        public readonly string newCode;
+        public readonly PatchingWay patchingWay;
 
+        public ModSummary(string fileName, string newCode, PatchingWay patchingWay) 
+        {
+            this.fileName = fileName;
+            this.newCode = newCode;
+            this.patchingWay = patchingWay;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} was patched by {1}:\n{2}", fileName, patchingWay, newCode);
+        }
+    }
     public class FileEnumerable<T>
     {
         public readonly Header header;
@@ -138,6 +155,61 @@ namespace ModShardLauncher
         public static FileEnumerable<(Match, string)> MatchFrom(this FileEnumerable<string> fe, ModFile modFile, string fileName) 
         {
             return new(fe.header, fe.ienumerable.MatchFrom(modFile.GetCode(fileName).Split("\n")));
+        }
+        public static IEnumerable<(Match, string)> MatchBelow(this IEnumerable<string> ienumerable, IEnumerable<string> other, int len)
+        {
+            Match m = Match.Before;
+            string? otherString = null;
+            int i = 0;
+            IEnumerator<string> otherEnumerator = other.GetEnumerator();
+            if(otherEnumerator.MoveNext())
+                otherString = otherEnumerator.Current;
+
+            foreach (string element in ienumerable)
+            {
+                if (m != Match.Matching && otherString != null && element.Contains(otherString)) // either the iter was consumed either it is not contained goto Matching
+                {
+                    yield return (m, element);
+                    if(otherEnumerator.MoveNext())
+                        otherString = otherEnumerator.Current;
+                    else {
+                        m = Match.Matching;
+                    }
+                }
+                else if (m == Match.After) 
+                {
+                    yield return (m, element);
+                }
+                else { // not before anymore, not after yet, it's matching time
+                    if (i == len) // it's been too long, after time. By desing we stay only at max len here
+                        m = Match.After;
+                    yield return (m, element);
+                    i++;
+                }
+            }
+        }
+        public static IEnumerable<(Match, string)> MatchBelow(this IEnumerable<string> ienumerable, string other, int len) 
+        {
+            return ienumerable.MatchBelow(other.Split("\n"), len);
+        }
+        public static FileEnumerable<(Match, string)> MatchBelow(this FileEnumerable<string> fe, string other, int len) 
+        {
+            return new(fe.header, fe.ienumerable.MatchBelow(other.Split("\n"), len));
+        }
+        public static FileEnumerable<(Match, string)> MatchBelow(this FileEnumerable<string> fe, ModFile modFile, string fileName, int len) 
+        {
+            return new(fe.header, fe.ienumerable.MatchBelow(modFile.GetCode(fileName).Split("\n"), len));
+        }
+        public static IEnumerable<(Match, string)> MatchAll(this IEnumerable<string> ienumerable)
+        {
+            foreach (string element in ienumerable)
+            {
+                yield return (Match.Matching, element);
+            }
+        }
+        public static FileEnumerable<(Match, string)> MatchAll(this FileEnumerable<string> fe) 
+        {
+            return new(fe.header, fe.ienumerable.MatchAll());
         }
         public static IEnumerable<T> Peek<T>(this IEnumerable<T> ienumerable)
         {
@@ -285,24 +357,29 @@ namespace ModShardLauncher
         {
             return new(fe.header, fe.ienumerable.ReplaceBy(modFile.GetCode(fileName).Split("\n")));
         }
-        public static Header Save(this FileEnumerable<string> fe)
+        public static ModSummary Save(this FileEnumerable<string> fe)
         {
             try {
+                string newCode = string.Join("\n", fe.ienumerable);
                 switch(fe.header.patchingWay) 
                 {
                     case PatchingWay.GML:
-                        fe.header.originalCode.ReplaceGML(string.Join("\n", fe.ienumerable), ModLoader.Data);
+                        fe.header.originalCode.ReplaceGML(newCode, ModLoader.Data);
                     break;
 
                     case PatchingWay.AssemblyAsString:
-                        fe.header.originalCode.Replace(Assembler.Assemble(string.Join("\n", fe.ienumerable), ModLoader.Data));
+                        fe.header.originalCode.Replace(Assembler.Assemble(newCode, ModLoader.Data));
                     break;
 
                     default:
                     break;
                 }
                 Log.Information("Successfully patched function {{{0}}} with {{{1}}}", fe.header.fileName, fe.header.patchingWay.ToString());
-                return fe.header;
+                return new(
+                    fe.header.fileName,
+                    newCode,
+                    fe.header.patchingWay
+                );
             }
             catch(Exception ex) {
                 Log.Error(ex, "Something went wrong");
