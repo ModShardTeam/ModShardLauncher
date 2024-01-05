@@ -21,18 +21,18 @@ Now let's have a look at the tool itself.
 
 ---
 
-<center><img src="../img/tool_UI.png" width=50%></center>
+<center> ![](../img/tool_UI.png){: style="width:50%"} </center>
 
 First, let's introduce the buttons on the left side. <br> <br>
 The top one is the `Menu` button. <br> 
 Clicking this button extends the panel to show the different pages' names :
 
-<center><img src="../img/tool_UI2.png" width=50%></center>
+<center> ![](../img/tool_UI2.png){: style="width:50%"} </center>
 
 The second button is the `Mods` button. <br> 
 It opens a new page where you can see which mods you currently have installed :
 
-<center><img src="../img/tool_UI3.png" width=50%></center>
+<center> ![](../img/tool_UI3.png){: style="width:50%"} </center>
 <center style="color:Gray">
 Here's an exemple of this page with a loaded mod (here SpeedShard by Zizani)
 </center>
@@ -41,12 +41,12 @@ The third button is the `ModSources` button. <br>
 There you can find the source code for mods you're making. <br>
 If you're a player, and not a modder, you can ignore this page as you won't need it.
 
-<center><img src="../img/tool_UI4.png" width=50%></center>
+<center> ![](../img/tool_UI4.png){: style="width:50%"} </center>
 
 And the last one is the `Settings` button. <br> 
 It opens the settings page, where you can configure ModShardLauncher, and one day mods as well.
 
-<center><img src="../img/tool_UI5.png" width=50%></center>
+<center> ![](../img/tool_UI5.png){: style="width:50%"} </center>
 
 ## Patching mods into the game
 
@@ -71,7 +71,7 @@ Now that we know how the UI works, let's patch some mods into the game's files.
 - First, click the "**folder**" button at the top of this page. <br>
 Navigate to your `Stoneshard` folder and select your vanilla `data.win`.
 
-<center><img src="../img/tool_UI6.png" width=50%></center>
+<center> ![](../img/tool_UI6.png){: style="width:50%"} </center>
 <center style="color:Gray">
 A loading window should appear.
 </center>

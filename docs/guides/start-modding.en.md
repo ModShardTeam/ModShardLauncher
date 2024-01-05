@@ -41,13 +41,13 @@ You can name this new folder whatever you want.
 There are many ways to create your mod. <br>
 If you use **Visual Studio**, you can click `Create a New Project`, search `Class Library` and click `Next` :
 
-<center><img src="../img/create_project_0_EN.png" width=50%></center>
+<center> ![Create New Project](../img/create_project_0.png){: style="width:50%"} </center>
 
 Give a name to your mod, then select the `ModSources` folder that **ModShardLauncher.exe** created earlier :
-<center><img src="../img/create_project_1_EN.png" width=50%></center>
+<center> ![Name Your Mod](../img/create_project_1.png){: style="width:50%"} </center>
 
 Choose **.Net 6.0**, and that's it!
-<center><img src="../img/create_project_2_EN.png" width=50%></center>
+<center> ![Net 6.0](../img/create_project_2.png){: style="width:50%"} </center>
 
 <br>
 
@@ -56,16 +56,16 @@ Choose **.Net 6.0**, and that's it!
 Next we should add a **reference** to the tool's **assembly**, which means the `ModShardLauncher.dll` file. <br><br>
 
 Open the **solution explorer** on the right :
-<center><img src="../img/mod_0_EN.png" width=50%></center>
+<center> ![Solution Explorer](../img/mod_0.png){: style="width:50%"} </center>
 
 Right click `Dependencies`, then click `Add Project Reference` :
-<center><img src="../img/mod_1_EN.png" width=30%></center>
+<center> ![Add Reference](../img/mod_1.png){: style="width:30%"} </center>
 
 Click `Browse...` :
-<center><img src="../img/mod_2_EN.png" width=50%></center>
+<center> ![Browse](../img/mod_2.png){: style="width:50%"} </center>
 
 Finally, select `ModShardLauncher.dll` and click `Add` :
-<center><img src="../img/mod_3_EN.png" width=50%></center>
+<center> ![DLL](../img/mod_3.png){: style="width:50%"} </center>
 
 <br>
 
@@ -80,7 +80,7 @@ When you created your project, **Visual Studio** should have added a class named
 We should add a reference to `ModShardLauncher` and to the `ModShardLauncher.Mods` namespace. <br>
 
 Let's change the code to the following :
-<center><img src="../img/class_0_EN.png" width=50%></center>
+<center> ![Class1](../img/class_0.png){: style="width:50%"} </center>
 
 As you can see, we changed the name of the class from `Class1` to `MyFirstMod`, and made this class extend the `Mod` class.
 
@@ -91,7 +91,7 @@ As you can see, we changed the name of the class from `Class1` to `MyFirstMod`, 
 Now we need to add some basic information to our mod.
 
 Let's add the following code to `MyFirstMod`:
-<center><img src="../img/class_1_EN.png" width=50%></center>
+<center> ![MyFirstMod](../img/class_1.png){: style="width:50%"} </center>
 
 Once you've done this, the mod's name, creator and brief description will be set.
 
@@ -101,7 +101,7 @@ Once you've done this, the mod's name, creator and brief description will be set
 
 Launch **ModShardLauncher**. <br>
 As you can see, the mod's source code has been loaded.
-<center><img src="../img/compile_0.png" width=50%></center>
+<center> ![Mod Source](../img/compile_0.png){: style="width:50%"} </center>
 
 In order to **compile** the mod, we need to click the **folder icon** on the top left, and choose our **vanilla** `data.win` file.
 
@@ -115,8 +115,8 @@ In order to **compile** the mod, we need to click the **folder icon** on the top
 
 We can now double click `MyFirstMod` to compile the mod.
 
-Result of compiling : 
-<center><img src="../img/compile_1.png" width=50%></center>
+Result of compiling :
+<center> ![Compiling Result](../img/compile_1.png){: style="width:50%"} </center>
 
 <br>
 
@@ -131,7 +131,7 @@ It's great but it's a bit empty right now, so let's add some content next.
 
 Right click the **Solution Explorer**, right click your **project** (_the one highlighted in purple in the image_), <br>
 click `Add`, and click `New Item...`
-<center><img src="../img/weapon_0_EN.png" width=30%></center>
+<center> ![New Item](../img/weapon_0.png){: style="width:30%"} </center>
 
 Now you can name your weapon. For this tutorial I will name it `MyFirstWeapon`. <br>
 
@@ -248,7 +248,7 @@ If you don't have any sprites, you can export some of the vanilla sprites with *
 You can put them in your mod's folder or its subfolders, except in `.vs`, `bin` or `obj`. <br>
 They will be patched into the `data.win` automatically.
 
-<center><img src="../img/weapon_1.png" width=50%></center>
+<center> ![Sprites](../img/weapon_1.png){: style="width:50%"} </center>
 
 From top to bottom : <br>
 
@@ -308,4 +308,4 @@ give Homemade_Blade
 
 Once you run the command, your weapon should be added to your inventory. <br>
 
-<center><img src="../img/weapon_2.png" width=50%></center>
+<center> ![Inventory InGame](../img/weapon_2.png){: style="width:50%"} </center>
