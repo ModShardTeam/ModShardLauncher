@@ -1,6 +1,6 @@
 
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="zh" class="no-js">
   <head>
     
       <meta charset="utf-8">
@@ -12,7 +12,7 @@
         <link rel="prev" href="introduction.html">
       
       
-        <link rel="next" href="api.html">
+        <link rel="next" href="how-to-play-mod.html">
       
       
       <link rel="icon" href="../../img/Stoneshard.ico">
@@ -20,7 +20,7 @@
     
     
       
-        <title>开始使用 - ModShardLauncher Modding Documentation</title>
+        <title>开始 - ModShardLauncher Modding Documentation</title>
       
     
     
@@ -84,7 +84,7 @@
       
         
         <a href="#_1" class="md-skip">
-          Skip to content
+          跳转至
         </a>
       
     </div>
@@ -98,8 +98,8 @@
   
 
 <header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="ModShardLauncher Modding Documentation" class="md-header__button md-logo" aria-label="ModShardLauncher Modding Documentation" data-md-component="logo">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../index.html" title="ModShardLauncher Modding Documentation" class="md-header__button md-logo" aria-label="ModShardLauncher Modding Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -119,7 +119,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              开始使用
+              开始
             
           </span>
         </div>
@@ -156,6 +156,32 @@
       <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
     
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../guides/start-modding.html" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="start-modding.html" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
     
       <label class="md-header__button md-icon" for="__search">
         
@@ -165,16 +191,16 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="Search">
+      <nav class="md-search__options" aria-label="查找">
         
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
         </button>
@@ -187,7 +213,7 @@
       <div class="md-search__scrollwrap" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            Initializing search
+            正在初始化搜索引擎
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -198,7 +224,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/DDDDDragon/ModShardLauncher" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/DDDDDragon/ModShardLauncher" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
@@ -234,9 +260,9 @@
 
   
 
-<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="导航栏" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="ModShardLauncher Modding Documentation" class="md-nav__button md-logo" aria-label="ModShardLauncher Modding Documentation" data-md-component="logo">
+    <a href="../index.html" title="ModShardLauncher Modding Documentation" class="md-nav__button md-logo" aria-label="ModShardLauncher Modding Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -246,7 +272,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/DDDDDragon/ModShardLauncher" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/DDDDDragon/ModShardLauncher" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
@@ -282,7 +308,7 @@
             
   
   <span class="md-ellipsis">
-    Index
+    首页
   </span>
   
 
@@ -292,7 +318,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
-            Index
+            首页
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -303,118 +329,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../index.html" class="md-nav__link">
+      <a href="../index.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Welcome
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-    Guides
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            Guides
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../guides/introduction.html" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Introduction
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../guides/start-modding.html" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../guides/how-to-play-mod.html" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    How to play mod
+    欢迎
   </span>
   
 
@@ -449,24 +368,24 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
-    中文
+    指南
   </span>
   
 
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            中文
+            指南
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -481,7 +400,7 @@
         
   
   <span class="md-ellipsis">
-    介绍
+    简介
   </span>
   
 
@@ -511,7 +430,7 @@
           
   
   <span class="md-ellipsis">
-    开始使用
+    开始
   </span>
   
 
@@ -522,7 +441,7 @@
         
   
   <span class="md-ellipsis">
-    开始使用
+    开始
   </span>
   
 
@@ -530,7 +449,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+<nav class="md-nav md-nav--secondary" aria-label="目录">
   
   
   
@@ -539,7 +458,7 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      目录
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
@@ -697,6 +616,27 @@
   
   
     <li class="md-nav__item">
+      <a href="how-to-play-mod.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    如何使用MOD
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="api.html" class="md-nav__link">
         
   
@@ -733,7 +673,7 @@
                   
 
   
-    <a href="https://github.com/DDDDDragon/ModShardLauncher/edit/main/docs/zh/guides/start-modding.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/DDDDDragon/ModShardLauncher/edit/main/docs/guides/start-modding.zh.md" title="编辑此页" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -742,7 +682,7 @@
     
       
     
-    <a href="https://github.com/DDDDDragon/ModShardLauncher/raw/main/docs/zh/guides/start-modding.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/DDDDDragon/ModShardLauncher/raw/main/docs/guides/start-modding.zh.md" title="查看本页的源代码" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
     </a>
@@ -791,26 +731,26 @@
 <p>然后在ModSources文件夹中创建一个新的文件夹, 你的第一个mod就从这里开始了.</p>
 <h3 id="mod_1">创建mod!</h3>
 <p>创建mod的方式有很多, 我们先来拿<strong>Visual Studio</strong>举例.
-首先运行VS, 点击创建新项目, 搜索类库并单击下一步. 如图: 
-<center><a class="glightbox" href="../../img/create_project_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../img/create_project_0.png" width=50%></a></center></p>
+首先运行VS, 点击创建新项目, 搜索类库并单击下一步. 如图:
+<center> <a class="glightbox" href="../img/create_project_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/create_project_0.png" style="width:50%" /></a> </center></p>
 <p>然后输入你mod的名字, 选择路径为刚才 <strong>ModShardLauncher.exe</strong> 创建的 Mods 文件夹.
-<center><a class="glightbox" href="../../img/create_project_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../img/create_project_1.png" width=50%></a></center></p>
+<center> <a class="glightbox" href="../img/create_project_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/create_project_1.png" style="width:50%" /></a> </center></p>
 <p>最后选择 .Net 6.0即可
-<center><a class="glightbox" href="../../img/create_project_2.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../img/create_project_2.png" width=50%></a></center></p>
+<center> <a class="glightbox" href="../img/create_project_2.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/create_project_2.png" style="width:50%" /></a> </center></p>
 <h3 id="_3">程序集引用!</h3>
 <p>首先我们需要引用工具的程序集, 即Dll文件.</p>
 <p>先打开解决方案资源管理器.
-<center><a class="glightbox" href="../../img/mod_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../img/mod_0.png" width=50%></a></center></p>
+<center> <a class="glightbox" href="../img/mod_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/mod_0.png" style="width:50%" /></a> </center></p>
 <p>右键依赖项, 并单击添加项目引用.
-<center><a class="glightbox" href="../../img/mod_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../img/mod_1.png" width=50%></a></center></p>
+<center> <a class="glightbox" href="../img/mod_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/mod_1.png" style="width:50%" /></a> </center></p>
 <p>点击浏览.
-<center><a class="glightbox" href="../../img/mod_2.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../img/mod_2.png" width=50%></a></center></p>
+<center> <a class="glightbox" href="../img/mod_2.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/mod_2.png" style="width:50%" /></a> </center></p>
 <p>最后选择ModShardLauncher.dll并点击添加.
-<center><a class="glightbox" href="../../img/mod_3.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../img/mod_3.png" width=50%></a></center></p>
+<center> <a class="glightbox" href="../img/mod_3.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/mod_3.png" style="width:50%" /></a> </center></p>
 <h3 id="mod_2">Mod主类!</h3>
 <p>如果你有C#基础, 那你一定对 <strong>类</strong>(Class) 有了解.我们接下来就要创建一个Mod的主类.</p>
 <p>创建项目时, VS应该已经为我们创建了一个类, 名字叫做Class1. 我们要做的就是先添加对 <code>ModShardLauncher</code> 和 <code>ModShardLauncher.Mods</code> 这两个命名空间的引用. 然后将代码改成如下这样:
-<center><a class="glightbox" href="../../img/class_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../img/class_0.png" width=50%></a></center></p>
+<center> <a class="glightbox" href="../img/class_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/class_0.png" style="width:50%" /></a> </center></p>
 <p>可以看到我们先是把类的访问级别从 <code>internal</code> 改为了 <code>public</code> , 这样一来Mod加载时就可以读取到这个类. 然后我们把类名改成了 <code>MyFirstMod</code> , 并让这个类继承 <code>Mod</code> 类.</p>
 <h3 id="mod_3">Mod信息!</h3>
 <p>接下来我们给Mod添加基础的信息.</p>
@@ -822,7 +762,7 @@
 这样我们就设置了mod的名称, 作者与描述信息.</p>
 <h3 id="mod_4">编译Mod!</h3>
 <p>接下来我们启动<strong>ModShardLauncher</strong>.  可以看到我们的Mod源码已经被加载出来了.
-<center><a class="glightbox" href="../../img/compile_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../img/compile_0.png" width=50%></a></center></p>
+<center> <a class="glightbox" href="../../img/compile_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../../img/compile_0.png" style="width:50%" /></a> </center></p>
 <p>在编译mod之前, 我们需要先点击模组界面左上角的文件夹按钮, 并选择 <strong>原版</strong> 的data.win文件进行加载.</p>
 <details class="reason">
 <summary>为什么要使用原版文件?</summary>
@@ -833,13 +773,13 @@
 <p>为了获取游戏版本, 防止极小可能出现的版本不同而崩溃现象(确信)</p>
 </details>
 <p>然后我们就可以点击 <code>MyFirstMod</code> 栏位右下角的编译辣! (UI现在嘎嘎好看是不是)</p>
-<p>编译成功后的结果: 
-<center><a class="glightbox" href="../../img/compile_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../img/compile_1.png" width=50%></a></center></p>
+<p>编译成功后的结果:
+<center> <a class="glightbox" href="../../img/compile_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../../img/compile_1.png" style="width:50%" /></a> </center></p>
 <h2 id="_4">创建你的第一把武器</h2>
 <p>就在刚刚, 你的第一个mod已经成功编译了! 接下来, 让我们为它添加一些看得到的东西吧.</p>
 <h3 id="_5">创建武器类!</h3>
 <p>首先点击右侧的解决方案资源管理器, 然后右键你的项目, 点击添加, 最后点击新建项, 如图:
-<center><a class="glightbox" href="../../img/weapon_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../img/weapon_0.png" width=50%></a></center></p>
+<center> <a class="glightbox" href="../img/weapon_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/weapon_0.png" style="width:50%" /></a> </center></p>
 <p>名字就输入这把武器的名称即可, 这里我们使用 <code>MyFirstWeapon</code> 作为它的名字.</p>
 <p>接下来进入代码界面, 还是一样的操作, 将 <code>internal</code> 改为 <code>public</code> , 以便Mod加载时可以加载到这把武器的信息. 然后添加对 <code>ModShardLauncher</code> 和 <code>ModShardLauncher.Mods</code> 这两个命名空间的引用.  并让武器类继承 <code>Weapon</code> 类.</p>
 <h3 id="_6">修改武器的信息!</h3>
@@ -884,7 +824,7 @@
 <h3 id="_7">武器贴图!</h3>
 <p>StoneShard做mod最痛苦的一部分就是这里了. 贴图, 一把最基础的武器竟然需要六张贴图, 这无疑增加了modder的工作量.</p>
 <p>如果你没得贴图, 你可以使用UTMT对原版的贴图进行导出, 然后放在Mod目录除 <code>.vs, bin 和 obj</code> 的任何地方, 打包时会自动将他们打包进data.win的.
-<center><a class="glightbox" href="../../img/weapon_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../img/weapon_1.png" width=50%></a></center></p>
+<center> <a class="glightbox" href="../../img/weapon_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../../img/weapon_1.png" style="width:50%" /></a> </center></p>
 <p>如图所示, 从上到下依次是: 人物右手拿武器, 人物左手拿武器, 背包中的武器(有三张的原因是紫晶的武器有破损系统, 如果你不想画, 可以把完整版的武器复制三遍), 掉落的武器.</p>
 <details class="why">
 <summary>注意</summary>
@@ -908,7 +848,7 @@
 <div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>give Homemade_Blade
 </span></code></pre></div></p>
 <p>执行了give函数后, 可以发现背包中就多了一把mod武器了.
-<center><a class="glightbox" href="../../img/weapon_2.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img src="../../img/weapon_2.png" width=50%></a></center></p>
+<center> <a class="glightbox" href="../../img/weapon_2.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../../img/weapon_2.png" style="width:50%" /></a> </center></p>
 
 
 
@@ -916,6 +856,43 @@
 
 
 
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
+    </span>
+    2024-01-05
+  </span>
+
+    
+    
+    
+      
+  
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="贡献者">
+      
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 5.5A3.5 3.5 0 0 1 15.5 9a3.5 3.5 0 0 1-3.5 3.5A3.5 3.5 0 0 1 8.5 9 3.5 3.5 0 0 1 12 5.5M5 8c.56 0 1.08.15 1.53.42-.15 1.43.27 2.85 1.13 3.96C7.16 13.34 6.16 14 5 14a3 3 0 0 1-3-3 3 3 0 0 1 3-3m14 0a3 3 0 0 1 3 3 3 3 0 0 1-3 3c-1.16 0-2.16-.66-2.66-1.62a5.536 5.536 0 0 0 1.13-3.96c.45-.27.97-.42 1.53-.42M5.5 18.25c0-2.07 2.91-3.75 6.5-3.75s6.5 1.68 6.5 3.75V20h-13v-1.75M0 20v-1.5c0-1.39 1.89-2.56 4.45-2.9-.59.68-.95 1.62-.95 2.65V20H0m24 0h-3.5v-1.75c0-1.03-.36-1.97-.95-2.65 2.56.34 4.45 1.51 4.45 2.9V20Z"/></svg>
+      
+    </span>
+    <nav>
+      
+        <a href="mailto:2294632065@qq.com">2294632065</a>, 
+        <a href="mailto:nylux42@gmail.com">Nylux</a>
+    </nav>
+  </span>
+
+    
+    
+  </aside>
 
 
 
@@ -934,7 +911,7 @@
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
-  Back to top
+  回到页面顶部
 </button>
         
       </main>
@@ -967,7 +944,7 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.path", "navigation.top", "header.autohide", "toc.integrate", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annotate", "content.code.copy", "content.action.edit", "content.action.view"], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.path", "navigation.top", "header.autohide", "toc.integrate", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annotate", "content.code.copy", "content.action.edit", "content.action.view"], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.d7c377c4.min.js"></script>
