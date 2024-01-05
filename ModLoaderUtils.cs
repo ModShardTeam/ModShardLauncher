@@ -78,45 +78,6 @@ namespace ModShardLauncher
                 yield return (ind++, element);
             }
         }
-        public static FileEnumerable<string> LoadGML(string fileName)
-        {
-            try {
-                UndertaleCode code = ModLoader.GetUMTCodeFromFile(fileName);
-                GlobalDecompileContext context = new(ModLoader.Data, false);
-
-                return new(
-                    new(
-                        fileName,
-                        code,
-                        PatchingWay.GML
-                    ),
-                    Decompiler.Decompile(code, context).Split("\n")
-                );
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        public static FileEnumerable<string> LoadAssemblyAsString(string fileName)
-        {
-            try {
-                UndertaleCode code = ModLoader.GetUMTCodeFromFile(fileName);
-
-                return new(
-                    new(
-                        fileName,
-                        code,
-                        PatchingWay.AssemblyAsString
-                    ),
-                    code.Disassemble(ModLoader.Data.Variables, ModLoader.Data.CodeLocals.For(code)).Split("\n")
-                );
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
         public static IEnumerable<(Match, string)> MatchFrom(this IEnumerable<string> ienumerable, IEnumerable<string> other) 
         {
             Match m = Match.Before;
@@ -167,24 +128,34 @@ namespace ModShardLauncher
 
             foreach (string element in ienumerable)
             {
-                if (m != Match.Matching && otherString != null && element.Contains(otherString)) // either the iter was consumed either it is not contained goto Matching
+                if (m == Match.Before && otherString != null && element.Contains(otherString)) // can only test the other iter if in Before
                 {
+                    m = Match.Before;
                     yield return (m, element);
                     if(otherEnumerator.MoveNext())
                         otherString = otherEnumerator.Current;
+                        if (!element.Contains(otherString)) 
+                        {
+                            // doesnt contains anymore, time to go in matching
+                            m = Match.Matching;
+                        }
                     else {
+                        // consumed the iter, time go to in matching
                         m = Match.Matching;
                     }
                 }
-                else if (m == Match.After) 
+                else if (m == Match.Before) // here when you still havent encounter the other iter
                 {
-                    yield return (m, element);
+                    yield return (Match.Before, element);
                 }
-                else { // not before anymore, not after yet, it's matching time
-                    if (i == len) // it's been too long, after time. By desing we stay only at max len here
-                        m = Match.After;
-                    yield return (m, element);
-                    i++;
+                else if (i < len) // here when either the iter was consumed, either it was not matching anymore
+                {
+                    yield return (Match.Matching, element);
+                    i++; // can stay only len in matching
+                }
+                else // here in after, nothing to do
+                {
+                    yield return (Match.After, element);
                 }
             }
         }

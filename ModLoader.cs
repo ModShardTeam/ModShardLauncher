@@ -124,6 +124,45 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        public static FileEnumerable<string> LoadGML(string fileName)
+        {
+            try {
+                UndertaleCode code = ModLoader.GetUMTCodeFromFile(fileName);
+                GlobalDecompileContext context = new(ModLoader.Data, false);
+
+                return new(
+                    new(
+                        fileName,
+                        code,
+                        PatchingWay.GML
+                    ),
+                    Decompiler.Decompile(code, context).Split("\n")
+                );
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static FileEnumerable<string> LoadAssemblyAsString(string fileName)
+        {
+            try {
+                UndertaleCode code = ModLoader.GetUMTCodeFromFile(fileName);
+
+                return new(
+                    new(
+                        fileName,
+                        code,
+                        PatchingWay.AssemblyAsString
+                    ),
+                    code.Disassemble(ModLoader.Data.Variables, ModLoader.Data.CodeLocals.For(code)).Split("\n")
+                );
+            }
+            catch(Exception ex) {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
         /// <summary>
         /// Return the UndertaleCode from <c>name</c>.
         /// </summary>
