@@ -32,37 +32,38 @@
 ### 创建mod!
 
 创建mod的方式有很多, 我们先来拿**Visual Studio**举例.
-首先运行VS, 点击创建新项目, 搜索类库并单击下一步. 如图: 
-<center><img src="../../img/create_project_0.png" width=50%></center>
+首先运行VS, 点击创建新项目, 搜索类库并单击下一步. 如图:
+<center> ![](../img/create_project_0.png){: style="width:50%"} </center>
 
 然后输入你mod的名字, 选择路径为刚才 **ModShardLauncher.exe** 创建的 Mods 文件夹.
-<center><img src="../../img/create_project_1.png" width=50%></center>
+<center> ![](../img/create_project_1.png){: style="width:50%"} </center>
 
 最后选择 .Net 6.0即可
-<center><img src="../../img/create_project_2.png" width=50%></center>
+<center> ![](../img/create_project_2.png){: style="width:50%"} </center>
 
 ### 程序集引用!
 
 首先我们需要引用工具的程序集, 即Dll文件.
 
 先打开解决方案资源管理器.
-<center><img src="../../img/mod_0.png" width=50%></center>
+<center> ![](../img/mod_0.png){: style="width:50%"} </center>
 
 右键依赖项, 并单击添加项目引用.
-<center><img src="../../img/mod_1.png" width=50%></center>
+<center> ![](../img/mod_1.png){: style="width:50%"} </center>
 
 点击浏览.
-<center><img src="../../img/mod_2.png" width=50%></center>
+<center> ![](../img/mod_2.png){: style="width:50%"} </center>
 
 最后选择ModShardLauncher.dll并点击添加.
-<center><img src="../../img/mod_3.png" width=50%></center>
+<center> ![](../img/mod_3.png){: style="width:50%"} </center>
 
 ### Mod主类!
 
 如果你有C#基础, 那你一定对 **类**(Class) 有了解.我们接下来就要创建一个Mod的主类.
 
 创建项目时, VS应该已经为我们创建了一个类, 名字叫做Class1. 我们要做的就是先添加对 `ModShardLauncher` 和 `ModShardLauncher.Mods` 这两个命名空间的引用. 然后将代码改成如下这样:
-<center><img src="../../img/class_0.png" width=50%></center>
+<center> ![](../img/class_0.png){: style="width:50%"} </center>
+
 
 可以看到我们先是把类的访问级别从 `internal` 改为了 `public` , 这样一来Mod加载时就可以读取到这个类. 然后我们把类名改成了 `MyFirstMod` , 并让这个类继承 `Mod` 类.
 
@@ -81,7 +82,7 @@ public override string Description => "我的第一个mod";
 ### 编译Mod!
 
 接下来我们启动**ModShardLauncher**.  可以看到我们的Mod源码已经被加载出来了.
-<center><img src="../../img/compile_0.png" width=50%></center>
+<center> ![](../img/compile_0.png){: style="width:50%"} </center>
 
 在编译mod之前, 我们需要先点击模组界面左上角的文件夹按钮, 并选择 **原版** 的data.win文件进行加载.
 
@@ -95,8 +96,8 @@ public override string Description => "我的第一个mod";
 
 然后我们就可以点击 `MyFirstMod` 栏位右下角的编译辣! (UI现在嘎嘎好看是不是)
 
-编译成功后的结果: 
-<center><img src="../../img/compile_1.png" width=50%></center>
+编译成功后的结果:
+<center> ![](../img/compile_1.png){: style="width:50%"} </center>
 
 ## 创建你的第一把武器
 
@@ -105,7 +106,7 @@ public override string Description => "我的第一个mod";
 ### 创建武器类!
 
 首先点击右侧的解决方案资源管理器, 然后右键你的项目, 点击添加, 最后点击新建项, 如图:
-<center><img src="../../img/weapon_0.png" width=50%></center>
+<center> ![](../img/weapon_0.png){: style="width:50%"} </center>
 
 名字就输入这把武器的名称即可, 这里我们使用 `MyFirstWeapon` 作为它的名字.
 
@@ -166,7 +167,7 @@ public override void SetDefaults()
 StoneShard做mod最痛苦的一部分就是这里了. 贴图, 一把最基础的武器竟然需要六张贴图, 这无疑增加了modder的工作量.
 
 如果你没得贴图, 你可以使用UTMT对原版的贴图进行导出, 然后放在Mod目录除 `.vs, bin 和 obj` 的任何地方, 打包时会自动将他们打包进data.win的.
-<center><img src="../../img/weapon_1.png" width=50%></center>
+<center> ![](../img/weapon_1.png){: style="width:50%"} </center>
 
 如图所示, 从上到下依次是: 人物右手拿武器, 人物左手拿武器, 背包中的武器(有三张的原因是紫晶的武器有破损系统, 如果你不想画, 可以把完整版的武器复制三遍), 掉落的武器.
 
@@ -200,4 +201,4 @@ give Homemade_Blade
 ```
 
 执行了give函数后, 可以发现背包中就多了一把mod武器了.
-<center><img src="../../img/weapon_2.png" width=50%></center>
+<center> ![](../img/weapon_2.png){: style="width:50%"} </center>
