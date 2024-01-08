@@ -78,6 +78,29 @@ namespace ModShardLauncher
                 yield return (ind++, element);
             }
         }
+        public static IEnumerable<string> Flatten(this IEnumerable<(Match, string)> ienumerable)
+        {
+            foreach((Match _, string element) in ienumerable)
+            {
+                yield return element;
+            }
+        }
+        public static string Collect(this IEnumerable<string> ienumerable)
+        {
+            return string.Join("\n", ienumerable);
+        }
+        public static string Collect(this IEnumerable<(Match, string)> ienumerable)
+        {
+            return string.Join("\n", ienumerable.Flatten());
+        }
+        public static string Collect(this FileEnumerable<string> fe)
+        {
+            return fe.ienumerable.Collect();
+        }
+        public static string Collect(this FileEnumerable<(Match, string)> fe)
+        {
+            return fe.ienumerable.Collect();
+        }
         public static IEnumerable<(Match, string)> MatchFrom(this IEnumerable<string> ienumerable, IEnumerable<string> other) 
         {
             Match m = Match.Before;
