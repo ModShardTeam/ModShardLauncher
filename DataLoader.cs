@@ -98,6 +98,8 @@ namespace ModShardLauncher
                         );
                         File.WriteAllText("json_dump_code.json", JsonConvert.SerializeObject(data.Code.Select(t => t.Name.Content)));
                         File.WriteAllText("json_dump_variables.json", JsonConvert.SerializeObject(data.Variables.Select(t => t.Name.Content)));
+                        // GlobalDecompileContext context = new(data, false);
+                        // GenericUtils.GenerateNRandomLinesFromCode(data.Code, context, 100, 1, 0);
 
                         dataCache = UndertaleIO.Read(
                             stream, warning =>
