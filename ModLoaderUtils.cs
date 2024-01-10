@@ -79,6 +79,17 @@ namespace ModShardLauncher
                 yield return (ind++, element);
             }
         }
+        /// <summary>
+        /// Convert a (Match, string) IEnumerable into a string IEnumerable by selecting for all elements only the string part.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt;(Match, string)&gt; example = new() { (Match.Before, "Aaa") };
+        /// var flatten_example = example.Flatten();
+        /// </code>
+        /// results in <c>flatten_example</c> being List { "Aaa" }.
+        /// </example>
+        /// </summary>
         public static IEnumerable<string> Flatten(this IEnumerable<(Match, string)> ienumerable)
         {
             foreach((Match _, string element) in ienumerable)
@@ -86,18 +97,46 @@ namespace ModShardLauncher
                 yield return element;
             }
         }
+        /// <summary>
+        /// A wrapper for string.Join("\n").
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt; string &gt; example = new() { "Hello", "World" };
+        /// var collect_example = example.Collect();
+        /// </code>
+        /// results in <c>collect_example</c> being "HelloWorld".
+        /// </example>
+        /// </summary>
         public static string Collect(this IEnumerable<string> ienumerable)
         {
             return string.Join("\n", ienumerable);
         }
+        /// <summary>
+        /// A wrapper for string.Join("\n") that works for (Match, string) IEnumerable by dropping the Match part.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt;(Match, string)&gt; example = new() { (Match.Before, "Hello"), (Match.Matching, "World") };
+        /// var collect_example = example.Collect();
+        /// </code>
+        /// results in <c>collect_example</c> being "HelloWorld".
+        /// </example>
+        /// </summary>
         public static string Collect(this IEnumerable<(Match, string)> ienumerable)
         {
             return string.Join("\n", ienumerable.Flatten());
         }
+        /// <summary>
+        /// A wrapper for string.Join("\n") on the IEnumerable attribute of a string FileEnumerable. <see cref="Collect"/>
+        /// </summary>
         public static string Collect(this FileEnumerable<string> fe)
         {
             return fe.ienumerable.Collect();
         }
+        /// <summary>
+        /// A wrapper for string.Join("\n") on the IEnumerable attribute of a (Match, string) FileEnumerable. <see cref="Collect"/>
+        /// </summary>
         public static string Collect(this FileEnumerable<(Match, string)> fe)
         {
             return fe.ienumerable.Collect();

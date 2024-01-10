@@ -107,15 +107,6 @@ loot_script = gml_Script_scr_loot_contGeneric
             speed = 0
 event_inherited()
 state = 25";
-
-
-        public static IEnumerable<object[]> RangeIndexData()
-        {
-            // start, len
-            yield return new object[] { 0, 1 };
-            yield return new object[] { 1, 1 };
-            yield return new object[] { 10, 5 };
-        }
     }
     public class FlattenTest
     {
@@ -410,6 +401,299 @@ state = 25";
 
             // Assert
             Assert.Equal(matchStringListReference, stringList_matchFrom);
+        }
+    }
+    public class MatchBelowTest
+    {
+        [Fact]
+        public void MatchBelow_EmptyString_WithEmptyString()
+        {
+            // Reference
+            List<(Match, string)> matchStringListReference = new()
+            {
+                (Match.Before, "")
+            };
+
+            // Arrange
+            IEnumerable<string> stringList = "".Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchBelow = stringList.MatchBelow("", 0);
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchBelow);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine)]
+        [InlineData(StringDataForTest.multipleLines)]
+        [InlineData(StringDataForTest.randomBlock)]
+        public void MatchBelow_EmptyString_WithNonEmptyString(string input)
+        {
+            // Reference
+            
+            List<(Match, string)> matchStringListReference = new()
+            {
+                (Match.Before, "")
+            };
+
+            // Arrange
+            IEnumerable<string> stringList = "".Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchBelow = stringList.MatchBelow(input, 0);
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchBelow);
+        }
+        
+        [Theory]
+        [InlineData(StringDataForTest.multipleLines, 0)]
+        [InlineData(StringDataForTest.multipleLines, 1)]
+        [InlineData(StringDataForTest.randomBlock, 0)]
+        [InlineData(StringDataForTest.randomBlock, 20)]
+        public void MatchBelow_NonEmptyString_WithEmptyString(string input, int len)
+        {
+            // Reference
+            List<(Match, string)> matchStringListReference = new();
+            foreach ((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i == 0)
+                    matchStringListReference.Add((Match.Before, s));
+                else if (i > len)
+                    matchStringListReference.Add((Match.After, s));
+                else
+                    matchStringListReference.Add((Match.Matching, s));
+            }
+
+            // Arrange
+            IEnumerable<string> stringList = input.Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchBelow = stringList.MatchBelow("", len);
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchBelow);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, 0)]
+        [InlineData(StringDataForTest.multipleLines, 0)]
+        [InlineData(StringDataForTest.randomBlock, 0)]   
+        [InlineData(StringDataForTest.oneLine, 1)]
+        [InlineData(StringDataForTest.multipleLines, 1)]
+        [InlineData(StringDataForTest.randomBlock, 1)]
+        [InlineData(StringDataForTest.oneLine, 5)]
+        [InlineData(StringDataForTest.multipleLines, 5)]
+        [InlineData(StringDataForTest.randomBlock, 5)]
+        public void MatchBelow_NonEmptyString_WithItself(string input, int len)
+        {
+            // Reference
+            List<(Match, string)> matchStringListReference = new();
+            foreach (string s in input.Split('\n'))
+            {
+                matchStringListReference.Add((Match.Before, s));
+            }
+
+            // Arrange
+            IEnumerable<string> stringList = input.Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchBelow = stringList.MatchBelow(input, len);
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchBelow);
+        }
+        
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, "return", 0)]
+        [InlineData(StringDataForTest.multipleLines, "b", 0)]
+        [InlineData(StringDataForTest.randomBlock, "aaaaaaaaaaaaaaaaaaaaaa", 0)]
+        [InlineData(StringDataForTest.oneLine, "return", 1)]
+        [InlineData(StringDataForTest.multipleLines, "b", 1)]
+        [InlineData(StringDataForTest.randomBlock, "aaaaaaaaaaaaaaaaaaaaaa", 1)]
+        [InlineData(StringDataForTest.oneLine, "return", 5)]
+        [InlineData(StringDataForTest.multipleLines, "b", 5)]
+        [InlineData(StringDataForTest.randomBlock, "aaaaaaaaaaaaaaaaaaaaaa", 5)]
+        public void MatchBelow_NonEmptyString_NoMatch(string input, string stringToMatch, int len)
+        {
+            // Reference
+            List<(Match, string)> matchStringListReference = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringListReference.Add((Match.Before, s));
+            }
+
+            // Arrange
+            IEnumerable<string> stringList = input.Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchBelow = stringList.MatchBelow(stringToMatch, len);
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchBelow);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.multipleLines, "y =", 1, 1)]
+        [InlineData(StringDataForTest.randomBlock, "4279667175", 15, 30)]
+        public void MatchBelow_NonEmptyString_WithOneLine(string input, string stringToMatch, int ind, int len)
+        {
+            // Reference
+            List<(Match, string)> matchStringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i > ind && i <= ind + len)
+                    matchStringListReference.Add((Match.Matching, s));
+                else if (i <= ind)
+                    matchStringListReference.Add((Match.Before, s));
+                else
+                    matchStringListReference.Add((Match.After, s));
+            }
+
+            // Arrange
+            IEnumerable<string> stringList = input.Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchBelow = stringList.MatchBelow(stringToMatch, len);
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchBelow);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.multipleLines, "y =\na + y", 1, 2, 1)] // this block is continuous from line 1 to line 2
+        [InlineData(StringDataForTest.randomBlock, "257910, 257910\n\nevent_inher\nwit", 7, 10, 2)] // this block is continuous from line 7 to line 10
+        [InlineData(StringDataForTest.multipleLines, "y =\nurn y", 1, 1, 1)] // this block is not continuous (includes line 1 and line 3)
+        [InlineData(StringDataForTest.randomBlock, "257910, 257910\n\nwit\ndepthshift = 0", 7, 8, 10)] // this block is not continuous (includes line 7, 8, 10 and 11)
+        public void MatchBelow_NonEmptyString_WithBlocks(string input, string stringToMatch, int _, int end, int len)
+        {
+            // Reference
+            List<(Match, string)> matchStringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i > end && i <= end + len)
+                    matchStringListReference.Add((Match.Matching, s));
+                else if (i <= end)
+                    matchStringListReference.Add((Match.Before, s));
+                else
+                    matchStringListReference.Add((Match.After, s));
+            }
+
+            // Arrange
+            IEnumerable<string> stringList = input.Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchBelow = stringList.MatchBelow(stringToMatch, len);
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchBelow);
+        }
+    }
+    
+    public class MatchAllTest
+    {
+        [Theory]
+        [InlineData("")]
+        [InlineData(StringDataForTest.oneLine)]
+        [InlineData(StringDataForTest.multipleLines)]
+        [InlineData(StringDataForTest.randomBlock)]
+        public void MatchAll(string input)
+        {
+            // Reference
+            List<(Match, string)> matchStringListReference = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringListReference.Add((Match.Matching, s));
+            }
+
+            // Arrange
+            IEnumerable<string> stringList = input.Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchFrom = stringList.MatchAll();
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchFrom);
+        }
+    }
+    public class RemoveTest
+    {
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, Match.Before)]
+        [InlineData(StringDataForTest.multipleLines, Match.Before)]
+        [InlineData(StringDataForTest.randomBlock, Match.Before)]
+        [InlineData(StringDataForTest.oneLine, Match.After)]
+        [InlineData(StringDataForTest.multipleLines, Match.After)]
+        [InlineData(StringDataForTest.randomBlock, Match.After)]
+        public void Remove_DoesNothing(string input, Match m)
+        {
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((m, s));
+            }
+
+            // Act
+            IEnumerable<string> matchStringList_remove = matchStringList.Remove();
+
+            // Assert
+            Assert.Equal(input.Split('\n'), matchStringList_remove);
+        }
+        
+        [Theory]
+        [InlineData(StringDataForTest.oneLine)]
+        [InlineData(StringDataForTest.multipleLines)]
+        [InlineData(StringDataForTest.randomBlock)]
+        public void Remove_All(string input)
+        {
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((Match.Matching, s));
+            }
+
+            // Act
+            IEnumerable<string> matchStringList_remove = matchStringList.Remove();
+
+            // Assert
+            Assert.Equal(Enumerable.Empty<string>(), matchStringList_remove);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, 0, 1)]
+        [InlineData(StringDataForTest.multipleLines, 0, 2)]
+        [InlineData(StringDataForTest.randomBlock, 0, 10)]
+        [InlineData(StringDataForTest.randomBlock, 7, 14)]
+        public void Remove_SpecificLines(string input, int start, int len)
+        {
+            // Reference
+            List<string> stringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i < start || i >= start + len)
+                    stringListReference.Add(s);
+            }
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i < start)
+                    matchStringList.Add((Match.Before, s));
+                else if (i >= start + len)
+                    matchStringList.Add((Match.After, s));
+                else
+                    matchStringList.Add((Match.Matching, s));
+            }
+
+            // Act
+            IEnumerable<string> matchStringList_remove = matchStringList.Remove();
+
+            // Assert
+            Assert.Equal(stringListReference, matchStringList_remove);
         }
     }
 }

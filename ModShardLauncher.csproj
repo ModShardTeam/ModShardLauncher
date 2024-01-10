@@ -12,11 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup> <!-- Include the specific files to exclude the ones in the test folder -->
-    <Compile Include="*.cs" Exclude="bin\**;obj\**;ModShardLauncherTest\**.*cs"/>
-    <Compile Include="Pages/*.cs"/>
-    <Compile Include="Extensions/*.cs"/>
-    <Compile Include="Mods/*.cs"/>
-    <Compile Include="Controls/*.cs"/>
+    <Compile Include="*.cs" Exclude="bin\**;obj\**;ModShardLauncherTest\**.*cs" />
+    <Compile Include="Pages/*.cs" />
+    <Compile Include="Extensions/*.cs" />
+    <Compile Include="Mods/*.cs" />
+    <Compile Include="Controls/*.cs" />
   </ItemGroup>
 
   <ItemGroup>
