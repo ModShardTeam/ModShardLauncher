@@ -233,37 +233,34 @@ namespace ModShardLauncher
         /// </summary>
         public static IEnumerable<(Match, string)> MatchBelow(this IEnumerable<string> ienumerable, IEnumerable<string> other, int len)
         {
-            Match m = Match.Before;
+            int i = 0; // used for keeping tracked about how many lines after the block we pass by
+            bool encounteredTheBlock = false; // bool to track if we already encountered the block, disabling the 2nd case of the if/else
+            bool passedTheBlock = false; // bool to track if we already passed the block, disabling the 1st case of the if/else
             string? otherString = null;
-            int i = 0;
             IEnumerator<string> otherEnumerator = other.GetEnumerator();
             if(otherEnumerator.MoveNext())
                 otherString = otherEnumerator.Current;
 
             foreach (string element in ienumerable)
             {
-                if (m == Match.Before && otherString != null && element.Contains(otherString)) // can only test the other iter if in Before
+                if (!passedTheBlock && otherString != null && element.Contains(otherString)) // can only test the other iter if in Before
                 {
-                    m = Match.Before;
-                    yield return (m, element);
+                    encounteredTheBlock = true;
+                    yield return (Match.Before, element);
                     if(otherEnumerator.MoveNext())
                         otherString = otherEnumerator.Current;
-                        if (!element.Contains(otherString)) 
-                        {
-                            // doesnt contains anymore, time to go in matching
-                            m = Match.Matching;
-                        }
                     else {
                         // consumed the iter, time go to in matching
-                        m = Match.Matching;
+                        passedTheBlock = true;
                     }
                 }
-                else if (m == Match.Before) // here when you still havent encounter the other iter
+                else if (!encounteredTheBlock) // here when you still havent encountered the other iter
                 {
                     yield return (Match.Before, element);
                 }
                 else if (i < len) // here when either the iter was consumed, either it was not matching anymore
                 {
+                    passedTheBlock = true;
                     yield return (Match.Matching, element);
                     i++; // can stay only len in matching
                 }
