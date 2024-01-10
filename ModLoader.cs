@@ -164,7 +164,7 @@ namespace ModShardLauncher
             }
         }
         /// <summary>
-        /// Return the UndertaleCode from <c>name</c>.
+        /// Return the UndertaleCode from <paramref name="fileName"/>.
         /// </summary>
         public static UndertaleCode GetUMTCodeFromFile(string fileName)
         {
@@ -179,6 +179,9 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        /// <summary>
+        /// Return the UndertaleCode as string from <paramref name="fileName"/>.
+        /// </summary>
         public static string GetStringGMLFromFile(string fileName)
         {
             try {
@@ -192,6 +195,9 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        /// <summary>
+        /// Set the UndertaleCode in <paramref name="fileName"/> as <paramref name="codeAsString"/>.
+        /// </summary>
         public static void SetStringGMLInFile(string codeAsString, string fileName)
         {
             try {
