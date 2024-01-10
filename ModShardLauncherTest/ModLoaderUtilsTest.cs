@@ -590,7 +590,6 @@ state = 25";
             Assert.Equal(matchStringListReference, stringList_matchBelow);
         }
     }
-    
     public class MatchAllTest
     {
         [Theory]
@@ -615,6 +614,50 @@ state = 25";
 
             // Assert
             Assert.Equal(matchStringListReference, stringList_matchFrom);
+        }
+    }
+    public class PeekTest
+    {
+        [Theory]
+        [InlineData(StringDataForTest.oneLine)]
+        [InlineData(StringDataForTest.multipleLines)]
+        [InlineData(StringDataForTest.randomBlock)]
+        public void Peek_String(string input)
+        {
+            // Arrange
+            IEnumerable<string> stringList = input.Split('\n');
+
+            // Act
+            IEnumerable<string> stringList_peek = stringList.Peek();
+
+            // Assert
+            Assert.Equal(input.Split('\n'), stringList_peek);
+        }
+        
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, Match.Before)]
+        [InlineData(StringDataForTest.multipleLines, Match.Before)]
+        [InlineData(StringDataForTest.randomBlock, Match.Before)]
+        [InlineData(StringDataForTest.oneLine, Match.Matching)]
+        [InlineData(StringDataForTest.multipleLines, Match.Matching)]
+        [InlineData(StringDataForTest.randomBlock, Match.Matching)]
+        [InlineData(StringDataForTest.oneLine, Match.After)]
+        [InlineData(StringDataForTest.multipleLines, Match.After)]
+        [InlineData(StringDataForTest.randomBlock, Match.After)]
+        public void Peek_MatchString(string input, Match m)
+        {
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((m, s));
+            }
+
+            // Act
+            IEnumerable<(Match, string)> matchStringList_peek = matchStringList.Peek();
+
+            // Assert
+            Assert.Equal(matchStringList, matchStringList_peek);
         }
     }
     public class RemoveTest
@@ -772,6 +815,212 @@ state = 25";
 
             // Assert
             Assert.Equal(stringListReference, matchStringList_keepOnly);
+        }
+    }
+
+    public class FilterMatchTest
+    {
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, 0, 1)]
+        [InlineData(StringDataForTest.multipleLines, 0, 2)]
+        [InlineData(StringDataForTest.randomBlock, 0, 10)]
+        [InlineData(StringDataForTest.randomBlock, 7, 14)]
+        public void FilterMatch_EqualsBefore(string input, int start, int len)
+        {
+            // Reference
+            List<string> stringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i < start)
+                    stringListReference.Add(s);
+            }
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i < start)
+                    matchStringList.Add((Match.Before, s));
+                else if (i >= start + len)
+                    matchStringList.Add((Match.After, s));
+                else
+                    matchStringList.Add((Match.Matching, s));
+            }
+
+            // Act
+            IEnumerable<string> matchStringList_filterMatch = matchStringList.FilterMatch(x => x == Match.Before);
+
+            // Assert
+            Assert.Equal(stringListReference, matchStringList_filterMatch);
+        }
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, 0, 1)]
+        [InlineData(StringDataForTest.multipleLines, 0, 2)]
+        [InlineData(StringDataForTest.randomBlock, 0, 10)]
+        [InlineData(StringDataForTest.randomBlock, 7, 14)]
+        public void FilterMatch_EqualsMatching(string input, int start, int len) // same as KeepOnly in theory
+        {
+            // Reference
+            List<string> stringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i >= start && i < start + len)
+                    stringListReference.Add(s);
+            }
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i < start)
+                    matchStringList.Add((Match.Before, s));
+                else if (i >= start + len)
+                    matchStringList.Add((Match.After, s));
+                else
+                    matchStringList.Add((Match.Matching, s));
+            }
+
+            // Act
+            IEnumerable<string> matchStringList_filterMatch = matchStringList.FilterMatch(x => x == Match.Matching);
+
+            // Assert
+            Assert.Equal(stringListReference, matchStringList_filterMatch);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, 0, 1)]
+        [InlineData(StringDataForTest.multipleLines, 0, 2)]
+        [InlineData(StringDataForTest.randomBlock, 0, 10)]
+        [InlineData(StringDataForTest.randomBlock, 7, 14)]
+        public void FilterMatch_EqualsAfter(string input, int start, int len)
+        {
+            // Reference
+            List<string> stringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i >= start + len)
+                    stringListReference.Add(s);
+            }
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i < start)
+                    matchStringList.Add((Match.Before, s));
+                else if (i >= start + len)
+                    matchStringList.Add((Match.After, s));
+                else
+                    matchStringList.Add((Match.Matching, s));
+            }
+
+            // Act
+            IEnumerable<string> matchStringList_filterMatch = matchStringList.FilterMatch(x => x == Match.After);
+
+            // Assert
+            Assert.Equal(stringListReference, matchStringList_filterMatch);
+        }
+        
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, 0, 1)]
+        [InlineData(StringDataForTest.multipleLines, 0, 2)]
+        [InlineData(StringDataForTest.randomBlock, 0, 10)]
+        [InlineData(StringDataForTest.randomBlock, 7, 14)]
+        public void FilterMatch_NotEqualsBefore(string input, int start, int len)
+        {
+            // Reference
+            List<string> stringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i >= start)
+                    stringListReference.Add(s);
+            }
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i < start)
+                    matchStringList.Add((Match.Before, s));
+                else if (i >= start + len)
+                    matchStringList.Add((Match.After, s));
+                else
+                    matchStringList.Add((Match.Matching, s));
+            }
+
+            // Act
+            IEnumerable<string> matchStringList_filterMatch = matchStringList.FilterMatch(x => x != Match.Before);
+
+            // Assert
+            Assert.Equal(stringListReference, matchStringList_filterMatch);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, 0, 1)]
+        [InlineData(StringDataForTest.multipleLines, 0, 2)]
+        [InlineData(StringDataForTest.randomBlock, 0, 10)]
+        [InlineData(StringDataForTest.randomBlock, 7, 14)]
+        public void FilterMatch_NotEqualsMatching(string input, int start, int len) // same as Remove in theory
+        {
+            // Reference
+            List<string> stringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i < start || i >= start + len)
+                    stringListReference.Add(s);
+            }
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i < start)
+                    matchStringList.Add((Match.Before, s));
+                else if (i >= start + len)
+                    matchStringList.Add((Match.After, s));
+                else
+                    matchStringList.Add((Match.Matching, s));
+            }
+
+            // Act
+            IEnumerable<string> matchStringList_filterMatch = matchStringList.FilterMatch(x => x != Match.Matching);
+
+            // Assert
+            Assert.Equal(stringListReference, matchStringList_filterMatch);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, 0, 1)]
+        [InlineData(StringDataForTest.multipleLines, 0, 2)]
+        [InlineData(StringDataForTest.randomBlock, 0, 10)]
+        [InlineData(StringDataForTest.randomBlock, 7, 14)]
+        public void FilterMatch_NotEqualsAfter(string input, int start, int len)
+        {
+            // Reference
+            List<string> stringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i < start + len)
+                    stringListReference.Add(s);
+            }
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i < start)
+                    matchStringList.Add((Match.Before, s));
+                else if (i >= start + len)
+                    matchStringList.Add((Match.After, s));
+                else
+                    matchStringList.Add((Match.Matching, s));
+            }
+
+            // Act
+            IEnumerable<string> matchStringList_filterMatch = matchStringList.FilterMatch(x => x != Match.After);
+
+            // Assert
+            Assert.Equal(stringListReference, matchStringList_filterMatch);
         }
     }
 }

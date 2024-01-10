@@ -11,6 +11,9 @@ using UndertaleModLib.Models;
 
 namespace ModShardLauncher
 {
+    /// <summary>
+    /// Enum used in <see cref="MatchFrom"/>, <see cref="MatchBelow"/> and <see cref="MatchAll"/> to tag specific lines.
+    /// </summary>
     public enum Match 
     {
         Before,
@@ -128,22 +131,22 @@ namespace ModShardLauncher
             return string.Join("\n", ienumerable.Flatten());
         }
         /// <summary>
-        /// A wrapper for string.Join("\n") on the IEnumerable attribute of a string FileEnumerable. <see cref="Collect"/>
+        /// A wrapper for string.Join("\n") on the IEnumerable attribute of a string <see cref="FileEnumerable"/>. <see cref="Collect"/>
         /// </summary>
         public static string Collect(this FileEnumerable<string> fe)
         {
             return fe.ienumerable.Collect();
         }
         /// <summary>
-        /// A wrapper for string.Join("\n") on the IEnumerable attribute of a (Match, string) FileEnumerable. <see cref="Collect"/>
+        /// A wrapper for string.Join("\n") on the IEnumerable attribute of a (Match, string) <see cref="FileEnumerable"/>. <see cref="Collect"/>
         /// </summary>
         public static string Collect(this FileEnumerable<(Match, string)> fe)
         {
             return fe.ienumerable.Collect();
         }
         /// <summary>
-        /// A selector that searches the first block of continuous lines that matches a given list of string.
-        /// Does nothing on its own, needs to be used with an Action to properly function.
+        /// A selector that tags the first block of continuous lines that matches a given list of string.
+        /// Does nothing on its own, only tagging, needs to be used with an Action to properly modify your input.
         /// <example>
         /// For example:
         /// <code>
@@ -188,18 +191,31 @@ namespace ModShardLauncher
             return ienumerable.MatchFrom(other.Split("\n"));
         }
         /// <summary>
-        /// Wrapper of <see cref="MatchFrom"/> for the FileEnumerable class.
+        /// Wrapper of <see cref="MatchFrom"/> for the <see cref="FileEnumerable"/>  class.
         /// </summary>
         public static FileEnumerable<(Match, string)> MatchFrom(this FileEnumerable<string> fe, string other) 
         {
             return new(fe.header, fe.ienumerable.MatchFrom(other.Split("\n")));
-        }/// <summary>
-        /// Wrapper of <see cref="MatchFrom"/> for the FileEnumerable class using the content of <paramref name="fileName"/> for the comparison.
+        }
+        /// <summary>
+        /// Wrapper of <see cref="MatchFrom"/> for the <see cref="FileEnumerable"/> class using the content of <paramref name="fileName"/> for the comparison.
         /// </summary>
         public static FileEnumerable<(Match, string)> MatchFrom(this FileEnumerable<string> fe, ModFile modFile, string fileName) 
         {
             return new(fe.header, fe.ienumerable.MatchFrom(modFile.GetCode(fileName).Split("\n")));
         }
+        /// <summary>
+        /// A selector that tags the <paramref name="len"/>-th lines of code below a given list of string.
+        /// Does nothing on its own, only tagging, needs to be used with an Action to properly modify your input.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt; string &gt; example = new() { "Hello", "World" };
+        /// var matched_example = example.MatchBelow(new List&lt; string &gt;() { "Hel" }, 1);
+        /// </code>
+        /// results in <c>matched_example</c> being new IEnumerable&lt;(Match, string)&gt;() { (Match.Before, "Hello"), (Match.Matching, "World") };.
+        /// </example>
+        /// </summary>
         public static IEnumerable<(Match, string)> MatchBelow(this IEnumerable<string> ienumerable, IEnumerable<string> other, int len)
         {
             Match m = Match.Before;
@@ -242,18 +258,39 @@ namespace ModShardLauncher
                 }
             }
         }
+        /// <summary>
+        /// Same behaviour as <see cref="MatchBelow"/> but using <paramref name="other"/>.Split('\n') for the comparison. 
+        /// </summary>
         public static IEnumerable<(Match, string)> MatchBelow(this IEnumerable<string> ienumerable, string other, int len) 
         {
             return ienumerable.MatchBelow(other.Split("\n"), len);
         }
+        /// <summary>
+        /// Wrapper of <see cref="MatchBelow"/> for the <see cref="FileEnumerable"/> class.
+        /// </summary>
         public static FileEnumerable<(Match, string)> MatchBelow(this FileEnumerable<string> fe, string other, int len) 
         {
             return new(fe.header, fe.ienumerable.MatchBelow(other.Split("\n"), len));
         }
+        /// <summary>
+        /// Wrapper of <see cref="MatchBelow"/> for the <see cref="FileEnumerable"/> class using the content of <paramref name="fileName"/> for the comparison.
+        /// </summary>
         public static FileEnumerable<(Match, string)> MatchBelow(this FileEnumerable<string> fe, ModFile modFile, string fileName, int len) 
         {
             return new(fe.header, fe.ienumerable.MatchBelow(modFile.GetCode(fileName).Split("\n"), len));
         }
+        /// <summary>
+        /// A selector that tags the all lines of the input.
+        /// Does nothing on its own, only tagging, needs to be used with an Action to properly modify your input.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt; string &gt; example = new() { "Hello", "World" };
+        /// var matched_example = example.MatchAll();
+        /// </code>
+        /// results in <c>matched_example</c> being new IEnumerable&lt;(Match, string)&gt;() { (Match.Matching, "Hello"), (Match.Matching, "World") };.
+        /// </example>
+        /// </summary>
         public static IEnumerable<(Match, string)> MatchAll(this IEnumerable<string> ienumerable)
         {
             foreach (string element in ienumerable)
@@ -261,10 +298,24 @@ namespace ModShardLauncher
                 yield return (Match.Matching, element);
             }
         }
+        /// <summary>
+        /// Wrapper of <see cref="MatchAll"/> for the <see cref="FileEnumerable"/> class.
+        /// </summary>
         public static FileEnumerable<(Match, string)> MatchAll(this FileEnumerable<string> fe) 
         {
             return new(fe.header, fe.ienumerable.MatchAll());
         }
+        /// <summary>
+        /// An action on an IEnumerable that prints each line on the log console but does not alter the data flow.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt; string &gt; example = new() { "Hello", "World" };
+        /// var peeked_example = example.Peek();
+        /// </code>
+        /// results in <c>peeked_example</c> being new IEnumerable&lt; string &gt;() { "Hello", "World" };.
+        /// </example>
+        /// </summary>
         public static IEnumerable<T> Peek<T>(this IEnumerable<T> ienumerable)
         {
             foreach(T element in ienumerable)
@@ -273,6 +324,9 @@ namespace ModShardLauncher
                 yield return element;
             }
         }
+        /// <summary>
+        /// Wrapper of <see cref="Peek"/> for the <see cref="FileEnumerable"/> class.
+        /// </summary>
         public static FileEnumerable<T> Peek<T>(this FileEnumerable<T> fe)
         {
             return new(fe.header, fe.ienumerable.Peek());
