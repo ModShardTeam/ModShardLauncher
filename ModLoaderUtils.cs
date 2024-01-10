@@ -20,12 +20,18 @@ namespace ModShardLauncher
         Matching,
         After,
     }
+    /// <summary>
+    /// Enum to know how the code handled was extracted with UTMT. The most classic cases are code as string either decompiled from GML or disassemblied from Assembly-like GML.
+    /// </summary>
     public enum PatchingWay 
     {
         GML,
         AssemblyAsInstructions,
         AssemblyAsString,
     }
+    /// <summary>
+    /// Informations around the code handled to notably recompiled it easily.
+    /// </summary>
     public class Header
     {
         public readonly string fileName;
@@ -39,6 +45,9 @@ namespace ModShardLauncher
             this.patchingWay = patchingWay;
         }
     }
+    /// <summary>
+    /// Result of the <see cref="Save"/> method. Contains information that can help debugging if something went wrong.
+    /// </summary>
     public class ModSummary
     {
         public readonly string fileName;
@@ -57,6 +66,9 @@ namespace ModShardLauncher
             return string.Format("{0} was patched by {1}:\n{2}", fileName, patchingWay, newCode);
         }
     }
+    /// <summary>
+    /// A class wrapper that encapsulate a <see cref="Header"/> and an IEnumerable. That's the main class used while modding under the hood.
+    /// </summary>
     public class FileEnumerable<T>
     {
         public readonly Header header;
@@ -67,6 +79,9 @@ namespace ModShardLauncher
             this.ienumerable = ienumerable;
         }
     }
+    /// <summary>
+    /// A static class for notably IEnumerable Extensions to provide a functional-programing-like api while modding.
+    /// </summary>
     public static class EnumerableExtensions
     {
         /// <summary>
@@ -410,6 +425,17 @@ namespace ModShardLauncher
         {
             return new(fe.header, fe.ienumerable.FilterMatch(predicate));
         }
+        /// <summary>
+        /// An action on an IEnumerable that inserts lines of code below the Matching block. 
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt;(Match, string)&gt; example = new() { (Match.Before, "Hello"), (Match.Matching, "World"), (Match.After, "!") };
+        /// var inserted_example = example.InsertBelow(new IEnumerable&lt; string &gt;() { " ", "I'm an example" });
+        /// </code>
+        /// results in <c>inserted_example</c> being new IEnumerable&lt; string &gt;() { "Hello", "World", " ", "I'm an example", "!" };.
+        /// </example>
+        /// </summary>
         public static IEnumerable<string> InsertBelow(this IEnumerable<(Match, string)> ienumerable, IEnumerable<string> inserting)
         {
             bool foundAfter = false;
@@ -436,18 +462,38 @@ namespace ModShardLauncher
                 }
             }
         }
+        /// <summary>
+        /// Same behaviour as <see cref="InsertBelow"/> but using <paramref name="other"/>.Split('\n') for the comparison. 
+        /// </summary>
         public static IEnumerable<string> InsertBelow(this IEnumerable<(Match, string)> ienumerable, string inserting)
         {
             return ienumerable.InsertBelow(inserting.Split("\n"));
         }
+        /// <summary>
+        /// Wrapper of <see cref="InsertBelow"/> for the <see cref="FileEnumerable"/> class.
+        /// </summary>
         public static  FileEnumerable<string> InsertBelow(this FileEnumerable<(Match, string)> fe, string inserting)
         {
             return new(fe.header, fe.ienumerable.InsertBelow(inserting.Split("\n")));
         }
+        /// <summary>
+        /// Wrapper of <see cref="InsertBelow"/> for the <see cref="FileEnumerable"/> class using the content of <paramref name="fileName"/> for the comparison.
+        /// </summary>
         public static  FileEnumerable<string> InsertBelow(this FileEnumerable<(Match, string)> fe, ModFile modFile, string fileName)
         {
             return new(fe.header, fe.ienumerable.InsertBelow(modFile.GetCode(fileName).Split("\n")));
         }
+        /// <summary>
+        /// An action on an IEnumerable that inserts lines of code above the Matching block. 
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt;(Match, string)&gt; example = new() { (Match.Before, "Hello"), (Match.Matching, "World"), (Match.After, "!") };
+        /// var inserted_example = example.InsertAbove(new IEnumerable&lt; string &gt;() { " ", "I'm an example" });
+        /// </code>
+        /// results in <c>inserted_example</c> being new IEnumerable&lt; string &gt;() { "Hello", " ", "I'm an example", "World", "!" };.
+        /// </example>
+        /// </summary>
         public static IEnumerable<string> InsertAbove(this IEnumerable<(Match, string)> ienumerable, IEnumerable<string> inserting)
         {
             bool alreadyInserted = false;
@@ -464,18 +510,38 @@ namespace ModShardLauncher
                 yield return element;
             }
         }
+        /// <summary>
+        /// Same behaviour as <see cref="InsertAbove"/> but using <paramref name="other"/>.Split('\n') for the comparison. 
+        /// </summary>
         public static IEnumerable<string> InsertAbove(this IEnumerable<(Match, string)> ienumerable, string inserting)
         {
             return ienumerable.InsertAbove(inserting.Split("\n"));
         }
+        /// <summary>
+        /// Wrapper of <see cref="InsertAbove"/> for the <see cref="FileEnumerable"/> class.
+        /// </summary>
         public static  FileEnumerable<string> InsertAbove(this FileEnumerable<(Match, string)> fe, string inserting)
         {
             return new(fe.header, fe.ienumerable.InsertAbove(inserting.Split("\n")));
         }
+        /// <summary>
+        /// Wrapper of <see cref="InsertAbove"/> for the <see cref="FileEnumerable"/> class using the content of <paramref name="fileName"/> for the comparison.
+        /// </summary>
         public static  FileEnumerable<string> InsertAbove(this FileEnumerable<(Match, string)> fe, ModFile modFile, string fileName)
         {
             return new(fe.header, fe.ienumerable.InsertAbove(modFile.GetCode(fileName).Split("\n")));
         }
+        /// <summary>
+        /// An action on an IEnumerable that replace the Matching block with the lines given. 
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt;(Match, string)&gt; example = new() { (Match.Before, "Hello"), (Match.Matching, "World"), (Match.After, "!") };
+        /// var replaced_example = example.ReplaceBy(new IEnumerable&lt; string &gt;() { " ", "I'm an example" });
+        /// </code>
+        /// results in <c>replaced_example</c> being new IEnumerable&lt; string &gt;() { "Hello", " ", "I'm an example", "!" };.
+        /// </example>
+        /// </summary>
         public static IEnumerable<string> ReplaceBy(this IEnumerable<(Match, string)> ienumerable, IEnumerable<string> replacing)
         {
             bool alreadyReplaced = false;
@@ -496,18 +562,33 @@ namespace ModShardLauncher
                 }
             }
         }
+        /// <summary>
+        /// Same behaviour as <see cref="ReplaceBy"/> but using <paramref name="other"/>.Split('\n') for the comparison. 
+        /// </summary>
         public static IEnumerable<string> ReplaceBy(this IEnumerable<(Match, string)> ienumerable, string replacing)
         {
             return ienumerable.ReplaceBy(replacing.Split("\n"));
         }
+        /// <summary>
+        /// Wrapper of <see cref="ReplaceBy"/> for the <see cref="FileEnumerable"/> class.
+        /// </summary>
         public static  FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, string inserting)
         {
             return new(fe.header, fe.ienumerable.ReplaceBy(inserting.Split("\n")));
         }
+        /// <summary>
+        /// Wrapper of <see cref="ReplaceBy"/> for the <see cref="FileEnumerable"/> class using the content of <paramref name="fileName"/> for the comparison.
+        /// </summary>
         public static  FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, ModFile modFile, string fileName)
         {
             return new(fe.header, fe.ienumerable.ReplaceBy(modFile.GetCode(fileName).Split("\n")));
         }
+        /// <summary>
+        /// Save the code handled during the chain of Matches and Actions.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="ModSummary"/> instance that can be used for debug purpose.
+        /// </returns>
         public static ModSummary Save(this FileEnumerable<string> fe)
         {
             try {
@@ -713,7 +794,7 @@ namespace ModShardLauncher
                 // see https://prng.di.unimi.it/
                 u = BitConverter.UInt64BitsToDouble(0x3FFL << 52 | x >> 12) - 1.0;
 
-                if((N - tt)*u >= n - m) 
+                if((N - tt)*u >= nn - m) 
                 {
                     // element not selected
                     tt++;

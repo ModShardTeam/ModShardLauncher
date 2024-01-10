@@ -1249,4 +1249,109 @@ state = 25";
             Assert.Equal(stringListReference, stringList_insertAbove);
         }
     }
+    public class ReplaceByTest
+    {
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, Match.Before)]
+        [InlineData(StringDataForTest.multipleLines, Match.Before)]
+        [InlineData(StringDataForTest.randomBlock, Match.Before)]
+        public void ReplaceBy_NothingHappensIfNoMatch(string input, Match m)
+        {
+            string toInsert = "Aaaaaa";
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((m, s));
+            }
+
+            // Act
+            IEnumerable<string> stringList_replaceBy = matchStringList.ReplaceBy(toInsert);
+
+            // Assert
+            Assert.Equal(input.Split('\n'), stringList_replaceBy);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, Match.Matching)]
+        [InlineData(StringDataForTest.multipleLines, Match.Matching)]
+        [InlineData(StringDataForTest.randomBlock, Match.Matching)]
+        public void ReplaceBy_AllMatchingReplaceByOneLine(string input, Match m)
+        {
+            string toInsert = "Aaaaaa";
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((m, s));
+            }
+
+            // Act
+            IEnumerable<string> stringList_replaceBy = matchStringList.ReplaceBy(toInsert);
+
+            // Assert
+            Assert.Equal(toInsert.Split('\n'), stringList_replaceBy);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, Match.Matching)]
+        [InlineData(StringDataForTest.multipleLines, Match.Matching)]
+        [InlineData(StringDataForTest.randomBlock, Match.Matching)]
+        public void ReplaceBy_AllMatchingReplaceBySomeLines(string input, Match m)
+        {
+            string toInsert = StringDataForTest.multipleLines;
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((m, s));
+            }
+
+            // Act
+            IEnumerable<string> stringList_replaceBy = matchStringList.ReplaceBy(toInsert);
+
+            // Assert
+            Assert.Equal(toInsert.Split('\n'), stringList_replaceBy);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, 0)]
+        [InlineData(StringDataForTest.multipleLines, 1)]
+        [InlineData(StringDataForTest.randomBlock, 40)]
+        public void ReplaceBy_SpecificIndexSomeLines(string input, int index)
+        {
+            string toInsert = StringDataForTest.multipleLines;
+
+            // Reference
+            List<string> stringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i == index)
+                    stringListReference.AddRange(toInsert.Split('\n'));
+                else
+                    stringListReference.Add(s);
+            }
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i == index)
+                    matchStringList.Add((Match.Matching, s));
+                else if (i < index)
+                    matchStringList.Add((Match.Before, s));
+                else
+                    matchStringList.Add((Match.After, s));
+            }
+
+            // Act
+            IEnumerable<string> stringList_replaceBy = matchStringList.ReplaceBy(toInsert);
+
+            // Assert
+            Assert.Equal(stringListReference, stringList_replaceBy);
+        }
+    }
 }
