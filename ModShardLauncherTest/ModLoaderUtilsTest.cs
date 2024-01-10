@@ -848,10 +848,10 @@ state = 25";
             }
 
             // Act
-            IEnumerable<string> matchStringList_filterMatch = matchStringList.FilterMatch(x => x == Match.Before);
+            IEnumerable<string> stringList_filterMatch = matchStringList.FilterMatch(x => x == Match.Before);
 
             // Assert
-            Assert.Equal(stringListReference, matchStringList_filterMatch);
+            Assert.Equal(stringListReference, stringList_filterMatch);
         }
         [Theory]
         [InlineData(StringDataForTest.oneLine, 0, 1)]
@@ -881,10 +881,10 @@ state = 25";
             }
 
             // Act
-            IEnumerable<string> matchStringList_filterMatch = matchStringList.FilterMatch(x => x == Match.Matching);
+            IEnumerable<string> stringList_filterMatch = matchStringList.FilterMatch(x => x == Match.Matching);
 
             // Assert
-            Assert.Equal(stringListReference, matchStringList_filterMatch);
+            Assert.Equal(stringListReference, stringList_filterMatch);
         }
 
         [Theory]
@@ -915,10 +915,10 @@ state = 25";
             }
 
             // Act
-            IEnumerable<string> matchStringList_filterMatch = matchStringList.FilterMatch(x => x == Match.After);
+            IEnumerable<string> stringList_filterMatch = matchStringList.FilterMatch(x => x == Match.After);
 
             // Assert
-            Assert.Equal(stringListReference, matchStringList_filterMatch);
+            Assert.Equal(stringListReference, stringList_filterMatch);
         }
         
         [Theory]
@@ -949,10 +949,10 @@ state = 25";
             }
 
             // Act
-            IEnumerable<string> matchStringList_filterMatch = matchStringList.FilterMatch(x => x != Match.Before);
+            IEnumerable<string> stringList_filterMatch = matchStringList.FilterMatch(x => x != Match.Before);
 
             // Assert
-            Assert.Equal(stringListReference, matchStringList_filterMatch);
+            Assert.Equal(stringListReference, stringList_filterMatch);
         }
 
         [Theory]
@@ -983,10 +983,10 @@ state = 25";
             }
 
             // Act
-            IEnumerable<string> matchStringList_filterMatch = matchStringList.FilterMatch(x => x != Match.Matching);
+            IEnumerable<string> stringList_filterMatch = matchStringList.FilterMatch(x => x != Match.Matching);
 
             // Assert
-            Assert.Equal(stringListReference, matchStringList_filterMatch);
+            Assert.Equal(stringListReference, stringList_filterMatch);
         }
 
         [Theory]
@@ -1017,10 +1017,236 @@ state = 25";
             }
 
             // Act
-            IEnumerable<string> matchStringList_filterMatch = matchStringList.FilterMatch(x => x != Match.After);
+            IEnumerable<string> stringList_filterMatch = matchStringList.FilterMatch(x => x != Match.After);
 
             // Assert
-            Assert.Equal(stringListReference, matchStringList_filterMatch);
+            Assert.Equal(stringListReference, stringList_filterMatch);
+        }
+    }
+
+    public class InsertBelowTest
+    {
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, Match.Before)]
+        [InlineData(StringDataForTest.multipleLines, Match.Before)]
+        [InlineData(StringDataForTest.randomBlock, Match.Before)]
+        public void InsertBelow_NothingHappensIfNoMatch(string input, Match m)
+        {
+            string toInsert = "Aaaaaa";
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((m, s));
+            }
+
+            // Act
+            IEnumerable<string> stringList_insertBelow = matchStringList.InsertBelow(toInsert);
+
+            // Assert
+            Assert.Equal(input.Split('\n'), stringList_insertBelow);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, Match.Matching)]
+        [InlineData(StringDataForTest.multipleLines, Match.Matching)]
+        [InlineData(StringDataForTest.randomBlock, Match.Matching)]
+        public void InsertBelow_AllMatchingInsertOneline(string input, Match m)
+        {
+            string toInsert = "Aaaaaa";
+
+            // Reference
+            List<string> stringListReference = input.Split('\n').ToList();
+            stringListReference.Add(toInsert);
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((m, s));
+            }
+
+            // Act
+            IEnumerable<string> stringList_insertBelow = matchStringList.InsertBelow(toInsert);
+
+            // Assert
+            Assert.Equal(stringListReference, stringList_insertBelow);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, Match.Matching)]
+        [InlineData(StringDataForTest.multipleLines, Match.Matching)]
+        [InlineData(StringDataForTest.randomBlock, Match.Matching)]
+        public void InsertBelow_AllMatchingInsertSomeLines(string input, Match m)
+        {
+            string toInsert = StringDataForTest.multipleLines;
+
+            // Reference
+            List<string> stringListReference = input.Split('\n').ToList();
+            stringListReference.AddRange(toInsert.Split('\n'));
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((m, s));
+            }
+
+            // Act
+            IEnumerable<string> stringList_insertBelow = matchStringList.InsertBelow(toInsert);
+
+            // Assert
+            Assert.Equal(stringListReference, stringList_insertBelow);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, 0)]
+        [InlineData(StringDataForTest.multipleLines, 1)]
+        [InlineData(StringDataForTest.randomBlock, 40)]
+        public void InsertBelow_SpecificIndexSomeLines(string input, int index)
+        {
+            string toInsert = StringDataForTest.multipleLines;
+
+            // Reference
+            List<string> stringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                stringListReference.Add(s);
+                if (i == index)
+                    stringListReference.AddRange(toInsert.Split('\n'));
+            }
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i == index)
+                    matchStringList.Add((Match.Matching, s));
+                else if (i < index)
+                    matchStringList.Add((Match.Before, s));
+                else
+                    matchStringList.Add((Match.After, s));
+            }
+
+            // Act
+            IEnumerable<string> stringList_insertBelow = matchStringList.InsertBelow(toInsert);
+
+            // Assert
+            Assert.Equal(stringListReference, stringList_insertBelow);
+        }
+    }
+
+    public class InsertAboveTest
+    {
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, Match.Before)]
+        [InlineData(StringDataForTest.multipleLines, Match.Before)]
+        [InlineData(StringDataForTest.randomBlock, Match.Before)]
+        public void InsertAbove_NothingHappensIfNoMatch(string input, Match m)
+        {
+            string toInsert = "Aaaaaa";
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((m, s));
+            }
+
+            // Act
+            IEnumerable<string> stringList_insertAbove = matchStringList.InsertAbove(toInsert);
+
+            // Assert
+            Assert.Equal(input.Split('\n'), stringList_insertAbove);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, Match.Matching)]
+        [InlineData(StringDataForTest.multipleLines, Match.Matching)]
+        [InlineData(StringDataForTest.randomBlock, Match.Matching)]
+        public void InsertAbove_AllMatchingInsertOneline(string input, Match m)
+        {
+            string toInsert = "Aaaaaa";
+
+            // Reference
+            List<string> stringListReference = new() { toInsert };
+            stringListReference.AddRange(input.Split('\n'));
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((m, s));
+            }
+
+            // Act
+            IEnumerable<string> stringList_insertAbove = matchStringList.InsertAbove(toInsert);
+
+            // Assert
+            Assert.Equal(stringListReference, stringList_insertAbove);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, Match.Matching)]
+        [InlineData(StringDataForTest.multipleLines, Match.Matching)]
+        [InlineData(StringDataForTest.randomBlock, Match.Matching)]
+        public void InsertAbove_AllMatchingInsertSomeLines(string input, Match m)
+        {
+            string toInsert = StringDataForTest.multipleLines;
+
+            // Reference
+            List<string> stringListReference = toInsert.Split('\n').ToList();
+            stringListReference.AddRange(input.Split('\n'));
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((m, s));
+            }
+
+            // Act
+            IEnumerable<string> stringList_insertAbove = matchStringList.InsertAbove(toInsert);
+
+            // Assert
+            Assert.Equal(stringListReference, stringList_insertAbove);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, 0)]
+        [InlineData(StringDataForTest.multipleLines, 1)]
+        [InlineData(StringDataForTest.randomBlock, 40)]
+        public void InsertAbove_SpecificIndexSomeLines(string input, int index)
+        {
+            string toInsert = StringDataForTest.multipleLines;
+
+            // Reference
+            List<string> stringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i == index)
+                    stringListReference.AddRange(toInsert.Split('\n'));
+                stringListReference.Add(s);
+            }
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i == index)
+                    matchStringList.Add((Match.Matching, s));
+                else if (i < index)
+                    matchStringList.Add((Match.Before, s));
+                else
+                    matchStringList.Add((Match.After, s));
+            }
+
+            // Act
+            IEnumerable<string> stringList_insertAbove = matchStringList.InsertAbove(toInsert);
+
+            // Assert
+            Assert.Equal(stringListReference, stringList_insertAbove);
         }
     }
 }

@@ -331,6 +331,17 @@ namespace ModShardLauncher
         {
             return new(fe.header, fe.ienumerable.Peek());
         }
+        /// <summary>
+        /// An action on an IEnumerable that removes all lines tagged as Matching. It's the complementary operation of <see cref="KeepOnly"/>.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt;(Match, string)&gt; example = new() { (Match.Before, "Hello"), (Match.Matching, "World") };
+        /// var remove_example = example.Remove();
+        /// </code>
+        /// results in <c>remove_example</c> being new IEnumerable&lt; string &gt;() { "Hello" };.
+        /// </example>
+        /// </summary>
         public static IEnumerable<string> Remove(this IEnumerable<(Match, string)> ienumerable)
         {
             foreach((Match matched, string element) in ienumerable)
@@ -339,10 +350,24 @@ namespace ModShardLauncher
                     yield return element;
             }
         }
+        /// <summary>
+        /// Wrapper of <see cref="Remove"/> for the <see cref="FileEnumerable"/> class.
+        /// </summary>
         public static  FileEnumerable<string> Remove(this FileEnumerable<(Match, string)> fe)
         {
             return new(fe.header, fe.ienumerable.Remove());
         }
+        /// <summary>
+        /// An action on an IEnumerable that removes all lines not tagged as Matching. It's the complementary operation of <see cref="Remove"/>.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt;(Match, string)&gt; example = new() { (Match.Before, "Hello"), (Match.Matching, "World") };
+        /// var keepOnly_example = example.KeepOnly();
+        /// </code>
+        /// results in <c>keepOnly_example</c> being new IEnumerable&lt; string &gt;() { "World" };.
+        /// </example>
+        /// </summary>
         public static IEnumerable<string> KeepOnly(this IEnumerable<(Match, string)> ienumerable)
         {
             foreach((Match matched, string element) in ienumerable)
@@ -351,10 +376,25 @@ namespace ModShardLauncher
                     yield return element;
             }
         }
+        /// <summary>
+        /// Wrapper of <see cref="KeepOnly"/> for the <see cref="FileEnumerable"/> class.
+        /// </summary>
         public static  FileEnumerable<string> KeepOnly(this FileEnumerable<(Match, string)> fe)
         {
             return new(fe.header, fe.ienumerable.KeepOnly());
         }
+        /// <summary>
+        /// An action on an IEnumerable that keeps all lines such that the <paramref name="predicate"/> is True. 
+        /// It's a generalization of <see cref="Remove"/> and <see cref="KeepOnly"/>.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt;(Match, string)&gt; example = new() { (Match.Before, "Hello"), (Match.Matching, "World"), (Match.After, "!") };
+        /// var filterMatch_example = example.FilterMatch(x => x != Match.Matching);
+        /// </code>
+        /// results in <c>filterMatch_example</c> being new IEnumerable&lt; string &gt;() { "World", "!" };.
+        /// </example>
+        /// </summary>
         public static IEnumerable<string> FilterMatch(this IEnumerable<(Match, string)> ienumerable, Predicate<Match> predicate)
         {
             foreach((Match matched, string element) in ienumerable)
@@ -363,6 +403,9 @@ namespace ModShardLauncher
                     yield return element;
             }
         }
+        /// <summary>
+        /// Wrapper of <see cref="FilterMatch"/> for the <see cref="FileEnumerable"/> class.
+        /// </summary>
         public static  FileEnumerable<string> FilterMatch(this FileEnumerable<(Match, string)> fe, Predicate<Match> predicate)
         {
             return new(fe.header, fe.ienumerable.FilterMatch(predicate));
