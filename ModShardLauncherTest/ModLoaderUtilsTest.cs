@@ -646,7 +646,7 @@ state = 25";
         [InlineData(StringDataForTest.oneLine)]
         [InlineData(StringDataForTest.multipleLines)]
         [InlineData(StringDataForTest.randomBlock)]
-        public void Remove_All(string input)
+        public void Remove_AllLines(string input)
         {
             // Arrange
             List<(Match, string)> matchStringList = new();
@@ -694,6 +694,84 @@ state = 25";
 
             // Assert
             Assert.Equal(stringListReference, matchStringList_remove);
+        }
+    }
+    public class KeepOnlyTest
+    {
+        [Theory]
+        [InlineData(StringDataForTest.oneLine)]
+        [InlineData(StringDataForTest.multipleLines)]
+        [InlineData(StringDataForTest.randomBlock)]
+        public void KeepOnly_AllLines(string input)
+        {
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((Match.Matching, s));
+            }
+
+            // Act
+            IEnumerable<string> matchStringList_keepOnly = matchStringList.KeepOnly();
+
+            // Assert
+            Assert.Equal(input.Split('\n'), matchStringList_keepOnly);
+        }
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, Match.Before)]
+        [InlineData(StringDataForTest.multipleLines, Match.Before)]
+        [InlineData(StringDataForTest.randomBlock, Match.Before)]
+        [InlineData(StringDataForTest.oneLine, Match.After)]
+        [InlineData(StringDataForTest.multipleLines, Match.After)]
+        [InlineData(StringDataForTest.randomBlock, Match.After)]
+        public void KeepOnly_NoLinesKept(string input, Match m)
+        {
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach(string s in input.Split('\n'))
+            {
+                matchStringList.Add((m, s));
+            }
+
+            // Act
+            IEnumerable<string> matchStringList_keepOnly = matchStringList.KeepOnly();
+
+            // Assert
+            Assert.Equal(Enumerable.Empty<string>(), matchStringList_keepOnly);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, 0, 1)]
+        [InlineData(StringDataForTest.multipleLines, 0, 2)]
+        [InlineData(StringDataForTest.randomBlock, 0, 10)]
+        [InlineData(StringDataForTest.randomBlock, 7, 14)]
+        public void KeepOnly_SpecificLines(string input, int start, int len)
+        {
+            // Reference
+            List<string> stringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i >= start && i < start + len)
+                    stringListReference.Add(s);
+            }
+
+            // Arrange
+            List<(Match, string)> matchStringList = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i < start)
+                    matchStringList.Add((Match.Before, s));
+                else if (i >= start + len)
+                    matchStringList.Add((Match.After, s));
+                else
+                    matchStringList.Add((Match.Matching, s));
+            }
+
+            // Act
+            IEnumerable<string> matchStringList_keepOnly = matchStringList.KeepOnly();
+
+            // Assert
+            Assert.Equal(stringListReference, matchStringList_keepOnly);
         }
     }
 }

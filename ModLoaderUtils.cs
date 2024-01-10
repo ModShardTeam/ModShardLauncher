@@ -87,7 +87,7 @@ namespace ModShardLauncher
         /// List&lt;(Match, string)&gt; example = new() { (Match.Before, "Aaa") };
         /// var flatten_example = example.Flatten();
         /// </code>
-        /// results in <c>flatten_example</c> being List { "Aaa" }.
+        /// results in <c>flatten_example</c> being IEnumerable&lt; string &gt; { "Aaa" }.
         /// </example>
         /// </summary>
         public static IEnumerable<string> Flatten(this IEnumerable<(Match, string)> ienumerable)
@@ -141,6 +141,18 @@ namespace ModShardLauncher
         {
             return fe.ienumerable.Collect();
         }
+        /// <summary>
+        /// A selector that searches the first block of continuous lines that matches a given list of string.
+        /// Does nothing on its own, needs to be used with an Action to properly function.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt; string &gt; example = new() { "Hello", "World" };
+        /// var matched_example = example.MatchFrom(new List&lt; string &gt;() { "Hel" });
+        /// </code>
+        /// results in <c>matched_example</c> being new IEnumerable&lt;(Match, string)&gt;() { (Match.Matching, "Hello"), (Match.After, "World") };.
+        /// </example>
+        /// </summary>
         public static IEnumerable<(Match, string)> MatchFrom(this IEnumerable<string> ienumerable, IEnumerable<string> other) 
         {
             Match m = Match.Before;
@@ -168,14 +180,22 @@ namespace ModShardLauncher
                 }
             }
         }
+        /// <summary>
+        /// Same behaviour as <see cref="MatchFrom"/> but using <paramref name="other"/>.Split('\n') for the comparison. 
+        /// </summary>
         public static IEnumerable<(Match, string)> MatchFrom(this IEnumerable<string> ienumerable, string other) 
         {
             return ienumerable.MatchFrom(other.Split("\n"));
         }
+        /// <summary>
+        /// Wrapper of <see cref="MatchFrom"/> for the FileEnumerable class.
+        /// </summary>
         public static FileEnumerable<(Match, string)> MatchFrom(this FileEnumerable<string> fe, string other) 
         {
             return new(fe.header, fe.ienumerable.MatchFrom(other.Split("\n")));
-        }
+        }/// <summary>
+        /// Wrapper of <see cref="MatchFrom"/> for the FileEnumerable class using the content of <paramref name="fileName"/> for the comparison.
+        /// </summary>
         public static FileEnumerable<(Match, string)> MatchFrom(this FileEnumerable<string> fe, ModFile modFile, string fileName) 
         {
             return new(fe.header, fe.ienumerable.MatchFrom(modFile.GetCode(fileName).Split("\n")));
