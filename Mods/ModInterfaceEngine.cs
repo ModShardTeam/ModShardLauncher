@@ -32,7 +32,20 @@ namespace ModShardLauncher.Mods
 
         public void Initalize()
         {
-            HookDelegates.Add("OnGameStart", new ModDelegate());
+            var OnGameStart = new ModDelegate();
+            OnGameStart += (object[] obj) =>
+            {
+                Main.Instance.Dispatcher.Invoke(() =>
+                {
+                    ModInterfaceServer.Window.MsgBox.AppendText("[Client]: StoneShard connect successfully.\n");
+                    if (Instance.IsLoadHooks)
+                        ModInterfaceServer.Window.MsgBox.AppendText("[Client]: Load hooks successfully.\n");
+                    else
+                        ModInterfaceServer.Window.MsgBox.AppendText("[Client]: Haven't load any hook, you can just use basic features now.\n");
+                });
+            };
+            HookDelegates.Add("OnGameStart", OnGameStart);
+
         }
 
         public Dictionary<string, EngineObject> Variables;
@@ -48,11 +61,10 @@ namespace ModShardLauncher.Mods
             objects.ToList().ForEach(o => code += " " + o.ToString());
             ModInterfaceServer.SendScript(code);
         }
-        public void DoHook(string hook)
+        public void DoHook(string hook, object[] param)
         {
             var data = hook.Split(" ");
-            var parameters = data.Length > 1 ? data.Skip(1).ToArray() : new object[] { };
-            if (HookDelegates.ContainsKey(data[0])) HookDelegates[data[0]].Invoke(parameters);
+            if (HookDelegates.ContainsKey(data[0])) HookDelegates[data[0]].Invoke(param);
         }
         public void AddHook(string hook, Action<object[]> action)
         {
@@ -135,6 +147,8 @@ namespace ModShardLauncher.Mods
             IPAddress ip = IPAddress.Parse(host);
             IPEndPoint ipe = new IPEndPoint(ip, port);
 
+            ModLoader.InitCallbacks();
+
             Server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Server.Bind(ipe);
             MessageBox.Show(string.Format(Application.Current.FindResource("ServerStart").ToString(), port.ToString()));
@@ -152,7 +166,7 @@ namespace ModShardLauncher.Mods
                 {
                     if (Client.Available == 0) continue;
                     string message = "";
-                    byte[] recvData = new byte[1024];
+                    byte[] recvData = new byte[1024 * 64];
                     int bytes;
                     bytes = Client.Receive(recvData, recvData.Length, 0);
                     var ID = BitConverter.ToInt32(recvData.Take(4).ToArray());
@@ -169,10 +183,9 @@ namespace ModShardLauncher.Mods
                         }
                         else if (message.StartsWith("[HOK]"))
                         {
-                            var data = message.Replace("[HOK]", "");
-                            ModInterfaceEngine.Instance.DoHook(data);
-                            if (data == "OnGameStart")
-                                Window.MsgBox.AppendText("[Client]: StoneShard connect successfully.");
+                            var data = message.Replace("[HOK]", "").Split("<EXTRAMSG>");
+                            var param = data.Length > 1 ? data.Skip(1).ToArray() : new string[] { };
+                            ModInterfaceEngine.Instance.DoHook(data[0], param);
                         }
                     });
                 }

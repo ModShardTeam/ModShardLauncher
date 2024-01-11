@@ -32,7 +32,7 @@ if (server >= 0 && ds_exists(async_load, 1))
         buffer = buffer_create(4, buffer_grow, 1)
         buffer_write(buffer, buffer_u32, ID)
         buffer_write(buffer, buffer_string, "[CLB]")
-        buffer_write(buffer, buffer_string, message)
+        buffer_write(buffer, buffer_string, ret)
         network_send_raw(server, buffer, buffer_get_size(buffer))
     }
 }

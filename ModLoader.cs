@@ -44,6 +44,10 @@ namespace ModShardLauncher
         {
             Weapons = GetTable("gml_GlobalScript_table_weapons");
             WeaponDescriptions = GetTable("gml_GlobalScript_table_weapons_text");
+            
+        }
+        public static void InitCallbacks()
+        {
             ScriptCallbacks.Add("getInstances", (str) =>
             {
                 var DynamicObject = JsonConvert.DeserializeObject<dynamic>(str);
@@ -355,21 +359,23 @@ namespace ModShardLauncher
                     if (type.IsSubclassOf(typeof(Weapon))) 
                         LoadWeapon(type);
                     if (type.IsSubclassOf(typeof(ModHooks)))
-                    {
-                        var hooks = Activator.CreateInstance(type);
-                        var instance = ModInterfaceEngine.Instance as ModInterfaceEngine;
-                        foreach (var hook in type.GetMethods())
-                        {
-                            if (instance.HookDelegates.ContainsKey(hook.Name))
-                                instance.HookDelegates[hook.Name] += (object[] obj) =>
-                                {
-                                    hook.Invoke(hooks, new object[] {obj});
-                                };
-                        }
-                        instance.IsLoadHooks = true;
-                    }
+                        LoadHooks(type);
                 }
             }
+        }
+        public static void LoadHooks(Type type)
+        {
+            var hooks = Activator.CreateInstance(type);
+            var instance = ModInterfaceEngine.Instance as ModInterfaceEngine;
+            foreach (var hook in type.GetMethods())
+            {
+                if (instance.HookDelegates.ContainsKey(hook.Name))
+                    instance.HookDelegates[hook.Name] += (object[] obj) =>
+                    {
+                        hook.Invoke(hooks, new object[] { obj });
+                    };
+            }
+            instance.IsLoadHooks = true;
         }
         public static void LoadWeapon(Type type)
         {
