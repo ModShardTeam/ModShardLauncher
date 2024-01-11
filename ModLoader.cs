@@ -27,82 +27,146 @@ namespace ModShardLauncher
         internal static UndertaleData Data => DataLoader.data;
         public static string ModPath => Path.Join(Environment.CurrentDirectory, "Mods");
         public static string ModSourcesPath => Path.Join(Environment.CurrentDirectory, "ModSources");
-        public static Dictionary<string, ModFile> Mods = new Dictionary<string, ModFile>();
-        public static Dictionary<string, ModSource> ModSources = new Dictionary<string, ModSource>();
-        private static List<Assembly> Assemblies = new List<Assembly>();
-        private static bool patched = false;
-        public static List<string> Weapons;
-        public static List<string> WeaponDescriptions;
+        public static Dictionary<string, ModFile> Mods = new();
+        public static Dictionary<string, ModSource> ModSources = new ();
+        private static List<Assembly> Assemblies = new();
+        public static List<string> Weapons = new();
+        public static List<string> WeaponDescriptions = new();
         public static void ShowMessage(string msg)
         {
             Trace.Write(msg);
         }
         public static void Initalize()
         {
-            Weapons = GetTable("gml_GlobalScript_table_weapons");
-            WeaponDescriptions = GetTable("gml_GlobalScript_table_weapons_text");
+            Weapons = ModLoaderUtils.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons"));
+            WeaponDescriptions = ModLoaderUtils.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons_text"));
         }
         public static UndertaleGameObject AddObject(string name)
         {
-            var obj = new UndertaleGameObject()
+            try 
             {
-                Name = Data.Strings.MakeString(name)
-            };
-            if(Data.GameObjects.FirstOrDefault(t => t.Name.Content == name) == default)
+                // check if the object exists already
+                UndertaleGameObject? existingObj = Data.GameObjects.FirstOrDefault(t => t.Name.Content == name);
+                if(existingObj != null)
+                {
+                    Log.Information(string.Format("Cannot create the GameObject since it already exists: {0}", name.ToString()));
+                    return existingObj;
+                }
+
+                // doesnt exist so it can be added
+                UndertaleGameObject obj = new()
+                {
+                    Name = Data.Strings.MakeString(name)
+                };
                 Data.GameObjects.Add(obj);
-            return obj;
+                Log.Information(string.Format("Successfully created gameObject: {0}", name.ToString()));
+                return obj;
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
         public static UndertaleGameObject GetObject(string name)
         {
-            return Data.GameObjects.FirstOrDefault(t => t.Name.Content == name);
+            try
+            {
+                UndertaleGameObject gameObject = Data.GameObjects.First(t => t.Name.Content == name);
+                Log.Information(string.Format("Found gameObject: {0}", name.ToString()));
+                return gameObject;
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
         public static UndertaleSprite GetSprite(string name)
         {
-            return Data.Sprites.FirstOrDefault(t => t.Name.Content == name);
+            try
+            {
+                UndertaleSprite sprite = Data.Sprites.First(t => t.Name.Content == name);
+                Log.Information(string.Format("Found sprite: {0}", name.ToString()));
+                return sprite;
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
         public static void SetObject(string name, UndertaleGameObject o)
         {
-            var obj = Data.GameObjects.First(t => t.Name.Content.IndexOf(name) != -1);
-            Data.GameObjects[Data.GameObjects.IndexOf(obj)] = o;
-        }
-        public static UndertaleCode AddCode(string Code, string name)
-        {
-            var code = new UndertaleCode();
-            var locals = new UndertaleCodeLocals();
-            code.Name = Data.Strings.MakeString(name);
-            locals.Name = code.Name;
-            UndertaleCodeLocals.LocalVar argsLocal = new()
+            try
             {
-                Name = Data.Strings.MakeString("arguments"),
-                Index = 0
-            };
-            locals.Locals.Add(argsLocal);
-            code.LocalsCount = 1;
-            Data.CodeLocals.Add(locals);
-            code.ReplaceGML(Code, Data);
-            Data.Code.Add(code);
-            return code;
+                UndertaleGameObject obj = Data.GameObjects.First(t => t.Name.Content == name);
+                Data.GameObjects[Data.GameObjects.IndexOf(obj)] = o;
+                Log.Information(string.Format("Successfully replaced gameObject: {0}", name.ToString()));
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
-        public static UndertaleCode AddFunction(string Code, string name)
+        public static UndertaleCode AddCode(string codeAsString, string name)
         {
-            var scriptCode = AddCode(Code, name);
-            Data.Code.Add(Data.Code[0]);
-            Data.Code.RemoveAt(0);
-            return scriptCode;
+            try
+            {
+                UndertaleCode code = new();
+                UndertaleCodeLocals locals = new();
+                code.Name = Data.Strings.MakeString(name);
+                locals.Name = code.Name;
+                UndertaleCodeLocals.LocalVar argsLocal = new()
+                {
+                    Name = Data.Strings.MakeString("arguments"),
+                    Index = 0
+                };
+                locals.Locals.Add(argsLocal);
+                code.LocalsCount = 1;
+                Data.CodeLocals.Add(locals);
+                code.ReplaceGML(codeAsString, Data);
+                Data.Code.Add(code);
+                return code;
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
-        public static List<string> GetTable(string name)
+        /// <summary>
+        /// Add a new function named <paramref name="name"/>.
+        /// </summary>
+        /// <param name="codeAsString"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static UndertaleCode AddFunction(string codeAsString, string name)
         {
-            var table = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
-            GlobalDecompileContext context = new GlobalDecompileContext(Data, false);
-            var text = Decompiler.Decompile(table, context);
-            var ret = Regex.Match(text, "return (\\[.*\\])").Groups[1].Value;
-            return JsonConvert.DeserializeObject<List<string>>(ret);
+            try
+            {
+                Log.Information(string.Format("Trying to add the function : {0}", name.ToString()));
+
+                UndertaleCode scriptCode = AddCode(codeAsString, name);
+                Data.Code.Add(Data.Code[0]);
+                Data.Code.RemoveAt(0);
+
+                Log.Information(string.Format("Successfully added the function : {0}", name.ToString()));
+                return scriptCode;
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
         public static UndertaleVariable GetVariable(string name)
         {
-            try {
+            try 
+            {
                 UndertaleVariable variable = Data.Variables.First(t => t.Name?.Content == name);
-                Log.Information(string.Format("Find variable: {0}", variable.ToString()));
+                Log.Information(string.Format("Found variable: {0}", variable.ToString()));
 
                 return variable;
             }
@@ -113,9 +177,10 @@ namespace ModShardLauncher
         }
         public static UndertaleString GetString(string name)
         {
-            try {
+            try 
+            {
                 UndertaleString variable = Data.Strings.First(t => t.Content == name);
-                Log.Information(string.Format("Find string: {0}", variable.ToString()));
+                Log.Information(string.Format("Found string: {0}", variable.ToString()));
 
                 return variable;
             }
@@ -126,7 +191,8 @@ namespace ModShardLauncher
         }
         public static FileEnumerable<string> LoadGML(string fileName)
         {
-            try {
+            try 
+            {
                 UndertaleCode code = ModLoader.GetUMTCodeFromFile(fileName);
                 GlobalDecompileContext context = new(ModLoader.Data, false);
 
@@ -139,14 +205,16 @@ namespace ModShardLauncher
                     Decompiler.Decompile(code, context).Split("\n")
                 );
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
         public static FileEnumerable<string> LoadAssemblyAsString(string fileName)
         {
-            try {
+            try 
+            {
                 UndertaleCode code = ModLoader.GetUMTCodeFromFile(fileName);
 
                 return new(
@@ -158,7 +226,8 @@ namespace ModShardLauncher
                     code.Disassemble(ModLoader.Data.Variables, ModLoader.Data.CodeLocals.For(code)).Split("\n")
                 );
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
@@ -168,13 +237,15 @@ namespace ModShardLauncher
         /// </summary>
         public static UndertaleCode GetUMTCodeFromFile(string fileName)
         {
-            try {
+            try 
+            {
                 UndertaleCode code = Data.Code.First(t => t.Name?.Content == fileName);
-                Log.Information(string.Format("Find function: {0}", code.ToString()));
+                Log.Information(string.Format("Found function: {0}", code.ToString()));
 
                 return code;
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
@@ -184,13 +255,15 @@ namespace ModShardLauncher
         /// </summary>
         public static string GetStringGMLFromFile(string fileName)
         {
-            try {
+            try 
+            {
                 UndertaleCode code = GetUMTCodeFromFile(fileName);
                 GlobalDecompileContext context = new(Data, false);
 
                 return Decompiler.Decompile(code, context);
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
@@ -200,11 +273,13 @@ namespace ModShardLauncher
         /// </summary>
         public static void SetStringGMLInFile(string codeAsString, string fileName)
         {
-            try {
+            try 
+            {
                 UndertaleCode code = GetUMTCodeFromFile(fileName);
                 code.ReplaceGML(codeAsString, Data);
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
@@ -225,7 +300,8 @@ namespace ModShardLauncher
         /// <param name="position">The exact position to insert.</param>
         public static void InsertGMLString(string codeAsString, string fileName, int position)
         {
-            try {
+            try 
+            {
                 Log.Information(string.Format("Trying insert code in: {0}", fileName.ToString()));
 
                 List<string>? originalCode = GetStringGMLFromFile(fileName).Split("\n").ToList();
@@ -234,7 +310,8 @@ namespace ModShardLauncher
 
                 Log.Information(string.Format("Patched function with InsertGMLString: {0}", fileName.ToString()));
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
@@ -255,7 +332,8 @@ namespace ModShardLauncher
         /// <param name="position">The exact position to insert.</param>
         public static void ReplaceGMLString(string codeAsString, string fileName, int position)
         {
-            try {
+            try 
+            {
                 Log.Information(string.Format("Trying replace code in: {0}", fileName.ToString()));
 
                 List<string>? originalCode = GetStringGMLFromFile(fileName).Split("\n").ToList();
@@ -264,7 +342,8 @@ namespace ModShardLauncher
 
                 Log.Information(string.Format("Patched function with ReplaceGMLString: {0}", fileName.ToString()));
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
@@ -287,7 +366,8 @@ namespace ModShardLauncher
         /// <param name="position">The exact position to insert.</param>
         public static void ReplaceGMLString(string codeAsString, string fileName, int start, int len)
         {
-            try {
+            try 
+            {
                 Log.Information(string.Format("Trying replace code in: {0}", fileName.ToString()));
 
                 List<string>? originalCode = GetStringGMLFromFile(fileName).Split("\n").ToList();
@@ -300,36 +380,42 @@ namespace ModShardLauncher
 
                 Log.Information(string.Format("Patched function with ReplaceGMLString: {0}", fileName.ToString()));
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
         public static string GetAssemblyString(string fileName)
         {
-            try {
+            try 
+            {
                 UndertaleCode func = GetUMTCodeFromFile(fileName);
                 return func.Disassemble(Data.Variables, Data.CodeLocals.For(func));
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
         public static void SetAssemblyString(string codeAsString, string fileName)
         {
-            try {
+            try 
+            {
                 UndertaleCode originalCode = GetUMTCodeFromFile(fileName);
                 originalCode.Replace(Assembler.Assemble(codeAsString, Data));
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
         public static void InsertAssemblyString(string codeAsString, string fileName, int position)
         {
-            try {
+            try 
+            {
                 Log.Information(string.Format("Trying insert assembly in: {0}", fileName.ToString()));
 
                 List<string>? originalCode = GetAssemblyString(fileName).Split("\n").ToList();
@@ -338,14 +424,16 @@ namespace ModShardLauncher
 
                 Log.Information(string.Format("Patched function with InsertDisassemblyCode: {0}", fileName.ToString()));
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
         public static void ReplaceAssemblyString(string codeAsString, string fileName, int position)
         {
-            try {
+            try 
+            {
                 Log.Information(string.Format("Trying replace assembly in: {0}", fileName.ToString()));
 
                 List<string>? originalCode = GetAssemblyString(fileName).Split("\n").ToList();
@@ -354,14 +442,16 @@ namespace ModShardLauncher
 
                 Log.Information(string.Format("Patched function with ReplaceDisassemblyCode: {0}", fileName.ToString()));
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
         public static void ReplaceAssemblyString(string codeAsString, string fileName, int start, int len)
         {
-            try {
+            try 
+            {
                 Log.Information(string.Format("Trying replace assembly in: {0}", fileName.ToString()));
 
                 List<string>? originalCode = GetAssemblyString(fileName).Split("\n").ToList();
@@ -374,14 +464,16 @@ namespace ModShardLauncher
 
                 Log.Information(string.Format("Patched function with ReplaceDisassemblyCode: {0}", fileName.ToString()));
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
         public static void InjectAssemblyInstruction(string name, Func<IEnumerable<UndertaleInstruction>, IEnumerable<UndertaleInstruction>> patch)
         {
-            try {
+            try 
+            {
                 Log.Information(string.Format("Trying patch assembly in: {0}", name.ToString()));
 
                 UndertaleCode originalCode = GetUMTCodeFromFile(name);
@@ -389,19 +481,44 @@ namespace ModShardLauncher
 
                 Log.Information(string.Format("Patched function with PatchDisassemblyCode: {0}", name.ToString()));
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static List<string>? GetTable(string name)
+        {
+            try
+            {
+                UndertaleCode table = Data.Code.First(t => t.Name.Content == name);
+                GlobalDecompileContext context = new(Data, false);
+                string text = Decompiler.Decompile(table, context);
+                string matchedText = Regex.Match(text, "return (\\[.*\\])").Groups[1].Value;
+                return JsonConvert.DeserializeObject<List<string>>(matchedText);
+            }
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
         public static void SetTable(List<string> table, string name)
         {
-            var ret = JsonConvert.SerializeObject(table).Replace("\n", "");
-            var target = Data.Code.First(t => t.Name.Content.IndexOf(name) != -1);
-            GlobalDecompileContext context = new GlobalDecompileContext(Data, false);
-            var text = Decompiler.Decompile(target, context);
-            text = Regex.Replace(text, "\\[.*\\]", ret);
-            target.ReplaceGML(text, Data);
+            try
+            {
+                string ret = JsonConvert.SerializeObject(table).Replace("\n", "");
+                UndertaleCode target = Data.Code.First(t => t.Name.Content == name);
+                GlobalDecompileContext context = new(Data, false);
+                string text = Decompiler.Decompile(target, context);
+                text = Regex.Replace(text, "\\[.*\\]", ret);
+                target.ReplaceGML(text, Data);
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
         public static Weapon GetWeapon(string ID)
         {

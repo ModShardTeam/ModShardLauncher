@@ -120,6 +120,7 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="SharpZipLib" Version="1.3.3" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
     <PackageReference Include="XamlAnimatedGif" Version="2.2.0" />
     <PackageReference Include="xunit" Version="2.6.5" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
@@ -129,14 +130,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Drawing.Common">
-      <HintPath>C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\6.0.21\ref\net6.0\System.Drawing.Common.dll</HintPath>
-    </Reference>
     <Reference Include="UndertaleModLib">
-      <HintPath>..\UndertaleModTool\UndertaleModTool\bin\Debug\net6.0-windows\UndertaleModLib.dll</HintPath>
+      <HintPath>Reference\UndertaleModLib.dll</HintPath>
     </Reference>
     <Reference Include="UndertaleModTool">
-      <HintPath>..\UndertaleModTool\UndertaleModTool\bin\Debug\net6.0-windows\UndertaleModTool.dll</HintPath>
+      <HintPath>Reference\UndertaleModTool.dll</HintPath>
     </Reference>
   </ItemGroup>
 
