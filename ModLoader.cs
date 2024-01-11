@@ -495,7 +495,10 @@ namespace ModShardLauncher
                 GlobalDecompileContext context = new(Data, false);
                 string text = Decompiler.Decompile(table, context);
                 string matchedText = Regex.Match(text, "return (\\[.*\\])").Groups[1].Value;
-                return JsonConvert.DeserializeObject<List<string>>(matchedText);
+                List<string>? tableAsList = JsonConvert.DeserializeObject<List<string>>(matchedText);
+
+                Log.Information(string.Format("Get table: {0}", name.ToString()));
+                return tableAsList;
             }
             catch(Exception ex) 
             {
@@ -513,6 +516,8 @@ namespace ModShardLauncher
                 string text = Decompiler.Decompile(target, context);
                 text = Regex.Replace(text, "\\[.*\\]", ret);
                 target.ReplaceGML(text, Data);
+
+                Log.Information(string.Format("Successfully set table: {0}", name.ToString()));
             }
             catch(Exception ex) 
             {
@@ -520,29 +525,66 @@ namespace ModShardLauncher
                 throw;
             }
         }
-        public static Weapon GetWeapon(string ID)
+        public static Weapon GetWeapon(string id)
         {
-            var str = Weapons.First(t => t.StartsWith(ID));
-            var descs = WeaponDescriptions.FindAll(t => t.StartsWith(ID))[1].Split(";").ToList();
-            descs.Remove("");
-            descs.RemoveAt(0);
-            var names = WeaponDescriptions.First(t => t.StartsWith(ID)).Split(";").ToList();
-            names.Remove("");
-            names.RemoveAt(0);
-            var weapon = new Weapon(str, descs, names);
-            return weapon;
+            try
+            {
+                string weaponsName = Weapons.First(t => t.StartsWith(id));
+
+                // for a lazy evaluation to avoid going through all the WeaponDescriptions list
+                IEnumerator<string> weaponDescriptionEnumerator = WeaponDescriptions.Where(t => t.StartsWith(id)).GetEnumerator();
+
+                // getting the first element - the localization name
+                weaponDescriptionEnumerator.MoveNext();
+                List<string> localizationNames = weaponDescriptionEnumerator.Current.Split(";").ToList();
+                localizationNames.Remove("");
+                localizationNames.RemoveAt(0);
+
+                // getting the second element - the description
+                weaponDescriptionEnumerator.MoveNext();
+                List<string> weaponDescription = weaponDescriptionEnumerator.Current.Split(";").ToList();
+                weaponDescription.Remove("");
+                weaponDescription.RemoveAt(0);
+
+                Log.Information(string.Format("Found weapon: {0}", weaponsName.ToString()));
+                return new(weaponsName, weaponDescription, localizationNames);
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
-        public static void SetWeapon(string ID, Weapon weapon)
+        public static void SetWeapon(string id, Weapon weapon)
         {
-            var target = Weapons.First(t => t.StartsWith(ID));
-            var name = WeaponDescriptions.First(t => t.StartsWith(ID));
-            var desc = WeaponDescriptions.FindAll(t => t.StartsWith(ID))[1];
-            var index = Weapons.IndexOf(target);
-            var index2 = WeaponDescriptions.IndexOf(desc);
-            var index3 = WeaponDescriptions.IndexOf(name);
-            Weapons[index] = Weapon.Weapon2String(weapon).Item1;
-            WeaponDescriptions[index2] = Weapon.Weapon2String(weapon).Item2;
-            WeaponDescriptions[index3] = Weapon.Weapon2String(weapon).Item3;
+            try
+            {
+                string targetName = Weapons.First(t => t.StartsWith(id));
+                int indexTargetName = Weapons.IndexOf(targetName);
+
+                // for a lazy evaluation to avoid going through all the WeaponDescriptions list
+                IEnumerator<(int, string)> weaponDescriptionEnumerator = WeaponDescriptions.Where(t => t.StartsWith(id)).Enumerate().GetEnumerator();
+
+                // getting the first element - the localization name
+                weaponDescriptionEnumerator.MoveNext();
+                (int indexLocalizationName, _) = weaponDescriptionEnumerator.Current;
+
+                // getting the first element - the description
+                weaponDescriptionEnumerator.MoveNext();
+                (int indexDescription, _) = weaponDescriptionEnumerator.Current;
+
+                (string, string, string) w2s = Weapon.Weapon2String(weapon);
+                Weapons[indexTargetName] = w2s.Item1;
+                WeaponDescriptions[indexDescription] = w2s.Item2;
+                WeaponDescriptions[indexLocalizationName] = w2s.Item3;
+
+                Log.Information(string.Format("Successfully set weapon: {0}", targetName.ToString()));
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
         }
         public static void LoadFiles()
         {
@@ -591,13 +633,15 @@ namespace ModShardLauncher
                 }
                 else
                 {
-                    var type = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(Mod))).ToList()[0];
-                    var mod = Activator.CreateInstance(type) as Mod;
+                    Type type = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(Mod))).ToList()[0];
+                    Mod mod = Activator.CreateInstance(type) as Mod;
                     mod.LoadAssembly();
                     mod.ModFiles = f;
                     f.instance = mod;
-                    var old = mods.FirstOrDefault(t => t.Name == f.Name);
+
+                    ModFile? old = mods.Find(t => t.Name == f.Name);
                     if (old != null) f.isEnabled = old.isEnabled;
+
                     modCaches.Add(f);
                 }
                 Assemblies.Add(assembly);
@@ -611,7 +655,7 @@ namespace ModShardLauncher
         public static void PatchMods()
         {
             Assembly ass = Assembly.GetEntryAssembly();
-            var mods = ModInfos.Instance.Mods;
+            List<ModFile> mods = ModInfos.Instance.Mods;
             foreach (ModFile mod in mods)
             {
                 if (!mod.isEnabled) continue;
@@ -621,8 +665,8 @@ namespace ModShardLauncher
                     continue;
                 }
                 Main.Settings.EnableMods.Add(mod.Name);
-                var version = DataLoader.GetVersion();
-                var reg = new Regex("0([0-9])");
+                string version = DataLoader.GetVersion();
+                Regex reg = new("0([0-9])");
                 version = reg.Replace(version, "$1");
                 if (mod.Version != version)
                 {
