@@ -1,13 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <StartupObject>ModShardLauncher.App</StartupObject> <!-- Specify the Main to be used since there is 2 Mains (test and wpf) -->
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>ico.ico</ApplicationIcon>
-	<SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+	  <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
   </PropertyGroup>
+
+  <ItemGroup> <!-- Include the specific files to exclude the ones in the test folder -->
+    <Compile Include="*.cs" Exclude="bin\**;obj\**;ModShardLauncherTest\**.*cs" />
+    <Compile Include="Pages/*.cs" />
+    <Compile Include="Extensions/*.cs" />
+    <Compile Include="Mods/*.cs" />
+    <Compile Include="Controls/*.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Resources\arrow_down.png" />
@@ -103,10 +113,19 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.7.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="SharpZipLib" Version="1.3.3" />
     <PackageReference Include="XamlAnimatedGif" Version="2.2.0" />
+    <PackageReference Include="xunit" Version="2.6.5" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
