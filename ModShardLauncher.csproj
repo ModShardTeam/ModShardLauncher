@@ -172,5 +172,11 @@
     <Resource Include="Resources\SSicon.png" />
     <Resource Include="Resources\zpix.ttf" />
   </ItemGroup>
+  
+  <Target Name="CopyDLLs" AfterTargets="Build">
+    <Copy
+      SourceFiles="ModReference\netstandard.dll;ModReference\System.Collections.dll;ModReference\System.Runtime.dll;"
+      DestinationFolder="$(OutDir)" />
+  </Target>
 
 </Project>
