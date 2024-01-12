@@ -16,6 +16,8 @@ using System.Linq;
 using Microsoft.Win32;
 using System.Windows.Documents;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Serilog;
 
 namespace ModShardLauncher
 {
@@ -49,7 +51,7 @@ namespace ModShardLauncher
         }
         public static async Task<bool> DoOpenDialog()
         {
-            if(Main.Settings.LoadPos != "")
+            if(Main.Settings.LoadPos != "" && File.Exists(Main.Settings.LoadPos))
             {
                 await LoadFile(Main.Settings.LoadPos);
                 return true;
@@ -78,40 +80,52 @@ namespace ModShardLauncher
                 {
                     using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read))
                     {
-                        data = UndertaleIO.Read(stream, warning =>
-                        {
-                            ShowWarning(warning, "Loading warning");
+                        data = UndertaleIO.Read(
+                            stream, warning =>
+                            {
+                                ShowWarning(warning, "Loading warning");
 
-                            if (warning.Contains("unserializeCountError.txt")
-                                || warning.Contains("object pool size"))
-                                return;
+                                if (warning.Contains("unserializeCountError.txt")
+                                    || warning.Contains("object pool size"))
+                                    return;
 
-                            hadWarnings = true;
-                        },delegate (string message)
-                        {
-                            FileMessageEvent?.Invoke(message);
-                        });
-                        dataCache = UndertaleIO.Read(stream, warning =>
-                        {
-                            ShowWarning(warning, "Loading warning");
+                                hadWarnings = true;
+                            }, 
+                            delegate (string message)
+                            {
+                                FileMessageEvent?.Invoke(message);
+                            }
+                        );
+                        File.WriteAllText("json_dump_code.json", JsonConvert.SerializeObject(data.Code.Select(t => t.Name.Content)));
+                        File.WriteAllText("json_dump_variables.json", JsonConvert.SerializeObject(data.Variables.Select(t => t.Name.Content)));
+                        // GlobalDecompileContext context = new(data, false);
+                        // GenericUtils.GenerateNRandomLinesFromCode(data.Code, context, 100, 1, 0);
 
-                            if (warning.Contains("unserializeCountError.txt")
-                                || warning.Contains("object pool size"))
-                                return;
+                        dataCache = UndertaleIO.Read(
+                            stream, warning =>
+                            {
+                                ShowWarning(warning, "Loading warning");
 
-                            hadWarnings = true;
-                        }, delegate (string message)
-                        {
-                            FileMessageEvent?.Invoke(message);
-                        });
+                                if (warning.Contains("unserializeCountError.txt")
+                                    || warning.Contains("object pool size"))
+                                    return;
+
+                                hadWarnings = true;
+                            }, 
+                            delegate (string message)
+                            {
+                                FileMessageEvent?.Invoke(message);
+                            }
+                        );
                     }
 
                     UndertaleEmbeddedTexture.TexData.ClearSharedStream();
+                    Log.Information(string.Format("Successfully load: {0}.", filename));
                 }
-                catch (Exception e)
-                {
-                    throw e;
-                    //this.ShowError("An error occured while trying to load:\n" + e.Message, "Load error");
+                catch (Exception ex)
+                {   
+                    Log.Error(ex, "Something went wrong");
+                    throw;
                 }
                 Main.Instance.Dispatcher.Invoke(async () =>
                 {
@@ -149,7 +163,7 @@ namespace ModShardLauncher
                 await SaveFile(dlg.FileName);
                 return true;
             }
-            else await LoadFile(DataPath, true);
+            // else await LoadFile(DataPath, true);
             return false;
         }
         public static async Task SaveFile(string filename)

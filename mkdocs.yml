@@ -58,6 +58,36 @@ plugins:
     - search
     - table-reader
     - glightbox
+    - git-authors
+    - git-revision-date
+    - i18n:
+        docs_structure: suffix
+        reconfigure_material: true
+        reconfigure_search: true
+        languages:
+          - locale: en
+            default: true
+            name: English
+            build: true
+          - locale: zh
+            name: 中文
+            build: true
+            nav_translations:
+              Index: 首页
+              Welcome: 欢迎
+              Guides: 指南
+              Introduction: 简介
+              Getting Started: 开始
+              How to play with mods: 如何使用MOD
+              API: API
+#           You can remove the nav_translations above and remove comments here if you want to have custom ZH nav.
+#           This would avoid setting up empty 'TODO' pages.
+#           nav:
+#             - 首页: "index.md"
+#             - 指南:
+#               - "简介": "guides/introduction.md"
+#               - ... : ...
+          
 
 nav:
   - Index:
@@ -65,8 +95,5 @@ nav:
   - Guides:
       - "Introduction": "guides/introduction.md"
       - "Getting Started": "guides/start-modding.md"
-      - "How to play mod": "guides/how-to-play-mod.md"
-  - 中文:
-      - "介绍": "zh/guides/introduction.md"
-      - "开始使用": "zh/guides/start-modding.md"
-      - "API": "zh/guides/api.md"
+      - "How to play with mods": "guides/how-to-play-mod.md"
+      - "API": "guides/api.md"

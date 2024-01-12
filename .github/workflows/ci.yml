@@ -1,5 +1,6 @@
 name: ci
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -11,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v4
         with:
           python-version: 3.x
@@ -18,5 +21,5 @@ jobs:
         with:
           key: ${{ github.ref }}
           path: .cache
-      - run: pip install mkdocs-material mkdocs-table-reader-plugin mkdocs-glightbox
+      - run: pip install mkdocs-material mkdocs-table-reader-plugin mkdocs-glightbox mkdocs-static-i18n[material] mkdocs-git-authors-plugin mkdocs-git-revision-date-plugin
       - run: mkdocs gh-deploy --force
