@@ -127,8 +127,11 @@ namespace ModShardLauncher
                 var list = ModInfos.Instance.Mods;
                 foreach (var i in Main.Settings.EnableMods)
                 {
-                    var tar = list.First(t => t.Name == i);
-                    list[list.IndexOf(tar)].isEnabled = true;
+                    var tar = list.FirstOrDefault(t => t.Name == i);
+                    if (tar != null)
+                        list[list.IndexOf(tar)].isEnabled = true;
+                    else
+                        Log.Warning($"Mod {i} not found");
                 }
             }
         }
