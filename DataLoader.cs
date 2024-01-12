@@ -168,8 +168,10 @@ namespace ModShardLauncher
         }
         public static async Task SaveFile(string filename)
         {
-            LoadingDialog dialog = new LoadingDialog();
-            dialog.Owner = Main.Instance;
+            LoadingDialog dialog = new()
+            {
+                Owner = Main.Instance
+            };
             Task t = Task.Run(async () =>
             {
                 bool SaveSucceeded = true;

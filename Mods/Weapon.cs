@@ -19,7 +19,7 @@ namespace ModShardLauncher.Mods
                 WeaponDescriptions.Add(lan, "None");
             } 
         }
-        public Weapon(string property, List<string> description = null, List<string> names = null)
+        public Weapon(string property, List<string>? description = null, List<string>? names = null)
         {
             NameList = new Dictionary<ModLanguage, string>();
             WeaponDescriptions = new Dictionary<ModLanguage, string>();

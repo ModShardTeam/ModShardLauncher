@@ -156,9 +156,10 @@ namespace ModShardLauncher
             }
             file.FileOffset = (int)fs.Position;
             
-            if(file.Files.Count > 0)
+            int fileCount = file.Files.Count;
+            if(fileCount > 0)
             {
-                FileChunk? f = file.Files.Last();
+                FileChunk? f = file.Files[fileCount - 1];
                 Read(fs, f.offset + f.length);
             }
             count = BitConverter.ToInt32(Read(fs, 4), 0);

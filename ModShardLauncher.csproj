@@ -131,10 +131,10 @@
 
   <ItemGroup>
     <Reference Include="UndertaleModLib">
-      <HintPath>..\UndertaleModTool\UndertaleModTool\bin\Debug\net6.0-windows\UndertaleModLib.dll</HintPath>
+      <HintPath>Reference\UndertaleModLib.dll</HintPath>
     </Reference>
     <Reference Include="UndertaleModTool">
-      <HintPath>..\UndertaleModTool\UndertaleModTool\bin\Debug\net6.0-windows\UndertaleModTool.dll</HintPath>
+      <HintPath>Reference\UndertaleModTool.dll</HintPath>
     </Reference>
   </ItemGroup>
 
