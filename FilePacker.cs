@@ -107,10 +107,6 @@ namespace ModShardLauncher
             stream.Close();
             return len;
         }
-        private static string refPath(string name)
-        {
-            return Path.Join(Environment.CurrentDirectory, name);
-        }
         public static Diagnostic[] RoslynCompile(string name, string[] files, string[] preprocessorSymbols, out byte[] code, out byte[] pdb)
         {
             IEnumerable<string> DefaultNamespaces =
