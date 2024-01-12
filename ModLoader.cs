@@ -626,7 +626,7 @@ namespace ModShardLauncher
                 var f = FileReader.Read(file);
                 if (f == null) continue;
                 Assembly assembly = f.Assembly;
-                if (assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(Mod))).Count() == 0)
+                if (assembly.GetTypes().Count(t => t.IsSubclassOf(typeof(Mod))) == 0)
                 {
                     MessageBox.Show("加载错误: " + assembly.GetName().Name + " 此Mod需要一个Mod类");
                     continue;
@@ -634,7 +634,7 @@ namespace ModShardLauncher
                 else
                 {
                     Type type = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(Mod))).ToList()[0];
-                    Mod mod = Activator.CreateInstance(type) as Mod;
+                    Mod? mod = Activator.CreateInstance(type) as Mod;
                     mod.LoadAssembly();
                     mod.ModFiles = f;
                     f.instance = mod;
@@ -654,7 +654,6 @@ namespace ModShardLauncher
         }
         public static void PatchMods()
         {
-            Assembly ass = Assembly.GetEntryAssembly();
             List<ModFile> mods = ModInfos.Instance.Mods;
             foreach (ModFile mod in mods)
             {
