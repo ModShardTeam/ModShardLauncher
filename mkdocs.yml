@@ -7,7 +7,6 @@ copyright: All rights belong to Ink Stains Games. <br> This is a community
   project and is not affiliated with Ink Stains Games.
 
 
-
 theme:
     name: material
     favicon: img/Stoneshard.ico
@@ -25,6 +24,7 @@ theme:
     - content.action.edit
     - content.action.view
     language: en
+    locale: en
     palette:
         - scheme: default
           toggle:
@@ -52,6 +52,8 @@ markdown_extensions:
   - pymdownx.keys
   - pymdownx.mark
   - pymdownx.tilde
+  - pymdownx.tabbed:
+      alternate_style: true
 
 
 plugins:

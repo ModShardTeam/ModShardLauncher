@@ -56,7 +56,7 @@ Whether you want to tweak the **game mechanics**, add **new content**, or **anyt
 | Weapons | :heavy_check_mark: |
 | Rooms | :x: |
 | Sounds | :x: |
-| Sprites | :heavy_check_mark: |
+| Sprites | :x: |
 | Shaders | :x: |
 | Fonts | :x: |
 | DE2 Dialogues | :x: |
