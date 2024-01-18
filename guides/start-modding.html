@@ -20,7 +20,7 @@
     
     
       
-        <title>Getting Started - ModShardLauncher Modding Documentation</title>
+        <title>Creating your First Mod - ModShardLauncher Modding Documentation</title>
       
     
     
@@ -83,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#lets-begin" class="md-skip">
+        <a href="#modding-stoneshard-with-msl" class="md-skip">
           Skip to content
         </a>
       
@@ -119,7 +119,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Getting Started
+              Creating your First Mod
             
           </span>
         </div>
@@ -430,7 +430,7 @@
           
   
   <span class="md-ellipsis">
-    Getting Started
+    Creating your First Mod
   </span>
   
 
@@ -441,7 +441,7 @@
         
   
   <span class="md-ellipsis">
-    Getting Started
+    Creating your First Mod
   </span>
   
 
@@ -463,9 +463,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#before-we-start" class="md-nav__link">
     <span class="md-ellipsis">
-      Before we start
+      Before we Start
     </span>
   </a>
   
@@ -481,122 +490,47 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#create-your-first-mod" class="md-nav__link">
+  <a href="#getting-started" class="md-nav__link">
     <span class="md-ellipsis">
-      Create your first mod
+      Getting Started
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Create your first mod">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#create-your-mod" class="md-nav__link">
-    <span class="md-ellipsis">
-      Create your mod
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#assembly-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      Assembly Reference
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#main-class" class="md-nav__link">
-    <span class="md-ellipsis">
-      Main class
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#information-of-your-mod" class="md-nav__link">
-    <span class="md-ellipsis">
-      Information of your mod
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#compile-the-mod" class="md-nav__link">
-    <span class="md-ellipsis">
-      Compile the Mod
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#create-your-first-weapon" class="md-nav__link">
+  <a href="#boilerplate-code" class="md-nav__link">
     <span class="md-ellipsis">
-      Create your first weapon
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Create your first weapon">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#create-weapon-class" class="md-nav__link">
-    <span class="md-ellipsis">
-      Create Weapon Class
+      Boilerplate Code
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#change-the-information-of-your-weapon" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#compiling-our-mod" class="md-nav__link">
     <span class="md-ellipsis">
-      Change the information of your weapon
+      Compiling our Mod
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#sprite-of-your-weapon" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#basic-injections" class="md-nav__link">
     <span class="md-ellipsis">
-      Sprite of your weapon
+      Basic Injections
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#loading-your-mod" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#advanced-injections" class="md-nav__link">
     <span class="md-ellipsis">
-      Loading your mod
+      Advanced Injections
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#launch-your-game" class="md-nav__link">
-    <span class="md-ellipsis">
-      Launch your game !
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -620,7 +554,7 @@
         
   
   <span class="md-ellipsis">
-    How to play with mods
+    Installing Mods
   </span>
   
 
@@ -689,97 +623,72 @@
   
 
 
-<h1 id="lets-begin">Let's begin!</h1>
-<h2 id="before-we-start">Before we start</h2>
+<h1 id="modding-stoneshard-with-msl">Modding Stoneshard with MSL</h1>
+<h2 id="introduction">Introduction</h2>
 <hr />
-<p>Before creating a mod, you should have a basic understanding of C# and Visual Studio. <br>
-If you do not know how to use them, please learn them first, as the tool's API can be a bit complex. <br></p>
-<p>Here are some resources to get you started on that :</p>
+<p>ModShardLauncher (or MSL) is a tool that has the ambition of becoming the <strong>prefered method of modding Stoneshard</strong>. </br></br>
+It is very much at an <strong>early stage of development</strong> right now, and as such quite a few <strong>key features are still missing</strong>. </br>
+Additionally, some of the included features are still <strong>rough around the edges</strong> and not as <strong>friendly to beginners</strong> as we'd like them to be. </br></br></p>
+<div class="admonition warning">
+<p class="admonition-title">Important  </p>
+<p>At this stage, modding Stoneshard with MSL <strong><ins>requires you to know how to mod the game</ins></strong> with <a href="https://github.com/krzys-h/UndertaleModTool"><strong>UndertaleModTool</strong></a>. </br></br>
+This is because the focus of the project right now is on <strong>including more features</strong>, rather than making the existing ones <strong>more accessible</strong>. </br></br>
+Eventually however, the project will reach a stage where <strong>no knowledge of GML</strong> or inner workings of the game is necessary for <strong>simple mods</strong> like adding weapons, swapping textures, etc...</p>
+</div>
+<h2 id="before-we-start">Before we Start</h2>
+<hr />
+<p>Before creating a mod, you should have a <strong>basic understanding</strong> of <strong>C#</strong> and <strong>Visual Studio</strong>.</p>
+<p>If you do not know how to use them, please <strong>learn them first</strong>, as MSL's API can be a bit complex at times. </br>
+Here are some <strong>resources</strong> to get you started on that :</p>
 <ul>
 <li><a href="https://www.w3schools.com/cs/index.php">C# Tutorial</a></li>
 <li><a href="https://www.youtube.com/watch?v=VcU2HGsxeII&amp;t=34s">Visual Studio Tutorial</a></li>
 </ul>
 <h2 id="tools">Tools</h2>
 <hr />
-<p>In order to write your mod's code, you will need a tool such as <a href="https://visualstudio.microsoft.com/"><strong>Visual Studio</strong></a>. <br> 
-It's a professional development tool that can help you a lot.</p>
-<p>While installing, make sure you choose the <code>.NET Desktop Development</code> workload. <br>
+<details class="abstract">
+<summary><strong>IDEs</strong></summary>
+<p>In order to write your mod's code, you'll need a tool such as <a href="https://visualstudio.microsoft.com/"><strong>Visual Studio</strong></a>, <a href="https://www.jetbrains.com/rider/"><strong>Jetbrains Rider</strong></a> or even <a href="https://code.visualstudio.com/"><strong>Visual Studio Code</strong></a>. </br></p>
+<div class="admonition question">
+<p class="admonition-title">What do they do ?</p>
+<p>These are professional development tools that can help you write code. </br>
+This guide will use <strong>Visual Studio</strong>, as it is both free and easier to use for beginners than <strong>Rider</strong>.</p>
+</div>
+<p>While installing <strong>Visual Studio</strong>, make sure you choose the <code>.NET Desktop Development</code> workload. </br>
 You do not need to download any other workload.</p>
-<p>At last, find <code>.NET 6.0 SDK</code> on official Microsoft website, install it and when it's done, reboot your PC.</p>
-<p>You can also use <strong>Visual Studio Code</strong> as your tool, but this tutorial won't cover it <del>cuz I havent tried it</del>.</p>
-<h2 id="create-your-first-mod">Create your first mod</h2>
-<hr />
-<p>Let's start our journey by launching <strong>ModShardLauncher.exe</strong>. <br>
-Once you start it, two folders should be created : the first is <code>Mods</code>, the other is <code>ModSource</code>. <br></p>
-<p>Move into the <code>ModSource</code> folder and create a <strong>new folder</strong> there. <br>
-You can name this new folder whatever you want.</p>
-<h3 id="create-your-mod">Create your mod</h3>
-<p>There are many ways to create your mod. <br>
-If you use <strong>Visual Studio</strong>, you can click <code>Create a New Project</code>, search <code>Class Library</code> and click <code>Next</code> :</p>
-<p><center> <a class="glightbox" href="../img/create_project_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Create New Project" src="../img/create_project_0.png" style="width:50%" /></a> </center></p>
-<p>Give a name to your mod, then select the <code>ModSources</code> folder that <strong>ModShardLauncher.exe</strong> created earlier :
-<center> <a class="glightbox" href="../img/create_project_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Name Your Mod" src="../img/create_project_1.png" style="width:50%" /></a> </center></p>
-<p>Choose <strong>.Net 6.0</strong>, and that's it!
-<center> <a class="glightbox" href="../img/create_project_2.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Net 6.0" src="../img/create_project_2.png" style="width:50%" /></a> </center></p>
-<p><br></p>
-<h3 id="assembly-reference">Assembly Reference</h3>
-<p>Next we should add a <strong>reference</strong> to the tool's <strong>assembly</strong>, which means the <code>ModShardLauncher.dll</code> file. <br><br></p>
-<p>Open the <strong>solution explorer</strong> on the right :
-<center> <a class="glightbox" href="../img/mod_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Solution Explorer" src="../img/mod_0.png" style="width:50%" /></a> </center></p>
-<p>Right click <code>Dependencies</code>, then click <code>Add Project Reference</code> :
-<center> <a class="glightbox" href="../img/mod_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Add Reference" src="../img/mod_1.png" style="width:30%" /></a> </center></p>
-<p>Click <code>Browse...</code> :
-<center> <a class="glightbox" href="../img/mod_2.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Browse" src="../img/mod_2.png" style="width:50%" /></a> </center></p>
-<p>Finally, select <code>ModShardLauncher.dll</code> and click <code>Add</code> :
-<center> <a class="glightbox" href="../img/mod_3.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="DLL" src="../img/mod_3.png" style="width:50%" /></a> </center></p>
-<p><br></p>
-<h3 id="main-class">Main class</h3>
-<p>Now we need to create a <strong>Main Class</strong> for our mod.</p>
-<p>If you're familiar with <strong>C#</strong>, then you probably already know about <strong>Classes</strong>. <br>
-We will now create our Mod's <strong>main class</strong>.</p>
-<p>When you created your project, <strong>Visual Studio</strong> should have added a class named <code>Class1</code>. <br> 
-We should add a reference to <code>ModShardLauncher</code> and to the <code>ModShardLauncher.Mods</code> namespace. <br></p>
-<p>Let's change the code to the following :
-<center> <a class="glightbox" href="../img/class_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Class1" src="../img/class_0.png" style="width:50%" /></a> </center></p>
-<p>As you can see, we changed the name of the class from <code>Class1</code> to <code>MyFirstMod</code>, and made this class extend the <code>Mod</code> class.</p>
-<p><br></p>
-<h3 id="information-of-your-mod">Information of your mod</h3>
-<p>Now we need to add some basic information to our mod.</p>
-<p>Let's add the following code to <code>MyFirstMod</code>:
-<center> <a class="glightbox" href="../img/class_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="MyFirstMod" src="../img/class_1.png" style="width:50%" /></a> </center></p>
-<p>Once you've done this, the mod's name, creator and brief description will be set.</p>
-<p><br></p>
-<h3 id="compile-the-mod">Compile the Mod</h3>
-<p>Launch <strong>ModShardLauncher</strong>. <br>
-As you can see, the mod's source code has been loaded.
-<center> <a class="glightbox" href="../img/compile_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Mod Source" src="../img/compile_0.png" style="width:50%" /></a> </center></p>
-<p>In order to <strong>compile</strong> the mod, we need to click the <strong>folder icon</strong> on the top left, and choose our <strong>vanilla</strong> <code>data.win</code> file.</p>
-<details class="question">
-<summary>Why does it need the vanilla <code>data.win</code> ?</summary>
-<p>This tool works based on the names of the objects in the <strong>vanilla</strong> <code>data.win</code> file.</p>
 </details>
-<details class="question">
-<summary>Why do we need to load the <code>data.win</code> before compiling?</summary>
-<p>To prevent potential mismatch (and issues) between the <strong>game version</strong> and your <strong>mod's version</strong>.</p>
+<details class="abstract">
+<summary><strong>.NET 6.0 SDK</strong></summary>
+<p>Download the <a href="https://dotnet.microsoft.com/en-us/download/dotnet/6.0">.NET 6.0 SDK</a>, install it and when it's done, restart your computer.</p>
 </details>
-<p>We can now double click <code>MyFirstMod</code> to compile the mod.</p>
-<p>Result of compiling :
-<center> <a class="glightbox" href="../img/compile_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Compiling Result" src="../img/compile_1.png" style="width:50%" /></a> </center></p>
-<p><br></p>
-<h2 id="create-your-first-weapon">Create your first weapon</h2>
+<details class="abstract">
+<summary><strong>ModShardLauncher Template (Optional)</strong></summary>
+<p>You can download the official template for MSL Mods to avoid having to write boilerplate code. </br>
+The easiest way to install it is to open a terminal and run the following command :</p>
+<p><code>dotnet new install ModShardLauncher.Templates</code></p>
+</details>
+<h2 id="getting-started">Getting Started</h2>
 <hr />
-<p>You have compiled your first mod just now! <br> 
-It's great but it's a bit empty right now, so let's add some content next.</p>
-<h3 id="create-weapon-class">Create Weapon Class</h3>
-<p>Right click the <strong>Solution Explorer</strong>, right click your <strong>project</strong> (<em>the one highlighted in purple in the image</em>), <br>
-click <code>Add</code>, and click <code>New Item...</code>
-<center> <a class="glightbox" href="../img/weapon_0.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="New Item" src="../img/weapon_0.png" style="width:30%" /></a> </center></p>
-<p>Now you can name your weapon. For this tutorial I will name it <code>MyFirstWeapon</code>. <br></p>
-<p>Just like before, we can now add the reference for <code>ModShardLauncher</code> and the <code>ModShardLauncher.Mod</code> namespace. <br> 
-However this time, we'll be extending the <code>Weapon</code> class rather than the <code>Mod</code> class.</p>
-<details class="note">
-<summary>MyFirstWeapon.cs</summary>
-<div class="language-C# highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<p>Let's start our modding journey by starting <code>ModShardLauncher.exe</code>. </br>
+This should create the <code>Mods</code> and <code>ModSources</code> folder if they didn't exist already. </br></br>
+Once this is done, you can simply close MSL for now.</p>
+<p>Now, let's create a new mod using the MSL Template. </br>
+To do this, open up Visual Studio, click Create a new project, and in the search bar type <code>msl</code>.</p>
+<p><a class="glightbox" href="../img/msl_template.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="MSL Tempalte" src="../img/msl_template.png" /></a></p>
+<p>For MSL to recognize your mod you need to create the new project in MSL's <code>ModSources</code> folder. </br>
+Make sure to also tick the <code>Place solution and project in the same directory</code> box.</p>
+<p><a class="glightbox" href="../img/msl_template_location.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="MSL Template Location" src="../img/msl_template_location.png" /></a></p>
+<p>Hit the <code>Create</code> button and you'll be good to go !</p>
+<p>Alternatively, you can also create a new project using the mod template with the CLI. </br>
+To do this, open a terminal, navigate to MSL's <code>ModSources</code> folder and type the following command :</p>
+<p><code>dotnet new msl --name "MyMod"</code></p>
+<p>Regardless of your method, you should now see a new <code>MyMod</code> folder in your <code>ModSources</code> folder. </br>
+It should contain a solution, which you can open in your <strong>IDE</strong> of choice.</p>
+<h2 id="boilerplate-code">Boilerplate Code</h2>
+<hr />
+<p>Now that our project is set up, you should have a working solution with a class containing some boilerplate code. </br>
+Let's quickly go over what it does, and why it needs to be there.</p>
+<div class="language-c# highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">MyMod.cs</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
 <span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
@@ -788,31 +697,75 @@ However this time, we'll be extending the <code>Weapon</code> class rather than 
 <span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
 <span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
 <span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-0-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher</span><span class="p">;</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher.Mod</span><span class="p">;</span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher</span><span class="p">;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher.Mods</span><span class="p">;</span><span class="w"> </span><span class="c1">// (1)!</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">MyFirstMod</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">MyMod</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="p">{</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MyFirstWeapon</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Weapon</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MyMod</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Mod</span><span class="w"> </span><span class="c1">// (2)!</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="p">}</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Author</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;author&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// (3)!</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;mod_name&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// (4)!</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Description</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;mod_description&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// (5)!</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;1.0.0.0&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// (6)!</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">PatchMod</span><span class="p">()</span><span class="w"> </span><span class="c1">// (7)!</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="p">}</span>
 </span></code></pre></div></td></tr></table></div>
-</details>
-<p><br></p>
-<h3 id="change-the-information-of-your-weapon">Change the information of your weapon</h3>
-<p>In StoneShard, there are many properties for a single weapon. <br>
-It is painful to set them all by hand, and if you forget to set any of them, your mod may not load as expected.</p>
+<ol>
+<li>The <code>using</code> directives allow us to use code from ModShardLauncher to write our mod.</li>
+<li>This is the base class for your mod. </br> All of your code should be contained withing it.</li>
+<li>This variable contains the name of the author of this mod. </br> Feel free to replace it with yours ! </br> It's visible in MSL's Mod list.</li>
+<li>This variable contains your mod's name. </br> Feel free to change it ! </br> It's visible in MSL's Mod list.</li>
+<li>This variable contains your mod's description. </br> Feel free to change it ! </br> It's visible in MSL's Mod list.</li>
+<li>This variable contains your mod's version. </br> Don't forget to change it when you update your mod ! </br> It's visible in MSL's Mod list.</li>
+<li>The <code>PatchMod</code> method is your mod's entry point. </br> Anything within it gets run by the compiler when your mod is patched into a <code>.win</code> file.</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Click on the <code>+</code> button next to the code to learn what it does.</p>
+</div>
+<h2 id="compiling-our-mod">Compiling our Mod</h2>
+<hr />
+<p>Right now our mod doesn't do, well, anything, but for the sake of learning let's compile it anyway. </br> </br></p>
+<ul>
+<li>First, let's make sure we saved any change we made to <code>MyMod.cs</code> by pressing <span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-s">S</kbd></span>. </br></li>
+<li>Open MSL, click the folder icon at the top of the window and select your <code>vanilla.win</code> file.</li>
+<li>Head to the <code>ModSources</code> menu (by clicking the C# button on the left). </br></li>
+<li>Your mod should be listed here with a <code>Compile</code> button next to it.</li>
+</ul>
 <details class="question">
-<summary>Why is that ?</summary>
-<p><del>Actually, cuz the source code of StoneShard is kinda messy...</del></p>
+<summary>My mod isn't there !</summary>
+<p>If your mod isn't there, try restarting MSL. </br>
+If you created your project after opening MSL it won't show in the list until your restart it. </br></br>
+If your mod still doesn't appear after restarting, make sure you created your mod in the <code>ModSources</code> folder.</p>
 </details>
-<p>Then, are there any ways that can help us easily change the properties of a weapon?</p>
-<p>First, let's override the <code>SetDefaults</code> method :</p>
-<details class="note">
-<summary>MyFirstWeapon.cs</summary>
-<div class="language-C# highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
+<ul>
+<li>Click the <code>Compile</code> button. </br> This generates a <code>.sml</code> file in the <code>Mods</code> folder, which is your mod file. </br> This is the file you can distribute to players.</li>
+<li>There's no feedback when clicking on the <code>Compile</code> button, so don't be alarmed, it's normal.</li>
+<li>Next head to the <code>Mods</code> menu, and tick the box next to your mod.</li>
+<li>Click the save button at the top of the window and save under the name <code>MyMod.win</code>.</li>
+</ul>
+<p>That's it you've now compiled your mod ! </br>
+You can now start Stoneshard, select <code>MyMod.win</code> and test your mod.</p>
+<h2 id="basic-injections">Basic Injections</h2>
+<hr />
+<p>At this point we've got a basic mod, but it doesn't really do anything. </br>
+Let's change that by injecting some code into the game's files. </br></p>
+<p>In the <code>MyMod.cs</code> class, let's add the following code :</p>
+<div class="language-c# highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">MyMod.cs</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
 <span class="normal"><a href="#__codelineno-1-4"> 4</a></span>
@@ -824,68 +777,46 @@ It is painful to set them all by hand, and if you forget to set any of them, you
 <span class="normal"><a href="#__codelineno-1-10">10</a></span>
 <span class="normal"><a href="#__codelineno-1-11">11</a></span>
 <span class="normal"><a href="#__codelineno-1-12">12</a></span>
-<span class="normal"><a href="#__codelineno-1-13">13</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher</span><span class="p">;</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher.Mod</span><span class="p">;</span>
+<span class="normal"><a href="#__codelineno-1-13">13</a></span>
+<span class="normal"><a href="#__codelineno-1-14">14</a></span>
+<span class="normal"><a href="#__codelineno-1-15">15</a></span>
+<span class="normal"><a href="#__codelineno-1-16">16</a></span>
+<span class="normal"><a href="#__codelineno-1-17">17</a></span>
+<span class="normal"><a href="#__codelineno-1-18">18</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher</span><span class="p">;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher.Mods</span><span class="p">;</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">MyFirstMod</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">MyMod</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="p">{</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MyFirstWeapon</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Weapon</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MyMod</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Mod</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="hll"><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">SetDefaults</span><span class="p">()</span>
-</span></span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="hll"><span class="w">        </span><span class="p">{</span>
-</span></span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="hll">
-</span></span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="hll"><span class="w">        </span><span class="p">}</span>
-</span></span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13"></a><span class="p">}</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Author</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;author&quot;</span><span class="p">;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;mod_name&quot;</span><span class="p">;</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Description</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;mod_description&quot;</span><span class="p">;</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;1.0.0.0&quot;</span><span class="p">;</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">PatchMod</span><span class="p">()</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15"></a><span class="hll"><span class="w">            </span><span class="n">ModLoader</span><span class="p">.</span><span class="n">InsertGMLString</span><span class="p">(</span><span class="s">&quot;scr_smoothSaveAuto()&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gml_Object_o_player_KeyPress_116&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">);</span><span class="w">  </span><span class="c1">// (1)!</span>
+</span></span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="p">}</span>
 </span></code></pre></div></td></tr></table></div>
-</details>
-<details class="info">
-<summary>If you feel like the code reminds you of tModLoader...</summary>
-<p><del>It's because I may or may not come from the Terraria modding community.</del></p>
-</details>
-<p>As you can see, this method's purpose is to set a weapon's properties.
-Now, let's introduce the <strong><code>CloneDefaults</code></strong> method.</p>
-<p>That's right, to prevent modders from forgetting setting those properties, we offer a new method so that every properties will be copied from another vanilla weapon except <code>Name</code> and <code>ID</code>. <br></p>
-<p>All you have to do is add the following code :</p>
-<details class="note">
-<summary>MyFirstWeapon.cs</summary>
-<div class="language-C# highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-2-10">10</a></span>
-<span class="normal"><a href="#__codelineno-2-11">11</a></span>
-<span class="normal"><a href="#__codelineno-2-12">12</a></span>
-<span class="normal"><a href="#__codelineno-2-13">13</a></span>
-<span class="normal"><a href="#__codelineno-2-14">14</a></span>
-<span class="normal"><a href="#__codelineno-2-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher</span><span class="p">;</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher.Mod</span><span class="p">;</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">MyFirstMod</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="p">{</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MyFirstWeapon</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Weapon</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">SetDefaults</span><span class="p">()</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="w">        </span><span class="p">{</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="hll"><span class="w">            </span><span class="n">CloneDefaults</span><span class="p">(</span><span class="s">&quot;Homemade Blade&quot;</span><span class="p">);</span>
-</span></span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="hll"><span class="w">            </span><span class="n">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyFirstWeapon&quot;</span><span class="p">;</span>
-</span></span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12"></a><span class="hll"><span class="w">            </span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyFirstMod1&quot;</span><span class="p">;</span>
-</span></span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15"></a><span class="p">}</span>
+<ol>
+<li>This line inserts the code <code>scr_smoothSaveAuto()</code> into the <code>gml_Object_o_player_KeyPress_116</code> at line <code>0</code>. </br></br> We're injecting the gml code necessary to quicksave the game when the player presses the F5 key.</li>
+</ol>
+<p>As you can see, using ModLoader.InsertGMLString allows us to inject a string of GML into an existing script. </br>
+But MSL's capabilities don't stop there, we can read code from a .gml file you wrote and inject it into a script. </br></br>
+For example, let's create a <code>Codes</code> folder in our project :</p>
+<p><a class="glightbox" href="../img/modding_codes.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Creating Codes Folder" src="../img/modding_codes.png" /></a></p>
+<p>Inside the <code>Codes</code> folder, let's create a <code>myCode.gml</code> file with the following code :</p>
+<div class="language-c highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">myCode.gml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
+<span class="normal"><a href="#__codelineno-2-2">2</a></span>
+<span class="normal"><a href="#__codelineno-2-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="n">scr_actionsLogUpdate</span><span class="p">(</span><span class="s">&quot;Quicksaving...&quot;</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="n">scr_smoothSaveAuto</span><span class="p">()</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="n">scr_actionsLogUpdate</span><span class="p">(</span><span class="s">&quot;Game Saved.&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
-</details>
-<p>Now, we have a brand new weapon with the exact same properties as the <code>Homemade Blade</code> except for its <strong>name</strong> and <strong>ID</strong>.</p>
-<div class="admonition info">
-<p class="admonition-title">Notice</p>
-<p><code>CloneDefaults</code> won't set a value for the name or description in other languages.<br> 
-You need to change them manually, like so :
-<div class="language-C# highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
+<p>Now back in <code>MyMod.cs</code>, let's change our code to the following :</p>
+<div class="language-c# highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">MyMod.cs</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-3-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-3-3"> 3</a></span>
 <span class="normal"><a href="#__codelineno-3-4"> 4</a></span>
@@ -901,79 +832,103 @@ You need to change them manually, like so :
 <span class="normal"><a href="#__codelineno-3-14">14</a></span>
 <span class="normal"><a href="#__codelineno-3-15">15</a></span>
 <span class="normal"><a href="#__codelineno-3-16">16</a></span>
-<span class="normal"><a href="#__codelineno-3-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher</span><span class="p">;</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher.Mod</span><span class="p">;</span>
+<span class="normal"><a href="#__codelineno-3-17">17</a></span>
+<span class="normal"><a href="#__codelineno-3-18">18</a></span>
+<span class="normal"><a href="#__codelineno-3-19">19</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher</span><span class="p">;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher.Mods</span><span class="p">;</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">MyFirstMod</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">MyMod</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="p">{</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MyFirstWeapon</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Weapon</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MyMod</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Mod</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">SetDefaults</span><span class="p">()</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="w">        </span><span class="p">{</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="w">            </span><span class="n">CloneDefaults</span><span class="p">(</span><span class="s">&quot;Homemade Blade&quot;</span><span class="p">);</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11"></a><span class="w">            </span><span class="n">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyFirstWeapon&quot;</span><span class="p">;</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12"></a><span class="w">            </span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyFirstMod1&quot;</span><span class="p">;</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13"></a><span class="hll"><span class="w">            </span><span class="n">Description</span><span class="p">[</span><span class="n">ModLanguage</span><span class="p">.</span><span class="n">English</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;This is my first weapon&quot;</span><span class="p">;</span>
-</span></span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14"></a><span class="hll"><span class="w">            </span><span class="n">NameList</span><span class="p">[</span><span class="n">ModLanguage</span><span class="p">.</span><span class="n">English</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;GreatFuckingSword&quot;</span><span class="p">;</span>
-</span></span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15"></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17"></a><span class="p">}</span>
-</span></code></pre></div></td></tr></table></div></p>
-</div>
-<p>That's the first step of creating a weapon done.</p>
-<h3 id="sprite-of-your-weapon">Sprite of your weapon</h3>
-<p>This is the most painful part. <br>
-In StoneShard, you need 6 sprites for a weapon, which adds tons of work for modders.</p>
-<p>If you don't have any sprites, you can export some of the vanilla sprites with <strong>UTMT</strong>. <br>
-You can put them in your mod's folder or its subfolders, except in <code>.vs</code>, <code>bin</code> or <code>obj</code>. <br>
-They will be patched into the <code>data.win</code> automatically.</p>
-<p><center> <a class="glightbox" href="../img/weapon_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Sprites" src="../img/weapon_1.png" style="width:50%" /></a> </center></p>
-<p>From top to bottom : <br></p>
-<ul>
-<li>weapon in right hand</li>
-<li>weapon in left hand</li>
-<li>weapon in inventory (there are 3 sprites for this, since the weapon in StoneShard can be broken. <br> If you don't want to sprite it , just copy it 3 times)</li>
-<li>weapon as loot (dropped on the ground)</li>
-</ul>
-<details class="info">
-<summary>Notice</summary>
-<ul>
-<li>The sprite size for weapons <strong>in the inventory</strong> must be at most <code>27*27 pixels</code> since a cell in StoneShard's inventory is exactly <code>27*27 pixels</code>. <br>
-  Going above that would simply mean your weapon's sprite will be <strong>too big to fit in a single cell</strong>.</li>
-<li>If making sprites for a <strong>two-handed weapon</strong>, you don't need <code>char_left</code>, as two-handed weapons cannot be used by just the left hand.</li>
-</ul>
-</details>
-<p>You can now run <strong>ModShardLauncher.exe</strong> again and repeat the compile steps described previously.</p>
-<h3 id="loading-your-mod">Loading your mod</h3>
-<div class="admonition warning">
-<p class="admonition-title">Important</p>
-<p>You need to move the <code>ModShard.dll</code> file from the tool's root path to the root folder of the game. <br>
-This is how the tool hooks into Stoneshard. <br></p>
-<p>Trying to load a modded data file without this will cause the game to crash. </p>
-</div>
-<p>The last step is loading the mod. <br></p>
-<p>Once you've <strong>compiled</strong> your mod, it should pop up in the <strong>mod list</strong>. <br>
-Head there and <strong>tick the box</strong> next to your mod to <strong>enable</strong> it. <br>
-Next, click on the <strong>floppy disk icon</strong> in the <strong>top left</strong>, and <strong>save</strong> the new data file under any name. <br></p>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Author</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;author&quot;</span><span class="p">;</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;mod_name&quot;</span><span class="p">;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Description</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;mod_description&quot;</span><span class="p">;</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;1.0.0.0&quot;</span><span class="p">;</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12"></a>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">PatchMod</span><span class="p">()</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15"></a><span class="hll"><span class="w">            </span><span class="n">ModLoader</span><span class="p">.</span><span class="n">InsertGMLString</span><span class="p">(</span><span class="n">ModFiles</span><span class="p">.</span><span class="n">GetCode</span><span class="p">(</span><span class="s">&quot;myCode.gml&quot;</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;gml_Object_o_player_KeyPress_116&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">);</span><span class="w">  </span>
+</span></span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16"></a><span class="w">            </span><span class="c1">// (1)!</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ol>
+<li>We replaced the hardcoded string with <code>ModFiles.GetCode("mycode.gml")</code> which grabs the content of <code>myCode.gml</code> and injects it into the script.</li>
+</ol>
+<p>Now if we compile this mod and press F5 in game, it should quicksave our game. </br>
+That's great, but what if we want to edit a script that breaks when edited in UTMT ? </br></br>
+The solution is the exact same as in UTMT, we can edit the assembly directly !</p>
+<div class="language-c# highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">MyMod.cs</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-4-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-4-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-4-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-4-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-4-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-4-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-4-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-4-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-4-10">10</a></span>
+<span class="normal"><a href="#__codelineno-4-11">11</a></span>
+<span class="normal"><a href="#__codelineno-4-12">12</a></span>
+<span class="normal"><a href="#__codelineno-4-13">13</a></span>
+<span class="normal"><a href="#__codelineno-4-14">14</a></span>
+<span class="normal"><a href="#__codelineno-4-15">15</a></span>
+<span class="normal"><a href="#__codelineno-4-16">16</a></span>
+<span class="normal"><a href="#__codelineno-4-17">17</a></span>
+<span class="normal"><a href="#__codelineno-4-18">18</a></span>
+<span class="normal"><a href="#__codelineno-4-19">19</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher</span><span class="p">;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">ModShardLauncher.Mods</span><span class="p">;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">MyMod</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="p">{</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MyMod</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Mod</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Author</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;author&quot;</span><span class="p">;</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;mod_name&quot;</span><span class="p">;</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Description</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;mod_description&quot;</span><span class="p">;</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&quot;1.0.0.0&quot;</span><span class="p">;</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12"></a>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">PatchMod</span><span class="p">()</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15"></a><span class="hll"><span class="w">            </span><span class="n">ModLoader</span><span class="p">.</span><span class="n">InsertAssemblyString</span><span class="p">(</span><span class="s">&quot;:[0]\ncall.i gml_Script_scr_smoothSaveAuto(argc=0)\npopz.v&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gml_Object_o_player_KeyPress_116&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">);</span>
+</span></span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16"></a><span class="w">            </span><span class="c1">// (1)!</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ol>
+<li>This line inserts the assembly instructions corresponding to the quicksave code seen in previous examples.</li>
+</ol>
 <div class="admonition info">
-<p class="admonition-title">Notice</p>
-<p>Make sure you keep the vanilla <code>data.win</code> untouched, as you will need it to <strong>make more mods</strong> and to <strong>play the game</strong> vanilla.</p>
+<p class="admonition-title">Important Note</p>
+<p>The demonstrated functions are far from being the only options to inject our code into the game files. </br>
+This guide is meant for beginners, and as such tries to keep things relatively simple. </br></br>
+For more options, feel free to check out the <a href="api.html">API</a>.</p>
 </div>
-<p>I also recommend <strong>renaming</strong> your original <code>data.win</code> to <code>vanilla.win</code>. <br></p>
-<p>The reason for this is that at launch, Stoneshard looks for a <code>data.win</code> to load. <br>
-If it doesn't find one, it will <strong>ask you</strong> to <strong>select a data file</strong>, which is is when we can tell it to <strong>load</strong> the <strong>patched data file</strong> we just saved. <br></p>
-<h3 id="launch-your-game">Launch your game !</h3>
-<p>After launching the game, a new window should open alongside Stoneshard. <br> 
-It is a control panel for the <code>Script Engine</code> that runs some inner script in game.</p>
-<p>Enter the game as usual. <br> </p>
-<p>The script engine has a <code>give</code> script, so simply type the following in the new window's text box :
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>give MyFirstWeapon
-</span></code></pre></div></p>
-<p>You can give yourself <strong>any weapon</strong> in this way, but keep in mind you need to <strong>replace any space</strong> in the weapon's name with an <strong>underscore</strong> <code>_</code> :
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>give Homemade_Blade
-</span></code></pre></div></p>
-<p>Once you run the command, your weapon should be added to your inventory. <br></p>
-<p><center> <a class="glightbox" href="../img/weapon_2.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Inventory InGame" src="../img/weapon_2.png" style="width:50%" /></a> </center></p>
+<h2 id="advanced-injections">Advanced Injections</h2>
+<hr />
+<p>For more advanced mods, you might require more accurate injections than simply inserting or replacing code or assembly instructions at specific lines. </br></br>
+To that effect, MSL offers a collection of methods for precise injection, which also helps making your injections more resilient to updates by matching a specific line or set of line rather than using a line number. </br></p>
+<p>They are divided in 4 different stages, namely :</p>
+<ul>
+<li>Loading</li>
+<li>Matching</li>
+<li>Acting</li>
+<li>Saving</li>
+</ul>
+<p>Here's an example of that :</p>
+<div class="language-c# highlight"><span class="filename">Chained Methods</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">ModLoader</span><span class="p">.</span><span class="n">LoadGML</span><span class="p">(</span><span class="s">&quot;gml_GlobalScript_scr_sessionDataInit&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1">// Loading a script from the game&#39;s files</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p">.</span><span class="n">MatchFrom</span><span class="p">(</span><span class="s">&quot;global.HP = -1&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1">// Finding the line containing `global.HP = -1`</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">.</span><span class="n">ReplaceBy</span><span class="p">(</span><span class="s">&quot;global.HP = 50&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1">// Replacing it with `gobal.HP = 50`</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">.</span><span class="n">Save</span><span class="p">()</span><span class="w"> </span><span class="c1">// Saving the file</span>
+</span></code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Important Note</p>
+<p>Once again, this is only a simple example of the available functions, to learn more check out the <a href="api.html">API</a>.</p>
+</div>
+<p></br></br></p>
 
 
 
@@ -994,7 +949,7 @@ It is a control panel for the <code>Script Engine</code> that runs some inner sc
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    2024-01-05
+    2024-01-18
   </span>
 
     
@@ -1056,6 +1011,42 @@ It is a control panel for the <code>Script Engine</code> that runs some inner sc
     Made with
     <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
       Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://discord.gg/YxfRKYUuht" target="_blank" rel="noopener" title="Stoneshard Mod Hub Discord" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M524.531 69.836a1.5 1.5 0 0 0-.764-.7A485.065 485.065 0 0 0 404.081 32.03a1.816 1.816 0 0 0-1.923.91 337.461 337.461 0 0 0-14.9 30.6 447.848 447.848 0 0 0-134.426 0 309.541 309.541 0 0 0-15.135-30.6 1.89 1.89 0 0 0-1.924-.91 483.689 483.689 0 0 0-119.688 37.107 1.712 1.712 0 0 0-.788.676C39.068 183.651 18.186 294.69 28.43 404.354a2.016 2.016 0 0 0 .765 1.375 487.666 487.666 0 0 0 146.825 74.189 1.9 1.9 0 0 0 2.063-.676A348.2 348.2 0 0 0 208.12 430.4a1.86 1.86 0 0 0-1.019-2.588 321.173 321.173 0 0 1-45.868-21.853 1.885 1.885 0 0 1-.185-3.126 251.047 251.047 0 0 0 9.109-7.137 1.819 1.819 0 0 1 1.9-.256c96.229 43.917 200.41 43.917 295.5 0a1.812 1.812 0 0 1 1.924.233 234.533 234.533 0 0 0 9.132 7.16 1.884 1.884 0 0 1-.162 3.126 301.407 301.407 0 0 1-45.89 21.83 1.875 1.875 0 0 0-1 2.611 391.055 391.055 0 0 0 30.014 48.815 1.864 1.864 0 0 0 2.063.7A486.048 486.048 0 0 0 610.7 405.729a1.882 1.882 0 0 0 .765-1.352c12.264-126.783-20.532-236.912-86.934-334.541ZM222.491 337.58c-28.972 0-52.844-26.587-52.844-59.239s23.409-59.241 52.844-59.241c29.665 0 53.306 26.82 52.843 59.239 0 32.654-23.41 59.241-52.843 59.241Zm195.38 0c-28.971 0-52.843-26.587-52.843-59.239s23.409-59.241 52.843-59.241c29.667 0 53.307 26.82 52.844 59.239 0 32.654-23.177 59.241-52.844 59.241Z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://github.com/DDDDDragon/ModShardLauncher" target="_blank" rel="noopener" title="GitHub Repository" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://store.steampowered.com/app/625960/Stoneshard/" target="_blank" rel="noopener" title="Stoneshard on Steam" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M496 256c0 137-111.2 248-248.4 248-113.8 0-209.6-76.3-239-180.4l95.2 39.3c6.4 32.1 34.9 56.4 68.9 56.4 39.2 0 71.9-32.4 70.2-73.5l84.5-60.2c52.1 1.3 95.8-40.9 95.8-93.5 0-51.6-42-93.5-93.7-93.5s-93.7 42-93.7 93.5v1.2L176.6 279c-15.5-.9-30.7 3.4-43.5 12.1L0 236.1C10.2 108.4 117.1 8 247.6 8 384.8 8 496 119 496 256zM155.7 384.3l-30.5-12.6a52.79 52.79 0 0 0 27.2 25.8c26.9 11.2 57.8-1.6 69-28.4 5.4-13 5.5-27.3.1-40.3-5.4-13-15.5-23.2-28.5-28.6-12.9-5.4-26.7-5.2-38.9-.6l31.5 13c19.8 8.2 29.2 30.9 20.9 50.7-8.3 19.9-31 29.2-50.8 21zm173.8-129.9c-34.4 0-62.4-28-62.4-62.3s28-62.3 62.4-62.3 62.4 28 62.4 62.3-27.9 62.3-62.4 62.3zm.1-15.6c25.9 0 46.9-21 46.9-46.8 0-25.9-21-46.8-46.9-46.8s-46.9 21-46.9 46.8c.1 25.8 21.1 46.8 46.9 46.8z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://www.gog.com/game/stoneshard" target="_blank" rel="noopener" title="Stoneshard on GOG" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.15 15.24H4.36a.4.4 0 0 0-.4.4v2c0 .21.18.4.4.4h2.8v1.32h-3.5c-.56 0-1.02-.46-1.02-1.03v-3.39c0-.56.46-1.02 1.03-1.02h3.48v1.32zm1.01-3.7c0 .58-.47 1.05-1.05 1.05H2.63v-1.35h3.78a.4.4 0 0 0 .4-.4V6.39a.4.4 0 0 0-.4-.4H4.39a.4.4 0 0 0-.41.4v2.02c0 .23.18.4.4.4H6v1.35H3.68c-.58 0-1.05-.46-1.05-1.04V5.68c0-.57.47-1.04 1.05-1.04H7.1c.58 0 1.05.47 1.05 1.04v5.86zm13.2 7.82h-1.32v-4.12h-.93a.4.4 0 0 0-.4.4v3.72h-1.33v-4.12h-.93a.4.4 0 0 0-.4.4v3.72h-1.33v-4.42c0-.56.46-1.02 1.03-1.02h5.61v5.44zm.01-7.82c0 .58-.47 1.05-1.05 1.05h-4.48v-1.35h3.78a.4.4 0 0 0 .4-.4V6.39a.4.4 0 0 0-.4-.4h-2.03a.4.4 0 0 0-.4.4v2.02c0 .23.18.4.4.4h1.62v1.35H16.9c-.58 0-1.05-.46-1.05-1.04V5.68c0-.57.47-1.04 1.05-1.04h3.43c.58 0 1.05.47 1.05 1.04v5.86zm-7.65-6.9h-3.44c-.58 0-1.04.47-1.04 1.04v3.44c0 .58.46 1.04 1.04 1.04h3.44c.57 0 1.04-.46 1.04-1.04V5.68c0-.57-.47-1.04-1.04-1.04m-.3 1.75v2.02a.4.4 0 0 1-.4.4h-2.03a.4.4 0 0 1-.4-.4V6.4c0-.22.17-.4.4-.4H13c.23 0 .4.18.4.4zm-.79 7.53H9.24c-.57 0-1.03.46-1.03 1.02v3.39c0 .57.46 1.03 1.03 1.03h3.39c.57 0 1.03-.46 1.03-1.03v-3.39c0-.56-.46-1.02-1.03-1.02m-.3 1.72v2a.4.4 0 0 1-.4.4v-.01H9.94a.4.4 0 0 1-.4-.4v-1.99c0-.22.18-.4.4-.4h2c.22 0 .4.18.4.4zM23.49 1.1a1.74 1.74 0 0 0-1.24-.52H1.75A1.74 1.74 0 0 0 0 2.33v19.34a1.74 1.74 0 0 0 1.75 1.75h20.5A1.74 1.74 0 0 0 24 21.67V2.33c0-.48-.2-.92-.51-1.24m0 20.58a1.23 1.23 0 0 1-1.24 1.24H1.75A1.23 1.23 0 0 1 .5 21.67V2.33a1.23 1.23 0 0 1 1.24-1.24h20.5a1.24 1.24 0 0 1 1.24 1.24v19.34z"/></svg>
     </a>
   
 </div>

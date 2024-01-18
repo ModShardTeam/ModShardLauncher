@@ -20,7 +20,7 @@
     
     
       
-        <title>How to play with mods - ModShardLauncher Modding Documentation</title>
+        <title>Installing Mods - ModShardLauncher Modding Documentation</title>
       
     
     
@@ -83,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#so-how-can-i-install-mods-with-this-tool" class="md-skip">
+        <a href="#installing-mods" class="md-skip">
           Skip to content
         </a>
       
@@ -119,7 +119,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              How to play with mods
+              Installing Mods
             
           </span>
         </div>
@@ -421,7 +421,7 @@
         
   
   <span class="md-ellipsis">
-    Getting Started
+    Creating your First Mod
   </span>
   
 
@@ -451,7 +451,7 @@
           
   
   <span class="md-ellipsis">
-    How to play with mods
+    Installing Mods
   </span>
   
 
@@ -462,7 +462,7 @@
         
   
   <span class="md-ellipsis">
-    How to play with mods
+    Installing Mods
   </span>
   
 
@@ -493,27 +493,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#modshardlaunchers-ui" class="md-nav__link">
+  <a href="#modshardlauncher-setup" class="md-nav__link">
     <span class="md-ellipsis">
-      ModShardLauncher's UI
+      ModShardLauncher Setup
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#patching-mods-into-the-game" class="md-nav__link">
+  <a href="#ui-tour" class="md-nav__link">
     <span class="md-ellipsis">
-      Patching mods into the game
+      UI Tour
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#launch-your-game" class="md-nav__link">
+  <a href="#installing-a-mod" class="md-nav__link">
     <span class="md-ellipsis">
-      Launch your game!
+      Installing a Mod
     </span>
   </a>
   
@@ -587,84 +587,53 @@
   
 
 
-<h1 id="so-how-can-i-install-mods-with-this-tool">So how can I install mods with this tool?</h1>
-<div class="admonition info">
-<p class="admonition-title">Rewrite needed</p>
-<p>This guide should be rewritten soon. <br>
-It is still accurate, but it is not as clear as it could be.</p>
-</div>
+<h1 id="installing-mods">Installing Mods</h1>
 <h2 id="downloading-modshardlauncher">Downloading ModShardLauncher</h2>
-<hr />
-<p>First let's download <a href="https://github.com/DDDDDragon/ModShardLauncher/releases"><strong>ModShardLauncher</strong></a> on Github.</p>
-<p>Once downloaded, you should run it once to generate the required folders. <br>
-You should be able to see two new folders in ModShardLauncher's directory : <code>Mods</code> and <code>ModSources</code>.</p>
-<p>Now let's have a look at the tool itself.</p>
-<h2 id="modshardlaunchers-ui">ModShardLauncher's UI</h2>
-<hr />
-<p><center> <a class="glightbox" href="../img/tool_UI.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/tool_UI.png" style="width:50%" /></a> </center></p>
-<p>First, let's introduce the buttons on the left side. <br> <br>
-The top one is the <code>Menu</code> button. <br> 
-Clicking this button extends the panel to show the different pages' names :</p>
-<p><center> <a class="glightbox" href="../img/tool_UI2.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/tool_UI2.png" style="width:50%" /></a> </center></p>
-<p>The second button is the <code>Mods</code> button. <br> 
-It opens a new page where you can see which mods you currently have installed :</p>
-<p><center> <a class="glightbox" href="../img/tool_UI3.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/tool_UI3.png" style="width:50%" /></a> </center>
-<center style="color:Gray">
-Here's an exemple of this page with a loaded mod (here SpeedShard by Zizani)
-</center></p>
-<p>The third button is the <code>ModSources</code> button. <br> 
-There you can find the source code for mods you're making. <br>
-If you're a player, and not a modder, you can ignore this page as you won't need it.</p>
-<p><center> <a class="glightbox" href="../img/tool_UI4.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/tool_UI4.png" style="width:50%" /></a> </center></p>
-<p>And the last one is the <code>Settings</code> button. <br> 
-It opens the settings page, where you can configure ModShardLauncher, and one day mods as well.</p>
-<p><center> <a class="glightbox" href="../img/tool_UI5.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/tool_UI5.png" style="width:50%" /></a> </center></p>
-<h2 id="patching-mods-into-the-game">Patching mods into the game</h2>
-<hr />
-<p>Now that we know how the UI works, let's patch some mods into the game's files.</p>
-<details class="info" open="open">
-<summary>Keeping a backup</summary>
-<p>It is strongly advised to rename the <code>data.win</code> file in the <code>Stoneshard</code> folder to <code>vanilla.win</code>.</p>
-<hr />
-<p>This is done so the game lets you load either your <strong>modded</strong> or your <strong>vanilla</strong> game files. <br> 
-It also helps make sure you keep your <strong>original</strong> game files <strong>safe</strong>.</p>
-</details>
-<div class="admonition warning">
-<p class="admonition-title">Mod version</p>
-<p>Make sure that the mod's <strong>game version</strong> is the <strong>same as yours</strong>. <br>
-While mods <strong><em>may</em></strong> work with different game versions, it is <strong>not guaranteed</strong>.</p>
+<p>In order to install mods, you will require the <strong>ModShardLauncher</strong>. </br>
+You can grab it on <strong>Github</strong> by clicking the button below. </br></p>
+<p><a class="md-button md-button--primary" href="https://github.com/DDDDDragon/ModShardLauncher/releases">ModShardLauncher <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2Zm6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1Z"/></svg></span></a>&emsp;</p>
+<p>Make sure you download the <code>ModShardLauncher.zip</code> file, and <ins><strong>not the source code</strong></ins>. </br></p>
+<div style="color:Gray">
+Alternatively, you can build ModShardLauncher from source, but it's out of this guide's scope.
 </div>
-<ul>
-<li>First, click the "<strong>folder</strong>" button at the top of this page. <br>
-Navigate to your <code>Stoneshard</code> folder and select your vanilla <code>data.win</code>.</li>
-</ul>
-<p><center> <a class="glightbox" href="../img/tool_UI6.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../img/tool_UI6.png" style="width:50%" /></a> </center>
-<center style="color:Gray">
-A loading window should appear.
-</center></p>
-<ul>
-<li>
-<p>Next, head to the <code>Mods</code> page and select the mod(s) you want to enable. <br>
-Just tick the box next to a mod to enable it. <br></p>
-</li>
-<li>
-<p>Once it's done, click on the <code>Save</code> button to <strong>save</strong> your <strong>modded game files</strong>. <br>
-    You can <strong>save</strong> it under <strong>any name</strong> you want, but it is <strong>strongly recommended</strong> to <strong>not overwrite</strong> your <strong>original</strong> <code>data.win</code>.</p>
-</li>
-<li>
-<p>For the final step, move the <code>ModShard.dll</code> file to the <code>Stoneshard</code> folder. <br></p>
-</li>
-</ul>
-<div class="admonition warning">
-<p class="admonition-title">ModShard.dll</p>
-<p>This file is <strong>required</strong> for the game to <strong>load mods</strong>. <br>
-Trying to load a <strong>modded data file</strong> without it will cause the game to <strong>crash</strong>.</p>
-</div>
-<h2 id="launch-your-game">Launch your game!</h2>
+
 <hr />
-<p>After launching the game, a new window should open alongside Stoneshard. <br>
-You can safely <strong>ignore</strong> this window, as it is only used as a <strong>debugging tool</strong> / <strong>console</strong>.</p>
-<p>Once you're in the game, you should be able to see the mod's changes. <br></p>
+<h2 id="modshardlauncher-setup">ModShardLauncher Setup</h2>
+<ul>
+<li><strong>Extract</strong> <code>ModShardLauncher.zip</code> anywhere.</li>
+<li><strong>Move</strong> <code>ModShard.dll</code> to your Stoneshard folder.</li>
+<li><strong>Rename</strong> <code>data.win</code> to <code>vanilla.win</code>  in your Stoneshard folder.</li>
+<li><strong>Run</strong> <code>ModShardLauncher.exe</code>.</li>
+</ul>
+<hr />
+<h2 id="ui-tour">UI Tour</h2>
+<p>Let's take a quick tour of the UI to better know MSL. </br></br></p>
+<p><center> <a class="glightbox" href="../img/tool_UI.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Main Menu" src="../img/tool_UI.png" style="width:50%" /></a> </center></p>
+<p><center style="color:Gray">
+The button on the top left of the window shows the button's name. </br></br>
+The <code>Anvil</code> button below that leads to the <code>Mods</code> menu. (<strong><em><ins>This is the only menu you will need</ins></em></strong>.) </br></br>
+The <code>C#</code> button leads to the <code>Mod Sources</code> menu. (<em>It's used by modders to create their mods</em>.) </br></br>
+The <code>Cog</code> button leads to the <code>Settings</code> menu. (<em>At some point you will be able to configure mod settings there</em>.) </br></br>
+</center></p>
+<hr />
+<h2 id="installing-a-mod">Installing a Mod</h2>
+<p>Now that we've got MSL running, let's install some mods. </br>
+Here's an <a href="https://www.youtube.com/watch?v=_J0oJYGi38E&amp;t=13s">example video showing the installation</a> of <a href="https://github.com/Nylux/Stoneshard-NeoConsole/releases">NeoConsole</a>. (<em>enable the subtitles !</em>) </br> </br></p>
+<ul>
+<li>Close MSL.</li>
+<li>Download your mod's <code>.sml</code> file.</li>
+<li>Place the <code>.sml</code> file in MSL's <code>Mods</code> folder.</li>
+<li>Start MSL.</li>
+<li>Click on the <strong>anvil button</strong> to open the <code>Mods</code> menu.</li>
+<li>At the top left of the window, click on the <strong>folder button</strong>.</li>
+<li>Select the <code>vanilla.win</code> file in the <code>Stoneshard</code> folder</li>
+<li>In the <code>Mods</code> menu, <strong>tick the box</strong> next to the mods you wish to enable.</li>
+<li>Click on the <strong>save button</strong> and save under any name (eg. <code>modded.win</code>)</li>
+<li>Close MSL.</li>
+<li>Start <strong>Stoneshard</strong>. It should ask you to select a <code>.win</code> file.</li>
+<li>Select the <code>modded.win</code> file and enjoy your mods !</li>
+</ul>
+<p></br></br></p>
 
 
 
@@ -685,7 +654,7 @@ You can safely <strong>ignore</strong> this window, as it is only used as a <str
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    2024-01-05
+    2024-01-18
   </span>
 
     
@@ -746,6 +715,42 @@ You can safely <strong>ignore</strong> this window, as it is only used as a <str
     Made with
     <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
       Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://discord.gg/YxfRKYUuht" target="_blank" rel="noopener" title="Stoneshard Mod Hub Discord" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M524.531 69.836a1.5 1.5 0 0 0-.764-.7A485.065 485.065 0 0 0 404.081 32.03a1.816 1.816 0 0 0-1.923.91 337.461 337.461 0 0 0-14.9 30.6 447.848 447.848 0 0 0-134.426 0 309.541 309.541 0 0 0-15.135-30.6 1.89 1.89 0 0 0-1.924-.91 483.689 483.689 0 0 0-119.688 37.107 1.712 1.712 0 0 0-.788.676C39.068 183.651 18.186 294.69 28.43 404.354a2.016 2.016 0 0 0 .765 1.375 487.666 487.666 0 0 0 146.825 74.189 1.9 1.9 0 0 0 2.063-.676A348.2 348.2 0 0 0 208.12 430.4a1.86 1.86 0 0 0-1.019-2.588 321.173 321.173 0 0 1-45.868-21.853 1.885 1.885 0 0 1-.185-3.126 251.047 251.047 0 0 0 9.109-7.137 1.819 1.819 0 0 1 1.9-.256c96.229 43.917 200.41 43.917 295.5 0a1.812 1.812 0 0 1 1.924.233 234.533 234.533 0 0 0 9.132 7.16 1.884 1.884 0 0 1-.162 3.126 301.407 301.407 0 0 1-45.89 21.83 1.875 1.875 0 0 0-1 2.611 391.055 391.055 0 0 0 30.014 48.815 1.864 1.864 0 0 0 2.063.7A486.048 486.048 0 0 0 610.7 405.729a1.882 1.882 0 0 0 .765-1.352c12.264-126.783-20.532-236.912-86.934-334.541ZM222.491 337.58c-28.972 0-52.844-26.587-52.844-59.239s23.409-59.241 52.844-59.241c29.665 0 53.306 26.82 52.843 59.239 0 32.654-23.41 59.241-52.843 59.241Zm195.38 0c-28.971 0-52.843-26.587-52.843-59.239s23.409-59.241 52.843-59.241c29.667 0 53.307 26.82 52.844 59.239 0 32.654-23.177 59.241-52.844 59.241Z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://github.com/DDDDDragon/ModShardLauncher" target="_blank" rel="noopener" title="GitHub Repository" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://store.steampowered.com/app/625960/Stoneshard/" target="_blank" rel="noopener" title="Stoneshard on Steam" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M496 256c0 137-111.2 248-248.4 248-113.8 0-209.6-76.3-239-180.4l95.2 39.3c6.4 32.1 34.9 56.4 68.9 56.4 39.2 0 71.9-32.4 70.2-73.5l84.5-60.2c52.1 1.3 95.8-40.9 95.8-93.5 0-51.6-42-93.5-93.7-93.5s-93.7 42-93.7 93.5v1.2L176.6 279c-15.5-.9-30.7 3.4-43.5 12.1L0 236.1C10.2 108.4 117.1 8 247.6 8 384.8 8 496 119 496 256zM155.7 384.3l-30.5-12.6a52.79 52.79 0 0 0 27.2 25.8c26.9 11.2 57.8-1.6 69-28.4 5.4-13 5.5-27.3.1-40.3-5.4-13-15.5-23.2-28.5-28.6-12.9-5.4-26.7-5.2-38.9-.6l31.5 13c19.8 8.2 29.2 30.9 20.9 50.7-8.3 19.9-31 29.2-50.8 21zm173.8-129.9c-34.4 0-62.4-28-62.4-62.3s28-62.3 62.4-62.3 62.4 28 62.4 62.3-27.9 62.3-62.4 62.3zm.1-15.6c25.9 0 46.9-21 46.9-46.8 0-25.9-21-46.8-46.9-46.8s-46.9 21-46.9 46.8c.1 25.8 21.1 46.8 46.9 46.8z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://www.gog.com/game/stoneshard" target="_blank" rel="noopener" title="Stoneshard on GOG" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.15 15.24H4.36a.4.4 0 0 0-.4.4v2c0 .21.18.4.4.4h2.8v1.32h-3.5c-.56 0-1.02-.46-1.02-1.03v-3.39c0-.56.46-1.02 1.03-1.02h3.48v1.32zm1.01-3.7c0 .58-.47 1.05-1.05 1.05H2.63v-1.35h3.78a.4.4 0 0 0 .4-.4V6.39a.4.4 0 0 0-.4-.4H4.39a.4.4 0 0 0-.41.4v2.02c0 .23.18.4.4.4H6v1.35H3.68c-.58 0-1.05-.46-1.05-1.04V5.68c0-.57.47-1.04 1.05-1.04H7.1c.58 0 1.05.47 1.05 1.04v5.86zm13.2 7.82h-1.32v-4.12h-.93a.4.4 0 0 0-.4.4v3.72h-1.33v-4.12h-.93a.4.4 0 0 0-.4.4v3.72h-1.33v-4.42c0-.56.46-1.02 1.03-1.02h5.61v5.44zm.01-7.82c0 .58-.47 1.05-1.05 1.05h-4.48v-1.35h3.78a.4.4 0 0 0 .4-.4V6.39a.4.4 0 0 0-.4-.4h-2.03a.4.4 0 0 0-.4.4v2.02c0 .23.18.4.4.4h1.62v1.35H16.9c-.58 0-1.05-.46-1.05-1.04V5.68c0-.57.47-1.04 1.05-1.04h3.43c.58 0 1.05.47 1.05 1.04v5.86zm-7.65-6.9h-3.44c-.58 0-1.04.47-1.04 1.04v3.44c0 .58.46 1.04 1.04 1.04h3.44c.57 0 1.04-.46 1.04-1.04V5.68c0-.57-.47-1.04-1.04-1.04m-.3 1.75v2.02a.4.4 0 0 1-.4.4h-2.03a.4.4 0 0 1-.4-.4V6.4c0-.22.17-.4.4-.4H13c.23 0 .4.18.4.4zm-.79 7.53H9.24c-.57 0-1.03.46-1.03 1.02v3.39c0 .57.46 1.03 1.03 1.03h3.39c.57 0 1.03-.46 1.03-1.03v-3.39c0-.56-.46-1.02-1.03-1.02m-.3 1.72v2a.4.4 0 0 1-.4.4v-.01H9.94a.4.4 0 0 1-.4-.4v-1.99c0-.22.18-.4.4-.4h2c.22 0 .4.18.4.4zM23.49 1.1a1.74 1.74 0 0 0-1.24-.52H1.75A1.74 1.74 0 0 0 0 2.33v19.34a1.74 1.74 0 0 0 1.75 1.75h20.5A1.74 1.74 0 0 0 24 21.67V2.33c0-.48-.2-.92-.51-1.24m0 20.58a1.23 1.23 0 0 1-1.24 1.24H1.75A1.23 1.23 0 0 1 .5 21.67V2.33a1.23 1.23 0 0 1 1.24-1.24h20.5a1.24 1.24 0 0 1 1.24 1.24v19.34z"/></svg>
     </a>
   
 </div>
