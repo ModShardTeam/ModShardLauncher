@@ -35,6 +35,20 @@ theme:
             icon: material/brightness-4
             name: Switch to Light Mode
 
+extra:
+  social:
+    - icon: fontawesome/brands/discord 
+      link: https://discord.gg/YxfRKYUuht
+      name: Stoneshard Mod Hub Discord
+    - icon: fontawesome/brands/github
+      link: https://github.com/DDDDDragon/ModShardLauncher
+      name: GitHub Repository
+    - icon: fontawesome/brands/steam
+      link: https://store.steampowered.com/app/625960/Stoneshard/
+      name: Stoneshard on Steam
+    - icon: simple/gogdotcom
+      link: https://www.gog.com/game/stoneshard
+      name: Stoneshard on GOG
 
 markdown_extensions:
   - attr_list
@@ -54,6 +68,9 @@ markdown_extensions:
   - pymdownx.tilde
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 
 plugins:
@@ -79,8 +96,8 @@ plugins:
               Welcome: 欢迎
               Guides: 指南
               Introduction: 简介
-              Getting Started: 开始
-              How to play with mods: 如何使用MOD
+              Creating your First Mod: 开始
+              Installing Mods: 如何使用MOD
               API: API
 #           You can remove the nav_translations above and remove comments here if you want to have custom ZH nav.
 #           This would avoid setting up empty 'TODO' pages.
@@ -96,6 +113,6 @@ nav:
       - "Welcome": "index.md"
   - Guides:
       - "Introduction": "guides/introduction.md"
-      - "Getting Started": "guides/start-modding.md"
-      - "How to play with mods": "guides/how-to-play-mod.md"
+      - "Creating your First Mod": "guides/start-modding.md"
+      - "Installing Mods": "guides/how-to-play-mod.md"
       - "API": "guides/api.md"
