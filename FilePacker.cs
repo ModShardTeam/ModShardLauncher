@@ -13,10 +13,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using Serilog;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Diagnostics;
 
 namespace ModShardLauncher
 {
-    public class FilePacker
+    public static class FilePacker
     {
         public static void Pack(string path)
         {
@@ -118,7 +119,7 @@ namespace ModShardLauncher
             }
             else if(type == typeof(FileInfo))
             {
-                var stream = new FileStream((obj as FileInfo).FullName, FileMode.Open);
+                var stream = new FileStream(((FileInfo)obj).FullName, FileMode.Open);
                 byte[]? bytes = new byte[stream.Length];
                 stream.Read(bytes, 0, bytes.Length);
                 fs.Write(bytes, 0, bytes.Length);
@@ -165,12 +166,26 @@ namespace ModShardLauncher
             defaultReferences.AddRange(new List<MetadataReference>() { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
 
             IEnumerable<SyntaxTree> src = files.Select(f => SyntaxFactory.ParseSyntaxTree(File.ReadAllText(f), parseOptions, f, Encoding.UTF8));
-            Log.Information("Writting ast...");
+            Log.Information("Compilation: Writting ast...");
             CSharpCompilation comp = CSharpCompilation.Create(name, src, defaultReferences, options);
 
+            Log.Information("Compilation: used Assemblies...");
             foreach(MetadataReference usedAssemblyReferences in comp.GetUsedAssemblyReferences())
             {
-                Log.Information(string.Format("usedAssemblyReferences: {0}", usedAssemblyReferences.Display));
+                if (usedAssemblyReferences.Display != null)
+                {
+                    FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(usedAssemblyReferences.Display);
+                    Log.Information(string.Format("{{{0}}} {{{1}}} {{{2}}}", 
+                        usedAssemblyReferences.Display,
+                        fileVersionInfo.FileVersion,
+                        fileVersionInfo.ProductName
+                    ));
+                }
+                else
+                {
+                    Log.Error("Cannot find the assembly");
+                }
+                
             }
 
             foreach(SyntaxTree tree in comp.SyntaxTrees)
