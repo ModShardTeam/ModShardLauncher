@@ -23,13 +23,13 @@ namespace ModShardLauncher
         public ModInfos ModPage;
         public ModSourceInfos ModSourcePage;
         public Settings SettingsPage;
-        public static UserSettings Settings = new UserSettings();
+        public static UserSettings Settings = new();
         public Main()
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
-                .WriteTo.File("logs/msl_log.txt")
+                .WriteTo.File(string.Format("logs/log_{0}.txt", DateTime.Now.ToString("yyyyMMdd_HHmm")))
                 .CreateLogger();
 
             Instance = this;
