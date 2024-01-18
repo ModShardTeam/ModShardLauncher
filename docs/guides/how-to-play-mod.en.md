@@ -1,101 +1,60 @@
-
-
-# So how can I install mods with this tool?
-
-!!! info "Rewrite needed"
-    This guide should be rewritten soon. <br>
-    It is still accurate, but it is not as clear as it could be.
+# Installing Mods
 
 ## Downloading ModShardLauncher
 
+In order to install mods, you will require the **ModShardLauncher**. </br>
+You can grab it on **Github** by clicking the button below. </br>
+
+
+[ModShardLauncher :octicons-link-external-16:](https://github.com/DDDDDragon/ModShardLauncher/releases){ .md-button .md-button--primary}&emsp;
+
+Make sure you download the `ModShardLauncher.zip` file, and ^^**not the source code**^^. </br>
+<div style="color:Gray">
+Alternatively, you can build ModShardLauncher from source, but it's out of this guide's scope.
+</div>
+
 ---
 
-First let's download [**ModShardLauncher**](https://github.com/DDDDDragon/ModShardLauncher/releases) on Github.
+## ModShardLauncher Setup
 
-Once downloaded, you should run it once to generate the required folders. <br>
-You should be able to see two new folders in ModShardLauncher's directory : `Mods` and `ModSources`.
-
-Now let's have a look at the tool itself.
-
-## ModShardLauncher's UI
+- **Extract** `ModShardLauncher.zip` anywhere.
+- **Move** `ModShard.dll` to your Stoneshard folder.
+- **Rename** `data.win` to `vanilla.win`  in your Stoneshard folder.
+- **Run** `ModShardLauncher.exe`.
 
 ---
 
-<center> ![](../img/tool_UI.png){: style="width:50%"} </center>
+## UI Tour
 
-First, let's introduce the buttons on the left side. <br> <br>
-The top one is the `Menu` button. <br> 
-Clicking this button extends the panel to show the different pages' names :
+Let's take a quick tour of the UI to better know MSL. </br></br>
 
-<center> ![](../img/tool_UI2.png){: style="width:50%"} </center>
+<center> ![Main Menu](../img/tool_UI.png){: style="width:50%"} </center>
 
-The second button is the `Mods` button. <br> 
-It opens a new page where you can see which mods you currently have installed :
-
-<center> ![](../img/tool_UI3.png){: style="width:50%"} </center>
 <center style="color:Gray">
-Here's an exemple of this page with a loaded mod (here SpeedShard by Zizani)
+The button on the top left of the window shows the button's name. </br></br>
+The `Anvil` button below that leads to the `Mods` menu. (***^^This is the only menu you will need^^***.) </br></br>
+The `C#` button leads to the `Mod Sources` menu. (*It's used by modders to create their mods*.) </br></br>
+The `Cog` button leads to the `Settings` menu. (*At some point you will be able to configure mod settings there*.) </br></br>
 </center>
 
-The third button is the `ModSources` button. <br> 
-There you can find the source code for mods you're making. <br>
-If you're a player, and not a modder, you can ignore this page as you won't need it.
-
-<center> ![](../img/tool_UI4.png){: style="width:50%"} </center>
-
-And the last one is the `Settings` button. <br> 
-It opens the settings page, where you can configure ModShardLauncher, and one day mods as well.
-
-<center> ![](../img/tool_UI5.png){: style="width:50%"} </center>
-
-## Patching mods into the game
-
 ---
 
-Now that we know how the UI works, let's patch some mods into the game's files.
+## Installing a Mod
 
-???+ info "Keeping a backup"
-    It is strongly advised to rename the `data.win` file in the `Stoneshard` folder to `vanilla.win`.
+Now that we've got MSL running, let's install some mods. </br>
+Here's an [example video showing the installation](https://www.youtube.com/watch?v=_J0oJYGi38E&t=13s) of [NeoConsole](https://github.com/Nylux/Stoneshard-NeoConsole/releases). (*enable the subtitles !*) </br> </br>
 
-    ---
+- Close MSL.
+- Download your mod's `.sml` file.
+- Place the `.sml` file in MSL's `Mods` folder.
+- Start MSL.
+- Click on the **anvil button** to open the `Mods` menu.
+- At the top left of the window, click on the **folder button**.
+- Select the `vanilla.win` file in the `Stoneshard` folder
+- In the `Mods` menu, **tick the box** next to the mods you wish to enable.
+- Click on the **save button** and save under any name (eg. `modded.win`)
+- Close MSL.
+- Start **Stoneshard**. It should ask you to select a `.win` file.
+- Select the `modded.win` file and enjoy your mods !
 
-    This is done so the game lets you load either your **modded** or your **vanilla** game files. <br> 
-    It also helps make sure you keep your **original** game files **safe**.
-
-!!! warning "Mod version"
-    Make sure that the mod's **game version** is the **same as yours**. <br>
-    While mods ***may*** work with different game versions, it is **not guaranteed**.
-
-
-
-- First, click the "**folder**" button at the top of this page. <br>
-Navigate to your `Stoneshard` folder and select your vanilla `data.win`.
-
-<center> ![](../img/tool_UI6.png){: style="width:50%"} </center>
-<center style="color:Gray">
-A loading window should appear.
-</center>
-
-- Next, head to the `Mods` page and select the mod(s) you want to enable. <br>
-Just tick the box next to a mod to enable it. <br>
-
-
-- Once it's done, click on the ``Save`` button to **save** your **modded game files**. <br>
-    You can **save** it under **any name** you want, but it is **strongly recommended** to **not overwrite** your **original** `data.win`.
-
-
-- For the final step, move the `ModShard.dll` file to the `Stoneshard` folder. <br>
-
-!!! warning "ModShard.dll"
-    This file is **required** for the game to **load mods**. <br>
-    Trying to load a **modded data file** without it will cause the game to **crash**.
-
-
-## Launch your game!
-
----
-
-After launching the game, a new window should open alongside Stoneshard. <br>
-You can safely **ignore** this window, as it is only used as a **debugging tool** / **console**.
-
-Once you're in the game, you should be able to see the mod's changes. <br>
+</br></br>

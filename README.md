@@ -64,7 +64,11 @@ Whether you want to tweak the **game mechanics**, add **new content**, or **anyt
 
 ## Contributing
 ### Building From Source
-**TODO**
+`git clone https://github.com/DDDDDragon/ModShardLauncher.git`
+
+`cd ModShardLauncher`
+
+`dotnet build`
 ### Issues
 **TODO**
 ### Pull Requests

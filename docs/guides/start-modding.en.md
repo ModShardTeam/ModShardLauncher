@@ -1,13 +1,26 @@
-#  Let's begin!
+# Modding Stoneshard with MSL
 
-## Before we start
+## Introduction
 
 ---
 
-Before creating a mod, you should have a basic understanding of C# and Visual Studio. <br>
-If you do not know how to use them, please learn them first, as the tool's API can be a bit complex. <br>
+ModShardLauncher (or MSL) is a tool that has the ambition of becoming the **prefered method of modding Stoneshard**. </br></br>
+It is very much at an **early stage of development** right now, and as such quite a few **key features are still missing**. </br>
+Additionally, some of the included features are still **rough around the edges** and not as **friendly to beginners** as we'd like them to be. </br></br>
 
-Here are some resources to get you started on that :
+!!! warning "Important  "
+    At this stage, modding Stoneshard with MSL **^^requires you to know how to mod the game^^** with [**UndertaleModTool**](https://github.com/krzys-h/UndertaleModTool). </br></br>
+    This is because the focus of the project right now is on **including more features**, rather than making the existing ones **more accessible**. </br></br>
+    Eventually however, the project will reach a stage where **no knowledge of GML** or inner workings of the game is necessary for **simple mods** like adding weapons, swapping textures, etc...
+
+## Before we Start
+
+---
+
+Before creating a mod, you should have a **basic understanding** of **C#** and **Visual Studio**.
+
+If you do not know how to use them, please **learn them first**, as MSL's API can be a bit complex at times. </br>
+Here are some **resources** to get you started on that :
 
 - [C# Tutorial](https://www.w3schools.com/cs/index.php)
 - [Visual Studio Tutorial](https://www.youtube.com/watch?v=VcU2HGsxeII&t=34s)
@@ -16,296 +29,244 @@ Here are some resources to get you started on that :
 
 ---
 
-In order to write your mod's code, you will need a tool such as [**Visual Studio**](https://visualstudio.microsoft.com/). <br> 
-It's a professional development tool that can help you a lot.
+??? abstract "**IDEs**"
+    In order to write your mod's code, you'll need a tool such as [**Visual Studio**](https://visualstudio.microsoft.com/), [**Jetbrains Rider**](https://www.jetbrains.com/rider/) or even [**Visual Studio Code**](https://code.visualstudio.com/). </br>
+    !!! question "What do they do ?"
+        These are professional development tools that can help you write code. </br>
+        This guide will use **Visual Studio**, as it is both free and easier to use for beginners than **Rider**.
 
-While installing, make sure you choose the `.NET Desktop Development` workload. <br>
-You do not need to download any other workload.
+    While installing **Visual Studio**, make sure you choose the `.NET Desktop Development` workload. </br>
+    You do not need to download any other workload.
 
-At last, find `.NET 6.0 SDK` on official Microsoft website, install it and when it's done, reboot your PC.
+??? abstract "**.NET 6.0 SDK**"
+    Download the [.NET 6.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0), install it and when it's done, restart your computer.
 
-You can also use **Visual Studio Code** as your tool, but this tutorial won't cover it ~~cuz I havent tried it~~.
+??? abstract "**ModShardLauncher Template (Optional)**"
+    You can download the official template for MSL Mods to avoid having to write boilerplate code. </br>
+    The easiest way to install it is to open a terminal and run the following command :
 
-## Create your first mod
+    `dotnet new install ModShardLauncher.Templates`
 
----
-
-Let's start our journey by launching **ModShardLauncher.exe**. <br>
-Once you start it, two folders should be created : the first is `Mods`, the other is `ModSource`. <br>
-
-Move into the `ModSource` folder and create a **new folder** there. <br>
-You can name this new folder whatever you want.
-
-### Create your mod
-
-There are many ways to create your mod. <br>
-If you use **Visual Studio**, you can click `Create a New Project`, search `Class Library` and click `Next` :
-
-<center> ![Create New Project](../img/create_project_0.png){: style="width:50%"} </center>
-
-Give a name to your mod, then select the `ModSources` folder that **ModShardLauncher.exe** created earlier :
-<center> ![Name Your Mod](../img/create_project_1.png){: style="width:50%"} </center>
-
-Choose **.Net 6.0**, and that's it!
-<center> ![Net 6.0](../img/create_project_2.png){: style="width:50%"} </center>
-
-<br>
-
-### Assembly Reference
-
-Next we should add a **reference** to the tool's **assembly**, which means the `ModShardLauncher.dll` file. <br><br>
-
-Open the **solution explorer** on the right :
-<center> ![Solution Explorer](../img/mod_0.png){: style="width:50%"} </center>
-
-Right click `Dependencies`, then click `Add Project Reference` :
-<center> ![Add Reference](../img/mod_1.png){: style="width:30%"} </center>
-
-Click `Browse...` :
-<center> ![Browse](../img/mod_2.png){: style="width:50%"} </center>
-
-Finally, select `ModShardLauncher.dll` and click `Add` :
-<center> ![DLL](../img/mod_3.png){: style="width:50%"} </center>
-
-<br>
-
-### Main class
-
-Now we need to create a **Main Class** for our mod.
-
-If you're familiar with **C#**, then you probably already know about **Classes**. <br>
-We will now create our Mod's **main class**.
-
-When you created your project, **Visual Studio** should have added a class named `Class1`. <br> 
-We should add a reference to `ModShardLauncher` and to the `ModShardLauncher.Mods` namespace. <br>
-
-Let's change the code to the following :
-<center> ![Class1](../img/class_0.png){: style="width:50%"} </center>
-
-As you can see, we changed the name of the class from `Class1` to `MyFirstMod`, and made this class extend the `Mod` class.
-
-<br>
-
-### Information of your mod
-
-Now we need to add some basic information to our mod.
-
-Let's add the following code to `MyFirstMod`:
-<center> ![MyFirstMod](../img/class_1.png){: style="width:50%"} </center>
-
-Once you've done this, the mod's name, creator and brief description will be set.
-
-<br>
-
-### Compile the Mod
-
-Launch **ModShardLauncher**. <br>
-As you can see, the mod's source code has been loaded.
-<center> ![Mod Source](../img/compile_0.png){: style="width:50%"} </center>
-
-In order to **compile** the mod, we need to click the **folder icon** on the top left, and choose our **vanilla** `data.win` file.
-
-??? question "Why does it need the vanilla `data.win` ?"
-
-    This tool works based on the names of the objects in the **vanilla** `data.win` file.
-
-??? question "Why do we need to load the `data.win` before compiling?"
-
-    To prevent potential mismatch (and issues) between the **game version** and your **mod's version**.
-
-We can now double click `MyFirstMod` to compile the mod.
-
-Result of compiling :
-<center> ![Compiling Result](../img/compile_1.png){: style="width:50%"} </center>
-
-<br>
-
-## Create your first weapon
+## Getting Started
 
 ---
 
-You have compiled your first mod just now! <br> 
-It's great but it's a bit empty right now, so let's add some content next.
+Let's start our modding journey by starting `ModShardLauncher.exe`. </br>
+This should create the `Mods` and `ModSources` folder if they didn't exist already. </br></br>
+Once this is done, you can simply close MSL for now.
 
-### Create Weapon Class
+Now, let's create a new mod using the MSL Template. </br>
+To do this, open up Visual Studio, click Create a new project, and in the search bar type `msl`.
 
-Right click the **Solution Explorer**, right click your **project** (_the one highlighted in purple in the image_), <br>
-click `Add`, and click `New Item...`
-<center> ![New Item](../img/weapon_0.png){: style="width:30%"} </center>
+![MSL Tempalte](../img/msl_template.png)
 
-Now you can name your weapon. For this tutorial I will name it `MyFirstWeapon`. <br>
+For MSL to recognize your mod you need to create the new project in MSL's `ModSources` folder. </br>
+Make sure to also tick the `Place solution and project in the same directory` box.
 
-Just like before, we can now add the reference for `ModShardLauncher` and the `ModShardLauncher.Mod` namespace. <br> 
-However this time, we'll be extending the `Weapon` class rather than the `Mod` class.
+![MSL Template Location](../img/msl_template_location.png)
 
-??? note "MyFirstWeapon.cs"
-    ```C# linenums="1"
-    using ModShardLauncher;
-    using ModShardLauncher.Mod;
+Hit the `Create` button and you'll be good to go !
 
-    namespace MyFirstMod
+Alternatively, you can also create a new project using the mod template with the CLI. </br>
+To do this, open a terminal, navigate to MSL's `ModSources` folder and type the following command :
+
+`dotnet new msl --name "MyMod"`
+
+Regardless of your method, you should now see a new `MyMod` folder in your `ModSources` folder. </br>
+It should contain a solution, which you can open in your **IDE** of choice.
+
+## Boilerplate Code
+
+---
+
+Now that our project is set up, you should have a working solution with a class containing some boilerplate code. </br>
+Let's quickly go over what it does, and why it needs to be there.
+
+```c# title="MyMod.cs" linenums="1"
+using ModShardLauncher;
+using ModShardLauncher.Mods; // (1)!
+
+namespace MyMod
+{
+    public class MyMod : Mod // (2)!
     {
-        public class MyFirstWeapon : Weapon
+        public override string Author => "author"; // (3)!
+        public override string Name => "mod_name"; // (4)!
+        public override string Description => "mod_description"; // (5)!
+        public override string Version => "1.0.0.0"; // (6)!
+
+        public override void PatchMod() // (7)!
         {
-            
+
         }
     }
-    ```
-<br>
+}
+```
 
-### Change the information of your weapon
+1. The `using` directives allow us to use code from ModShardLauncher to write our mod.
+2. This is the base class for your mod. </br> All of your code should be contained withing it.
+3. This variable contains the name of the author of this mod. </br> Feel free to replace it with yours ! </br> It's visible in MSL's Mod list.
+4. This variable contains your mod's name. </br> Feel free to change it ! </br> It's visible in MSL's Mod list.
+5. This variable contains your mod's description. </br> Feel free to change it ! </br> It's visible in MSL's Mod list.
+6. This variable contains your mod's version. </br> Don't forget to change it when you update your mod ! </br> It's visible in MSL's Mod list.
+7. The `PatchMod` method is your mod's entry point. </br> Anything within it gets run by the compiler when your mod is patched into a `.win` file.
 
-In StoneShard, there are many properties for a single weapon. <br>
-It is painful to set them all by hand, and if you forget to set any of them, your mod may not load as expected.
+!!! tip "Tip"
+    Click on the `+` button next to the code to learn what it does.
 
-??? question "Why is that ?"
-    ~~Actually, cuz the source code of StoneShard is kinda messy...~~
+## Compiling our Mod
 
-Then, are there any ways that can help us easily change the properties of a weapon?
+---
 
-First, let's override the `SetDefaults` method :
+Right now our mod doesn't do, well, anything, but for the sake of learning let's compile it anyway. </br> </br>
 
-??? note "MyFirstWeapon.cs"
-    ```C# linenums="1" hl_lines="8-11"
-    using ModShardLauncher;
-    using ModShardLauncher.Mod;
+- First, let's make sure we saved any change we made to `MyMod.cs` by pressing ++ctrl+s++. </br>
+- Open MSL, click the folder icon at the top of the window and select your `vanilla.win` file.
+- Head to the `ModSources` menu (by clicking the C# button on the left). </br>
+- Your mod should be listed here with a `Compile` button next to it.
 
-    namespace MyFirstMod
+??? question "My mod isn't there !"
+    If your mod isn't there, try restarting MSL. </br>
+    If you created your project after opening MSL it won't show in the list until your restart it. </br></br>
+    If your mod still doesn't appear after restarting, make sure you created your mod in the `ModSources` folder.
+
+- Click the `Compile` button. </br> This generates a `.sml` file in the `Mods` folder, which is your mod file. </br> This is the file you can distribute to players.
+- There's no feedback when clicking on the `Compile` button, so don't be alarmed, it's normal.
+- Next head to the `Mods` menu, and tick the box next to your mod.
+- Click the save button at the top of the window and save under the name `MyMod.win`.
+
+That's it you've now compiled your mod ! </br>
+You can now start Stoneshard, select `MyMod.win` and test your mod.
+
+## Basic Injections
+
+---
+
+At this point we've got a basic mod, but it doesn't really do anything. </br>
+Let's change that by injecting some code into the game's files. </br>
+
+In the `MyMod.cs` class, let's add the following code :
+
+``` c# title="MyMod.cs" linenums="1" hl_lines="15"
+using ModShardLauncher;
+using ModShardLauncher.Mods;
+
+namespace MyMod
+{
+    public class MyMod : Mod
     {
-        public class MyFirstWeapon : Weapon
+        public override string Author => "author";
+        public override string Name => "mod_name";
+        public override string Description => "mod_description";
+        public override string Version => "1.0.0.0";
+
+        public override void PatchMod()
         {
-            public override void SetDefaults()
-            {
-                
-            }
+            ModLoader.InsertGMLString("scr_smoothSaveAuto()", "gml_Object_o_player_KeyPress_116", 0);  // (1)!
         }
     }
-    ```
+}
+```
 
-??? info "If you feel like the code reminds you of tModLoader..."
-    ~~It's because I may or may not come from the Terraria modding community.~~
+1. This line inserts the code `scr_smoothSaveAuto()` into the `gml_Object_o_player_KeyPress_116` at line `0`. </br></br> We're injecting the gml code necessary to quicksave the game when the player presses the F5 key.
 
-As you can see, this method's purpose is to set a weapon's properties.
-Now, let's introduce the **`CloneDefaults`** method.
+As you can see, using ModLoader.InsertGMLString allows us to inject a string of GML into an existing script. </br>
+But MSL's capabilities don't stop there, we can read code from a .gml file you wrote and inject it into a script. </br></br>
+For example, let's create a `Codes` folder in our project :
 
-That's right, to prevent modders from forgetting setting those properties, we offer a new method so that every properties will be copied from another vanilla weapon except `Name` and `ID`. <br>
+![Creating Codes Folder](../img/modding_codes.png)
 
-All you have to do is add the following code :
+Inside the `Codes` folder, let's create a `myCode.gml` file with the following code :
 
-??? note "MyFirstWeapon.cs"
-    ```C# linenums="1" hl_lines="10-12"
-    using ModShardLauncher;
-    using ModShardLauncher.Mod;
+``` c title="myCode.gml" linenums="1"
+scr_actionsLogUpdate("Quicksaving...")
+scr_smoothSaveAuto()
+scr_actionsLogUpdate("Game Saved.")
+```
 
-    namespace MyFirstMod
+Now back in `MyMod.cs`, let's change our code to the following :
+
+``` c# title="MyMod.cs" linenums="1" hl_lines="15"
+using ModShardLauncher;
+using ModShardLauncher.Mods;
+
+namespace MyMod
+{
+    public class MyMod : Mod
     {
-        public class MyFirstWeapon : Weapon
+        public override string Author => "author";
+        public override string Name => "mod_name";
+        public override string Description => "mod_description";
+        public override string Version => "1.0.0.0";
+
+        public override void PatchMod()
         {
-            public override void SetDefaults()
-            {
-                CloneDefaults("Homemade Blade");
-                Name = "MyFirstWeapon";
-                ID = "MyFirstMod1";
-            }
+            ModLoader.InsertGMLString(ModFiles.GetCode("myCode.gml"), "gml_Object_o_player_KeyPress_116", 0);  
+            // (1)!
         }
     }
-    ```
+}
+```
 
-Now, we have a brand new weapon with the exact same properties as the `Homemade Blade` except for its **name** and **ID**.
+1. We replaced the hardcoded string with `ModFiles.GetCode("mycode.gml")` which grabs the content of `myCode.gml` and injects it into the script.
 
-!!! info "Notice"
-    `CloneDefaults` won't set a value for the name or description in other languages.<br> 
-    You need to change them manually, like so :
-    ```C# linenums="1" hl_lines="13 14"
-    using ModShardLauncher;
-    using ModShardLauncher.Mod;
+Now if we compile this mod and press F5 in game, it should quicksave our game. </br>
+That's great, but what if we want to edit a script that breaks when edited in UTMT ? </br></br>
+The solution is the exact same as in UTMT, we can edit the assembly directly !
 
-    namespace MyFirstMod
+``` c# title="MyMod.cs" linenums="1" hl_lines="15"
+using ModShardLauncher;
+using ModShardLauncher.Mods;
+
+namespace MyMod
+{
+    public class MyMod : Mod
     {
-        public class MyFirstWeapon : Weapon
+        public override string Author => "author";
+        public override string Name => "mod_name";
+        public override string Description => "mod_description";
+        public override string Version => "1.0.0.0";
+
+        public override void PatchMod()
         {
-            public override void SetDefaults()
-            {
-                CloneDefaults("Homemade Blade");
-                Name = "MyFirstWeapon";
-                ID = "MyFirstMod1";
-                Description[ModLanguage.English] = "This is my first weapon";
-                NameList[ModLanguage.English] = "GreatFuckingSword";
-            }
+            ModLoader.InsertAssemblyString(":[0]\ncall.i gml_Script_scr_smoothSaveAuto(argc=0)\npopz.v", "gml_Object_o_player_KeyPress_116", 1 );
+            // (1)!
         }
     }
-    ```
-
-That's the first step of creating a weapon done.
-
-### Sprite of your weapon
-
-This is the most painful part. <br>
-In StoneShard, you need 6 sprites for a weapon, which adds tons of work for modders.
-
-
-If you don't have any sprites, you can export some of the vanilla sprites with **UTMT**. <br>
-You can put them in your mod's folder or its subfolders, except in `.vs`, `bin` or `obj`. <br>
-They will be patched into the `data.win` automatically.
-
-<center> ![Sprites](../img/weapon_1.png){: style="width:50%"} </center>
-
-From top to bottom : <br>
-
-- weapon in right hand
-- weapon in left hand
-- weapon in inventory (there are 3 sprites for this, since the weapon in StoneShard can be broken. <br> If you don't want to sprite it , just copy it 3 times)
-- weapon as loot (dropped on the ground)
-
-??? info "Notice"
-    
-    - The sprite size for weapons **in the inventory** must be at most `27*27 pixels` since a cell in StoneShard's inventory is exactly `27*27 pixels`. <br>
-      Going above that would simply mean your weapon's sprite will be **too big to fit in a single cell**.
-    - If making sprites for a **two-handed weapon**, you don't need `char_left`, as two-handed weapons cannot be used by just the left hand.
-
-You can now run **ModShardLauncher.exe** again and repeat the compile steps described previously.
-
-### Loading your mod
-
-!!! warning "Important"
-    You need to move the `ModShard.dll` file from the tool's root path to the root folder of the game. <br>
-    This is how the tool hooks into Stoneshard. <br>
-
-    Trying to load a modded data file without this will cause the game to crash. 
-
-The last step is loading the mod. <br>
-
-Once you've **compiled** your mod, it should pop up in the **mod list**. <br>
-Head there and **tick the box** next to your mod to **enable** it. <br>
-Next, click on the **floppy disk icon** in the **top left**, and **save** the new data file under any name. <br>
-
-!!! info "Notice"
-    Make sure you keep the vanilla `data.win` untouched, as you will need it to **make more mods** and to **play the game** vanilla.
-
-I also recommend **renaming** your original `data.win` to `vanilla.win`. <br>
-
-The reason for this is that at launch, Stoneshard looks for a `data.win` to load. <br>
-If it doesn't find one, it will **ask you** to **select a data file**, which is is when we can tell it to **load** the **patched data file** we just saved. <br>
-
-
-### Launch your game !
-
-After launching the game, a new window should open alongside Stoneshard. <br> 
-It is a control panel for the `Script Engine` that runs some inner script in game.
-
-Enter the game as usual. <br> 
-
-The script engine has a `give` script, so simply type the following in the new window's text box :
-```
-give MyFirstWeapon
+}
 ```
 
+1. This line inserts the assembly instructions corresponding to the quicksave code seen in previous examples.
 
-You can give yourself **any weapon** in this way, but keep in mind you need to **replace any space** in the weapon's name with an **underscore** `_` :
+!!! info "Important Note"
+    The demonstrated functions are far from being the only options to inject our code into the game files. </br>
+    This guide is meant for beginners, and as such tries to keep things relatively simple. </br></br>
+    For more options, feel free to check out the [API](./api.md).
+
+## Advanced Injections
+
+---
+
+For more advanced mods, you might require more accurate injections than simply inserting or replacing code or assembly instructions at specific lines. </br></br>
+To that effect, MSL offers a collection of methods for precise injection, which also helps making your injections more resilient to updates by matching a specific line or set of line rather than using a line number. </br>
+
+They are divided in 4 different stages, namely :
+
+- Loading
+- Matching
+- Acting
+- Saving
+
+Here's an example of that :
+
+``` c# title="Chained Methods"
+ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit") // Loading a script from the game's files
+.MatchFrom("global.HP = -1") // Finding the line containing `global.HP = -1`
+.ReplaceBy("global.HP = 50") // Replacing it with `gobal.HP = 50`
+.Save() // Saving the file
 ```
-give Homemade_Blade
-```
 
-Once you run the command, your weapon should be added to your inventory. <br>
+!!! info "Important Note"
+    Once again, this is only a simple example of the available functions, to learn more check out the [API](./api.md).
 
-<center> ![Inventory InGame](../img/weapon_2.png){: style="width:50%"} </center>
+</br></br>
