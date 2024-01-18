@@ -13,6 +13,10 @@ Make sure you download the `ModShardLauncher.zip` file, and ^^**not the source c
 Alternatively, you can build ModShardLauncher from source, but it's out of this guide's scope.
 </div>
 
+You will also require the **.NET Desktop Runtime 6.0**
+
+[.NET Desktop Runtime 6.0 :octicons-link-external-16:](https://dotnet.microsoft.com/en-us/download/dotnet/6.0){ .md-button .md-button--primary}&emsp;
+
 ---
 
 ## ModShardLauncher Setup
