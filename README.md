@@ -26,7 +26,7 @@ Whether you want to tweak the **game mechanics**, add **new content**, or **anyt
 #### Mod Template : <br>
 - [Source Code](https://github.com/remyCases/ModShardLauncherTemplate/)
 - [NuGet Package](https://www.nuget.org/packages/ModShardLauncher.Templates)
-#### Mod Exemples :
+#### Mod Examples :
 - [Quicksave](https://github.com/Nylux/Stoneshard-Quicksave)
 - [SpeedManager](https://github.com/Nylux/Stoneshard-SpeedManager)
 - [NeoConsole](https://github.com/Nylux/Stoneshard-NeoConsole)
@@ -48,7 +48,7 @@ Whether you want to tweak the **game mechanics**, add **new content**, or **anyt
 | :------ | :--------: |
 | Mod Settings | :x: |
 | GML Editing  | :heavy_check_mark: |
-| Assembly Editing | :x: |
+| Assembly Editing | :heavy_check_mark: |
 | GameObjects | :heavy_check_mark: |
 | Events | :heavy_check_mark: |
 | Functions | :heavy_check_mark: |
@@ -64,11 +64,12 @@ Whether you want to tweak the **game mechanics**, add **new content**, or **anyt
 
 ## Contributing
 ### Building From Source
-`git clone https://github.com/DDDDDragon/ModShardLauncher.git`
+Requires the [.NET 6.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 
-`cd ModShardLauncher`
-
+`git clone https://github.com/DDDDDragon/ModShardLauncher.git` </br>
+`cd ModShardLauncher` </br>
 `dotnet build`
+
 ### Issues
 **TODO**
 ### Pull Requests
