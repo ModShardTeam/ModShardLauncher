@@ -28,7 +28,7 @@ namespace ModShardLauncher
         public static string ModPath => Path.Join(Environment.CurrentDirectory, "Mods");
         public static string ModSourcesPath => Path.Join(Environment.CurrentDirectory, "ModSources");
         public static Dictionary<string, ModFile> Mods = new();
-        public static Dictionary<string, ModSource> ModSources = new ();
+        public static Dictionary<string, ModSource> ModSources = new();
         private static List<Assembly> Assemblies = new();
         public static List<string> Weapons = new();
         public static List<string> WeaponDescriptions = new();
@@ -82,20 +82,6 @@ namespace ModShardLauncher
                 throw;
             }
         }
-        public static UndertaleSprite GetSprite(string name)
-        {
-            try
-            {
-                UndertaleSprite sprite = Data.Sprites.First(t => t.Name.Content == name);
-                Log.Information(string.Format("Found sprite: {0}", name.ToString()));
-                return sprite;
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
         public static void SetObject(string name, UndertaleGameObject o)
         {
             try
@@ -103,6 +89,20 @@ namespace ModShardLauncher
                 UndertaleGameObject obj = Data.GameObjects.First(t => t.Name.Content == name);
                 Data.GameObjects[Data.GameObjects.IndexOf(obj)] = o;
                 Log.Information(string.Format("Successfully replaced gameObject: {0}", name.ToString()));
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static UndertaleSprite GetSprite(string name)
+        {
+            try
+            {
+                UndertaleSprite sprite = Data.Sprites.First(t => t.Name.Content == name);
+                Log.Information(string.Format("Found sprite: {0}", name.ToString()));
+                return sprite;
             }
             catch(Exception ex) 
             {
@@ -585,6 +585,11 @@ namespace ModShardLauncher
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
+        }
+
+        public static IEnumerable<UndertaleRoom> GetRooms()
+        {
+            return Data.Rooms;
         }
         public static void LoadFiles()
         {
