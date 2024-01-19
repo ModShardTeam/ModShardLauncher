@@ -87,7 +87,7 @@ namespace ModShardLauncher
             return GetFile(name).Length > 0;
         }
     }
-    public class FileReader
+    public static class FileReader
     {
         public static ModFile? Read(string path)
         {

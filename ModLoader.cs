@@ -593,11 +593,12 @@ namespace ModShardLauncher
         }
         public static void LoadFiles()
         {
-            var mods = Main.Instance.ModPage.Mods;
-            var modSources = Main.Instance.ModSourcePage.ModSources;
+            List<ModFile> mods = Main.Instance.ModPage.Mods;
+            List<ModSource> modSources = Main.Instance.ModSourcePage.ModSources;
             foreach(ModFile i in mods)
-                if(i.Stream != null) i.Stream.Close();
-            var modCaches = new List<ModFile>();
+                i.Stream?.Close();
+            
+            List<ModFile> modCaches = new();
             Mods.Clear();
             modSources.Clear();
             ModSources.Clear();
@@ -625,21 +626,25 @@ namespace ModShardLauncher
                 modSources.Add(info);
                 ModSources.Add(info.Name, info);
             }
-            var files = Directory.GetFiles(ModPath, "*.sml");
-            foreach (var file in files)
+
+            string[] files = Directory.GetFiles(ModPath, "*.sml");
+            foreach (string file in files)
             {
-                var f = FileReader.Read(file);
+                ModFile? f = FileReader.Read(file);
                 if (f == null) continue;
                 Assembly assembly = f.Assembly;
-                if (assembly.GetTypes().Count(t => t.IsSubclassOf(typeof(Mod))) == 0)
+                // for array or list, use the available search method instead of Linq one
+                // use the Linq ones for IEnumerable
+                Type? modType = Array.Find(assembly.GetTypes(), t => t.IsSubclassOf(typeof(Mod)));
+
+                if (modType == null)
                 {
                     MessageBox.Show("加载错误: " + assembly.GetName().Name + " 此Mod需要一个Mod类");
                     continue;
                 }
                 else
                 {
-                    Type type = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(Mod))).ToList()[0];
-                    Mod? mod = Activator.CreateInstance(type) as Mod;
+                    if (Activator.CreateInstance(modType) is not Mod mod) continue;
                     mod.LoadAssembly();
                     mod.ModFiles = f;
                     f.instance = mod;
