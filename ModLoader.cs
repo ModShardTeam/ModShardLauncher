@@ -216,7 +216,7 @@ namespace ModShardLauncher
             try 
             {
                 UndertaleCode code = ModLoader.GetUMTCodeFromFile(fileName);
-
+                
                 return new(
                     new(
                         fileName,
@@ -706,7 +706,7 @@ namespace ModShardLauncher
             WeaponDescriptions.Insert(WeaponDescriptions.IndexOf(";weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;") + 1,
                 weapon.Name + ";He;;;It;She;She;She;She;He;;;;");
         }
-        public static async void PatchFile()
+        public static void PatchFile()
         {
             PatchInnerFile();
             PatchMods();

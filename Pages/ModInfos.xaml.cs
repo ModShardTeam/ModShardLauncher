@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Serilog;
 
 namespace ModShardLauncher.Pages
 {
@@ -41,8 +42,22 @@ namespace ModShardLauncher.Pages
                 MessageBox.Show(Application.Current.FindResource("LoadDataWarning").ToString());
                 return;
             }
-            ModLoader.PatchFile();
-            DataLoader.DoSaveDialog();
+
+            try 
+            {
+                Task taskPatch = Task.Run(() => ModLoader.PatchFile());
+                Task<bool> taskSave = DataLoader.DoSaveDialog();
+                await taskPatch;
+                await taskSave;
+
+                Log.Information("Successfully patch vanilla");
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Something went wrong");
+                Log.Information("Failed patching vanilla");
+            }
+
             Main.Instance.Refresh();
         }
     }

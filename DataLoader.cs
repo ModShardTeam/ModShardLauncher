@@ -70,8 +70,10 @@ namespace ModShardLauncher
         }
         public static async Task LoadFile(string filename, bool re = false)
         {
-            LoadingDialog dialog = new LoadingDialog();
-            dialog.Owner = Main.Instance;
+            LoadingDialog dialog = new()
+            {
+                Owner = Main.Instance
+            };
             DataPath = filename;
             Task t = Task.Run(() =>
             {
@@ -153,12 +155,15 @@ namespace ModShardLauncher
                 await SaveFile(Main.Settings.SavePos);
                 return true;
             }
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.DefaultExt = "win";
-            dlg.Filter = "Game Maker Studio data files (.win, .unx, .ios, .droid, audiogroup*.dat)|*.win;*.unx;*.ios;*.droid;audiogroup*.dat|All files|*";
-            dlg.FileName = "data.win";
+            
+            SaveFileDialog dlg = new()
+            {
+                DefaultExt = "win",
+                Filter = "Game Maker Studio data files (.win, .unx, .ios, .droid, audiogroup*.dat)|*.win;*.unx;*.ios;*.droid;audiogroup*.dat|All files|*",
+                FileName = "data.win"
+            };
 
-            if(dlg.ShowDialog() == true)
+            if (dlg.ShowDialog() == true)
             {
                 await SaveFile(dlg.FileName);
                 return true;
