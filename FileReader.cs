@@ -1,4 +1,5 @@
 ﻿using ModShardLauncher.Mods;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -46,7 +47,7 @@ namespace ModShardLauncher
         {
             return instance.ToString();
         }
-        public byte[] GetFile(string name)
+        public byte[] GetFile(string fileName)
         {
             if(!isExisted)
             {
@@ -54,9 +55,10 @@ namespace ModShardLauncher
                 ModLoader.LoadFiles();
                 return Array.Empty<byte>();
             }
+
             // https://sonarsource.github.io/rspec/#/rspec/S6602/csharp
             // for list, Find should be used instead of FirstOrDefault
-            FileChunk? file = Files.Find(t => t.name == name) ?? Files.Find(t => t.name.Split("\\").Last() == name);
+            FileChunk? file = Files.Find(t => t.name == fileName) ?? Files.Find(t => t.name.Split("\\")[^1] == fileName);
             if (file != null)
             {
                 if(!Stream.CanRead) Stream = new FileStream(Path, FileMode.Open);
@@ -64,27 +66,41 @@ namespace ModShardLauncher
                 FileReader.Read(Stream, file.offset);
                 return FileReader.Read(Stream, file.length);
             }
-            else return Array.Empty<byte>();
+            throw new FileNotFoundException(string.Format("File {0} not found in the packed sml.", fileName));
         }
-        public string GetCode(string name)
+        public string GetCode(string fileName)
         {
-            var data = GetFile(name);
-
-            // if a BOM is found aka: 0xEF 0xBB 0xBF at the beginning of the file, remove it since UTMT will not understand these characters.
-            // BOM are produced if a script is made through Visual Studio
-            if (data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF) data = data.Skip(3).ToArray();
-            
-            var text = Encoding.UTF8.GetString(data);
-            if(text.Length == 0)
+            try
             {
-                MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + name);
-                return "";
+                byte[] data = GetFile(fileName);
+
+                // if a BOM is found aka: 0xEF 0xBB 0xBF at the beginning of the file, remove it since UTMT will not understand these characters.
+                // BOM are produced if a script is made through Visual Studio
+                if (data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF) data = data.Skip(3).ToArray();
+
+                string text = Encoding.UTF8.GetString(data);
+                if(text.Length == 0)
+                {
+                    MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + fileName);
+                    throw new ArgumentException("String cannot be of length zero");
+                }
+                return text;
             }
-            return text;
+            catch
+            {
+                throw;
+            }
         }
-        public bool FileExist(string name)
+        public bool FileExist(string fileName)
         {
-            return GetFile(name).Length > 0;
+            try
+            {
+                return GetFile(fileName).Length > 0;
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
     public static class FileReader
@@ -96,7 +112,7 @@ namespace ModShardLauncher
             ModFile file = new()
             {
                 Stream = fs,
-                Name = fs.Name.Split("\\").Last().Replace(".sml", "")
+                Name = fs.Name.Split("\\")[^1].Replace(".sml", "")
             };
 
             if (Encoding.UTF8.GetString(Read(fs, 4)) != "MSLM")
@@ -165,9 +181,16 @@ namespace ModShardLauncher
             count = BitConverter.ToInt32(Read(fs, 4), 0);
             file.Assembly = Assembly.Load(Read(fs, count));
             file.Path = path;
-            
-            if (file.FileExist(file.Name + "\\icon.png"))
+
+            try
+            {
                 file.Icon = file.GetFile(file.Name + "\\icon.png");
+            }
+            catch
+            {
+                Log.Information(string.Format("Cannot find the icon.png associated to {0}", fs.Name.Split("\\")[^1]));
+            }
+
             fs.Close();
 
             return file;
@@ -178,7 +201,7 @@ namespace ModShardLauncher
             if(fs.Length - fs.Position < length)
             {
                 fs.Close();
-                throw new Exception("Mod File Error: " + fs.Name.Split("\\").Last());
+                throw new Exception("Mod File Error: " + fs.Name.Split("\\")[^1]);
             }
             fs.Read(bytes, 0, length);
             return bytes;
