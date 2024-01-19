@@ -45,11 +45,7 @@ namespace ModShardLauncher.Pages
 
             try 
             {
-                Task taskPatch = Task.Run(() => ModLoader.PatchFile());
-                Task<bool> taskSave = DataLoader.DoSaveDialog();
-                await taskPatch;
-                await taskSave;
-
+                ModLoader.PatchFile();
                 Log.Information("Successfully patch vanilla");
             }
             catch(Exception ex)
@@ -57,7 +53,8 @@ namespace ModShardLauncher.Pages
                 Log.Error(ex, "Something went wrong");
                 Log.Information("Failed patching vanilla");
             }
-
+            
+            await DataLoader.DoSaveDialog();
             Main.Instance.Refresh();
         }
     }

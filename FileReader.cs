@@ -125,7 +125,7 @@ namespace ModShardLauncher
             file.Version = reg.Replace(Encoding.UTF8.GetString(Read(fs, 12)), "$1");
 
             int count = BitConverter.ToInt32(Read(fs, 4), 0);
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 int len = BitConverter.ToInt32(Read(fs, 4));
 
@@ -140,7 +140,6 @@ namespace ModShardLauncher
             }
 
             count = BitConverter.ToInt32(Read(fs, 4), 0);
-
             for (int i = 0; i < count; i++)
             {
                 int len = BitConverter.ToInt32(Read(fs, 4), 0);
@@ -156,7 +155,21 @@ namespace ModShardLauncher
             }
 
             count = BitConverter.ToInt32(Read(fs, 4), 0);
+            for (int i = 0; i < count; i++)
+            {
+                int len = BitConverter.ToInt32(Read(fs, 4), 0);
 
+                FileChunk chunk = new()
+                {
+                    name = Encoding.UTF8.GetString(Read(fs, len)),
+                    offset = BitConverter.ToInt32(Read(fs, 4)),
+                    length = BitConverter.ToInt32(Read(fs, 4))
+                };
+
+                file.Files.Add(chunk);
+            }
+            
+            count = BitConverter.ToInt32(Read(fs, 4), 0);
             for (int i = 0; i < count; i++)
             {
                 int len = BitConverter.ToInt32(Read(fs, 4), 0);
@@ -178,6 +191,7 @@ namespace ModShardLauncher
                 FileChunk? f = file.Files[fileCount - 1];
                 Read(fs, f.offset + f.length);
             }
+
             count = BitConverter.ToInt32(Read(fs, 4), 0);
             file.Assembly = Assembly.Load(Read(fs, count));
             file.Path = path;

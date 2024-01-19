@@ -618,8 +618,8 @@ namespace ModShardLauncher
                     fe.header.patchingWay
                 );
             }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
+            catch
+            {
                 throw;
             }
         }

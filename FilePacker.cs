@@ -27,6 +27,7 @@ namespace ModShardLauncher
             var textures = dir.GetFiles("*.png", SearchOption.AllDirectories).ToList();
             var scripts = dir.GetFiles("*.lua", SearchOption.AllDirectories).ToList();
             var codes = dir.GetFiles("*.gml", SearchOption.AllDirectories).ToList();
+            var assemblies = dir.GetFiles("*.asm", SearchOption.AllDirectories).ToList();
             int offset = 0;
             FileStream fs = new(Path.Join(ModLoader.ModPath, dir.Name + ".sml"), FileMode.Create);
 
@@ -65,17 +66,30 @@ namespace ModShardLauncher
             Log.Information("Preparing scripts...");
 
             Write(fs, codes.Count);
-            foreach (FileInfo scr in codes)
+            foreach (FileInfo cds in codes)
             {
-                string name = dir.Name + scr.FullName.Replace(path, "");
+                string name = dir.Name + cds.FullName.Replace(path, "");
                 Write(fs, name.Length);
                 Write(fs, name);
                 Write(fs, offset);
-                int len = CalculateBytesLength(scr);
+                int len = CalculateBytesLength(cds);
                 Write(fs, len);
                 offset += len;
             }
             Log.Information("Preparing codes...");
+
+            Write(fs, assemblies.Count);
+            foreach (FileInfo asm in assemblies)
+            {
+                string name = dir.Name + asm.FullName.Replace(path, "");
+                Write(fs, name.Length);
+                Write(fs, name);
+                Write(fs, offset);
+                int len = CalculateBytesLength(asm);
+                Write(fs, len);
+                offset += len;
+            }
+            Log.Information("Preparing assemblies...");
 
             foreach (FileInfo tex in textures)
                 Write(fs, tex);
@@ -85,9 +99,13 @@ namespace ModShardLauncher
                 Write(fs, scr);
             Log.Information("Writting scripts...");
 
-            foreach (FileInfo scr in codes)
-                Write(fs, scr);
+            foreach (FileInfo cds in codes)
+                Write(fs, cds);
             Log.Information("Writting codes...");
+
+            foreach (FileInfo asm in assemblies)
+                Write(fs, asm);
+            Log.Information("Writting assemblies...");
 
             Log.Information("Starting compilation...");
             bool successful = CompileMod(dir.Name, path, out byte[] code, out _);
