@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using UndertaleModLib;
+using Serilog;
 
 namespace ModShardLauncher.Mods
 {
@@ -33,7 +34,15 @@ namespace ModShardLauncher.Mods
                 MessageBox.Show(Application.Current.FindResource("LoadDataWarning").ToString());
                 return;
             }
-            FilePacker.Pack((DataContext as ModSource).Path);
+            try
+            {
+                FilePacker.Pack((DataContext as ModSource).Path);
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Something went wrong");
+            }
+
             ModLoader.LoadFiles();
         }
     }
