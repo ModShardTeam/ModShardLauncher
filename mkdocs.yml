@@ -12,7 +12,6 @@ theme:
     favicon: img/Stoneshard.ico
     features: 
     - navigation.path
-    - navigation.top
     - header.autohide
     - toc.integrate
     - navigation.top
@@ -99,6 +98,7 @@ plugins:
               Creating your First Mod: 开始
               Installing Mods: 如何使用MOD
               API: API
+              Modding: MOD制作
 #           You can remove the nav_translations above and remove comments here if you want to have custom ZH nav.
 #           This would avoid setting up empty 'TODO' pages.
 #           nav:
@@ -113,6 +113,7 @@ nav:
       - "Welcome": "index.md"
   - Guides:
       - "Introduction": "guides/introduction.md"
-      - "Creating your First Mod": "guides/start-modding.md"
       - "Installing Mods": "guides/how-to-play-mod.md"
-      - "API": "guides/api.md"
+      - Modding :
+        - "API": "guides/api.md"
+        - "Creating your First Mod": "guides/start-modding.md"
