@@ -679,15 +679,17 @@ namespace ModShardLauncher
                 version = reg.Replace(version, "$1");
                 if (mod.Version != version)
                 {
-                    var result = MessageBox.Show(Application.Current.FindResource("VersionDifferentWarning").ToString(),
-                        Application.Current.FindResource("VersionDifferentWarningTitle").ToString() + " : " + mod.Name, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    MessageBoxResult result = MessageBox.Show(
+                        Application.Current.FindResource("VersionDifferentWarning").ToString(),
+                        Application.Current.FindResource("VersionDifferentWarningTitle").ToString() + " : " + mod.Name, 
+                        MessageBoxButton.YesNo, 
+                        MessageBoxImage.Question
+                    );
                     if (result == MessageBoxResult.No) continue;
                 }
                 TextureLoader.LoadTextures(mod);
                 mod.instance.PatchMod();
-                var modAss = mod.Assembly;
-                Type[] types = modAss.GetTypes().Where(t => !t.IsAbstract).ToArray();
-                foreach (var type in types)
+                foreach (Type type in Array.FindAll(mod.Assembly.GetTypes(), t => !t.IsAbstract))
                 {
                     if (type.IsSubclassOf(typeof(Weapon))) 
                         LoadWeapon(type);

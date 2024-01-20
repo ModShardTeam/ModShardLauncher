@@ -3,13 +3,10 @@ using System.IO;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using ModShardLauncher.Mods;
 using UndertaleModLib.Models;
 using UndertaleModLib;
 using System.Text.RegularExpressions;
 using System.Collections;
-using ICSharpCode.SharpZipLib.Tar;
 using System.Drawing.Imaging;
 
 namespace ModShardLauncher
@@ -45,7 +42,7 @@ namespace ModShardLauncher
     }
     public class TextureLoader
     {
-        public static List<TextureInfo> SourceTextures = new List<TextureInfo>();
+        public static List<TextureInfo> SourceTextures = new();
         public static StringWriter Log;
         public static StringWriter Error;
         public static int Padding;
@@ -65,8 +62,10 @@ namespace ModShardLauncher
             Process(mod, 2048, 2, false);
             foreach (Atlas atlas in Atlasses)
             {
-                var ueTexture = new UndertaleEmbeddedTexture();
-                ueTexture.Name = Data.Strings.MakeString(mod.Name);
+                UndertaleEmbeddedTexture ueTexture = new()
+                {
+                    Name = Data.Strings.MakeString(mod.Name)
+                };
                 var ms = new MemoryStream();
                 var img = CreateAtlasImage(atlas);
                 img.Save(ms, ImageFormat.Png);
@@ -74,7 +73,7 @@ namespace ModShardLauncher
                 ueTexture.TextureData.TextureBlob = new byte[ms.Length];
                 ms.Read(ueTexture.TextureData.TextureBlob);
                 Data.EmbeddedTextures.Add(ueTexture);
-                Bitmap atlasBitmap = new Bitmap(img);
+                Bitmap atlasBitmap = new(img);
                 foreach (Node node in atlas.Nodes)
                 {
                     if(node.Texture != null)
@@ -100,27 +99,29 @@ namespace ModShardLauncher
                         string stripped = Path.GetFileNameWithoutExtension(node.Texture.Source);
 
                         string spriteName;
-                        int frame = 0;
+                        int frame;
+                        
                         try
                         {
                             var spriteParts = sprFrameRegex.Match(stripped);
                             spriteName = spriteParts.Groups[1].Value;
                             int.TryParse(spriteParts.Groups[2].Value, out frame);
                         }
-                        catch(Exception e) 
+                        catch 
                         {
                             continue;
                         }
-                        UndertaleSprite sprite = null;
-                        sprite = Data.Sprites.ByName(spriteName);
 
-                        var textureEntry = new UndertaleSprite.TextureEntry();
-                        textureEntry.Texture = texturePageItem;
-
-                        if(sprite == null)
+                        UndertaleSprite sprite = Data.Sprites.ByName(spriteName);
+                        UndertaleSprite.TextureEntry textureEntry = new()
                         {
-                            var spriteUTString = Data.Strings.MakeString(spriteName);
-                            var newSprite = new UndertaleSprite()
+                            Texture = texturePageItem
+                        };
+
+                        if (sprite == null)
+                        {
+                            UndertaleString spriteUTString = Data.Strings.MakeString(spriteName);
+                            UndertaleSprite newSprite = new()
                             {
                                 Name = spriteUTString,
                                 Width = (uint)node.Bounds.Width,
@@ -132,16 +133,18 @@ namespace ModShardLauncher
                                 OriginX = 0,
                                 OriginY = 0,
                             };
+
                             if(frame > 0)
                             {
                                 for (int i = 0; i < frame; i++)
                                     newSprite.Textures.Add(null);
                             }
+
                             newSprite.CollisionMasks.Add(newSprite.NewMaskEntry());
-                            Rectangle bmpRect = new Rectangle(node.Bounds.X, node.Bounds.Y, node.Bounds.Width, node.Bounds.Height);
+                            Rectangle bmpRect = new(node.Bounds.X, node.Bounds.Y, node.Bounds.Width, node.Bounds.Height);
                             var format = atlasBitmap.PixelFormat;
                             var clone = atlasBitmap.Clone(bmpRect, format);
-                            int width = ((node.Bounds.Width + 7) / 8) * 8;
+                            int width = (node.Bounds.Width + 7) / 8 * 8;
                             BitArray maskingBitArray = new BitArray(width * node.Bounds.Height);
                             for(int y = 0; y < node.Bounds.Height; y++)
                             {
@@ -188,17 +191,17 @@ namespace ModShardLauncher
             AtlasSize = _AtlasSize;
 
             ScanForTextures(mod);
-
-            List<TextureInfo> textures = new List<TextureInfo>();
-            textures = SourceTextures.ToList();
+            List<TextureInfo> textures = SourceTextures.ToList();
 
             //2: generate as many atlasses as needed (with the latest one as small as possible)
             Atlasses = new List<Atlas>();
             while (textures.Count > 0)
             {
-                Atlas atlas = new Atlas();
-                atlas.Width = _AtlasSize;
-                atlas.Height = _AtlasSize;
+                Atlas atlas = new()
+                {
+                    Width = _AtlasSize,
+                    Height = _AtlasSize
+                };
 
                 List<TextureInfo> leftovers = LayoutAtlas(textures, atlas);
 
@@ -226,9 +229,8 @@ namespace ModShardLauncher
         {
             int atlasCount = 0;
             string prefix = _Destination.Replace(Path.GetExtension(_Destination), "");
+            StreamWriter tw = new(_Destination);
 
-            string descFile = _Destination;
-            StreamWriter tw = new StreamWriter(_Destination);
             tw.WriteLine("source_tex, atlas_tex, u, v, scale_u, scale_v");
 
             foreach (Atlas atlas in Atlasses)
@@ -272,32 +274,30 @@ namespace ModShardLauncher
                 if (fi.name == mod.Name + "\\" + "icon.png") continue;
                 var ms = new MemoryStream(mod.GetFile(fi.name));
                 Image img = Image.FromStream(ms);
-                if (img != null)
+                if (img != null && img.Width <= AtlasSize && img.Height <= AtlasSize)
                 {
-                    if (img.Width <= AtlasSize && img.Height <= AtlasSize)
+                    TextureInfo ti = new()
                     {
-                        TextureInfo ti = new TextureInfo();
+                        Width = img.Width,
+                        Height = img.Height,
+                        Source = fi.name.Split("\\")[^1],
+                        Data = mod.GetFile(fi.name)
+                    };
 
-                        ti.Width = img.Width;
-                        ti.Height = img.Height;
-                        ti.Source = fi.name.Split("\\").Last();
-                        ti.Data = mod.GetFile(fi.name);
-
-                        SourceTextures.Add(ti);
-                    }
+                    SourceTextures.Add(ti);
                 }
             }
         }
         private static void HorizontalSplit(Node _ToSplit, int _Width, int _Height, List<Node> _List)
         {
-            Node n1 = new Node();
+            Node n1 = new();
             n1.Bounds.X = _ToSplit.Bounds.X + _Width + Padding;
             n1.Bounds.Y = _ToSplit.Bounds.Y;
             n1.Bounds.Width = _ToSplit.Bounds.Width - _Width - Padding;
             n1.Bounds.Height = _Height;
             n1.SplitType = SplitType.Vertical;
 
-            Node n2 = new Node();
+            Node n2 = new();
             n2.Bounds.X = _ToSplit.Bounds.X;
             n2.Bounds.Y = _ToSplit.Bounds.Y + _Height + Padding;
             n2.Bounds.Width = _ToSplit.Bounds.Width;
@@ -311,14 +311,14 @@ namespace ModShardLauncher
         }
         private static void VerticalSplit(Node _ToSplit, int _Width, int _Height, List<Node> _List)
         {
-            Node n1 = new Node();
+            Node n1 = new();
             n1.Bounds.X = _ToSplit.Bounds.X + _Width + Padding;
             n1.Bounds.Y = _ToSplit.Bounds.Y;
             n1.Bounds.Width = _ToSplit.Bounds.Width - _Width - Padding;
             n1.Bounds.Height = _ToSplit.Bounds.Height;
             n1.SplitType = SplitType.Vertical;
 
-            Node n2 = new Node();
+            Node n2 = new();
             n2.Bounds.X = _ToSplit.Bounds.X;
             n2.Bounds.Y = _ToSplit.Bounds.Y + _Height + Padding;
             n2.Bounds.Width = _Width;
@@ -330,9 +330,34 @@ namespace ModShardLauncher
             if (n2.Bounds.Width > 0 && n2.Bounds.Height > 0)
                 _List.Add(n2);
         }
-        private static TextureInfo FindBestFitForNode(Node _Node, List<TextureInfo> _Textures)
+        private static bool MaxOneAxisFit(Node node, TextureInfo ti, out float ratio)
         {
-            TextureInfo bestFit = null;
+            if (ti.Width <= node.Bounds.Width && ti.Height <= node.Bounds.Height)
+            {
+                float wRatio = ti.Width / (float)node.Bounds.Width;
+                float hRatio = ti.Height / (float)node.Bounds.Height;
+                ratio = wRatio > hRatio ? wRatio : hRatio;
+
+                return true;
+            }
+            ratio = 0.0f;
+            return false;
+        }
+        private static bool AreaFit(Node node, TextureInfo ti, float nodeArea, out float coverage)
+        {
+            if (ti.Width <= node.Bounds.Width && ti.Height <= node.Bounds.Height)
+            {
+                float textureArea = ti.Width * ti.Height;
+                coverage = textureArea / nodeArea;
+
+                return true;
+            }
+            coverage = 0.0f;
+            return false;
+        }
+        private static TextureInfo? FindBestFitForNode(Node _Node, List<TextureInfo> _Textures)
+        {
+            TextureInfo? bestFit = null;
 
             float nodeArea = _Node.Bounds.Width * _Node.Bounds.Height;
             float maxCriteria = 0.0f;
@@ -343,31 +368,19 @@ namespace ModShardLauncher
                 {
                     // Max of Width and Height ratios
                     case BestFitHeuristic.MaxOneAxis:
-                        if (ti.Width <= _Node.Bounds.Width && ti.Height <= _Node.Bounds.Height)
+                        if(MaxOneAxisFit(_Node, ti, out float ratio) && ratio > maxCriteria)
                         {
-                            float wRatio = (float)ti.Width / (float)_Node.Bounds.Width;
-                            float hRatio = (float)ti.Height / (float)_Node.Bounds.Height;
-                            float ratio = wRatio > hRatio ? wRatio : hRatio;
-                            if (ratio > maxCriteria)
-                            {
-                                maxCriteria = ratio;
-                                bestFit = ti;
-                            }
+                            maxCriteria = ratio;
+                            bestFit = ti;
                         }
                         break;
 
                     // Maximize Area coverage
                     case BestFitHeuristic.Area:
-
-                        if (ti.Width <= _Node.Bounds.Width && ti.Height <= _Node.Bounds.Height)
+                        if (AreaFit(_Node, ti, nodeArea, out float coverage) && coverage > maxCriteria)
                         {
-                            float textureArea = ti.Width * ti.Height;
-                            float coverage = textureArea / nodeArea;
-                            if (coverage > maxCriteria)
-                            {
-                                maxCriteria = coverage;
-                                bestFit = ti;
-                            }
+                            maxCriteria = coverage;
+                            bestFit = ti;
                         }
                         break;
                 }
@@ -377,14 +390,11 @@ namespace ModShardLauncher
         }
         private static List<TextureInfo> LayoutAtlas(List<TextureInfo> _Textures, Atlas _Atlas)
         {
-            List<Node> freeList = new List<Node>();
-            List<TextureInfo> textures = new List<TextureInfo>();
-
+            List<Node> freeList = new();
             _Atlas.Nodes = new List<Node>();
+            List<TextureInfo> textures = _Textures.ToList();
 
-            textures = _Textures.ToList();
-
-            Node root = new Node();
+            Node root = new();
             root.Bounds.Size = new Size(_Atlas.Width, _Atlas.Height);
             root.SplitType = SplitType.Horizontal;
 
@@ -395,7 +405,7 @@ namespace ModShardLauncher
                 Node node = freeList[0];
                 freeList.RemoveAt(0);
 
-                TextureInfo bestFit = FindBestFitForNode(node, textures);
+                TextureInfo? bestFit = FindBestFitForNode(node, textures);
                 if (bestFit != null)
                 {
                     if (node.SplitType == SplitType.Horizontal)
@@ -428,8 +438,7 @@ namespace ModShardLauncher
             {
                 if (n.Texture != null)
                 {
-                    var ms = new MemoryStream(n.Texture.Data);
-                    Image sourceImg = Image.FromStream(ms);
+                    Image sourceImg = Image.FromStream(new MemoryStream(n.Texture.Data));
                     g.DrawImage(sourceImg, n.Bounds);
                 }
                 else
