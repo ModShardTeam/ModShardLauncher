@@ -34,11 +34,13 @@
     ModLoader.AddObject("o_myobject")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the gameobject to create. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleGameObject` | The gameobject created. |
@@ -51,11 +53,13 @@
     ModLoader.GetObject("o_myobject")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description** |
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the gameobject to get.
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleGameObject` | The gameobject if found. |
@@ -68,12 +72,14 @@
     ModLoader.SetObject("o_myobject", myObject)
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description** |
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the gameobject to replace. |
     | `UndertaleGameObject` | `o` | The gameobject to replace it with. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A. |
@@ -90,11 +96,13 @@
     ModLoader.GetSprite("s_mySprite")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the sprite to get. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleSprite` | The sprite if found. |
@@ -111,11 +119,13 @@
     ModLoader.GetTable("gml_GlobalScript_table_Miniboss_type")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the table to get. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `List<string>?` | The table's content as a list of strings. |
@@ -128,12 +138,14 @@
     ModLoader.SetTable("gml_GlobalScript_table_Miniboss_type")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `List<string>` | `table` | The table to replace the game's table with. |
     | `String` | `name` | The name of the table to get. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A |
@@ -150,12 +162,14 @@
     ModLoader.AddCode("scr_actionsLogUpdate(\"Hello World !\")", "myCode")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `codeAsString` | The gml code as a string. |
     | `String` | `name` | The name of the code to create. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleCode` | The code created. |
@@ -168,11 +182,13 @@
     ModLoader.GetUMTCodeFromFile("gml_GlobalScript_scr_sessionDataInit")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `fileName` | The name of the code to get. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleCode` | The code if found. |
@@ -185,11 +201,13 @@
     ModLoader.GetStringGMLFromFile("gml_GlobalScript_scr_sessionDataInit")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `fileName` | The name of the code to get. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `String` | The content of the code if found. |
@@ -202,6 +220,7 @@
     ModLoader.ReplaceGMLString("gml_GlobalScript_scr_sessionDataInit")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `codeAsString` | The string of GML code to insert. |
@@ -209,6 +228,7 @@
     | `Int` | `position` | The line to replace with the provided GML. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A |
@@ -226,6 +246,7 @@
     ModLoader.InsertAssemblyString("pushi.e 1", "gml_GlobalScript_scr_sessionDataInit", 14)
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `codeAsString` | The string of assembly instruction(s) to insert. |
@@ -233,6 +254,7 @@
     | `Int` | `position` | The line below which we inject the assembly instruction(s) |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A |
@@ -246,6 +268,7 @@
     ModLoader.ReplaceAssemblyString("pushi.e 1", "gml_GlobalScript_scr_sessionDataInit", 8)
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `codeAsString` | The string of assembly instruction(s) to insert. |
@@ -253,6 +276,7 @@
     | `Int` | `position` | The line below which we inject the assembly instruction(s) |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A |
@@ -269,12 +293,14 @@
     ModLoader.AddFunction("scr_actionsLogUpdate(\"Hello World !\")", "myFunction")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `codeAsString` | The gml code to put in the function as a string. |
     | `String` | `name` | The name of the function to create. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleCode` | The code created for the function. |
@@ -287,11 +313,13 @@
     ModLoader.GetVariable("display_x")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the variable to get. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleVariable` | The variable if found. |
@@ -304,11 +332,13 @@
     ModLoader.GetString("questBreweryOdarAccept00")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the string to get. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleString` | The string if found. |
@@ -328,11 +358,13 @@ The 'Loading' stage is used to get the GML or assembly from the game's files.
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `fileName` | The name of the code to get from the game files. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | A class containing the loaded GML file, used in Stage 2 methods. |
@@ -346,11 +378,13 @@ The 'Loading' stage is used to get the GML or assembly from the game's files.
     ModLoader.LoadAssemblyAsString("gml_GlobalScript_scr_sessionDataInit")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `fileName` | The name of the code to get the assembly from in the game files. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | A class containing the assembly for the loaded code, used in Stage 2 methods. |
@@ -407,12 +441,14 @@ It is done by providing code to find in the file, or matching every line.
     ModLoader.LoadAssemblyAsString("gml_GlobalScript_scr_sessionDataInit").MatchFrom("pushi.e 1")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<string>` | `fe` | The previously opened file |
     | `String` | `other` | The code to find and match with the file |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<(Match, string)>` | A class that contains the loaded code with selected parts defined, ready for Stage 3. |
@@ -463,6 +499,7 @@ It is done by providing code to find in the file, or matching every line.
     ModLoader.LoadAssemblyAsString("gml_GlobalScript_scr_sessionDataInit").MatchBelow("pushi.e 1", 1)
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<string>` | `fe` | The previously opened file |
@@ -470,6 +507,7 @@ It is done by providing code to find in the file, or matching every line.
     | `Int` | `len` | The amount of lines below the match to select. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<(Match, string)>` | A class that contains the loaded code with selected parts defined, ready for Stage 3. |
@@ -501,11 +539,13 @@ It is done by providing code to find in the file, or matching every line.
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchAll()
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<string>` | `fe` | The previously opened file. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<(Match, string)>` | A class that contains the loaded code with selected parts defined, ready for Stage 3. |
@@ -530,11 +570,13 @@ This can be inserting, replacing, deleting or others, which lead to modification
     ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").Remove()
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | The file with the result of the action. |
@@ -552,11 +594,13 @@ This can be inserting, replacing, deleting or others, which lead to modification
     ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").KeepOnly()
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | The file with the result of the action. |
@@ -577,12 +621,14 @@ This can be inserting, replacing, deleting or others, which lead to modification
     ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").InsertAbove("popz.v")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
     | 'String' | `inserting` | The code to insert above the selected line.
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | The file with the result of the action. |
@@ -603,12 +649,14 @@ This can be inserting, replacing, deleting or others, which lead to modification
     ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").InsertBelow("popz.v")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
     | 'String' | `inserting` | The code to insert below the selected line. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | The file with the result of the action. |
@@ -629,12 +677,14 @@ This can be inserting, replacing, deleting or others, which lead to modification
     ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").ReplaceBy("popz.v")
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
     | 'String' | `inserting` | The code to replace the selected line with. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | The file with the result of the action. |
@@ -648,11 +698,13 @@ This can be inserting, replacing, deleting or others, which lead to modification
     TODO
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | The file with the result of the action. |
@@ -674,11 +726,13 @@ Failing to add this at the end of your chain of calls will render it useless.
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").ReplaceBy("global.HP = 50").Save()
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
 
     <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `ModSummary` | The file with the result of the action. |
@@ -697,11 +751,13 @@ Failing to add this at the end of your chain of calls will render it useless.
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").Peek().MatchFrom("global.HP = -1").ReplaceBy("global.HP = 50").Peek().Save()
     ```
     <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<T>` | `fe` | The previously opened file. |
 
     <h3>Returns</h3>
+    
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<T>` | The file, exactly as it was when passed as an argument. |
