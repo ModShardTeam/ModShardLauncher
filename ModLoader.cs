@@ -620,7 +620,7 @@ namespace ModShardLauncher
             {
                 var info = new ModSource()
                 {
-                    Name = i.Split("\\").Last(),
+                    Name = i.Split("\\")[^1],
                     Path = i
                 };
                 modSources.Add(info);

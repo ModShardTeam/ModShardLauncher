@@ -8,6 +8,7 @@ using UndertaleModLib;
 using System.Text.RegularExpressions;
 using System.Collections;
 using System.Drawing.Imaging;
+using Serilog;
 
 namespace ModShardLauncher
 {
@@ -43,9 +44,9 @@ namespace ModShardLauncher
     public class TextureLoader
     {
         public static List<TextureInfo> SourceTextures = new();
-        public static StringWriter Log;
+        public static StringWriter LogWriter;
         public static StringWriter Error;
-        public static int Padding;
+        public static int padding;
         public static int AtlasSize;
         public static BestFitHeuristic FitHeuristic;
         public static List<Atlas> Atlasses;
@@ -54,7 +55,7 @@ namespace ModShardLauncher
         public TextureLoader()
         {
             SourceTextures = new List<TextureInfo>();
-            Log = new StringWriter();
+            LogWriter = new StringWriter();
             Error = new StringWriter();
         }
         public static void LoadTextures(ModFile mod)
@@ -187,7 +188,7 @@ namespace ModShardLauncher
         }
         public static void Process(ModFile mod, int _AtlasSize, int _Padding, bool _DebugMode)
         {
-            Padding = _Padding;
+            padding = _Padding;
             AtlasSize = _AtlasSize;
 
             ScanForTextures(mod);
@@ -261,47 +262,70 @@ namespace ModShardLauncher
 
             tw = new StreamWriter(prefix + ".log");
             tw.WriteLine("--- LOG -------------------------------------------");
-            tw.WriteLine(Log.ToString());
+            tw.WriteLine(LogWriter.ToString());
             tw.WriteLine("--- ERROR -----------------------------------------");
             tw.WriteLine(Error.ToString());
             tw.Close();
         }
-        private static void ScanForTextures(ModFile mod)
+        // scan all png packed in the modFile
+        // and add them in a List<TextureInfo>
+        private static void ScanForTextures(ModFile modFile)
         {
-            foreach (FileChunk fi in mod.Files)
+            // look for all elements in the modFile
+            // and save the png ones
+            foreach (FileChunk fileChunk in modFile.Files)
             {
-                if (!fi.name.EndsWith("png")) continue;
-                if (fi.name == mod.Name + "\\" + "icon.png") continue;
-                var ms = new MemoryStream(mod.GetFile(fi.name));
-                Image img = Image.FromStream(ms);
-                if (img != null && img.Width <= AtlasSize && img.Height <= AtlasSize)
-                {
-                    TextureInfo ti = new()
-                    {
-                        Width = img.Width,
-                        Height = img.Height,
-                        Source = fi.name.Split("\\")[^1],
-                        Data = mod.GetFile(fi.name)
-                    };
+                // all non png files are not images
+                if (!fileChunk.name.EndsWith("png")) continue;
+                // icon.png is tied to the mod itself
+                if (fileChunk.name == modFile.Name + "\\" + "icon.png") continue;
 
-                    SourceTextures.Add(ti);
+                // GetFile can fail
+                try
+                {
+                    // open the image with a memory stream
+                    byte[] byteFile = modFile.GetFile(fileChunk.name);
+                    using Image image = Image.FromStream(new MemoryStream(byteFile));
+
+                    // check if the image loaded is correct regarding the AtlasSize
+                    if (image != null && image.Width <= AtlasSize && image.Height <= AtlasSize)
+                    {
+                        // create a new texture information from the image
+                        TextureInfo textureInfo = new()
+                        {
+                            Width = image.Width,
+                            Height = image.Height,
+                            Source = fileChunk.name.Split("\\")[^1],
+                            Data = byteFile
+                        };
+                        Log.Information(string.Format("Successfully load texture {0}", fileChunk.name));
+                        SourceTextures.Add(textureInfo);
+                    }
+                    else
+                    {
+                        throw new BadImageFormatException("Cannot load the image {0}", fileChunk.name);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Log.Error(ex, "Something went wrong");
                 }
             }
         }
         private static void HorizontalSplit(Node _ToSplit, int _Width, int _Height, List<Node> _List)
         {
             Node n1 = new();
-            n1.Bounds.X = _ToSplit.Bounds.X + _Width + Padding;
+            n1.Bounds.X = _ToSplit.Bounds.X + _Width + padding;
             n1.Bounds.Y = _ToSplit.Bounds.Y;
-            n1.Bounds.Width = _ToSplit.Bounds.Width - _Width - Padding;
+            n1.Bounds.Width = _ToSplit.Bounds.Width - _Width - padding;
             n1.Bounds.Height = _Height;
             n1.SplitType = SplitType.Vertical;
 
             Node n2 = new();
             n2.Bounds.X = _ToSplit.Bounds.X;
-            n2.Bounds.Y = _ToSplit.Bounds.Y + _Height + Padding;
+            n2.Bounds.Y = _ToSplit.Bounds.Y + _Height + padding;
             n2.Bounds.Width = _ToSplit.Bounds.Width;
-            n2.Bounds.Height = _ToSplit.Bounds.Height - _Height - Padding;
+            n2.Bounds.Height = _ToSplit.Bounds.Height - _Height - padding;
             n2.SplitType = SplitType.Horizontal;
 
             if (n1.Bounds.Width > 0 && n1.Bounds.Height > 0)
@@ -312,17 +336,17 @@ namespace ModShardLauncher
         private static void VerticalSplit(Node _ToSplit, int _Width, int _Height, List<Node> _List)
         {
             Node n1 = new();
-            n1.Bounds.X = _ToSplit.Bounds.X + _Width + Padding;
+            n1.Bounds.X = _ToSplit.Bounds.X + _Width + padding;
             n1.Bounds.Y = _ToSplit.Bounds.Y;
-            n1.Bounds.Width = _ToSplit.Bounds.Width - _Width - Padding;
+            n1.Bounds.Width = _ToSplit.Bounds.Width - _Width - padding;
             n1.Bounds.Height = _ToSplit.Bounds.Height;
             n1.SplitType = SplitType.Vertical;
 
             Node n2 = new();
             n2.Bounds.X = _ToSplit.Bounds.X;
-            n2.Bounds.Y = _ToSplit.Bounds.Y + _Height + Padding;
+            n2.Bounds.Y = _ToSplit.Bounds.Y + _Height + padding;
             n2.Bounds.Width = _Width;
-            n2.Bounds.Height = _ToSplit.Bounds.Height - _Height - Padding;
+            n2.Bounds.Height = _ToSplit.Bounds.Height - _Height - padding;
             n2.SplitType = SplitType.Horizontal;
 
             if (n1.Bounds.Width > 0 && n1.Bounds.Height > 0)
