@@ -38,9 +38,9 @@ namespace ModShardLauncher
         }
         public static string GetVersion()
         {
-            var version = data.Strings.First(t => t.Content.EndsWith(" Build date: ")).Content;
-            var sp = version.Replace(" Build date: ", "").Replace("Verison: ", "").Split(".").ToList();
-            var sp2 = new List<string>();
+            string version = data.Strings.First(t => t.Content.EndsWith(" Build date: ")).Content;
+            List<string> sp = version.Replace(" Build date: ", "").Replace("Verison: ", "").Split(".").ToList();
+            List<string> sp2 = new();
             sp.ForEach(i =>
             {
                 if (i.Length < 2) sp2.Add(0 + i);
@@ -80,7 +80,7 @@ namespace ModShardLauncher
                 bool hadWarnings = false;
                 try
                 {
-                    using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read))
+                    using (FileStream stream = new(filename, FileMode.Open, FileAccess.Read))
                     {
                         data = UndertaleIO.Read(
                             stream, warning =>
@@ -98,6 +98,7 @@ namespace ModShardLauncher
                                 FileMessageEvent?.Invoke(message);
                             }
                         );
+
                         File.WriteAllText("json_dump_code.json", JsonConvert.SerializeObject(data.Code.Select(t => t.Name.Content)));
                         File.WriteAllText("json_dump_variables.json", JsonConvert.SerializeObject(data.Variables.Select(t => t.Name.Content)));
                         File.WriteAllText("json_dump_rooms.json", JsonConvert.SerializeObject(data.Rooms.Select(t => t.Name.Content)));
@@ -140,7 +141,7 @@ namespace ModShardLauncher
             ModLoader.Initalize();
             if(Main.Settings.LoadPos == "" && !re)
             {
-                var result = MessageBox.Show(Application.Current.FindResource("LoadPath").ToString(),
+                MessageBoxResult result = MessageBox.Show(Application.Current.FindResource("LoadPath").ToString(),
                         Application.Current.FindResource("LoadPath").ToString(), MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if(result == MessageBoxResult.Yes)
                 {
@@ -182,7 +183,7 @@ namespace ModShardLauncher
                 bool SaveSucceeded = true;
                 try
                 {
-                    using (var stream = new FileStream(filename + "temp", FileMode.Create, FileAccess.Write))
+                    using (FileStream stream = new(filename + "temp", FileMode.Create, FileAccess.Write))
                     {
                         UndertaleIO.Write(stream, data, message =>
                         {
@@ -199,7 +200,7 @@ namespace ModShardLauncher
                     {
                         try
                         {
-                            var listChunks = data.FORM.Chunks.Values.Select(x => x as IUndertaleListChunk);
+                            IEnumerable<IUndertaleListChunk?> listChunks = data.FORM.Chunks.Values.Select(x => x as IUndertaleListChunk);
                             Parallel.ForEach(listChunks.Where(x => x is not null), (chunk) =>
                             {
                                 chunk.ClearIndexDict();
@@ -249,7 +250,7 @@ namespace ModShardLauncher
             ModLoader.LoadFiles();
             if (Main.Settings.SavePos == "")
             {
-                var result = MessageBox.Show(Application.Current.FindResource("SavePath").ToString(),
+                MessageBoxResult result = MessageBox.Show(Application.Current.FindResource("SavePath").ToString(),
                         Application.Current.FindResource("SavePath").ToString(), MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {

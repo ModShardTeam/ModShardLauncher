@@ -616,12 +616,12 @@ namespace ModShardLauncher
                         != null
             );
 
-            foreach(var i in sources)
+            foreach(string source in sources)
             {
-                var info = new ModSource()
+                ModSource info = new()
                 {
-                    Name = i.Split("\\")[^1],
-                    Path = i
+                    Name = source.Split("\\")[^1],
+                    Path = source
                 };
                 modSources.Add(info);
                 ModSources.Add(info.Name, info);
@@ -698,7 +698,7 @@ namespace ModShardLauncher
         }
         public static void LoadWeapon(Type type)
         {
-            var weapon = Activator.CreateInstance(type) as Weapon;
+            Weapon? weapon = Activator.CreateInstance(type) as Weapon;
             weapon.SetDefaults();
             var strs = weapon.AsString();
             Weapons.Insert(Weapons.IndexOf("SWORDS - BLADES;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;") + 1, strs.Item1);
@@ -775,7 +775,7 @@ namespace ModShardLauncher
         }
         public static void AddExtension(UndertaleExtensionFile file)
         {
-            var ext = Data.Extensions.First(t => t.Name.Content == "display_mouse_lock");
+            UndertaleExtension ext = Data.Extensions.First(t => t.Name.Content == "display_mouse_lock");
             ext.Files.Add(file);
         }
     }

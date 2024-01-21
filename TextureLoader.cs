@@ -67,8 +67,8 @@ namespace ModShardLauncher
                 {
                     Name = Data.Strings.MakeString(mod.Name)
                 };
-                var ms = new MemoryStream();
-                var img = CreateAtlasImage(atlas);
+                MemoryStream ms = new();
+                Image img = CreateAtlasImage(atlas);
                 img.Save(ms, ImageFormat.Png);
                 ms.Seek(0, SeekOrigin.Begin);
                 ueTexture.TextureData.TextureBlob = new byte[ms.Length];
@@ -79,7 +79,7 @@ namespace ModShardLauncher
                 {
                     if(node.Texture != null)
                     {
-                        var texturePageItem = new UndertaleTexturePageItem()
+                        UndertaleTexturePageItem texturePageItem = new()
                         {
                             Name = Data.Strings.MakeString("PageItem " + Data.TexturePageItems.Count),
                             SourceX = (ushort)node.Bounds.X,
@@ -104,7 +104,7 @@ namespace ModShardLauncher
                         
                         try
                         {
-                            var spriteParts = sprFrameRegex.Match(stripped);
+                            System.Text.RegularExpressions.Match spriteParts = sprFrameRegex.Match(stripped);
                             spriteName = spriteParts.Groups[1].Value;
                             int.TryParse(spriteParts.Groups[2].Value, out frame);
                         }
@@ -143,8 +143,8 @@ namespace ModShardLauncher
 
                             newSprite.CollisionMasks.Add(newSprite.NewMaskEntry());
                             Rectangle bmpRect = new(node.Bounds.X, node.Bounds.Y, node.Bounds.Width, node.Bounds.Height);
-                            var format = atlasBitmap.PixelFormat;
-                            var clone = atlasBitmap.Clone(bmpRect, format);
+                            PixelFormat format = atlasBitmap.PixelFormat;
+                            Bitmap clone = atlasBitmap.Clone(bmpRect, format);
                             int width = (node.Bounds.Width + 7) / 8 * 8;
                             BitArray maskingBitArray = new BitArray(width * node.Bounds.Height);
                             for(int y = 0; y < node.Bounds.Height; y++)
@@ -155,7 +155,7 @@ namespace ModShardLauncher
                                     maskingBitArray[y * width + x] = (pixelColor.A > 0);
                                 }
                             }
-                            BitArray ba = new BitArray(width * node.Bounds.Height);
+                            BitArray ba = new(width * node.Bounds.Height);
                             for(int i = 0; i < maskingBitArray.Length; i += 8)
                             {
                                 for(int j = 0; j < 8; j++)
@@ -191,6 +191,8 @@ namespace ModShardLauncher
             padding = _Padding;
             AtlasSize = _AtlasSize;
 
+            // scan all textures in mod
+            // and store them in SourceTextures
             ScanForTextures(mod);
             List<TextureInfo> textures = SourceTextures.ToList();
 
@@ -226,21 +228,21 @@ namespace ModShardLauncher
                 textures = leftovers;
             }
         }
-        public static void SaveAtlasses(string _Destination)
+        public static void SaveAtlasses(string destination)
         {
             int atlasCount = 0;
-            string prefix = _Destination.Replace(Path.GetExtension(_Destination), "");
-            StreamWriter tw = new(_Destination);
+            string prefix = destination.Replace(Path.GetExtension(destination), "");
+            StreamWriter tw = new(destination);
 
             tw.WriteLine("source_tex, atlas_tex, u, v, scale_u, scale_v");
 
             foreach (Atlas atlas in Atlasses)
             {
-                string atlasName = String.Format(prefix + "{0:000}" + ".png", atlasCount);
+                string atlasName = string.Format(prefix + "{0:000}" + ".png", atlasCount);
 
                 //1: Save images
                 Image img = CreateAtlasImage(atlas);
-                img.Save(atlasName, System.Drawing.Imaging.ImageFormat.Png);
+                img.Save(atlasName, ImageFormat.Png);
 
                 //2: save description in file
                 foreach (Node n in atlas.Nodes)
@@ -412,24 +414,24 @@ namespace ModShardLauncher
 
             return bestFit;
         }
-        private static List<TextureInfo> LayoutAtlas(List<TextureInfo> _Textures, Atlas _Atlas)
+        private static List<TextureInfo> LayoutAtlas(List<TextureInfo> textures, Atlas atlas)
         {
             List<Node> freeList = new();
-            _Atlas.Nodes = new List<Node>();
-            List<TextureInfo> textures = _Textures.ToList();
+            atlas.Nodes = new List<Node>();
+            List<TextureInfo> textures_d = textures.ToList();
 
             Node root = new();
-            root.Bounds.Size = new Size(_Atlas.Width, _Atlas.Height);
+            root.Bounds.Size = new Size(atlas.Width, atlas.Height);
             root.SplitType = SplitType.Horizontal;
 
             freeList.Add(root);
 
-            while (freeList.Count > 0 && textures.Count > 0)
+            while (freeList.Count > 0 && textures_d.Count > 0)
             {
                 Node node = freeList[0];
                 freeList.RemoveAt(0);
 
-                TextureInfo? bestFit = FindBestFitForNode(node, textures);
+                TextureInfo? bestFit = FindBestFitForNode(node, textures_d);
                 if (bestFit != null)
                 {
                     if (node.SplitType == SplitType.Horizontal)
@@ -445,33 +447,33 @@ namespace ModShardLauncher
                     node.Bounds.Width = bestFit.Width;
                     node.Bounds.Height = bestFit.Height;
 
-                    textures.Remove(bestFit);
+                    textures_d.Remove(bestFit);
                 }
 
-                _Atlas.Nodes.Add(node);
+                atlas.Nodes.Add(node);
             }
 
-            return textures;
+            return textures_d;
         }
-        private static Image CreateAtlasImage(Atlas _Atlas)
+        private static Image CreateAtlasImage(Atlas atlas)
         {
-            Image img = new Bitmap(_Atlas.Width, _Atlas.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            Graphics g = Graphics.FromImage(img);
+            Image image = new Bitmap(atlas.Width, atlas.Height, PixelFormat.Format32bppArgb);
+            Graphics graphics = Graphics.FromImage(image);
 
-            foreach (Node n in _Atlas.Nodes)
+            foreach (Node n in atlas.Nodes)
             {
                 if (n.Texture != null)
                 {
-                    Image sourceImg = Image.FromStream(new MemoryStream(n.Texture.Data));
-                    g.DrawImage(sourceImg, n.Bounds);
+                    Image sourceImage = Image.FromStream(new MemoryStream(n.Texture.Data));
+                    graphics.DrawImage(sourceImage, n.Bounds);
                 }
                 else
                 {
-                    g.FillRectangle(Brushes.DarkMagenta, n.Bounds);
+                    graphics.FillRectangle(Brushes.DarkMagenta, n.Bounds);
                 }
             }
 
-            return img;
+            return image;
         }
     }
 }
