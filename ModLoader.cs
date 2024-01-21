@@ -110,6 +110,43 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        public static UndertaleEmbeddedTexture GetEmbeddedTexture(string name)
+        {
+            try
+            {
+                UndertaleEmbeddedTexture embeddedTexture = Data.EmbeddedTextures.First(t => t.Name.Content == name);
+                Log.Information(string.Format("Found embedded texture: {0}", name.ToString()));
+                return embeddedTexture;
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static string AddNewTextureFromExistingEmbeddedTexture(string embeddedTextureName, RectTexture source, RectTexture target, BoundingData bounding)
+        {
+            try
+            {
+                UndertaleEmbeddedTexture embeddedTexture = GetEmbeddedTexture(embeddedTextureName);
+
+                UndertaleTexturePageItem texturePageItem = TextureLoader.CreateTexureItem(
+                    embeddedTexture, 
+                    source, 
+                    target, 
+                    bounding
+                );
+                Data.TexturePageItems.Add(texturePageItem);
+                Log.Information(string.Format("Successfully added a new texture from: {0}", embeddedTextureName.ToString()));
+                return texturePageItem.Name.Content;
+
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
         public static UndertaleCode AddCode(string codeAsString, string name)
         {
             try

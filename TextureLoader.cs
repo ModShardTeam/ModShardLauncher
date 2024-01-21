@@ -29,6 +29,32 @@ namespace ModShardLauncher
         Area,
         MaxOneAxis,
     }
+    public class RectTexture
+    {
+        public ushort X;
+        public ushort Y;
+        public ushort Width;
+        public ushort Height;
+
+        public RectTexture(ushort x, ushort y, ushort width, ushort height)
+        {
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
+        }
+    }
+    public class BoundingData
+    {
+        public ushort Width;
+        public ushort Height;
+
+        public BoundingData(ushort width, ushort height)
+        {
+            Width = width;
+            Height = height;
+        }
+    }
     public class Node
     {
         public Rectangle Bounds;
@@ -58,6 +84,27 @@ namespace ModShardLauncher
             LogWriter = new StringWriter();
             Error = new StringWriter();
         }
+        public static UndertaleTexturePageItem CreateTexureItem(UndertaleEmbeddedTexture texture, RectTexture source, RectTexture target, BoundingData bounding) 
+        {
+            return new()
+            {
+                Name = Data.Strings.MakeString("PageItem " + Data.TexturePageItems.Count),
+
+                SourceX = source.X,
+                SourceY = source.Y,
+                SourceHeight = source.Height,
+                SourceWidth = source.Width,
+
+                TargetX = target.X,
+                TargetY = target.Y,
+                TargetHeight = target.Height,
+                TargetWidth = target.Width,
+
+                BoundingHeight = bounding.Height,
+                BoundingWidth = bounding.Width,
+                TexturePage = texture
+            };
+        }
         public static void LoadTextures(ModFile mod)
         {
             Process(mod, 2048, 2, false);
@@ -79,21 +126,13 @@ namespace ModShardLauncher
                 {
                     if(node.Texture != null)
                     {
-                        UndertaleTexturePageItem texturePageItem = new()
-                        {
-                            Name = Data.Strings.MakeString("PageItem " + Data.TexturePageItems.Count),
-                            SourceX = (ushort)node.Bounds.X,
-                            SourceY = (ushort)node.Bounds.Y,
-                            SourceHeight = (ushort)node.Bounds.Height,
-                            SourceWidth = (ushort)node.Bounds.Width,
-                            TargetX = 0,
-                            TargetY = 0,
-                            TargetHeight = (ushort)node.Bounds.Height,
-                            TargetWidth = (ushort)node.Bounds.Width,
-                            BoundingHeight = (ushort)node.Bounds.Height,
-                            BoundingWidth = (ushort)node.Bounds.Width,
-                            TexturePage = ueTexture
-                        };
+
+                        UndertaleTexturePageItem texturePageItem = CreateTexureItem(
+                            ueTexture, 
+                            new RectTexture((ushort)node.Bounds.X, (ushort)node.Bounds.Y, (ushort)node.Bounds.Height, (ushort)node.Bounds.Width), 
+                            new RectTexture(0, 0, (ushort)node.Bounds.Height, (ushort)node.Bounds.Width), 
+                            new BoundingData((ushort)node.Bounds.Height, (ushort)node.Bounds.Width)
+                        );
 
                         Data.TexturePageItems.Add(texturePageItem);
 
