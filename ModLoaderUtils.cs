@@ -117,6 +117,13 @@ namespace ModShardLauncher
             }
         }
         /// <summary>
+        /// Wrapper of <see cref="Flatten"/> for the <see cref="FileEnumerable"/>  class.
+        /// </summary>
+        public static FileEnumerable<string> Flatten(this FileEnumerable<(Match, string)> fe)
+        {
+            return new(fe.header, fe.ienumerable.Flatten());
+        }
+        /// <summary>
         /// A wrapper for string.Join("\n").
         /// <example>
         /// For example:
@@ -611,8 +618,8 @@ namespace ModShardLauncher
                     fe.header.patchingWay
                 );
             }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
+            catch
+            {
                 throw;
             }
         }

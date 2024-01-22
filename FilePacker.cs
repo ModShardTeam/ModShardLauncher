@@ -11,66 +11,115 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Serilog;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Diagnostics;
 
 namespace ModShardLauncher
 {
-    public class FilePacker
+    public static class FilePacker
     {
         public static void Pack(string path)
         {
+            Log.Information(string.Format("Starting packing {0}", path));
+
             var dir = new DirectoryInfo(path);
             var textures = dir.GetFiles("*.png", SearchOption.AllDirectories).ToList();
             var scripts = dir.GetFiles("*.lua", SearchOption.AllDirectories).ToList();
             var codes = dir.GetFiles("*.gml", SearchOption.AllDirectories).ToList();
-            FileStream fs = new FileStream(Path.Join(ModLoader.ModPath, dir.Name + ".sml"), FileMode.Create);
-            Write(fs, "MSLM");
-            var version = DataLoader.GetVersion();
-            Write(fs, version);
-            Write(fs, textures.Count);
+            var assemblies = dir.GetFiles("*.asm", SearchOption.AllDirectories).ToList();
             int offset = 0;
-            foreach (var tex in textures)
+            FileStream fs = new(Path.Join(ModLoader.ModPath, dir.Name + ".sml"), FileMode.Create);
+
+            Write(fs, "MSLM");
+            Log.Information("Writting header...");
+            
+            string version = DataLoader.GetVersion();
+            Write(fs, version);
+            Log.Information("Writting version...");
+
+            Write(fs, textures.Count);
+            foreach (FileInfo tex in textures)
             {
-                var name = dir.Name + tex.FullName.Replace(path, "");
+                string name = dir.Name + tex.FullName.Replace(path, "");
                 Write(fs, name.Length);
                 Write(fs, name);
                 Write(fs, offset);
-                var len = CalculateBytesLength(tex);
+                int len = CalculateBytesLength(tex);
                 Write(fs, len);
                 offset += len;
             }
+            Log.Information("Preparing textures...");
+
             Write(fs, scripts.Count);
-            foreach (var scr in scripts)
+            foreach (FileInfo scr in scripts)
             {
-                var name = dir.Name + scr.FullName.Replace(path, "");
+                string name = dir.Name + scr.FullName.Replace(path, "");
                 Write(fs, name.Length);
                 Write(fs, name);
                 Write(fs, offset);
-                var len = CalculateBytesLength(scr);
+                int len = CalculateBytesLength(scr);
                 Write(fs, len);
                 offset += len;
                 
             }
+            Log.Information("Preparing scripts...");
+
             Write(fs, codes.Count);
-            foreach (var scr in codes)
+            foreach (FileInfo cds in codes)
             {
-                var name = dir.Name + scr.FullName.Replace(path, "");
+                string name = dir.Name + cds.FullName.Replace(path, "");
                 Write(fs, name.Length);
                 Write(fs, name);
                 Write(fs, offset);
-                var len = CalculateBytesLength(scr);
+                int len = CalculateBytesLength(cds);
                 Write(fs, len);
                 offset += len;
             }
-            foreach (var tex in textures)
+            Log.Information("Preparing codes...");
+
+            Write(fs, assemblies.Count);
+            foreach (FileInfo asm in assemblies)
+            {
+                string name = dir.Name + asm.FullName.Replace(path, "");
+                Write(fs, name.Length);
+                Write(fs, name);
+                Write(fs, offset);
+                int len = CalculateBytesLength(asm);
+                Write(fs, len);
+                offset += len;
+            }
+            Log.Information("Preparing assemblies...");
+
+            foreach (FileInfo tex in textures)
                 Write(fs, tex);
-            foreach (var scr in scripts)
+            Log.Information("Writting textures...");
+
+            foreach (FileInfo scr in scripts)
                 Write(fs, scr);
-            foreach (var scr in codes)
-                Write(fs, scr);
-            var successful = CompileMod(dir.Name, path, out var code, out _, fs);
-            if (!successful) return;
+            Log.Information("Writting scripts...");
+
+            foreach (FileInfo cds in codes)
+                Write(fs, cds);
+            Log.Information("Writting codes...");
+
+            foreach (FileInfo asm in assemblies)
+                Write(fs, asm);
+            Log.Information("Writting assemblies...");
+
+            Log.Information("Starting compilation...");
+            bool successful = CompileMod(dir.Name, path, out byte[] code, out _);
+            if (!successful)
+            {
+                fs.Close();
+                File.Delete(fs.Name);
+                Log.Information(string.Format("Failed packing {0}", dir.Name));
+                return;
+            }
+
             Write(fs, code.Length);
             Write(fs, code);
+            Log.Information(string.Format("Successfully packed {0}", dir.Name));
             fs.Close();
         }
         public static void Write(FileStream fs, object obj)
@@ -88,7 +137,7 @@ namespace ModShardLauncher
             }
             else if(type == typeof(FileInfo))
             {
-                var stream = new FileStream((obj as FileInfo).FullName, FileMode.Open);
+                var stream = new FileStream(((FileInfo)obj).FullName, FileMode.Open);
                 byte[]? bytes = new byte[stream.Length];
                 stream.Read(bytes, 0, bytes.Length);
                 fs.Write(bytes, 0, bytes.Length);
@@ -106,61 +155,119 @@ namespace ModShardLauncher
             stream.Close();
             return len;
         }
-        public static Diagnostic[] RoslynCompile(string name, string[] files, string[] preprocessorSymbols, out byte[] code, out byte[] pdb)
+        public static Diagnostic[] RoslynCompile(string name, IEnumerable<string> files, IEnumerable<string> preprocessorSymbols, out byte[] code, out byte[] pdb)
         {
-            IEnumerable<string> DefaultNamespaces =
-            new[]
+            // creating default namespaces
+            IEnumerable<string> DefaultNamespaces = new[] { "System.Collections.Generic" };
+
+            // creating compilation options
+            CSharpCompilationOptions options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, checkOverflow: true, optimizationLevel: OptimizationLevel.Release, allowUnsafe: false)
+                .WithUsings(DefaultNamespaces);
+
+            // creating parse options
+            CSharpParseOptions parseOptions = new(LanguageVersion.Preview, preprocessorSymbols: preprocessorSymbols);
+
+            // creating emit options
+            EmitOptions emitOptions = new(debugInformationFormat: DebugInformationFormat.PortablePdb);
+
+            // getting all dlls
+            string[] dlls = Directory.GetFiles(Environment.CurrentDirectory, "*.dll");
+
+            // convert string of dll into MetadataReference
+            List<MetadataReference> defaultReferences = dlls
+                .ToList()
+                .ConvertAll(
+                    new Converter<string, MetadataReference>(delegate(string str) { return MetadataReference.CreateFromFile(str); })
+                );
+
+            // add more references
+            defaultReferences.AddRange(new List<MetadataReference>() { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+            IEnumerable<SyntaxTree> src = files.Select(f => SyntaxFactory.ParseSyntaxTree(File.ReadAllText(f), parseOptions, f, Encoding.UTF8));
+            Log.Information("Compilation: Writting ast...");
+            CSharpCompilation comp = CSharpCompilation.Create(name, src, defaultReferences, options);
+
+            Log.Information("Compilation: used Assemblies...");
+            foreach(MetadataReference usedAssemblyReferences in comp.GetUsedAssemblyReferences())
             {
-                "System.Collections.Generic"
-            };
-        var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
-                checkOverflow: true,
-                optimizationLevel: OptimizationLevel.Release,
-                allowUnsafe: false).WithUsings(DefaultNamespaces);
-
-            var parseOptions = new CSharpParseOptions(LanguageVersion.Preview, preprocessorSymbols: preprocessorSymbols);
-            var emitOptions = new EmitOptions(debugInformationFormat: DebugInformationFormat.PortablePdb);
-
-            var Dlls = Directory.GetFiles(Environment.CurrentDirectory, "*.dll").ToList();
-
-            List<MetadataReference> DefaultReferences = Dlls.ConvertAll<MetadataReference>(new Converter<string, MetadataReference>(
-                delegate(string str)
+                if (usedAssemblyReferences.Display != null)
                 {
-                    return MetadataReference.CreateFromFile(str);
-                })).ToList();
-            DefaultReferences.AddRange(new List<MetadataReference>()
+                    FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(usedAssemblyReferences.Display);
+                    Log.Information(string.Format("{{{0}}} {{{1}}} {{{2}}}", 
+                        usedAssemblyReferences.Display,
+                        fileVersionInfo.FileVersion,
+                        fileVersionInfo.ProductName
+                    ));
+                }
+                else
+                {
+                    Log.Error("Cannot find the assembly");
+                }
+                
+            }
+
+            foreach(SyntaxTree tree in comp.SyntaxTrees)
             {
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location)
-            });
-            var src = files.Select(f => SyntaxFactory.ParseSyntaxTree(File.ReadAllText(f), parseOptions, f, Encoding.UTF8));
-            var comp = CSharpCompilation.Create(name, src, DefaultReferences, options);
+                // get the semantic model for this tree
+                SemanticModel model = comp.GetSemanticModel(tree);
+                
+                // find everywhere in the AST that refers to a type
+                SyntaxNode root = tree.GetRoot();
+                IEnumerable<TypeSyntax> allTypeNames = root.DescendantNodesAndSelf().OfType<TypeSyntax>();
+                
+                foreach(TypeSyntax typeName in allTypeNames)
+                {
+                    // what does roslyn think the type _name_ actually refers to?
+                    Microsoft.CodeAnalysis.TypeInfo effectiveType = model.GetTypeInfo(typeName);
+                    if(effectiveType.Type != null && effectiveType.Type.TypeKind == TypeKind.Error)
+                    {
+                        // if it's an error type (ie. couldn't be resolved), cast and proceed
+                        Log.Error("Cannot understand type {0} of variable {1}", (IErrorTypeSymbol)effectiveType.Type, typeName);
+                    }
+                }
+            }
 
-            using var peStream = new MemoryStream();
-            using var pdbStream = new MemoryStream();
+            using MemoryStream peStream = new();
+            using MemoryStream pdbStream = new();
 
-            var results = comp.Emit(peStream, pdbStream, options: emitOptions);
+            EmitResult results = comp.Emit(peStream, pdbStream, options: emitOptions);
 
             code = peStream.ToArray();
             pdb = pdbStream.ToArray();
 
-            return results.Diagnostics.Where(d => d.Severity >= DiagnosticSeverity.Warning).ToArray();
+            return results.Diagnostics.ToArray();
         }
-        public static bool CompileMod(string name, string path, out byte[] code, out byte[] pdb, FileStream fs)
+        public static bool CompileMod(string name, string path, out byte[] code, out byte[] pdb)
         {
-            var files = Directory.GetFiles(path, "*.cs", SearchOption.AllDirectories).Where(file => !IgnoreCompletely(name, file)).ToArray();
-            var preprocessorSymbols = new List<string>() { "FNA" };
-            var result = RoslynCompile(name, files, preprocessorSymbols.ToArray(), out code, out pdb);
+            IEnumerable<string> files = Directory
+                .GetFiles(path, "*.cs", SearchOption.AllDirectories)
+                .Where(file => !IgnoreCompletely(name, file));
+            
+            Log.Information("Compilation: Gathering files...");
+            Diagnostic[] result = RoslynCompile(name, files, new[] { "FNA" }, out code, out pdb);
 
-            var WarningsCount = result.Count(e => e.Severity == DiagnosticSeverity.Warning);
-            var ErrorsCount = result.Length - WarningsCount;
-
-            if(ErrorsCount > 0)
+            Log.Information("Compilation: Gathering results...");
+            
+            foreach(Diagnostic err in result.Where(e => e.Severity == DiagnosticSeverity.Error))
             {
-                var firstError = result.First(e => e.Severity == DiagnosticSeverity.Error);
-                fs.Close();
-                File.Delete(fs.Name);
-                MessageBox.Show(Application.Current.FindResource("CompileError").ToString() +
-                    "\n" + name + " : " + firstError);
+                Log.Error(err.ToString());
+            }
+            foreach(Diagnostic warning in result.Where(e => e.Severity == DiagnosticSeverity.Warning))
+            {
+                Log.Warning(warning.ToString());
+            }
+            foreach(Diagnostic info in result.Where(e => e.Severity == DiagnosticSeverity.Info))
+            {
+                Log.Information(info.ToString());
+            }
+
+            if(Array.Exists(result, e => e.Severity == DiagnosticSeverity.Error))
+            {
+                MessageBox.Show(
+                    string.Format("{0}\nFound {1} error(s), check log for more information.", 
+                    Application.Current.FindResource("CompileError"), 
+                    result.Count(e => e.Severity == DiagnosticSeverity.Error)
+                ));
                 return false;
             }
             return true;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,16 @@ namespace ModShardLauncher.Mods
                 MessageBox.Show(Application.Current.FindResource("LoadDataWarning").ToString());
                 return;
             }
-            FilePacker.Pack((DataContext as ModSource).Path);
+
+            try
+            {
+                FilePacker.Pack((DataContext as ModSource).Path);
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Something went wrong");
+            }
+            
             ModLoader.LoadFiles();
             (Main.Instance.Viewer.Content as UserControl).UpdateLayout();
             Main.Instance.Refresh();
