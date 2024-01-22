@@ -44,15 +44,41 @@ namespace ModShardLauncher
             Height = height;
         }
     }
-    public class BoundingData
+    public class MarginData
     {
-        public ushort Width;
-        public ushort Height;
+        public int Top;
+        public int Bottom;
+        public int Left;
+        public int Right;
 
-        public BoundingData(ushort width, ushort height)
+        public MarginData(int top, int bottom, int left, int right)
+        {
+            Top = top;
+            Bottom = bottom;
+            Left = left;
+            Right = right;
+        }
+    }
+    public class BoundingData<T>
+    {
+        public T Width;
+        public T Height;
+
+        public BoundingData(T width, T height)
         {
             Width = width;
             Height = height;
+        }
+    }
+    public class OriginData
+    {
+        public int X;
+        public int Y;
+
+        public OriginData(int x, int y)
+        {
+            X = x;
+            Y = y;
         }
     }
     public class Node
@@ -84,7 +110,7 @@ namespace ModShardLauncher
             LogWriter = new StringWriter();
             Error = new StringWriter();
         }
-        public static UndertaleTexturePageItem CreateTexureItem(UndertaleEmbeddedTexture texture, RectTexture source, RectTexture target, BoundingData bounding) 
+        public static UndertaleTexturePageItem CreateTexureItem(UndertaleEmbeddedTexture texture, RectTexture source, RectTexture target, BoundingData<ushort> bounding) 
         {
             return new()
             {
@@ -105,39 +131,66 @@ namespace ModShardLauncher
                 TexturePage = texture
             };
         }
+        public static UndertaleSprite CreateSpriteNoCollisionMasks(string spriteName, MarginData margin, OriginData origin, BoundingData<uint> bounding) 
+        {
+            UndertaleSprite newSprite = new()
+            {
+                Name = Data.Strings.MakeString(spriteName),
+                Width = bounding.Width,
+                Height = bounding.Height,
+                MarginLeft = margin.Left,
+                MarginRight = margin.Right,
+                MarginTop = margin.Top,
+                MarginBottom = margin.Bottom,
+                OriginX = origin.X,
+                OriginY = origin.Y,
+            };
+            
+            return newSprite;
+        }
         public static void LoadTextures(ModFile mod)
         {
             Process(mod, 2048, 2, false);
             foreach (Atlas atlas in Atlasses)
             {
+                // read an atlas as an image
+                Image image = CreateAtlasImage(atlas);
+
+                // save the image in a memory stream
+                MemoryStream memoryStream = new();
+                image.Save(memoryStream, ImageFormat.Png);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                // create a new embedded texture
                 UndertaleEmbeddedTexture ueTexture = new()
                 {
                     Name = Data.Strings.MakeString(mod.Name)
                 };
-                MemoryStream ms = new();
-                Image img = CreateAtlasImage(atlas);
-                img.Save(ms, ImageFormat.Png);
-                ms.Seek(0, SeekOrigin.Begin);
-                ueTexture.TextureData.TextureBlob = new byte[ms.Length];
-                ms.Read(ueTexture.TextureData.TextureBlob);
+                ueTexture.TextureData.TextureBlob = new byte[memoryStream.Length];
+
+                // read the memory steam to populate the new embedded texture and add it in Data
+                memoryStream.Read(ueTexture.TextureData.TextureBlob);
                 Data.EmbeddedTextures.Add(ueTexture);
-                Bitmap atlasBitmap = new(img);
+
+                // convert the image as a bitmap to compute the collision mask
+                Bitmap atlasBitmap = new(image);
                 foreach (Node node in atlas.Nodes)
                 {
                     if(node.Texture != null)
                     {
-
+                        // create a new texture page item and add it in Data
                         UndertaleTexturePageItem texturePageItem = CreateTexureItem(
                             ueTexture, 
                             new RectTexture((ushort)node.Bounds.X, (ushort)node.Bounds.Y, (ushort)node.Bounds.Height, (ushort)node.Bounds.Width), 
                             new RectTexture(0, 0, (ushort)node.Bounds.Height, (ushort)node.Bounds.Width), 
-                            new BoundingData((ushort)node.Bounds.Height, (ushort)node.Bounds.Width)
+                            new BoundingData<ushort>((ushort)node.Bounds.Height, (ushort)node.Bounds.Width)
                         );
-
                         Data.TexturePageItems.Add(texturePageItem);
 
+                        // this texture page item can be injected in a sprite
+                        // reading the name of the png
+                        // to find the frame number and the name of the sprite associated
                         string stripped = Path.GetFileNameWithoutExtension(node.Texture.Source);
-
                         string spriteName;
                         int frame;
                         
@@ -152,65 +205,86 @@ namespace ModShardLauncher
                             continue;
                         }
 
+                        // find the sprite
                         UndertaleSprite sprite = Data.Sprites.ByName(spriteName);
+                        // create a textureEntry from the texture page item
                         UndertaleSprite.TextureEntry textureEntry = new()
                         {
                             Texture = texturePageItem
                         };
 
+                        // test if the sprite exists or not
                         if (sprite == null)
                         {
-                            UndertaleString spriteUTString = Data.Strings.MakeString(spriteName);
-                            UndertaleSprite newSprite = new()
-                            {
-                                Name = spriteUTString,
-                                Width = (uint)node.Bounds.Width,
-                                Height = (uint)node.Bounds.Height,
-                                MarginLeft = 0,
-                                MarginRight = node.Bounds.Width - 1,
-                                MarginTop = 0,
-                                MarginBottom = node.Bounds.Height - 1,
-                                OriginX = 0,
-                                OriginY = 0,
-                            };
-
-                            if(frame > 0)
-                            {
-                                for (int i = 0; i < frame; i++)
-                                    newSprite.Textures.Add(null);
-                            }
-
-                            newSprite.CollisionMasks.Add(newSprite.NewMaskEntry());
+                            // clone the image
                             Rectangle bmpRect = new(node.Bounds.X, node.Bounds.Y, node.Bounds.Width, node.Bounds.Height);
                             PixelFormat format = atlasBitmap.PixelFormat;
                             Bitmap clone = atlasBitmap.Clone(bmpRect, format);
-                            int width = (node.Bounds.Width + 7) / 8 * 8;
-                            BitArray maskingBitArray = new BitArray(width * node.Bounds.Height);
+
+                            // create a new sprite
+                            UndertaleSprite newSprite = CreateSpriteNoCollisionMasks(
+                                spriteName,
+                                new MarginData(0, node.Bounds.Height - 1, 0, node.Bounds.Width - 1),
+                                new OriginData(0, 0),
+                                new BoundingData<uint>((uint)node.Bounds.Width, (uint)node.Bounds.Height)
+                            );
+
+                            // populate the list of textures with null
+                            // indeed, we want to add the texture at the position frame
+                            // since the sprite didnt exist, we need to make the frame - 1 first texture as null
+                            for (int i = 0; i < frame; i++)
+                                newSprite.Textures.Add(null);
+
+                            // create a new mask for this sprite but it seems Stoneshard does not use collision mask
+                            newSprite.CollisionMasks.Add(newSprite.NewMaskEntry());
+
+                            // ?
+                            int correctedWidth = (node.Bounds.Width + 7) / 8 * 8;
+
+                            // using a bit array to transpose masks, ?
+                            BitArray maskingBitArray = new(correctedWidth * node.Bounds.Height);
+                            BitArray bitArray = new(correctedWidth * node.Bounds.Height);
+
+                            // loop on color off the image pixel by pixel
+                            // and make a mask for alpha > 0
                             for(int y = 0; y < node.Bounds.Height; y++)
                             {
                                 for (int x = 0; x < node.Bounds.Width; x++)
                                 {
                                     Color pixelColor = clone.GetPixel(x, y);
-                                    maskingBitArray[y * width + x] = (pixelColor.A > 0);
+                                    maskingBitArray[y * correctedWidth + x] = pixelColor.A > 0;
                                 }
                             }
-                            BitArray ba = new(width * node.Bounds.Height);
+                            
+                            // ?
                             for(int i = 0; i < maskingBitArray.Length; i += 8)
                             {
                                 for(int j = 0; j < 8; j++)
                                 {
-                                    ba[j + i] = maskingBitArray[-(j - 7) + i];
+                                    bitArray[j + i] = maskingBitArray[-(j - 7) + i];
                                 }
                             }
-                            int numBytes = maskingBitArray.Length / 8;
-                            byte[] bytes = new byte[numBytes];
-                            ba.CopyTo(bytes, 0);
+
+                            // convert the bitArray into an array of bytes
+                            byte[] bytes = new byte[maskingBitArray.Length / 8];
+                            bitArray.CopyTo(bytes, 0);
+
+                            // inject the array of bytes in the collision mask
                             for(int i = 0; i < bytes.Length; i++)
                                 newSprite.CollisionMasks[0].Data[i] = bytes[i];
+                            
+                            // put the texture page item in the frame index
                             newSprite.Textures.Add(textureEntry);
+
+                            // add the new Sprite in data
                             Data.Sprites.Add(newSprite);
                             continue;
                         }
+
+                        // the sprite already exists
+                        // we then need to check the list of textures
+                        // we want to add the texture page item at the frame index
+                        // if the index is out of bound, fill the list with the texture page item until we reach frame - 1
                         if (frame > sprite.Textures.Count - 1)
                         {
                             while (frame > sprite.Textures.Count - 1)
@@ -219,6 +293,8 @@ namespace ModShardLauncher
                             }
                             continue;
                         }
+
+                        // put the texture page item at the frame index
                         sprite.Textures[frame] = textureEntry;
                     }
                 }
@@ -496,7 +572,10 @@ namespace ModShardLauncher
         }
         private static Image CreateAtlasImage(Atlas atlas)
         {
+            // create a new empty image
             Image image = new Bitmap(atlas.Width, atlas.Height, PixelFormat.Format32bppArgb);
+
+            // create the tool to populate this image
             Graphics graphics = Graphics.FromImage(image);
 
             foreach (Node n in atlas.Nodes)
