@@ -181,9 +181,9 @@ namespace ModShardLauncher
                         // create a new texture page item and add it in Data
                         UndertaleTexturePageItem texturePageItem = CreateTexureItem(
                             ueTexture, 
-                            new RectTexture((ushort)node.Bounds.X, (ushort)node.Bounds.Y, (ushort)node.Bounds.Height, (ushort)node.Bounds.Width), 
-                            new RectTexture(0, 0, (ushort)node.Bounds.Height, (ushort)node.Bounds.Width), 
-                            new BoundingData<ushort>((ushort)node.Bounds.Height, (ushort)node.Bounds.Width)
+                            new RectTexture((ushort)node.Bounds.X, (ushort)node.Bounds.Y, (ushort)node.Bounds.Width, (ushort)node.Bounds.Height), 
+                            new RectTexture(0, 0, (ushort)node.Bounds.Width, (ushort)node.Bounds.Height), 
+                            new BoundingData<ushort>((ushort)node.Bounds.Width, (ushort)node.Bounds.Height)
                         );
                         Data.TexturePageItems.Add(texturePageItem);
 
