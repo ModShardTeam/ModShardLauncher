@@ -350,7 +350,7 @@ namespace ModShardLauncher.Mods
         }
         public void CloneDefaults(string name)
         {
-            var weapon = ModLoader.GetWeapon(name);
+            var weapon = WeaponUtils.GetWeapon(name);
             Set(Weapon2String(weapon).Item1);
         }
 

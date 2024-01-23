@@ -29,58 +29,6 @@ namespace ModShardLauncher
         Area,
         MaxOneAxis,
     }
-    public class RectTexture
-    {
-        public ushort X;
-        public ushort Y;
-        public ushort Width;
-        public ushort Height;
-
-        public RectTexture(ushort x, ushort y, ushort width, ushort height)
-        {
-            X = x;
-            Y = y;
-            Width = width;
-            Height = height;
-        }
-    }
-    public class MarginData
-    {
-        public int Top;
-        public int Bottom;
-        public int Left;
-        public int Right;
-
-        public MarginData(int top, int bottom, int left, int right)
-        {
-            Top = top;
-            Bottom = bottom;
-            Left = left;
-            Right = right;
-        }
-    }
-    public class BoundingData<T>
-    {
-        public T Width;
-        public T Height;
-
-        public BoundingData(T width, T height)
-        {
-            Width = width;
-            Height = height;
-        }
-    }
-    public class OriginData
-    {
-        public int X;
-        public int Y;
-
-        public OriginData(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-    }
     public class Node
     {
         public Rectangle Bounds;
@@ -109,44 +57,6 @@ namespace ModShardLauncher
             SourceTextures = new List<TextureInfo>();
             LogWriter = new StringWriter();
             Error = new StringWriter();
-        }
-        public static UndertaleTexturePageItem CreateTexureItem(UndertaleEmbeddedTexture texture, RectTexture source, RectTexture target, BoundingData<ushort> bounding) 
-        {
-            return new()
-            {
-                Name = Data.Strings.MakeString("PageItem " + Data.TexturePageItems.Count),
-
-                SourceX = source.X,
-                SourceY = source.Y,
-                SourceHeight = source.Height,
-                SourceWidth = source.Width,
-
-                TargetX = target.X,
-                TargetY = target.Y,
-                TargetHeight = target.Height,
-                TargetWidth = target.Width,
-
-                BoundingHeight = bounding.Height,
-                BoundingWidth = bounding.Width,
-                TexturePage = texture
-            };
-        }
-        public static UndertaleSprite CreateSpriteNoCollisionMasks(string spriteName, MarginData margin, OriginData origin, BoundingData<uint> bounding) 
-        {
-            UndertaleSprite newSprite = new()
-            {
-                Name = Data.Strings.MakeString(spriteName),
-                Width = bounding.Width,
-                Height = bounding.Height,
-                MarginLeft = margin.Left,
-                MarginRight = margin.Right,
-                MarginTop = margin.Top,
-                MarginBottom = margin.Bottom,
-                OriginX = origin.X,
-                OriginY = origin.Y,
-            };
-            
-            return newSprite;
         }
         public static void LoadTextures(ModFile mod)
         {
@@ -179,7 +89,7 @@ namespace ModShardLauncher
                     if(node.Texture != null)
                     {
                         // create a new texture page item and add it in Data
-                        UndertaleTexturePageItem texturePageItem = CreateTexureItem(
+                        UndertaleTexturePageItem texturePageItem = TextureUtils.CreateTexureItem(
                             ueTexture, 
                             new RectTexture((ushort)node.Bounds.X, (ushort)node.Bounds.Y, (ushort)node.Bounds.Width, (ushort)node.Bounds.Height), 
                             new RectTexture(0, 0, (ushort)node.Bounds.Width, (ushort)node.Bounds.Height), 
@@ -222,7 +132,7 @@ namespace ModShardLauncher
                             Bitmap clone = atlasBitmap.Clone(bmpRect, format);
 
                             // create a new sprite
-                            UndertaleSprite newSprite = CreateSpriteNoCollisionMasks(
+                            UndertaleSprite newSprite = TextureUtils.CreateSpriteNoCollisionMasks(
                                 spriteName,
                                 new MarginData(0, node.Bounds.Height - 1, 0, node.Bounds.Width - 1),
                                 new OriginData(0, 0),

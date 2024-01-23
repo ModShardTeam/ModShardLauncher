@@ -34,7 +34,7 @@ namespace ModShardLauncher
     {
         public string Name;
         public string Version {  get; set; }
-        public List<FileChunk> Files = new List<FileChunk>();
+        public List<FileChunk> Files = new();
         public Assembly Assembly;
         public int FileOffset;
         public FileStream Stream;
