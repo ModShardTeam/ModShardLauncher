@@ -12,6 +12,7 @@ theme:
     favicon: img/Stoneshard.ico
     features: 
     - navigation.path
+    - navigation.indexes
     - header.autohide
     - toc.integrate
     - navigation.top
@@ -109,8 +110,8 @@ plugins:
           
 
 nav:
-  - Index:
-      - "Welcome": "index.md"
+  - Index: 
+      - "Index": "index.md"
   - Guides:
       - "Introduction": "guides/introduction.md"
       - "Installing Mods": "guides/how-to-play-mod.md"
