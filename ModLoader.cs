@@ -713,7 +713,15 @@ namespace ModShardLauncher
             string[] files = Directory.GetFiles(ModPath, "*.sml");
             foreach (string file in files)
             {
-                ModFile? f = FileReader.Read(file);
+                ModFile? f = null;
+                try
+                {
+                    f = FileReader.Read(file);
+                }
+                catch(Exception ex)
+                {
+                    Log.Information(ex, string.Format("Cannot read the mod {0}", file));
+                }
                 if (f == null) continue;
                 Assembly assembly = f.Assembly;
                 // for array or list, use the available search method instead of Linq one

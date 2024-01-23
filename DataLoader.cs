@@ -39,7 +39,9 @@ namespace ModShardLauncher
         public static string GetVersion()
         {
             string version = data.Strings.First(t => t.Content.EndsWith(" Build date: ")).Content;
-            List<string> sp = version.Replace(" Build date: ", "").Replace("Version: ", "").Split(".").ToList();
+            // version is spelled Verison in the code base
+            // so dont touch this part even if it feels like a mistake
+            List<string> sp = version.Replace(" Build date: ", "").Replace("Verison: ", "").Split(".").ToList();
             List<string> sp2 = new();
             sp.ForEach(i =>
             {
