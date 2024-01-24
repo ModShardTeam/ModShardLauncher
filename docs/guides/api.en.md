@@ -27,53 +27,59 @@
 ## Objects
 
 ??? info "AddObject `method`"
-    ### Summary
+    <h3>Summary</h3>
     Adds a gameobject to the game.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.AddObject("o_myobject")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the gameobject to create. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleGameObject` | The gameobject created. |
 
 ??? info "GetObject `method`"
-    ### Summary
+    <h3>Summary</h3>
     Gets a gameobject from the game files.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.GetObject("o_myobject")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description** |
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the gameobject to get.
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleGameObject` | The gameobject if found. |
 
 ??? info "SetObject `method`"
-    ### Summary
+    <h3>Summary</h3>
     Replaces a gameobject from the game with your own.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.SetObject("o_myobject", myObject)
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description** |
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the gameobject to replace. |
     | `UndertaleGameObject` | `o` | The gameobject to replace it with. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A. |
@@ -83,18 +89,20 @@
 ## Sprites
 
 ??? info "GetSprite `method`"
-    ### Summary
+    <h3>Summary</h3>
     Gets a sprite from the game files.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.GetSprite("s_mySprite")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the sprite to get. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleSprite` | The sprite if found. |
@@ -104,36 +112,40 @@
 ## Tables
 
 ??? info "GetTable `method`"
-    ### Summary
+    <h3>Summary</h3>
     Gets a table from the game's files.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.GetTable("gml_GlobalScript_table_Miniboss_type")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the table to get. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `List<string>?` | The table's content as a list of strings. |
 
 ??? info "SetTable `method`"
-    ### Summary
+    <h3>Summary</h3>
     Replaces a table from the game with your own.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.SetTable("gml_GlobalScript_table_Miniboss_type")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `List<string>` | `table` | The table to replace the game's table with. |
     | `String` | `name` | The name of the table to get. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A |
@@ -143,72 +155,80 @@
 ## Code
 
 ??? info "AddCode `method`"
-    ### Summary
+    <h3>Summary</h3>
     Adds a code to the game.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.AddCode("scr_actionsLogUpdate(\"Hello World !\")", "myCode")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `codeAsString` | The gml code as a string. |
     | `String` | `name` | The name of the code to create. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleCode` | The code created. |
 
 ??? info "GetUMTCodeFromFile `method`"
-    ### Summary
+    <h3>Summary</h3>
     Gets a code from the game files.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.GetUMTCodeFromFile("gml_GlobalScript_scr_sessionDataInit")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `fileName` | The name of the code to get. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleCode` | The code if found. |
 
 ??? info "GetStringGMLFromFile `method`"
-    ### Summary
+    <h3>Summary</h3>
     Gets the content of a code from the game files as a string of GML.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.GetStringGMLFromFile("gml_GlobalScript_scr_sessionDataInit")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `fileName` | The name of the code to get. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `String` | The content of the code if found. |
 
 ??? info "ReplaceGMLString `method`"
-    ### Summary
+    <h3>Summary</h3>
     Replaces a code in the game with a string of GML.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.ReplaceGMLString("gml_GlobalScript_scr_sessionDataInit")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `codeAsString` | The string of GML code to insert. |
     | `String` | `fileName` | The name of the code to replace a line. |
     | `Int` | `position` | The line to replace with the provided GML. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A |
@@ -218,41 +238,45 @@
 ## Assembly
 
 ??? info "InsertAssemblyString `method`"
-    ### Summary
+    <h3>Summary</h3>
     Inserts an assembly instruction below the provided line.
-    ### Example
+    <h3>Example</h3>
     ```c#
     // Example : Inserts the instruction 'pushi.e 1' in 'gml_GlobalScript_scr_sessionDataInit' below line 14.
     ModLoader.InsertAssemblyString("pushi.e 1", "gml_GlobalScript_scr_sessionDataInit", 14)
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `codeAsString` | The string of assembly instruction(s) to insert. |
     | `String` | `fileName` | The name of the code to insert the assembly into |
     | `Int` | `position` | The line below which we inject the assembly instruction(s) |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A |
 
 ??? info "ReplaceAssemblyString `method`"
-    ### Summary
+    <h3>Summary</h3>
     Replaces the provided line with an assembly instruction.
-    ### Example
+    <h3>Example</h3>
     ```c#
     // Example : Replaces the 8th line in 'gml_GlobalScript_scr_sessionDataInit' with 'pushi.e 1'.
     ModLoader.ReplaceAssemblyString("pushi.e 1", "gml_GlobalScript_scr_sessionDataInit", 8)
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `codeAsString` | The string of assembly instruction(s) to insert. |
     | `String` | `fileName` | The name of the code to insert the assembly into |
     | `Int` | `position` | The line below which we inject the assembly instruction(s) |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A |
@@ -262,53 +286,59 @@
 ## Functions / Strings / Variables
 
 ??? info "AddFunction `method`"
-    ### Summary
+    <h3>Summary</h3>
     Adds a function to the game.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.AddFunction("scr_actionsLogUpdate(\"Hello World !\")", "myFunction")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `codeAsString` | The gml code to put in the function as a string. |
     | `String` | `name` | The name of the function to create. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleCode` | The code created for the function. |
 
 ??? info "GetVariable `method`"
-    ### Summary
+    <h3>Summary</h3>
     Gets a variable from the game files.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.GetVariable("display_x")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the variable to get. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleVariable` | The variable if found. |
 
 ??? info "GetString `method`"
-    ### Summary
+    <h3>Summary</h3>
     Gets a variable from the game files.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.GetString("questBreweryOdarAccept00")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the string to get. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleString` | The string if found. |
@@ -320,37 +350,41 @@
 The 'Loading' stage is used to get the GML or assembly from the game's files.
 
 ??? info "LoadGML `method`"
-    ### Summary
+    <h3>Summary</h3>
     The first step to inject GML. </br>
     Loads an existing code from the game files and returns it.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `fileName` | The name of the code to get from the game files. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | A class containing the loaded GML file, used in Stage 2 methods. |
 
 ??? info "LoadAssemblyAsString `method`"
-    ### Summary
+    <h3>Summary</h3>
     The first step to inject Assembly. </br>
     Loads the assembly corresponding to an existing code from the game files and returns it.
-    ### Example
+    <h3>Example</h3>
     ```c#
     ModLoader.LoadAssemblyAsString("gml_GlobalScript_scr_sessionDataInit")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `fileName` | The name of the code to get the assembly from in the game files. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | A class containing the assembly for the loaded code, used in Stage 2 methods. |
@@ -363,7 +397,7 @@ The 'Matching' stage is used to select a line, or multiple lines that we're goin
 It is done by providing code to find in the file, or matching every line.
 
 ??? info "MatchFrom `method`"
-    ### Summary
+    <h3>Summary</h3>
     The second step to inject GML or Assembly. </br>
     Finds the code in the previously opened file and selects every matching line.
 
@@ -395,7 +429,7 @@ It is done by providing code to find in the file, or matching every line.
             public static FileEnumerable<(Match, string)> MatchFrom(this FileEnumerable<string> fe, ModFile modFile, string fileName)
             ```
 
-    ### Examples
+    <h3>Examples</h3>
     ```c#
     // Example 1 : Selecting a matching String in a GML file
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("if (!instance_exists(o_music_controller))")
@@ -406,19 +440,21 @@ It is done by providing code to find in the file, or matching every line.
     // Example 3 : Selecting a matching assembly instruction String in an assembly file
     ModLoader.LoadAssemblyAsString("gml_GlobalScript_scr_sessionDataInit").MatchFrom("pushi.e 1")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<string>` | `fe` | The previously opened file |
     | `String` | `other` | The code to find and match with the file |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<(Match, string)>` | A class that contains the loaded code with selected parts defined, ready for Stage 3. |
 
 ??? info "MatchBelow `method`"
-    ### Summary
+    <h3>Summary</h3>
     The second step to inject GML or Assembly. </br>
     Finds the passed string/file in the previously opened file and selects the `N` lines below the matching part.
 
@@ -451,7 +487,7 @@ It is done by providing code to find in the file, or matching every line.
             ```
 
 
-    ### Example
+    <h3>Example</h3>
     ```c#
     // Example 1 : Selecting 1 line below a matching String in a GML file
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchBelow("if (!instance_exists(o_music_controller))", 1)
@@ -462,20 +498,22 @@ It is done by providing code to find in the file, or matching every line.
     // Example 3 : Selecting 1 line below a matching assembly instruction String in an assembly file
     ModLoader.LoadAssemblyAsString("gml_GlobalScript_scr_sessionDataInit").MatchBelow("pushi.e 1", 1)
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<string>` | `fe` | The previously opened file |
     | `String` | `other` |The code to match with the file |
     | `Int` | `len` | The amount of lines below the match to select. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<(Match, string)>` | A class that contains the loaded code with selected parts defined, ready for Stage 3. |
 
 ??? info "MatchAll `method`"
-    ### Summary
+    <h3>Summary</h3>
     The second step to inject GML or Assembly. </br>
     Selects all lines in the previously opened file.
 
@@ -495,17 +533,19 @@ It is done by providing code to find in the file, or matching every line.
             public static FileEnumerable<(Match, string)> MatchAll(this FileEnumerable<string> fe) 
             ```
 
-    ### Example
+    <h3>Example</h3>
     ```c#
     // Example : Selecting every line in a GML file
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchAll()
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<string>` | `fe` | The previously opened file. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<(Match, string)>` | A class that contains the loaded code with selected parts defined, ready for Stage 3. |
@@ -518,10 +558,10 @@ The 'Acting' stage is used to perform an action on the selected lines. </br>
 This can be inserting, replacing, deleting or others, which lead to modification of the original file.
 
 ??? info "Remove `method`"
-    ### Summary
+    <h3>Summary</h3>
     The third step to inject GML / assembly. </br>
     Removes previously selected lines from opened file.
-    ### Example
+    <h3>Example</h3>
     ```c#
     // Example 1 : Remove all lines from script gml_GlobalScript_scr_sessionDataInit
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchAll().Remove()
@@ -529,21 +569,23 @@ This can be inserting, replacing, deleting or others, which lead to modification
     // Example 2 : Remove the `pushi.e 1` instruction from gml_Object_c_bed_sleep_crafted_Alarm_0's assembly
     ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").Remove()
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | The file with the result of the action. |
 
 ??? info "KeepOnly `method`"
-    ### Summary
+    <h3>Summary</h3>
     The third step to inject GML / assembly. </br>
     Removes all non-selected lines from opened file.
-    ### Example
+    <h3>Example</h3>
     ```c#
     // Example 1 : Remove all lines from script gml_GlobalScript_scr_sessionDataInit except the line where 'global.HP = -1' appears.
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").KeepOnly()
@@ -551,21 +593,23 @@ This can be inserting, replacing, deleting or others, which lead to modification
     // Example 2 : Remove all instructions from gml_Object_c_bed_sleep_crafted_Alarm_0's assembly except `pushi.e 1`
     ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").KeepOnly()
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | The file with the result of the action. |
 
 ??? info "InsertAbove `method`"
-    ### Summary
+    <h3>Summary</h3>
     The third step to inject GML / assembly. </br>
     Inserts a string/file content above the selected line.
-    ### Example
+    <h3>Example</h3>
     ```c#
     // Example 1 : Adds 'global.myVar = 14' above the line containing 'global.HP = -1'
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").InsertAbove("global.myVar = 14")
@@ -576,22 +620,24 @@ This can be inserting, replacing, deleting or others, which lead to modification
     // Example 3 : Adds the instruction 'popz.v' above the line containing the instruction 'pushi.e 1'
     ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").InsertAbove("popz.v")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
     | 'String' | `inserting` | The code to insert above the selected line.
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | The file with the result of the action. |
 
 ??? info "InsertBelow `method`"
-    ### Summary
+    <h3>Summary</h3>
     The third step to inject GML / assembly. </br>
     Inserts a string/file content below the selected line.
-    ### Example
+    <h3>Example</h3>
     ```c#
     // Example 1 : Adds 'global.myVar = 14' below the line containing 'global.HP = -1'
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").InsertBelow("global.myVar = 14")
@@ -602,22 +648,24 @@ This can be inserting, replacing, deleting or others, which lead to modification
     // Example 3 : Adds the instruction 'popz.v' below the line containing the instruction 'pushi.e 1'
     ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").InsertBelow("popz.v")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
     | 'String' | `inserting` | The code to insert below the selected line. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | The file with the result of the action. |
 
 ??? info "ReplaceBy `method`"
-    ### Summary
+    <h3>Summary</h3>
     The third step to inject GML / assembly. </br>
     Replaces the selected line with a string/file content.
-    ### Example
+    <h3>Example</h3>
     ```c#
     // Example 1 : Replaces the line containing 'global.HP = -1' with 'global.HP = 50'
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").ReplaceBy("global.HP = 50")
@@ -628,31 +676,35 @@ This can be inserting, replacing, deleting or others, which lead to modification
     // Example 3 : Replaces the line containing the instruction 'pushi.e 1' with the instruction 'popz.v'
     ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").ReplaceBy("popz.v")
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
     | 'String' | `inserting` | The code to replace the selected line with. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | The file with the result of the action. |
 
 ??? info "FilterMatch `method`"
-    ### Summary
+    <h3>Summary</h3>
     The third step to inject GML / assembly. </br>
     TODO
-    ### Example
+    <h3>Example</h3>
     ```c#
     TODO
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<string>` | The file with the result of the action. |
@@ -665,20 +717,22 @@ The 'Saving' stage saves the patched difference into the original file. </br>
 Failing to add this at the end of your chain of calls will render it useless.
 
 ??? info "Save `method`"
-    ### Summary
+    <h3>Summary</h3>
     The final step to inject GML / assembly. </br>
     Saves the modified content to the original file.
-    ### Example
+    <h3>Example</h3>
     ```c#
     // Example : Loads a script, selects the line containing 'global.HP = -1', replaces it with 'global.HP = 50' and saves it.
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").ReplaceBy("global.HP = 50").Save()
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<(Match, string)>` | `fe` | The previously opened file. |
 
-    ### Returns
+    <h3>Returns</h3>
+
     | **Type** | **Description** |
     | :--- | :--- |
     | `ModSummary` | The file with the result of the action. |
@@ -688,20 +742,22 @@ Failing to add this at the end of your chain of calls will render it useless.
 ## Patching : Utility
 
 ??? info "Peek `method`"
-    ### Summary
+    <h3>Summary</h3>
     Can be used before at any stage before saving to print a log in MSL's console containing the current state of the file. </br>
     This method doesn't modify the input at all, simply prints it and passes it forward to the next method.
-    ### Example
+    <h3>Example</h3>
     ```c#
     // Example : Prints the state of the file before and after replacing.
     ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").Peek().MatchFrom("global.HP = -1").ReplaceBy("global.HP = 50").Peek().Save()
     ```
-    ### Arguments
+    <h3>Arguments</h3>
+
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<T>` | `fe` | The previously opened file. |
 
-    ### Returns
+    <h3>Returns</h3>
+    
     | **Type** | **Description** |
     | :--- | :--- |
     | `FileEnumerable<T>` | The file, exactly as it was when passed as an argument. |

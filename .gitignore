@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # Jetbrains IDE projet settings folder
 .idea/
+
+# VSCode Markdown linting configuration
+.markdownlint.json
