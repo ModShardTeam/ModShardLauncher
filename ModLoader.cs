@@ -33,51 +33,8 @@ namespace ModShardLauncher
         }
         public static void Initalize()
         {
-            Weapons = GeneralUtils.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons"));
-            WeaponDescriptions = GeneralUtils.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons_text"));
-        }
-        public static FileEnumerable<string> LoadGML(string fileName)
-        {
-            try 
-            {
-                UndertaleCode code = CodeUtils.GetUMTCodeFromFile(fileName);
-                GlobalDecompileContext context = new(ModLoader.Data, false);
-
-                return new(
-                    new(
-                        fileName,
-                        code,
-                        PatchingWay.GML
-                    ),
-                    Decompiler.Decompile(code, context).Split("\n")
-                );
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
-        }
-        public static FileEnumerable<string> LoadAssemblyAsString(string fileName)
-        {
-            try 
-            {
-                UndertaleCode code = CodeUtils.GetUMTCodeFromFile(fileName);
-                
-                return new(
-                    new(
-                        fileName,
-                        code,
-                        PatchingWay.AssemblyAsString
-                    ),
-                    code.Disassemble(ModLoader.Data.Variables, ModLoader.Data.CodeLocals.For(code)).Split("\n")
-                );
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            Weapons = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons"));
+            WeaponDescriptions = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons_text"));
         }
         public static List<string>? GetTable(string name)
         {
@@ -253,7 +210,7 @@ namespace ModShardLauncher
         internal static void PatchInnerFile()
         {
             AddExtension(new ModShard());
-            UndertaleGameObject engine = ObjectUtils.AddObject("o_ScriptEngine");
+            UndertaleGameObject engine = Msl.AddObject("o_ScriptEngine");
             engine.Persistent = true;
             UndertaleGameObject.Event ev = new()
             {
@@ -261,7 +218,7 @@ namespace ModShardLauncher
             };
             ev.Actions.Add(new UndertaleGameObject.EventAction()
             {
-                CodeId = CodeUtils.AddCode(@"if(GetScript() != ""NoScript"")
+                CodeId = Msl.AddCode(@"if(GetScript() != ""NoScript"")
 {
     var scr = string_split(GetScript(),"" "")
     var scriptID = asset_get_index(scr[0])
@@ -282,11 +239,11 @@ namespace ModShardLauncher
 }", "ScriptEngine_step")
             });
             engine.Events[3].Add(ev);
-            CodeUtils.AddFunction(@"function print(argument0)
+            Msl.AddFunction(@"function print(argument0)
 {
     show_message(argument0)
 }","print");
-            CodeUtils.AddFunction(@"function give(argument0)
+            Msl.AddFunction(@"function give(argument0)
 {
     with (o_inventory)
     {
@@ -297,7 +254,7 @@ namespace ModShardLauncher
             UndertaleGameObject.Event create = new();
             create.Actions.Add(new UndertaleGameObject.EventAction()
             {
-                CodeId = CodeUtils.AddCode(@"ScriptThread()", "ScriptEngine_create")
+                CodeId = Msl.AddCode(@"ScriptThread()", "ScriptEngine_create")
             });
             engine.Events[0].Add(create);
             UndertaleRoom start = Data.Rooms.First(t => t.Name.Content == "START");

@@ -6,7 +6,7 @@ using UndertaleModLib.Models;
 
 namespace ModShardLauncher
 {
-    public static class ObjectUtils
+    public static partial class Msl
     {
         public static UndertaleGameObject AddObject(string name)
         {
@@ -53,7 +53,7 @@ namespace ModShardLauncher
         {
             try
             {
-                (int indexObj, UndertaleGameObject obj) = ModLoader.Data.GameObjects.Enumerate().First(t => t.Item2.Name.Content == name);
+                (int indexObj, _) = ModLoader.Data.GameObjects.Enumerate().First(t => t.Item2.Name.Content == name);
                 ModLoader.Data.GameObjects[indexObj] = o;
                 Log.Information(string.Format("Successfully replaced gameObject: {0}", name.ToString()));
             }

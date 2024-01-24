@@ -6,7 +6,7 @@ using Serilog;
 
 namespace ModShardLauncher
 {
-    public static class WeaponUtils
+    public static partial class Msl
     {
         public static Weapon GetWeapon(string id)
         {

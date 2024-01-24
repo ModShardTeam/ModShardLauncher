@@ -81,7 +81,7 @@ namespace ModShardLauncher
     /// <summary>
     /// A static class for notably IEnumerable Extensions to provide a functional-programing-like api while modding.
     /// </summary>
-    public static class CodeUtils
+    public static partial class Msl
     {
         /// <summary>
         /// Return the UndertaleCode from <paramref name="fileName"/>.

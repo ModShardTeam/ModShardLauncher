@@ -89,7 +89,7 @@ namespace ModShardLauncher
                     if(node.Texture != null)
                     {
                         // create a new texture page item and add it in Data
-                        UndertaleTexturePageItem texturePageItem = TextureUtils.CreateTexureItem(
+                        UndertaleTexturePageItem texturePageItem = Msl.CreateTexureItem(
                             ueTexture, 
                             new RectTexture((ushort)node.Bounds.X, (ushort)node.Bounds.Y, (ushort)node.Bounds.Width, (ushort)node.Bounds.Height), 
                             new RectTexture(0, 0, (ushort)node.Bounds.Width, (ushort)node.Bounds.Height), 
@@ -132,7 +132,7 @@ namespace ModShardLauncher
                             Bitmap clone = atlasBitmap.Clone(bmpRect, format);
 
                             // create a new sprite
-                            UndertaleSprite newSprite = TextureUtils.CreateSpriteNoCollisionMasks(
+                            UndertaleSprite newSprite = Msl.CreateSpriteNoCollisionMasks(
                                 spriteName,
                                 new MarginData(0, node.Bounds.Height - 1, 0, node.Bounds.Width - 1),
                                 new OriginData(0, 0),

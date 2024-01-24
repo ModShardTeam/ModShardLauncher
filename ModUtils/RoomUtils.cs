@@ -3,7 +3,7 @@ using UndertaleModLib.Models;
 
 namespace ModShardLauncher
 {
-    public static class RoomUtils
+    public static partial class Msl
     {
         public static IEnumerable<UndertaleRoom> GetRooms()
         {

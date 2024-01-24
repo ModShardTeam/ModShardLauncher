@@ -59,7 +59,7 @@ namespace ModShardLauncher
             Y = y;
         }
     }
-    public static class TextureUtils
+    public static partial class Msl
     {
         public static UndertaleTexturePageItem CreateTexureItem(UndertaleEmbeddedTexture texture, RectTexture source, RectTexture target, BoundingData<ushort> bounding) 
         {
@@ -147,7 +147,7 @@ namespace ModShardLauncher
             {
                 UndertaleEmbeddedTexture embeddedTexture = GetEmbeddedTexture(embeddedTextureName);
 
-                UndertaleTexturePageItem texturePageItem = TextureUtils.CreateTexureItem(
+                UndertaleTexturePageItem texturePageItem = CreateTexureItem(
                     embeddedTexture, 
                     source, 
                     target, 
@@ -168,7 +168,7 @@ namespace ModShardLauncher
         {
             try
             {
-                UndertaleSprite newSprite = TextureUtils.CreateSpriteNoCollisionMasks(
+                UndertaleSprite newSprite = CreateSpriteNoCollisionMasks(
                     spriteName,
                     margin,
                     origin,

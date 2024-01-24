@@ -8,13 +8,13 @@ using UndertaleModLib.Models;
 
 namespace ModShardLauncher
 {
-    public static class AsmUtils
+    public static partial class Msl
     {
         public static string GetAssemblyString(string fileName)
         {
             try 
             {
-                UndertaleCode originalCode = CodeUtils.GetUMTCodeFromFile(fileName);
+                UndertaleCode originalCode = GetUMTCodeFromFile(fileName);
                 return originalCode.Disassemble(ModLoader.Data.Variables, ModLoader.Data.CodeLocals.For(originalCode));
             }
             catch(Exception ex) 
@@ -27,7 +27,7 @@ namespace ModShardLauncher
         {
             try 
             {
-                UndertaleCode originalCode = CodeUtils.GetUMTCodeFromFile(fileName);
+                UndertaleCode originalCode = GetUMTCodeFromFile(fileName);
                 originalCode.Replace(Assembler.Assemble(codeAsString, ModLoader.Data));
             }
             catch(Exception ex) 
@@ -100,7 +100,7 @@ namespace ModShardLauncher
             {
                 Log.Information(string.Format("Trying patch assembly in: {0}", name.ToString()));
 
-                UndertaleCode originalCode = CodeUtils.GetUMTCodeFromFile(name);
+                UndertaleCode originalCode = GetUMTCodeFromFile(name);
                 originalCode.Replace(patch(originalCode.Instructions).ToList());
 
                 Log.Information(string.Format("Patched function with PatchDisassemblyCode: {0}", name.ToString()));

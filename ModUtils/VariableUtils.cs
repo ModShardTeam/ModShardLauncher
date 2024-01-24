@@ -5,7 +5,7 @@ using UndertaleModLib.Models;
 
 namespace ModShardLauncher
 {
-    public static class VariableUtils
+    public static partial class Msl
     {
         public static UndertaleVariable GetVariable(string name)
         {
