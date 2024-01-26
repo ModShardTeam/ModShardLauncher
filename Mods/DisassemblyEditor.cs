@@ -16,12 +16,11 @@ namespace ModShardLauncher.Mods
         public DisassemblyEditor(UndertaleCode code)
         {
             Code = code;
-            var text = code.Disassemble(Data.Variables, Data.CodeLocals.For(Code));
-            CodeContents = text.Split("\n").ToList();
+            CodeContents = code.Disassemble(Data.Variables, Data.CodeLocals.For(Code)).Split("\n").ToList();
         }
 
-        public UndertaleCode Code = new UndertaleCode();
-        public List<string> CodeContents = new List<string>();
+        public UndertaleCode Code = new();
+        public List<string> CodeContents = new();
         public int Index { get; private set; } = 0;
 
         public bool TryGotoNext(Func<string, bool> predicate)

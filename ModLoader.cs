@@ -110,6 +110,89 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        public static UndertaleEmbeddedTexture GetEmbeddedTexture(string name)
+        {
+            try
+            {
+                UndertaleEmbeddedTexture embeddedTexture = Data.EmbeddedTextures.First(t => t.Name.Content == name);
+                Log.Information(string.Format("Found embedded texture: {0}", name.ToString()));
+                return embeddedTexture;
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static UndertaleTexturePageItem GetTexturePageItem(string name)
+        {
+            try
+            {
+                UndertaleTexturePageItem texturePageItem = Data.TexturePageItems.First(t => t.Name.Content == name);
+                Log.Information(string.Format("Found texture page item: {0}", name.ToString()));
+                return texturePageItem;
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static string AddNewTexturePageItem(string embeddedTextureName, RectTexture source, RectTexture target, BoundingData<ushort> bounding)
+        {
+            try
+            {
+                UndertaleEmbeddedTexture embeddedTexture = GetEmbeddedTexture(embeddedTextureName);
+
+                UndertaleTexturePageItem texturePageItem = TextureLoader.CreateTexureItem(
+                    embeddedTexture, 
+                    source, 
+                    target, 
+                    bounding
+                );
+                Data.TexturePageItems.Add(texturePageItem);
+                Log.Information(string.Format("Successfully added a new texture from: {0}", embeddedTextureName.ToString()));
+                return texturePageItem.Name.Content;
+
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
+        public static string AddNewSprite(string spriteName, List<string> texturePageItemNames, MarginData margin, OriginData origin, BoundingData<uint> bounding)
+        {
+            try
+            {
+                UndertaleSprite newSprite = TextureLoader.CreateSpriteNoCollisionMasks(
+                    spriteName,
+                    margin,
+                    origin,
+                    bounding
+                );
+
+                IEnumerable<UndertaleSprite.TextureEntry> texturePageItems = texturePageItemNames
+                    .Select(x => GetTexturePageItem(x))
+                    .Select(x => new UndertaleSprite.TextureEntry(){ Texture = x });
+
+                foreach(UndertaleSprite.TextureEntry texturePageItem in texturePageItems)
+                {
+                    newSprite.Textures.Add(texturePageItem);
+                }
+                
+                Data.Sprites.Add(newSprite);
+
+                Log.Information(string.Format("Successfully added new sprite: {0}", newSprite.Name.Content));
+                return newSprite.Name.Content;
+
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
         public static UndertaleCode AddCode(string codeAsString, string name)
         {
             try
@@ -616,12 +699,12 @@ namespace ModShardLauncher
                         != null
             );
 
-            foreach(var i in sources)
+            foreach(string source in sources)
             {
-                var info = new ModSource()
+                ModSource info = new()
                 {
-                    Name = i.Split("\\").Last(),
-                    Path = i
+                    Name = source.Split("\\")[^1],
+                    Path = source
                 };
                 modSources.Add(info);
                 ModSources.Add(info.Name, info);
@@ -630,7 +713,15 @@ namespace ModShardLauncher
             string[] files = Directory.GetFiles(ModPath, "*.sml");
             foreach (string file in files)
             {
-                ModFile? f = FileReader.Read(file);
+                ModFile? f = null;
+                try
+                {
+                    f = FileReader.Read(file);
+                }
+                catch(Exception ex)
+                {
+                    Log.Information(ex, string.Format("Cannot read the mod {0}", file));
+                }
                 if (f == null) continue;
                 Assembly assembly = f.Assembly;
                 // for array or list, use the available search method instead of Linq one
@@ -679,15 +770,17 @@ namespace ModShardLauncher
                 version = reg.Replace(version, "$1");
                 if (mod.Version != version)
                 {
-                    var result = MessageBox.Show(Application.Current.FindResource("VersionDifferentWarning").ToString(),
-                        Application.Current.FindResource("VersionDifferentWarningTitle").ToString() + " : " + mod.Name, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    MessageBoxResult result = MessageBox.Show(
+                        Application.Current.FindResource("VersionDifferentWarning").ToString(),
+                        Application.Current.FindResource("VersionDifferentWarningTitle").ToString() + " : " + mod.Name, 
+                        MessageBoxButton.YesNo, 
+                        MessageBoxImage.Question
+                    );
                     if (result == MessageBoxResult.No) continue;
                 }
                 TextureLoader.LoadTextures(mod);
                 mod.instance.PatchMod();
-                var modAss = mod.Assembly;
-                Type[] types = modAss.GetTypes().Where(t => !t.IsAbstract).ToArray();
-                foreach (var type in types)
+                foreach (Type type in Array.FindAll(mod.Assembly.GetTypes(), t => !t.IsAbstract))
                 {
                     if (type.IsSubclassOf(typeof(Weapon))) 
                         LoadWeapon(type);
@@ -696,7 +789,7 @@ namespace ModShardLauncher
         }
         public static void LoadWeapon(Type type)
         {
-            var weapon = Activator.CreateInstance(type) as Weapon;
+            Weapon? weapon = Activator.CreateInstance(type) as Weapon;
             weapon.SetDefaults();
             var strs = weapon.AsString();
             Weapons.Insert(Weapons.IndexOf("SWORDS - BLADES;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;") + 1, strs.Item1);
@@ -773,7 +866,7 @@ namespace ModShardLauncher
         }
         public static void AddExtension(UndertaleExtensionFile file)
         {
-            var ext = Data.Extensions.First(t => t.Name.Content == "display_mouse_lock");
+            UndertaleExtension ext = Data.Extensions.First(t => t.Name.Content == "display_mouse_lock");
             ext.Files.Add(file);
         }
     }

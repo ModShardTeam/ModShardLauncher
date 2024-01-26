@@ -138,7 +138,7 @@ namespace ModShardLauncher
 
                 file.Files.Add(chunk);
             }
-
+            
             count = BitConverter.ToInt32(Read(fs, 4), 0);
             for (int i = 0; i < count; i++)
             {
@@ -183,6 +183,7 @@ namespace ModShardLauncher
 
                 file.Files.Add(chunk);
             }
+
             file.FileOffset = (int)fs.Position;
             
             int fileCount = file.Files.Count;
@@ -209,13 +210,13 @@ namespace ModShardLauncher
 
             return file;
         }
-        public static byte[] Read(FileStream fs, int length, int offset = 0)
+        public static byte[] Read(FileStream fs, int length)
         {
             byte[] bytes = new byte[length];
             if(fs.Length - fs.Position < length)
             {
                 fs.Close();
-                throw new Exception("Mod File Error: " + fs.Name.Split("\\")[^1]);
+                throw new Exception(string.Format("In FileReader.Read cannot read {0} bytes in the mod {1} ",  length, fs.Name.Split("\\")[^1]));
             }
             fs.Read(bytes, 0, length);
             return bytes;

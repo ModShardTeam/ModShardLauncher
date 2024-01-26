@@ -23,11 +23,11 @@ namespace ModShardLauncher
         {
             Log.Information(string.Format("Starting packing {0}", path));
 
-            var dir = new DirectoryInfo(path);
-            var textures = dir.GetFiles("*.png", SearchOption.AllDirectories).ToList();
-            var scripts = dir.GetFiles("*.lua", SearchOption.AllDirectories).ToList();
-            var codes = dir.GetFiles("*.gml", SearchOption.AllDirectories).ToList();
-            var assemblies = dir.GetFiles("*.asm", SearchOption.AllDirectories).ToList();
+            DirectoryInfo dir = new(path);
+            FileInfo[] textures = dir.GetFiles("*.png", SearchOption.AllDirectories);
+            FileInfo[] scripts = dir.GetFiles("*.lua", SearchOption.AllDirectories);
+            FileInfo[] codes = dir.GetFiles("*.gml", SearchOption.AllDirectories);
+            FileInfo[] assemblies = dir.GetFiles("*.asm", SearchOption.AllDirectories);
             int offset = 0;
             FileStream fs = new(Path.Join(ModLoader.ModPath, dir.Name + ".sml"), FileMode.Create);
 
@@ -38,7 +38,7 @@ namespace ModShardLauncher
             Write(fs, version);
             Log.Information("Writting version...");
 
-            Write(fs, textures.Count);
+            Write(fs, textures.Length);
             foreach (FileInfo tex in textures)
             {
                 string name = dir.Name + tex.FullName.Replace(path, "");
@@ -51,7 +51,7 @@ namespace ModShardLauncher
             }
             Log.Information("Preparing textures...");
 
-            Write(fs, scripts.Count);
+            Write(fs, scripts.Length);
             foreach (FileInfo scr in scripts)
             {
                 string name = dir.Name + scr.FullName.Replace(path, "");
@@ -65,7 +65,7 @@ namespace ModShardLauncher
             }
             Log.Information("Preparing scripts...");
 
-            Write(fs, codes.Count);
+            Write(fs, codes.Length);
             foreach (FileInfo cds in codes)
             {
                 string name = dir.Name + cds.FullName.Replace(path, "");
@@ -78,7 +78,7 @@ namespace ModShardLauncher
             }
             Log.Information("Preparing codes...");
 
-            Write(fs, assemblies.Count);
+            Write(fs, assemblies.Length);
             foreach (FileInfo asm in assemblies)
             {
                 string name = dir.Name + asm.FullName.Replace(path, "");
@@ -124,7 +124,7 @@ namespace ModShardLauncher
         }
         public static void Write(FileStream fs, object obj)
         {
-            var type = obj.GetType();
+            Type type = obj.GetType();
             if (type == typeof(int))
             {
                 byte[]? bytes = BitConverter.GetBytes((int)obj);
@@ -137,7 +137,7 @@ namespace ModShardLauncher
             }
             else if(type == typeof(FileInfo))
             {
-                var stream = new FileStream(((FileInfo)obj).FullName, FileMode.Open);
+                FileStream stream = new(((FileInfo)obj).FullName, FileMode.Open);
                 byte[]? bytes = new byte[stream.Length];
                 stream.Read(bytes, 0, bytes.Length);
                 fs.Write(bytes, 0, bytes.Length);
@@ -150,8 +150,8 @@ namespace ModShardLauncher
         }
         public static int CalculateBytesLength(FileInfo f)
         {
-            var stream = new FileStream(f.FullName, FileMode.Open);
-            var len = (int)stream.Length;
+            FileStream stream = new(f.FullName, FileMode.Open);
+            int len = (int)stream.Length;
             stream.Close();
             return len;
         }
@@ -274,7 +274,7 @@ namespace ModShardLauncher
         }
         public static bool IgnoreCompletely(string name, string file)
         {
-            var relPath = file.Substring(file.IndexOf("ModSources")).Replace("ModSources\\" + name + "\\", "");
+            string relPath = file.Substring(file.IndexOf("ModSources")).Replace("ModSources\\" + name + "\\", "");
             return relPath[0] == '.' ||
                 relPath.StartsWith("bin" + Path.DirectorySeparatorChar) ||
                 relPath.StartsWith("obj" + Path.DirectorySeparatorChar);
