@@ -62,5 +62,10 @@ namespace ModShardLauncher.Pages
             selection = combo.SelectedIndex;
             LangSelector.SelectedIndex = selection;
         }
+
+        private void Logger_Checked(object sender, RoutedEventArgs e)
+        {
+            Main.Settings.EnableLogger = (bool)Logger.IsChecked;
+        }
     }
 }
