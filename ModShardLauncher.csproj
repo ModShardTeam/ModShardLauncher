@@ -17,6 +17,7 @@
     <Compile Include="Extensions/*.cs" />
     <Compile Include="Mods/*.cs" />
     <Compile Include="Controls/*.cs" />
+    <Compile Include="ModUtils/*.cs" />
   </ItemGroup>
 
   <ItemGroup>
