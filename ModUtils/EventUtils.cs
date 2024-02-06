@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Serilog;
 using UndertaleModLib;
@@ -7,52 +8,6 @@ using static UndertaleModLib.Models.UndertaleGameObject;
 
 namespace ModShardLauncher
 {
-    public enum MslEventType
-    {
-        Create,
-        Destroy,
-        Step0,
-        StepBegin,
-        StepEnd,
-        Alarm0,
-        Alarm1,
-        Alarm2,
-        Alarm3,
-        Alarm4,
-        Alarm5,
-        Alarm6,
-        Alarm7,
-        Alarm8,
-        Alarm9,
-        Alarm10,
-        Alarm11,
-        KeyBoard, //TODO: check here
-        LeftButton,
-        RightButton,
-        MiddleButton,
-        NoButton,
-        LeftPress,
-        RightPress,
-        MiddlePress,
-        LeftRelease,
-        RightRelease,
-        MiddleRelease,
-        MouseEnter,
-        MouseLeave,
-        MouseWheelUp,
-        MouseWheelDown,
-        GlobalLeftButton,
-        GlobalRightButton,
-        GlobalMiddleButton,
-        GlobalLeftPress,
-        GlobalRightPress,
-        GlobalMiddlePress,
-        GlobalLeftRelease,
-        GlobalRightRelease,
-        GlobalMiddleRelease,
-        DrawGui,
-        
-    }
     public static partial class Msl
     {
         public static string EventName(string objectName, EventType eventType, uint subtype)
@@ -100,50 +55,78 @@ namespace ModShardLauncher
             {
                 case EventType.Create:
                 case EventType.Destroy:
-                if(nullOrSubtype != null) throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Null subtype expected for {0}", eventType));
+                case EventType.Trigger:
+                    // test if null or default
+                    // default is zero for uint
+                    if (!EqualityComparer<uint>.Default.Equals(nullOrSubtype))
+                    {
+                        throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Null or zero subtype expected for {0}", eventType));
+                    }
                 break;
                 
                 case EventType.Alarm:
-                if(nullOrSubtype == null) throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Null subtype expected for {0}", eventType));
+                    if(nullOrSubtype == null) throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Null subtype found for {0}", eventType));
+                    if(nullOrSubtype > 11) throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Invalid subtype {1} found for {0}", eventType, subType));
+                    subType = (uint)nullOrSubtype;
                 break;
+                
                 case EventType.Step:
+                    if(nullOrSubtype == null) throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Null subtype found for {0}", eventType));
+                    if(nullOrSubtype > 2) throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Invalid subtype {1} found for {0}", eventType, subType));
+                    subType = (uint)nullOrSubtype;
+                break;
+
                 case EventType.Collision:
+                    if(nullOrSubtype == null) throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Null subtype found for {0}", eventType));
+                    if(nullOrSubtype >= ModLoader.Data.GameObjects.Count) throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Invalid subtype {1} found for {0}", eventType, subType));
+                    if(ModLoader.Data.GameObjects[(int)nullOrSubtype] == null) throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Invalid subtype {1} found for {0}, gameObject associated is null", eventType, subType));
+                    subType = (uint)nullOrSubtype;
+                break;
+
                 case EventType.Keyboard:
-                case EventType.Mouse:
-                case EventType.Other:
-                case EventType.Draw:
                 case EventType.KeyPress:
                 case EventType.KeyRelease:
-                case EventType.Trigger:
-                default:
-                break; 
-            }
+                    if(nullOrSubtype == null) throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Null subtype found for {0}", eventType));
+                    if(Enum.IsDefined(typeof(EventSubtypeKey), (uint)nullOrSubtype)) 
+                    {
+                        throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Invalid subtype {1} found for {0}", eventType, subType));
+                    }
+                    subType = (uint)nullOrSubtype;
+                break;
 
-            return subType;
-        }
-        public static void AddNewEvent(string objectName, string eventCode, MslEventType mslEventType)
-        {
-            switch(mslEventType)
-            {
-                case MslEventType.Create:
-                    AddNewEvent(objectName, eventCode, EventType.Create, 0);
-                    break;
-                case MslEventType.Destroy:
-                    AddNewEvent(objectName, eventCode, EventType.Destroy, 0);
-                    break;
-                case MslEventType.Step0:
-                    AddNewEvent(objectName, eventCode, EventType.Step, 0);
-                    break;
-                case MslEventType.Alarm0:
-                    AddNewEvent(objectName, eventCode, EventType.Alarm, 0);
-                    break;
-                case MslEventType.DrawGui:
-                    AddNewEvent(objectName, eventCode, EventType.Draw, 0);
-                    break;
+                case EventType.Mouse:
+                    if(nullOrSubtype == null) throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Null subtype found for {0}", eventType));
+                    if(Enum.IsDefined(typeof(EventSubtypeMouse), (uint)nullOrSubtype)) 
+                    {
+                        throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Invalid subtype {1} found for {0}", eventType, subType));
+                    }
+                    subType = (uint)nullOrSubtype;
+                break;
+
+                case EventType.Other:
+                    if(nullOrSubtype == null) throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Null subtype found for {0}", eventType));
+                    if(Enum.IsDefined(typeof(EventSubtypeOther), (uint)nullOrSubtype)) 
+                    {
+                        throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Invalid subtype {1} found for {0}", eventType, subType));
+                    }
+                    subType = (uint)nullOrSubtype;
+                break;
+
+                case EventType.Draw:
+                    if(nullOrSubtype == null) throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Null subtype found for {0}", eventType));
+                    if(Enum.IsDefined(typeof(EventSubtypeDraw), (uint)nullOrSubtype)) 
+                    {
+                        throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Invalid subtype {1} found for {0}", eventType, subType));
+                    }
+                    subType = (uint)nullOrSubtype;
+                break;
+
                 default:
-                    Log.Error(string.Format("Invalid MslEventType found in AddNewEvent. Found: {0}", mslEventType));
-                    break;
+                    throw new ArgumentNullException(nullOrSubtype.ToString(), string.Format("Unknown event {0}", eventType));
+                break;
             }
+    
+            return subType;
         }
     }
 }
