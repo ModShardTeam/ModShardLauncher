@@ -590,6 +590,156 @@ state = 25";
             Assert.Equal(matchStringListReference, stringList_matchBelow);
         }
     }
+    public class MatchFromUntilTest
+    {
+        [Fact]
+        public void MatchFromUntil_EmptyString_FromEmptyStringUntilEmptyString()
+        {
+            // Reference
+            List<(Match, string)> matchStringListReference = new()
+            {
+                (Match.Matching, "")
+            };
+
+            // Arrange
+            IEnumerable<string> stringList = "".Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchFromUntil = stringList.MatchFromUntil("", "");
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchFromUntil);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine)]
+        [InlineData(StringDataForTest.multipleLines)]
+        [InlineData(StringDataForTest.randomBlock)]
+        public void MatchFromUntil_EmptyString_FromNonEmptyStringUntilEmptyString(string input)
+        {
+            // Reference
+            
+            List<(Match, string)> matchStringListReference = new()
+            {
+                (Match.Before, "")
+            };
+
+            // Arrange
+            IEnumerable<string> stringList = "".Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchFromUntil = stringList.MatchFromUntil(input, "");
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchFromUntil);
+        }
+        
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, "return")]
+        [InlineData(StringDataForTest.multipleLines, "b")]
+        [InlineData(StringDataForTest.randomBlock, "aaaaaaaaaaaaaaaaaaaaaa")]
+        public void MatchFromUntil_FromNoMatch_UntilEmptyString(string input, string from)
+        {
+            // Reference
+            List<(Match, string)> matchStringListReference = new();
+            foreach (string s in input.Split('\n'))
+            {
+                matchStringListReference.Add((Match.Before, s));
+            }
+
+            // Arrange
+            IEnumerable<string> stringList = input.Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchFromUntil = stringList.MatchFromUntil(from, "");
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchFromUntil);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine)]
+        [InlineData(StringDataForTest.multipleLines)]
+        [InlineData(StringDataForTest.randomBlock)]
+        public void MatchFromUntil_FromItself(string input)
+        {
+            // Reference
+            List<(Match, string)> matchStringListReference = new();
+            foreach (string s in input.Split('\n'))
+            {
+                matchStringListReference.Add((Match.Matching, s));
+            }
+
+            // Arrange
+            IEnumerable<string> stringList = input.Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchFromUntil = stringList.MatchFromUntil(input, "");
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchFromUntil);
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine, "var", 0)]
+        [InlineData(StringDataForTest.multipleLines, "y =", 1)]
+        [InlineData(StringDataForTest.randomBlock, "4279667175", 15)]
+        public void MatchFromUntil_FromOneLineUntilEmpty(string input, string from, int ind)
+        {
+            // Reference
+            List<(Match, string)> matchStringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i == ind || i == ind + 1)
+                    matchStringListReference.Add((Match.Matching, s));
+                else if (i < ind)
+                    matchStringListReference.Add((Match.Before, s));
+                else
+                    matchStringListReference.Add((Match.After, s));
+            }
+
+            // Arrange
+            IEnumerable<string> stringList = input.Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchFromUntil = stringList.MatchFromUntil(from, "");
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchFromUntil);
+        }
+        
+        [Theory]
+        [InlineData(StringDataForTest.multipleLines, "y =", "y = a +", 1, 2)]
+        [InlineData(StringDataForTest.randomBlock, "4279667175", "isQuest", 15, 7)]
+        [InlineData(StringDataForTest.multipleLines, "y =\na + y", "eturn y", 1, 3)] // this block is continuous from line 1 to line 2, until line 3
+        [InlineData(StringDataForTest.randomBlock, "257910, 257910\n\nevent_inher\nwit", "alarm", 7, 6)] // this block is continuous from line 7 to line 10, until line 12
+        [InlineData(StringDataForTest.multipleLines, "y =\nurn y", "eturn y", 1, 3)] // this block is not continuous (includes line 1 and line 3), until line 3
+        [InlineData(StringDataForTest.randomBlock, "257910, 257910\n\nwit\ndepthshift = 0", "nd = 42796", 7, 9)] // this block is not continuous (includes line 7, 8, 10 and 11), until line 15
+        public void MatchFromUntil(string input, string from, string until, int start, int len)
+        {
+            // Reference
+            List<(Match, string)> matchStringListReference = new();
+            foreach((int i, string s) in input.Split('\n').Enumerate())
+            {
+                if (i >= start && i < start + len)
+                    matchStringListReference.Add((Match.Matching, s));
+                else if (i < start)
+                    matchStringListReference.Add((Match.Before, s));
+                else
+                    matchStringListReference.Add((Match.After, s));
+            }
+
+            // Arrange
+            IEnumerable<string> stringList = input.Split('\n');
+
+            // Act
+            IEnumerable<(Match, string)> stringList_matchFromUntil = stringList.MatchFromUntil(from, until);
+
+            // Assert
+            Assert.Equal(matchStringListReference, stringList_matchFromUntil);
+        }
+    }
+
     public class MatchAllTest
     {
         [Theory]

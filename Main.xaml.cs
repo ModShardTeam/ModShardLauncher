@@ -114,8 +114,12 @@ namespace ModShardLauncher
         public List<string> EnableMods = new List<string>();
         public void LoadSettings()
         {
+            // if no settings file, early stop
             if (!File.Exists("Settings.json")) return;
-            var settings = File.ReadAllText("Settings.json");
+
+            // read file
+            string settings = File.ReadAllText("Settings.json");
+            // convert if as UserSettings
             Main.Settings = JsonConvert.DeserializeObject<UserSettings>(settings);
 
             var logger = new LoggerConfiguration()
@@ -127,16 +131,19 @@ namespace ModShardLauncher
 
             Log.Logger = logger.CreateLogger();
 
+            // auto load if loadpos not empty
             if (Main.Settings.LoadPos != "")
                 Main.Instance.Dispatcher.Invoke(async () => await DataLoader.LoadFile(Main.Settings.LoadPos));
+
+            // auto check active mods
             if (Main.Settings.EnableMods.Count > 0)
             {
-                var list = ModInfos.Instance.Mods;
-                foreach (var i in Main.Settings.EnableMods)
+                List<ModFile> listModFile = ModInfos.Instance.Mods;
+                foreach (string i in Main.Settings.EnableMods)
                 {
-                    var tar = list.FirstOrDefault(t => t.Name == i);
-                    if (tar != null)
-                        list[list.IndexOf(tar)].isEnabled = true;
+                    (int indexMod, ModFile? modFile) = listModFile.Enumerate().FirstOrDefault(t => t.Item2.Name == i);
+                    if (modFile != null)
+                        listModFile[indexMod].isEnabled = true;
                     else
                         Log.Warning($"Mod {i} not found");
                 }

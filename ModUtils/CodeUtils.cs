@@ -516,6 +516,82 @@ namespace ModShardLauncher
             return new(fe.header, fe.ienumerable.MatchAll());
         }
         /// <summary>
+        /// A selector that tags the first block of continuous lines that matches a first list of string until it matches a second list of string.
+        /// Does nothing on its own, only tagging, needs to be used with an Action to properly modify your input.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// List&lt; string &gt; example = new() { "Hello", "World", "!" };
+        /// var matched_example = example.MatchFrom(new List&lt; string &gt;() { "Hel" }, new List&lt; string &gt;() { "!" });
+        /// </code>
+        /// results in <c>matched_example</c> being new IEnumerable&lt;(Match, string)&gt;() { (Match.Matching, "Hello"), (Match.Matching, "World"), (Match.Matching, "!") };.
+        /// </example>
+        /// </summary>
+        public static IEnumerable<(Match, string)> MatchFromUntil(this IEnumerable<string> ienumerable, IEnumerable<string> otherfrom, IEnumerable<string> otheruntil)
+        {
+            bool foundUntil = false;
+            bool exitMatching = false;
+
+            string? otherUntilString = null;
+            IEnumerator<string> otherUntilEnumerator = otheruntil.GetEnumerator();
+            if(otherUntilEnumerator.MoveNext())
+                otherUntilString = otherUntilEnumerator.Current;
+
+            foreach ((Match m, string element) in ienumerable.MatchFrom(otherfrom))
+            {
+                if (m == Match.Before || m == Match.Matching)
+                {
+                    // before and matching stays as before and matching
+                    yield return (m, element);
+                }
+                else if (!exitMatching && otherUntilString != null && element.Contains(otherUntilString))
+                {
+                    // if we match with the until, stay as matching
+                    foundUntil = true;
+                    yield return (Match.Matching, element);
+                    if(otherUntilEnumerator.MoveNext())
+                        otherUntilString = otherUntilEnumerator.Current;
+                    else 
+                    {
+                        exitMatching = true;
+                    }
+                }
+                else if (!foundUntil)
+                {
+                    // until we never encounter the until string, stay as matching
+                    yield return (Match.Matching, element);
+                }
+                else
+                {
+                    // we encountered the until part and leave
+                    // we are now in after
+                    exitMatching = true;
+                    yield return (Match.After, element);
+                }
+            }
+        }
+        /// <summary>
+        /// Same behaviour as <see cref="MatchFromUntil"/> but using <paramref name="otherfrom"/>.Split('\n') and <paramref name="otheruntil"/>.Split('\n') for the comparison. 
+        /// </summary>
+        public static IEnumerable<(Match, string)> MatchFromUntil(this IEnumerable<string> ienumerable, string otherfrom, string otheruntil)
+        {
+            return ienumerable.MatchFromUntil(otherfrom.Split("\n"), otheruntil.Split("\n"));
+        }
+        /// <summary>
+        /// Wrapper of <see cref="MatchFromUntil"/> for the <see cref="FileEnumerable"/> class.
+        /// </summary>
+        public static FileEnumerable<(Match, string)> MatchFromUntil(this FileEnumerable<string> fe, string otherfrom, string otheruntil)
+        {
+            return new(fe.header, fe.ienumerable.MatchFromUntil(otherfrom.Split("\n"), otheruntil.Split("\n")));
+        }
+        /// <summary>
+        /// Wrapper of <see cref="MatchFromUntil"/> for the <see cref="FileEnumerable"/> class using the content of <paramref name="filenameOther"/> and <paramref name="filenameUntil"/> for the comparison.
+        /// </summary>
+        public static FileEnumerable<(Match, string)> MatchFromUntil(this FileEnumerable<string> fe, ModFile modFile, string filenameOther, string filenameUntil)
+        {
+            return new(fe.header, fe.ienumerable.MatchFromUntil(modFile.GetCode(filenameOther).Split("\n"), modFile.GetCode(filenameUntil).Split("\n")));
+        }
+        /// <summary>
         /// An action on an IEnumerable that prints each line on the log console but does not alter the data flow.
         /// <example>
         /// For example:
