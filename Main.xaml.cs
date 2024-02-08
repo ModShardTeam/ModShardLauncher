@@ -9,6 +9,8 @@ using System.Windows;
 using System.Windows.Threading;
 using UndertaleModLib;
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 
 namespace ModShardLauncher
 {
@@ -24,6 +26,7 @@ namespace ModShardLauncher
         public ModSourceInfos ModSourcePage;
         public Settings SettingsPage;
         public static UserSettings Settings = new();
+        public static LoggingLevelSwitch lls = new();
         public Main()
         {
             Instance = this;
@@ -35,6 +38,18 @@ namespace ModShardLauncher
                 Directory.CreateDirectory(ModLoader.ModPath);
             if (!Directory.Exists(ModLoader.ModSourcesPath))
                 Directory.CreateDirectory(ModLoader.ModSourcesPath);
+
+            // create File and Console (controlledby a switch) sinks
+            LoggerConfiguration logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.File(string.Format("logs/log_{0}.txt", DateTime.Now.ToString("yyyyMMdd_HHmm")))
+                .WriteTo.Logger(log => log
+                    .MinimumLevel.ControlledBy(lls)
+                    .WriteTo.Console()
+                );
+
+            Log.Logger = logger.CreateLogger();
+
             try
             {
                 ModLoader.LoadFiles();
@@ -124,7 +139,7 @@ namespace ModShardLauncher
         public bool EnableLogger = true;
         public string SavePos = "";
         public string LoadPos = "";
-        public List<string> EnableMods = new List<string>();
+        public List<string> EnableMods = new();
         public void LoadSettings()
         {
             // if no settings file, early stop
@@ -135,14 +150,7 @@ namespace ModShardLauncher
             // convert if as UserSettings
             Main.Settings = JsonConvert.DeserializeObject<UserSettings>(settings);
 
-            var logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.File(string.Format("logs/log_{0}.txt", DateTime.Now.ToString("yyyyMMdd_HHmm")));
-
-            if (Main.Settings.EnableLogger)
-                logger = logger.WriteTo.Console();
-
-            Log.Logger = logger.CreateLogger();
+            CheckLog(Main.Settings.EnableLogger);
 
             // auto load if loadpos not empty
             if (Main.Settings.LoadPos != "")
@@ -161,6 +169,13 @@ namespace ModShardLauncher
                         Log.Warning($"Mod {i} not found");
                 }
             }
+        }
+        public static void CheckLog(bool isLogConsole)
+        {
+            if (isLogConsole)
+                Main.lls.MinimumLevel = LogEventLevel.Information;
+            else
+                Main.lls.MinimumLevel = (LogEventLevel) 1 + (int) LogEventLevel.Fatal;
         }
         public void ChangeLanguage(int index)
         {
