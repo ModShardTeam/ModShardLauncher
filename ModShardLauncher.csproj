@@ -9,6 +9,7 @@
     <ApplicationIcon>ico.ico</ApplicationIcon>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 	  <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
+    <FileVersion>0.9.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup> <!-- Include the specific files to exclude the ones in the test folder -->
