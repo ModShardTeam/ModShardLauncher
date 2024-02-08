@@ -108,11 +108,12 @@ namespace ModShardLauncher
         public static ModFile? Read(string path)
         {
             FileStream fs = new(path, FileMode.Open);
+            string nameMod = fs.Name.Split("\\")[^1].Replace(".sml", "");
 
             ModFile file = new()
             {
                 Stream = fs,
-                Name = fs.Name.Split("\\")[^1].Replace(".sml", "")
+                Name = nameMod
             };
 
             if (Encoding.UTF8.GetString(Read(fs, 4)) != "MSLM")
@@ -122,8 +123,38 @@ namespace ModShardLauncher
             }
 
             Regex? reg = new("0([0-9])");
-            file.Version = reg.Replace(Encoding.UTF8.GetString(Read(fs, 12)), "$1");
+            byte pointBytes = 0x2E;
+            byte zeroBytes = 0x30;
+            byte nineBytes = 0x39;
+            // the version number should be at least 24 bytes
+            byte[] readbytes = Read(fs, 24);
+            // resizing
+            int size = 24;
+            // i = 0 is a v
+            for (int i = 1; i < 24; i++)
+            {
+                // either a point or in a range of [0-9]
+                if (readbytes[i] != pointBytes && (readbytes[i] > nineBytes || readbytes[i] < zeroBytes))
+                {
+                    size = i;
+                    break;
+                }
+            }
 
+            if (size == 24)
+            {
+                Log.Warning("Version number seems ill formed");
+            }
+
+            // restarting the buffer
+            fs.Seek(-24, SeekOrigin.Current);
+            // reading the correct version
+            byte[] versionbytes = Read(fs, size);
+
+            file.Version = reg.Replace(Encoding.UTF8.GetString(versionbytes), "$1");
+            Log.Information(string.Format("Reading {{{0}}} built with version {1}", nameMod, file.Version));
+
+            // read textures
             int count = BitConverter.ToInt32(Read(fs, 4), 0);
             for (int i = 0; i < count; i++)
             {
@@ -139,6 +170,7 @@ namespace ModShardLauncher
                 file.Files.Add(chunk);
             }
             
+            // scripts
             count = BitConverter.ToInt32(Read(fs, 4), 0);
             for (int i = 0; i < count; i++)
             {
@@ -154,6 +186,7 @@ namespace ModShardLauncher
                 file.Files.Add(chunk);
             }
 
+            // codes
             count = BitConverter.ToInt32(Read(fs, 4), 0);
             for (int i = 0; i < count; i++)
             {
@@ -169,6 +202,7 @@ namespace ModShardLauncher
                 file.Files.Add(chunk);
             }
             
+            // assembly
             count = BitConverter.ToInt32(Read(fs, 4), 0);
             for (int i = 0; i < count; i++)
             {
