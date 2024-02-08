@@ -40,7 +40,14 @@ namespace ModShardLauncher
                 Directory.CreateDirectory(ModLoader.ModPath);
             if (!Directory.Exists(ModLoader.ModSourcesPath))
                 Directory.CreateDirectory(ModLoader.ModSourcesPath);
-            ModLoader.LoadFiles();
+            try
+            {
+                ModLoader.LoadFiles();
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Something went wrong");
+            }
             Settings.LoadSettings();
             SettingsPage = new Settings();
             InitializeComponent();
@@ -66,10 +73,17 @@ namespace ModShardLauncher
         {
             ModPage = new ModInfos();
             ModSourcePage = new ModSourceInfos();
-            var settingCache = new Settings();
+            Settings settingCache = new();
             settingCache.Viewer.Content = SettingsPage.Viewer.Content;
             SettingsPage = settingCache;
-            ModLoader.LoadFiles();
+            try
+            {
+                ModLoader.LoadFiles();
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Something went wrong");
+            }
             if (Viewer.Content is ModInfos) Viewer.Content = ModPage;
             else if (Viewer.Content is ModSourceInfos) Viewer.Content = ModSourcePage;
             else if (Viewer.Content is Settings) Viewer.Content = SettingsPage;
