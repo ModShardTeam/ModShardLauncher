@@ -11,6 +11,7 @@ using UndertaleModLib;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
+using System.Runtime.InteropServices;
 
 namespace ModShardLauncher
 {
@@ -27,8 +28,19 @@ namespace ModShardLauncher
         public Settings SettingsPage;
         public static UserSettings Settings = new();
         public static LoggingLevelSwitch lls = new();
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        public const int SW_HIDE = 0;
+        public const int SW_SHOW = 5;
+        public static IntPtr handle;
+
         public Main()
         {
+            handle = GetConsoleWindow();
+            ShowWindow(handle, SW_HIDE);
+
             Instance = this;
             MainPage = new MainPage();
             ModPage = new ModInfos();
@@ -173,9 +185,15 @@ namespace ModShardLauncher
         public static void CheckLog(bool isLogConsole)
         {
             if (isLogConsole)
+            {
+                Main.ShowWindow(Main.handle, Main.SW_SHOW);
                 Main.lls.MinimumLevel = LogEventLevel.Information;
+            }
             else
+            {
+                Main.ShowWindow(Main.handle, Main.SW_HIDE);
                 Main.lls.MinimumLevel = (LogEventLevel) 1 + (int) LogEventLevel.Fatal;
+            }
         }
         public void ChangeLanguage(int index)
         {
