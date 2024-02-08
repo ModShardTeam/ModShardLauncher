@@ -29,11 +29,6 @@ namespace ModShardLauncher.Mods
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(DataLoader.data == null)
-            {
-                MessageBox.Show(Application.Current.FindResource("LoadDataWarning").ToString());
-                return;
-            }
             try
             {
                 FilePacker.Pack((DataContext as ModSource).Path);
@@ -43,7 +38,14 @@ namespace ModShardLauncher.Mods
                 Log.Error(ex, "Something went wrong");
             }
 
-            ModLoader.LoadFiles();
+            try
+            {
+                ModLoader.LoadFiles();
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Something went wrong");
+            }
         }
     }
 }

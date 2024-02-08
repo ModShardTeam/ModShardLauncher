@@ -31,8 +31,9 @@ namespace ModShardLauncher
             Write(fs, "MSLM");
             Log.Information("Writting header...");
             
-            string version = DataLoader.GetVersion();
-            Write(fs, version);
+            Assembly assembly = Assembly.GetExecutingAssembly() ?? throw new NullReferenceException("ExecutingAssembly");
+            string mod_version = "v" + FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
+            Write(fs, mod_version);
             Log.Information("Writting version...");
 
             Write(fs, textures.Length);

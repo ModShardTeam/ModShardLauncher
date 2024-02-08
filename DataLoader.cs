@@ -249,7 +249,14 @@ namespace ModShardLauncher
             dialog.ShowDialog();
             await t;
             await LoadFile(DataPath, true);
-            ModLoader.LoadFiles();
+            try
+            {
+                ModLoader.LoadFiles();
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Something went wrong");
+            }
             if (Main.Settings.SavePos == "")
             {
                 MessageBoxResult result = MessageBox.Show(Application.Current.FindResource("SavePath").ToString(),

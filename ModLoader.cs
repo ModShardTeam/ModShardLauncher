@@ -123,29 +123,36 @@ namespace ModShardLauncher
                     Log.Information(ex, string.Format("Cannot read the mod {0}", file));
                 }
                 if (f == null) continue;
-                Assembly assembly = f.Assembly;
-                // for array or list, use the available search method instead of Linq one
-                // use the Linq ones for IEnumerable
-                Type? modType = Array.Find(assembly.GetTypes(), t => t.IsSubclassOf(typeof(Mod)));
-
-                if (modType == null)
+                try
                 {
-                    MessageBox.Show("加载错误: " + assembly.GetName().Name + " 此Mod需要一个Mod类");
-                    continue;
+                    Assembly assembly = f.Assembly;
+                    // for array or list, use the available search method instead of Linq one
+                    // use the Linq ones for IEnumerable
+                    Type? modType = Array.Find(assembly.GetTypes(), t => t.IsSubclassOf(typeof(Mod)));
+
+                    if (modType == null)
+                    {
+                        MessageBox.Show("加载错误: " + assembly.GetName().Name + " 此Mod需要一个Mod类");
+                        continue;
+                    }
+                    else
+                    {
+                        if (Activator.CreateInstance(modType) is not Mod mod) continue;
+                        mod.LoadAssembly();
+                        mod.ModFiles = f;
+                        f.instance = mod;
+
+                        ModFile? old = mods.Find(t => t.Name == f.Name);
+                        if (old != null) f.isEnabled = old.isEnabled;
+
+                        modCaches.Add(f);
+                    }
+                    Assemblies.Add(assembly);
                 }
-                else
+                catch
                 {
-                    if (Activator.CreateInstance(modType) is not Mod mod) continue;
-                    mod.LoadAssembly();
-                    mod.ModFiles = f;
-                    f.instance = mod;
-
-                    ModFile? old = mods.Find(t => t.Name == f.Name);
-                    if (old != null) f.isEnabled = old.isEnabled;
-
-                    modCaches.Add(f);
+                    throw;
                 }
-                Assemblies.Add(assembly);
             }
             mods.Clear();
             modCaches.ForEach(i => {
@@ -205,7 +212,14 @@ namespace ModShardLauncher
             PatchMods();
             SetTable(Weapons, "gml_GlobalScript_table_weapons");
             SetTable(WeaponDescriptions, "gml_GlobalScript_table_weapons_text");
-            LoadFiles();
+            try
+            {
+                LoadFiles();
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Something went wrong");
+            }
         }
         internal static void PatchInnerFile()
         {

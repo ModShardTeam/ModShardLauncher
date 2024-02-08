@@ -29,12 +29,6 @@ namespace ModShardLauncher.Mods
 
         private void CompileButton_Click(object sender, RoutedEventArgs e)
         {
-            if (DataLoader.data == null)
-            {
-                MessageBox.Show(Application.Current.FindResource("LoadDataWarning").ToString());
-                return;
-            }
-
             try
             {
                 FilePacker.Pack((DataContext as ModSource).Path);
@@ -44,7 +38,6 @@ namespace ModShardLauncher.Mods
                 Log.Error(ex, "Something went wrong");
             }
             
-            ModLoader.LoadFiles();
             (Main.Instance.Viewer.Content as UserControl).UpdateLayout();
             Main.Instance.Refresh();
         }
