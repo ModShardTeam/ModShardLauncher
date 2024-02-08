@@ -26,15 +26,10 @@ namespace ModShardLauncher
         public static UserSettings Settings = new();
         public Main()
         {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.Console()
-                .WriteTo.File(string.Format("logs/log_{0}.txt", DateTime.Now.ToString("yyyyMMdd_HHmm")))
-                .CreateLogger();
-
             Instance = this;
             MainPage = new MainPage();
             ModPage = new ModInfos();
+            Settings.LoadSettings();
             ModSourcePage = new ModSourceInfos();
             if (!Directory.Exists(ModLoader.ModPath))
                 Directory.CreateDirectory(ModLoader.ModPath);
@@ -48,7 +43,7 @@ namespace ModShardLauncher
             {
                 Log.Error(ex, "Something went wrong");
             }
-            Settings.LoadSettings();
+            
             SettingsPage = new Settings();
             InitializeComponent();
 
@@ -126,6 +121,7 @@ namespace ModShardLauncher
     public class UserSettings
     {
         public string Language = "English";
+        public bool EnableLogger = true;
         public string SavePos = "";
         public string LoadPos = "";
         public List<string> EnableMods = new List<string>();
@@ -138,6 +134,15 @@ namespace ModShardLauncher
             string settings = File.ReadAllText("Settings.json");
             // convert if as UserSettings
             Main.Settings = JsonConvert.DeserializeObject<UserSettings>(settings);
+
+            var logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.File(string.Format("logs/log_{0}.txt", DateTime.Now.ToString("yyyyMMdd_HHmm")));
+
+            if (Main.Settings.EnableLogger)
+                logger = logger.WriteTo.Console();
+
+            Log.Logger = logger.CreateLogger();
 
             // auto load if loadpos not empty
             if (Main.Settings.LoadPos != "")

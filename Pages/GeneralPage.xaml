@@ -290,5 +290,41 @@
                   FontSize="10" Width="160" ItemsSource="{Binding Path=Languages, RelativeSource={RelativeSource AncestorType=local:GeneralPage, Mode=FindAncestor}}"
                   Foreground="#95796A" SelectionChanged="ComboBox_SelectionChanged">
         </ComboBox>
+        <Label Content="{DynamicResource SettingHeader_Log}" VerticalAlignment="Top" Margin="32,100,0,0"
+               Style="{StaticResource xFont}" FontSize="12" Foreground="#95796A"/>
+        <CheckBox HorizontalAlignment="Left" Margin="160,102,0,0" VerticalAlignment="Top" IsChecked="{Binding isEnabled, Mode=TwoWay}" Name="Logger" 
+                  Checked="Logger_Checked" Unchecked="Logger_Checked">
+            <CheckBox.Style>
+                <Style TargetType="CheckBox">
+                    <Setter Property="IsChecked" Value="False"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="CheckBox">
+                                <DockPanel Background="{TemplateBinding Background}"
+                                               LastChildFill="False" Width="{TemplateBinding Width}"
+                                               RenderOptions.BitmapScalingMode="NearestNeighbor">
+                                    <Image Margin="2,0,4,2" DockPanel.Dock="Left" Height="25" Width="25"
+                                               x:Name="_img" Stretch="Fill" Source="/Resources/checkbox_0.png"/>
+                                    <TextBlock DockPanel.Dock="Left" Foreground="{TemplateBinding Foreground}"
+                                                   Margin="2,0,0,0" VerticalAlignment="Center"
+                                                   Text="{TemplateBinding Content}"/>
+                                </DockPanel>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter TargetName="_img" Property="Source" Value="/Resources/checkbox_1.png"/>
+                                    </Trigger>
+                                    <Trigger Property="IsChecked" Value="{x:Null}">
+                                        <Setter TargetName="_img" Property="Source" Value="/Resources/checkbox_2.png"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </CheckBox.Style>
+        </CheckBox>
+
     </Grid>
 </UserControl>

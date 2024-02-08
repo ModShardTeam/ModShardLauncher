@@ -7,7 +7,7 @@
     Adds a gameobject to the game.
     ### Example
     ```c#
-    ModLoader.AddObject("o_myobject")
+    Msl.AddObject("o_myobject")
     ```
     ### Arguments
     | **Type** | **Name** | **Description**|
@@ -31,7 +31,7 @@
     Adds a gameobject to the game.
     <h3>Example</h3>
     ```c#
-    ModLoader.AddObject("o_myobject")
+    Msl.AddObject("o_myobject")
     ```
     <h3>Arguments</h3>
 
@@ -50,7 +50,7 @@
     Gets a gameobject from the game files.
     <h3>Example</h3>
     ```c#
-    ModLoader.GetObject("o_myobject")
+    Msl.GetObject("o_myobject")
     ```
     <h3>Arguments</h3>
 
@@ -69,7 +69,7 @@
     Replaces a gameobject from the game with your own.
     <h3>Example</h3>
     ```c#
-    ModLoader.SetObject("o_myobject", myObject)
+    Msl.SetObject("o_myobject", myObject)
     ```
     <h3>Arguments</h3>
 
@@ -93,7 +93,7 @@
     Gets a sprite from the game files.
     <h3>Example</h3>
     ```c#
-    ModLoader.GetSprite("s_mySprite")
+    Msl.GetSprite("s_mySprite")
     ```
     <h3>Arguments</h3>
 
@@ -116,7 +116,7 @@
     Gets a table from the game's files.
     <h3>Example</h3>
     ```c#
-    ModLoader.GetTable("gml_GlobalScript_table_Miniboss_type")
+    Msl.GetTable("gml_GlobalScript_table_Miniboss_type")
     ```
     <h3>Arguments</h3>
 
@@ -135,7 +135,7 @@
     Replaces a table from the game with your own.
     <h3>Example</h3>
     ```c#
-    ModLoader.SetTable("gml_GlobalScript_table_Miniboss_type")
+    Msl.SetTable("gml_GlobalScript_table_Miniboss_type")
     ```
     <h3>Arguments</h3>
 
@@ -159,7 +159,7 @@
     Adds a code to the game.
     <h3>Example</h3>
     ```c#
-    ModLoader.AddCode("scr_actionsLogUpdate(\"Hello World !\")", "myCode")
+    Msl.AddCode("scr_actionsLogUpdate(\"Hello World !\")", "myCode")
     ```
     <h3>Arguments</h3>
 
@@ -179,7 +179,7 @@
     Gets a code from the game files.
     <h3>Example</h3>
     ```c#
-    ModLoader.GetUMTCodeFromFile("gml_GlobalScript_scr_sessionDataInit")
+    Msl.GetUMTCodeFromFile("gml_GlobalScript_scr_sessionDataInit")
     ```
     <h3>Arguments</h3>
 
@@ -198,7 +198,7 @@
     Gets the content of a code from the game files as a string of GML.
     <h3>Example</h3>
     ```c#
-    ModLoader.GetStringGMLFromFile("gml_GlobalScript_scr_sessionDataInit")
+    Msl.GetStringGMLFromFile("gml_GlobalScript_scr_sessionDataInit")
     ```
     <h3>Arguments</h3>
 
@@ -217,7 +217,7 @@
     Replaces a code in the game with a string of GML.
     <h3>Example</h3>
     ```c#
-    ModLoader.ReplaceGMLString("gml_GlobalScript_scr_sessionDataInit")
+    Msl.ReplaceGMLString("gml_GlobalScript_scr_sessionDataInit")
     ```
     <h3>Arguments</h3>
 
@@ -243,7 +243,7 @@
     <h3>Example</h3>
     ```c#
     // Example : Inserts the instruction 'pushi.e 1' in 'gml_GlobalScript_scr_sessionDataInit' below line 14.
-    ModLoader.InsertAssemblyString("pushi.e 1", "gml_GlobalScript_scr_sessionDataInit", 14)
+    Msl.InsertAssemblyString("pushi.e 1", "gml_GlobalScript_scr_sessionDataInit", 14)
     ```
     <h3>Arguments</h3>
 
@@ -265,7 +265,7 @@
     <h3>Example</h3>
     ```c#
     // Example : Replaces the 8th line in 'gml_GlobalScript_scr_sessionDataInit' with 'pushi.e 1'.
-    ModLoader.ReplaceAssemblyString("pushi.e 1", "gml_GlobalScript_scr_sessionDataInit", 8)
+    Msl.ReplaceAssemblyString("pushi.e 1", "gml_GlobalScript_scr_sessionDataInit", 8)
     ```
     <h3>Arguments</h3>
 
@@ -290,7 +290,7 @@
     Adds a function to the game.
     <h3>Example</h3>
     ```c#
-    ModLoader.AddFunction("scr_actionsLogUpdate(\"Hello World !\")", "myFunction")
+    Msl.AddFunction("scr_actionsLogUpdate(\"Hello World !\")", "myFunction")
     ```
     <h3>Arguments</h3>
 
@@ -310,7 +310,7 @@
     Gets a variable from the game files.
     <h3>Example</h3>
     ```c#
-    ModLoader.GetVariable("display_x")
+    Msl.GetVariable("display_x")
     ```
     <h3>Arguments</h3>
 
@@ -329,7 +329,7 @@
     Gets a variable from the game files.
     <h3>Example</h3>
     ```c#
-    ModLoader.GetString("questBreweryOdarAccept00")
+    Msl.GetString("questBreweryOdarAccept00")
     ```
     <h3>Arguments</h3>
 
@@ -355,7 +355,7 @@ The 'Loading' stage is used to get the GML or assembly from the game's files.
     Loads an existing code from the game files and returns it.
     <h3>Example</h3>
     ```c#
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit")
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit")
     ```
     <h3>Arguments</h3>
 
@@ -375,7 +375,7 @@ The 'Loading' stage is used to get the GML or assembly from the game's files.
     Loads the assembly corresponding to an existing code from the game files and returns it.
     <h3>Example</h3>
     ```c#
-    ModLoader.LoadAssemblyAsString("gml_GlobalScript_scr_sessionDataInit")
+    Msl.LoadAssemblyAsString("gml_GlobalScript_scr_sessionDataInit")
     ```
     <h3>Arguments</h3>
 
@@ -432,13 +432,13 @@ It is done by providing code to find in the file, or matching every line.
     <h3>Examples</h3>
     ```c#
     // Example 1 : Selecting a matching String in a GML file
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("if (!instance_exists(o_music_controller))")
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("if (!instance_exists(o_music_controller))")
 
     // Example 2 : Selecting the matching content of a file in a GML file
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom(ModFiles, "my_matching_file.gml")
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom(ModFiles, "my_matching_file.gml")
 
     // Example 3 : Selecting a matching assembly instruction String in an assembly file
-    ModLoader.LoadAssemblyAsString("gml_GlobalScript_scr_sessionDataInit").MatchFrom("pushi.e 1")
+    Msl.LoadAssemblyAsString("gml_GlobalScript_scr_sessionDataInit").MatchFrom("pushi.e 1")
     ```
     <h3>Arguments</h3>
 
@@ -490,13 +490,13 @@ It is done by providing code to find in the file, or matching every line.
     <h3>Example</h3>
     ```c#
     // Example 1 : Selecting 1 line below a matching String in a GML file
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchBelow("if (!instance_exists(o_music_controller))", 1)
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchBelow("if (!instance_exists(o_music_controller))", 1)
 
     // Example 2 : Selecting the 4 lines below a matching file in a GML file
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchBelow(ModFiles, "my_matching_file.gml", 4)
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchBelow(ModFiles, "my_matching_file.gml", 4)
 
     // Example 3 : Selecting 1 line below a matching assembly instruction String in an assembly file
-    ModLoader.LoadAssemblyAsString("gml_GlobalScript_scr_sessionDataInit").MatchBelow("pushi.e 1", 1)
+    Msl.LoadAssemblyAsString("gml_GlobalScript_scr_sessionDataInit").MatchBelow("pushi.e 1", 1)
     ```
     <h3>Arguments</h3>
 
@@ -536,13 +536,68 @@ It is done by providing code to find in the file, or matching every line.
     <h3>Example</h3>
     ```c#
     // Example : Selecting every line in a GML file
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchAll()
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchAll()
     ```
     <h3>Arguments</h3>
 
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `FileEnumerable<string>` | `fe` | The previously opened file. |
+
+    <h3>Returns</h3>
+
+    | **Type** | **Description** |
+    | :--- | :--- |
+    | `FileEnumerable<(Match, string)>` | A class that contains the loaded code with selected parts defined, ready for Stage 3. |
+
+??? example "MatchFromUntil `method`"
+    <h3>Summary</h3>
+    The second step to inject GML or Assembly. </br>
+    Selects all lines from the first match until the second match (included).
+
+    !!! tip "Signatures"
+        This method has multiple signatures. </br>
+        This documentation only covers the `FileEnumerable` signature.
+
+        === "Main"
+
+            ```c#
+            public static IEnumerable<(Match, string)> MatchFromUntil(this IEnumerable<string> ienumerable, IEnumerable<string> otherfrom, IEnumerable<string> otheruntil)
+            ```
+
+        === "Strings"
+
+            ```c#
+            public static FileEnumerable<(Match, string)> MatchFromUntil(this IEnumerable<string> ienumerable, string otherfrom, string otheruntil) 
+            ```
+        
+        === "FileEnumerable"
+
+            ```c#
+            public static FileEnumerable<(Match, string)> MatchFromUntil(this FileEnumerable<string> fe, string otherfrom, string otheruntil)
+            ```
+        
+        === "Mod Files"
+
+            ```c#
+            public static FileEnumerable<(Match, string)> MatchFromUntil(this FileEnumerable<string> fe, ModFile modFile, string filenameOther, string filenameUntil)
+            ```
+
+    <h3>Example</h3>
+    ```c#
+    // Example 1 : Selecting all lines from the line containing "scr_locationPositionInit()" until the line containing "if (!instance_exists(o_music_controller))".
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFromUntil("scr_locationPositionInit()", "if (!instance_exists(o_music_controller))")
+
+    // Example 2 : Selecting all lines from the line contained in "firstMatchingLine.gml" until the line contained in "otherMatchingLine.gml".
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom(ModFiles, "firstMatchingLine.gml", "otherMatchingLine.gml")
+    ```
+    <h3>Arguments</h3>
+
+    | **Type** | **Name** | **Description**|
+    | :---: | :---: | :--- |
+    | `FileEnumerable<string>` | `fe` | The previously opened file. |
+    | `String` | `otherfrom` | The beginning of the code to match |
+    | `String` | `otheruntil` | The end of the code to match |
 
     <h3>Returns</h3>
 
@@ -564,10 +619,10 @@ This can be inserting, replacing, deleting or others, which lead to modification
     <h3>Example</h3>
     ```c#
     // Example 1 : Remove all lines from script gml_GlobalScript_scr_sessionDataInit
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchAll().Remove()
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchAll().Remove()
 
     // Example 2 : Remove the `pushi.e 1` instruction from gml_Object_c_bed_sleep_crafted_Alarm_0's assembly
-    ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").Remove()
+    Msl.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").Remove()
     ```
     <h3>Arguments</h3>
 
@@ -588,10 +643,10 @@ This can be inserting, replacing, deleting or others, which lead to modification
     <h3>Example</h3>
     ```c#
     // Example 1 : Remove all lines from script gml_GlobalScript_scr_sessionDataInit except the line where 'global.HP = -1' appears.
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").KeepOnly()
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").KeepOnly()
 
     // Example 2 : Remove all instructions from gml_Object_c_bed_sleep_crafted_Alarm_0's assembly except `pushi.e 1`
-    ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").KeepOnly()
+    Msl.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").KeepOnly()
     ```
     <h3>Arguments</h3>
 
@@ -612,13 +667,13 @@ This can be inserting, replacing, deleting or others, which lead to modification
     <h3>Example</h3>
     ```c#
     // Example 1 : Adds 'global.myVar = 14' above the line containing 'global.HP = -1'
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").InsertAbove("global.myVar = 14")
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").InsertAbove("global.myVar = 14")
 
     // Example 2 : Adds the content of my_gml_code.gml above the line containing 'global.HP = -1
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").InsertAbove(ModFiles, "my_gml_code.gml")
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").InsertAbove(ModFiles, "my_gml_code.gml")
 
     // Example 3 : Adds the instruction 'popz.v' above the line containing the instruction 'pushi.e 1'
-    ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").InsertAbove("popz.v")
+    Msl.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").InsertAbove("popz.v")
     ```
     <h3>Arguments</h3>
 
@@ -640,13 +695,13 @@ This can be inserting, replacing, deleting or others, which lead to modification
     <h3>Example</h3>
     ```c#
     // Example 1 : Adds 'global.myVar = 14' below the line containing 'global.HP = -1'
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").InsertBelow("global.myVar = 14")
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").InsertBelow("global.myVar = 14")
 
     // Example 2 : Adds the content of my_gml_code.gml below the line containing 'global.HP = -1
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").InsertBelow(ModFiles, "my_gml_code.gml")
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").InsertBelow(ModFiles, "my_gml_code.gml")
 
     // Example 3 : Adds the instruction 'popz.v' below the line containing the instruction 'pushi.e 1'
-    ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").InsertBelow("popz.v")
+    Msl.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").InsertBelow("popz.v")
     ```
     <h3>Arguments</h3>
 
@@ -668,13 +723,13 @@ This can be inserting, replacing, deleting or others, which lead to modification
     <h3>Example</h3>
     ```c#
     // Example 1 : Replaces the line containing 'global.HP = -1' with 'global.HP = 50'
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").ReplaceBy("global.HP = 50")
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").ReplaceBy("global.HP = 50")
 
     // Example 2 : Replaces the line containing 'global.HP = -1 with the content of 'my_gml_code.gml'
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").ReplaceBy(ModFiles, "my_gml_code.gml")
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").ReplaceBy(ModFiles, "my_gml_code.gml")
 
     // Example 3 : Replaces the line containing the instruction 'pushi.e 1' with the instruction 'popz.v'
-    ModLoader.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").ReplaceBy("popz.v")
+    Msl.LoadAssemblyString("gml_Object_c_bed_sleep_crafted_Alarm_0").MatchFrom("pushi.e 1").ReplaceBy("popz.v")
     ```
     <h3>Arguments</h3>
 
@@ -723,7 +778,7 @@ Failing to add this at the end of your chain of calls will render it useless.
     <h3>Example</h3>
     ```c#
     // Example : Loads a script, selects the line containing 'global.HP = -1', replaces it with 'global.HP = 50' and saves it.
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").ReplaceBy("global.HP = 50").Save()
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").MatchFrom("global.HP = -1").ReplaceBy("global.HP = 50").Save()
     ```
     <h3>Arguments</h3>
 
@@ -748,7 +803,7 @@ Failing to add this at the end of your chain of calls will render it useless.
     <h3>Example</h3>
     ```c#
     // Example : Prints the state of the file before and after replacing.
-    ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit").Peek().MatchFrom("global.HP = -1").ReplaceBy("global.HP = 50").Peek().Save()
+    Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit").Peek().MatchFrom("global.HP = -1").ReplaceBy("global.HP = 50").Peek().Save()
     ```
     <h3>Arguments</h3>
 
