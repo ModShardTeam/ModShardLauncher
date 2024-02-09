@@ -39,6 +39,7 @@ Whether you want to tweak the **game mechanics**, add **new content**, or **anyt
 | :------ | :--------: |
 | Installing Mods | :heavy_check_mark: |
 | Version Checking | :x: |
+| Auto-updates | :x: |
 | Conflict Checking | :x: |
 | Mod Settings | :x: |
 
@@ -56,7 +57,7 @@ Whether you want to tweak the **game mechanics**, add **new content**, or **anyt
 | Weapons | :heavy_check_mark: |
 | Rooms | :x: |
 | Sounds | :x: |
-| Sprites | :x: |
+| Sprites | :heavy_check_mark: |
 | Shaders | :x: |
 | Fonts | :x: |
 | DE2 Dialogues | :x: |
@@ -70,9 +71,5 @@ Requires the [.NET 6.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6
 `cd ModShardLauncher` </br>
 `dotnet build`
 
-### Issues
-**TODO**
-### Pull Requests
-**TODO**
 ### Editing The Documentation
 **TODO**
