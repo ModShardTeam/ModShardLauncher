@@ -30,9 +30,10 @@ namespace ModShardLauncher
 
             Write(fs, "MSLM");
             Log.Information("Writting header...");
-            
-            Assembly assembly = Assembly.GetExecutingAssembly() ?? throw new NullReferenceException("ExecutingAssembly");
-            string mod_version = "v" + FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
+
+            ProcessModule mainProcess = Process.GetCurrentProcess().MainModule ?? throw new NullReferenceException("MainModule");
+            string mainProcessName = mainProcess.FileName ?? throw new NullReferenceException("MainModuleFileName");
+            string mod_version = "v" + FileVersionInfo.GetVersionInfo(mainProcessName).FileVersion;
             Write(fs, mod_version);
             Log.Information("Writting version...");
 
