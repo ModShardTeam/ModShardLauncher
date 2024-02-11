@@ -53,7 +53,7 @@ namespace ModShardLauncher.Pages
                 selection = LangSelector.SelectedIndex;
                 return;
             }
-            var combo = sender as ComboBox;
+            ComboBox combo = Msl.ThrowIfNull(sender as ComboBox);
             UserSettings.ChangeLanguage(combo.SelectedIndex);
             selection = combo.SelectedIndex;
             LangSelector.SelectedIndex = selection;

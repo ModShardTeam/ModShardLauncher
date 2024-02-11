@@ -43,11 +43,11 @@ namespace ModShardLauncher.Mods
         /// <summary>
         /// 译名列表
         /// </summary>
-        public Dictionary<ModLanguage, string>? NameList;
+        public Dictionary<ModLanguage, string> NameList;
         /// <summary>
         /// 描述翻译列表
         /// </summary>
-        public Dictionary<ModLanguage, string>? WeaponDescriptions;
+        public Dictionary<ModLanguage, string> WeaponDescriptions;
         /// <summary>
         /// 内部ID
         /// </summary>
@@ -350,7 +350,7 @@ namespace ModShardLauncher.Mods
         }
         public void CloneDefaults(string name)
         {
-            var weapon = Msl.GetWeapon(name);
+            Weapon weapon = Msl.GetWeapon(name);
             Set(Weapon2String(weapon).Item1);
         }
 
@@ -360,9 +360,9 @@ namespace ModShardLauncher.Mods
         }
         public void Set(string property)
         {
-            var attributes = property.Split(";").ToList();
+            List<string> attributes = property.Split(";").ToList();
             attributes.RemoveAt(attributes.Count - 1);
-            var str2 =
+            string str2 =
             "Name;ID;Slot;Rare;Material;MaxDuration;Lv;E;Price;Rng;WeaponDamage;ArmorDamage;" +
             "ArmorPiercing;BodypartDamage;SlashingDamage;PiercingDamage;BluntDamage;RendingDamage;" +
             "FireDamage;ShockDamage;PoisonDamage;CausticDamage;FrostDamage;ArcaneDamage;" +
@@ -373,21 +373,23 @@ namespace ModShardLauncher.Mods
             "CryomanticPower;ArcanisticPower;AstromanticPower;PsimanticPower;ChronomanticPower;HealthRestoration;" +
             "Lifesteal;Manasteal;BonusRange;RangeModifier;DamageReceived;DamageReturned;HealingReceived;" +
             "STL;NoiseProduced;Balance;OffhandEfficiency;SlayingChance;tags;NoDrop;";
-            var attributes2 = str2.Split(";").ToList();
+            List<string> attributes2 = str2.Split(";").ToList();
             attributes2.Remove("");
-            foreach (var attr in attributes2)
+            foreach (string attr in attributes2)
             {
                 if (attr == "Name" || attr == "ID") continue;
-                var field = typeof(Weapon).GetField(attr, BindingFlags.Public | BindingFlags.Instance);
-                if (field.FieldType == typeof(string)) field?.SetValue(this, attributes[attributes2.IndexOf(attr)]);
-                else if (attributes[attributes2.IndexOf(attr)] == "") field?.SetValue(this, 0);
-                else field?.SetValue(this, int.Parse(attributes[attributes2.IndexOf(attr)]));
+                FieldInfo? fieldOrNull = typeof(Weapon).GetField(attr, BindingFlags.Public | BindingFlags.Instance);
+                FieldInfo field = Msl.ThrowIfNull(fieldOrNull);
+
+                if (field.FieldType == typeof(string)) field.SetValue(this, attributes[attributes2.IndexOf(attr)]);
+                else if (attributes[attributes2.IndexOf(attr)] == "") field.SetValue(this, 0);
+                else field.SetValue(this, int.Parse(attributes[attributes2.IndexOf(attr)]));
             }
         }
         public static (string, string, string) Weapon2String(Weapon weapon)
         {
-            var type = typeof(Weapon);
-            var str =
+            Type type = typeof(Weapon);
+            string str =
             "Name;ID;Slot;Rare;Material;MaxDuration;Lv;E;Price;Rng;WeaponDamage;ArmorDamage;" +
             "ArmorPiercing;BodypartDamage;SlashingDamage;PiercingDamage;BluntDamage;RendingDamage;" +
             "FireDamage;ShockDamage;PoisonDamage;CausticDamage;FrostDamage;ArcaneDamage;" +
@@ -398,13 +400,17 @@ namespace ModShardLauncher.Mods
             "CryomanticPower;ArcanisticPower;AstromanticPower;PsimanticPower;ChronomanticPower;HealthRestoration;" +
             "Lifesteal;Manasteal;BonusRange;RangeModifier;DamageReceived;DamageReturned;HealingReceived;" +
             "STL;NoiseProduced;Balance;OffhandEfficiency;SlayingChance;tags;NoDrop;";
-            var attributes = str.Split(";").ToList();
+
+            List<string> attributes = str.Split(";").ToList();
             attributes.Remove("");
-            var ret = "";
-            foreach (var attr in attributes)
+            string ret = "";
+
+            foreach (string attr in attributes)
             {
-                var field = type.GetField(attr, BindingFlags.Public | BindingFlags.Instance);
-                var value = field?.GetValue(weapon);
+                FieldInfo? fieldOrNull = type.GetField(attr, BindingFlags.Public | BindingFlags.Instance);
+                FieldInfo field = Msl.ThrowIfNull(fieldOrNull);
+
+                object? value = field.GetValue(weapon);
                 if (value != null)
                 {
                     if((field.FieldType == typeof(int) && (value as int?) != 0) || field.FieldType == typeof(string))
@@ -419,10 +425,10 @@ namespace ModShardLauncher.Mods
         }
         public static Weapon String2Weapon(string property)
         {
-            var weapon = new Weapon();
-            var attributes = property.Split(";").ToList();
+            Weapon weapon = new();
+            List<string> attributes = property.Split(";").ToList();
             attributes.RemoveAt(attributes.Count - 1);
-            var str2 =
+            string str2 =
             "Name;ID;Slot;Rare;Material;MaxDuration;Lv;E;Price;Rng;WeaponDamage;ArmorDamage;" +
             "ArmorPiercing;BodypartDamage;SlashingDamage;PiercingDamage;BluntDamage;RendingDamage;" +
             "FireDamage;ShockDamage;PoisonDamage;CausticDamage;FrostDamage;ArcaneDamage;" +
@@ -433,14 +439,16 @@ namespace ModShardLauncher.Mods
             "CryomanticPower;ArcanisticPower;AstromanticPower;PsimanticPower;ChronomanticPower;HealthRestoration;" +
             "Lifesteal;Manasteal;BonusRange;RangeModifier;DamageReceived;DamageReturned;HealingReceived;" +
             "STL;NoiseProduced;Balance;OffhandEfficiency;SlayingChance;tags;NoDrop;";
-            var attributes2 = str2.Split(";").ToList();
+            List<string> attributes2 = str2.Split(";").ToList();
             attributes2.Remove("");
-            foreach (var attr in attributes2)
+            foreach (string attr in attributes2)
             {
-                var field = typeof(Weapon).GetField(attr, BindingFlags.Public | BindingFlags.Instance);
-                if (field.FieldType == typeof(string)) field?.SetValue(weapon, attributes[attributes2.IndexOf(attr)]);
-                else if (attributes[attributes2.IndexOf(attr)] == "") field?.SetValue(weapon, 0);
-                else field?.SetValue(weapon, int.Parse(attributes[attributes2.IndexOf(attr)]));
+                FieldInfo? fieldOrNull = typeof(Weapon).GetField(attr, BindingFlags.Public | BindingFlags.Instance);
+                FieldInfo field = Msl.ThrowIfNull(fieldOrNull);
+
+                if (field.FieldType == typeof(string)) field.SetValue(weapon, attributes[attributes2.IndexOf(attr)]);
+                else if (attributes[attributes2.IndexOf(attr)] == "") field.SetValue(weapon, 0);
+                else field.SetValue(weapon, int.Parse(attributes[attributes2.IndexOf(attr)]));
             }
             return weapon;
         }
