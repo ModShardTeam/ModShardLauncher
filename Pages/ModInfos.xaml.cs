@@ -43,15 +43,6 @@ namespace ModShardLauncher.Pages
                 Log.Information("Failed patching vanilla");
                 MessageBox.Show(Application.Current.FindResource("SaveDataWarning").ToString());
             }
-
-            try
-            {
-                ModLoader.LoadFiles();
-            }
-            catch(Exception ex)
-            {
-                Log.Error(ex, "Something went wrong");
-            }
             
             Main.Instance.Refresh();
         }
