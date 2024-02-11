@@ -9,18 +9,15 @@ namespace ModShardLauncher.Mods
 {
     public class DisassemblyEditor
     {
-        public DisassemblyEditor() { }
         public UndertaleData Data => DataLoader.data;
+        public UndertaleCode Code;
+        public List<string> CodeContents;
+        public int Index { get; private set; } = 0;
         public DisassemblyEditor(UndertaleCode code)
         {
             Code = code;
             CodeContents = code.Disassemble(Data.Variables, Data.CodeLocals.For(Code)).Split("\n").ToList();
         }
-
-        public UndertaleCode Code = new();
-        public List<string> CodeContents = new();
-        public int Index { get; private set; } = 0;
-
         public bool TryGotoNext(Func<string, bool> predicate)
         {
             if (CodeContents.FirstOrDefault(predicate) == default) return false;
