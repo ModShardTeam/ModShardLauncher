@@ -31,7 +31,7 @@ namespace ModShardLauncher.Mods
         {
             try
             {
-                FilePacker.Pack((DataContext as ModSource).Path);
+                FilePacker.Pack(((ModSource)DataContext).Path);
             }
             catch(Exception ex)
             {
@@ -44,7 +44,7 @@ namespace ModShardLauncher.Mods
 
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("explorer.exe", (DataContext as ModSource).Path);
+            System.Diagnostics.Process.Start("explorer.exe", ((ModSource)DataContext).Path);
             
         }
     }

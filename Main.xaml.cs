@@ -80,9 +80,9 @@ namespace ModShardLauncher
         {
             foreach(var i in stackPanel.Children)
             {
-                if(i != sender && i is MyToggleButton)
+                if(i != sender && i is MyToggleButton button)
                 {
-                    (i as MyToggleButton).MyButton.IsChecked = false;
+                    button.MyButton.IsChecked = false;
                 }
             }
         }

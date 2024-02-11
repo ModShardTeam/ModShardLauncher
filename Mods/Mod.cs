@@ -20,8 +20,8 @@ namespace ModShardLauncher.Mods
         public virtual string ShortDesc { get => "未知"; }
         public virtual string Version { get => "v0.0.0.0"; }
         public virtual string TargetVersion { get => "v0.0.0.0"; }
-        public List<Weapon> ModWeapons;
-        public ModFile ModFiles;
+        public List<Weapon> ModWeapons = new();
+        public ModFile ModFiles = new();
         public Mod() { }
         public virtual void LoadAssembly()
         {

@@ -22,11 +22,11 @@ namespace ModShardLauncher.Mods
     /// </summary>
     public partial class ModBar : UserControl
     {
+        public ImageSource? Icon = null;
         public ModBar()
         {
             InitializeComponent();
         }
-        public ImageSource Icon = null;
     }
     public class ByteArrayToImageSourceConverter : IValueConverter
     {
@@ -35,8 +35,8 @@ namespace ModShardLauncher.Mods
             byte[] imageData = (byte[])value;
             if (imageData.Length == 0) return new BitmapImage(new Uri("/Resources/icon_default.png", UriKind.Relative));
 
-            var biImg = new BitmapImage();
-            MemoryStream ms = new MemoryStream(imageData);
+            BitmapImage biImg = new();
+            MemoryStream ms = new(imageData);
             biImg.BeginInit();
             biImg.StreamSource = ms;
             biImg.EndInit();
