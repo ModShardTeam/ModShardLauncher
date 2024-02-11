@@ -17,7 +17,6 @@ namespace ModShardLauncher
     public class DataLoader
     {
         public static UndertaleData data = new();
-        public static UndertaleData dataCache = new();
         internal static string dataPath = "";
         public delegate void FileMessageEventHandler(string message);
         public static event FileMessageEventHandler FileMessageEvent;
@@ -83,24 +82,6 @@ namespace ModShardLauncher
             using (FileStream stream = new(filename, FileMode.Open, FileAccess.Read))
             {
                 data = UndertaleIO.Read(
-                    stream, warning =>
-                    {
-                        ShowWarning(warning, "Loading warning");
-
-                        if (warning.Contains("unserializeCountError.txt")
-                            || warning.Contains("object pool size"))
-                            return;
-
-                        hadWarnings = true;
-                    }, 
-                    delegate (string message)
-                    {
-                        FileMessageEvent?.Invoke(message);
-                    }
-                );
-
-                // TODO: test suppr dataCache
-                dataCache = UndertaleIO.Read(
                     stream, warning =>
                     {
                         ShowWarning(warning, "Loading warning");
@@ -212,8 +193,8 @@ namespace ModShardLauncher
             {
                 try
                 {
-                    IEnumerable<IUndertaleListChunk?> enumerableChunks = data.FORM.Chunks.Values.Select(x => x as IUndertaleListChunk);
-                    Parallel.ForEach(enumerableChunks.Where(x => x is not null), (chunk) =>
+                    IEnumerable<IUndertaleListChunk> enumerableChunks = data.FORM.Chunks.Values.Where(x => x is not null).Select(x => (IUndertaleListChunk)x);
+                    Parallel.ForEach(enumerableChunks, (chunk) =>
                     {
                         chunk.ClearIndexDict();
                     });
