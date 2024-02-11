@@ -61,7 +61,7 @@ namespace ModShardLauncher.Pages
 
         private void Logger_Checked(object sender, RoutedEventArgs e)
         {
-            Main.Settings.EnableLogger = (bool)Logger.IsChecked;
+            Main.Settings.EnableLogger = Msl.ThrowIfNull(Logger.IsChecked);
             UserSettings.CheckLog(Main.Settings.EnableLogger);
             Main.Settings.SaveSettings();
         }

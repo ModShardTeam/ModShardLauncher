@@ -31,20 +31,20 @@ namespace ModShardLauncher.Mods
         {
             try
             {
-                FilePacker.Pack(((ModSource)DataContext).Path);
+                FilePacker.Pack(Msl.ThrowIfNull(DataContext as ModSource).Path);
             }
             catch(Exception ex)
             {
                 Log.Error(ex, "Something went wrong");
             }
             
-            (Main.Instance.Viewer.Content as UserControl).UpdateLayout();
+            Msl.ThrowIfNull(Main.Instance.Viewer.Content as UserControl).UpdateLayout();
             Main.Instance.Refresh();
         }
 
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("explorer.exe", ((ModSource)DataContext).Path);
+            System.Diagnostics.Process.Start("explorer.exe", Msl.ThrowIfNull(DataContext as ModSource).Path);
             
         }
     }

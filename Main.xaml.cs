@@ -115,24 +115,24 @@ namespace ModShardLauncher
 
         private void MyToggleButton_Click_1(object sender, EventArgs e)
         {
-            if ((bool)(sender as MyToggleButton).MyButton.IsChecked) Viewer.Content = ModPage;
+            if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = ModPage;
             else Viewer.Content = MainPage;
         }
 
         private void MyToggleButton_Click_2(object sender, EventArgs e)
         {
-            if ((bool)(sender as MyToggleButton).MyButton.IsChecked) Viewer.Content = ModSourcePage;
+            if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = ModSourcePage;
             else Viewer.Content = MainPage;
         }
         private void MyToggleButton_Click_4(object sender, EventArgs e)
         {
-            if ((bool)(sender as MyToggleButton).MyButton.IsChecked) Viewer.Content = SettingsPage;
+            if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = SettingsPage;
             else Viewer.Content = MainPage;
         }
         private void MyToggleButton_Click_3(object sender, EventArgs e)
         {
             WindowState = WindowState.Minimized;
-            (sender as MyToggleButton).MyButton.IsChecked = false;
+            if (sender is MyToggleButton button) button.MyButton.IsChecked = false;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
