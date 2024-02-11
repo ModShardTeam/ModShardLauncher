@@ -1,17 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Serilog;
 
 namespace ModShardLauncher.Pages
 {
@@ -20,13 +11,13 @@ namespace ModShardLauncher.Pages
     /// </summary>
     public partial class ModSourceInfos : UserControl
     {
+        public static ModSourceInfos Instance;
+        public List<ModSource> ModSources {  get; set; } = new();
         public ModSourceInfos()
         {
             InitializeComponent();
             Instance = this;
         }
-        public static ModSourceInfos Instance;
-        public List<ModSource> ModSources {  get; set; } = new List<ModSource>();
         private async void Open_Click(object sender, EventArgs e)
         {
             await DataLoader.DoOpenDialog();
@@ -39,8 +30,29 @@ namespace ModShardLauncher.Pages
                 MessageBox.Show(Application.Current.FindResource("LoadDataWarning").ToString());
                 return;
             }
-            ModLoader.PatchFile();
-            DataLoader.DoSaveDialog();
+
+            try 
+            {
+                ModLoader.PatchFile();
+                Log.Information("Successfully patch vanilla");
+                await DataLoader.DoSaveDialog();
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Something went wrong");
+                Log.Information("Failed patching vanilla");
+                MessageBox.Show(Application.Current.FindResource("SaveDataWarning").ToString());
+            }
+
+            try
+            {
+                ModLoader.LoadFiles();
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Something went wrong");
+            }
+
             Main.Instance.Refresh();
         }
     }
