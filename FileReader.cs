@@ -64,7 +64,9 @@ namespace ModShardLauncher
                 if(!Stream.CanRead) Stream = new FileStream(Path, FileMode.Open);
                 Stream.Position = FileOffset;
                 FileReader.Read(Stream, file.offset);
-                return FileReader.Read(Stream, file.length);
+                byte[] fileStream = FileReader.Read(Stream, file.length);
+                Stream.Close();
+                return fileStream;
             }
             throw new FileNotFoundException(string.Format("File {0} not found in the packed sml.", fileName));
         }
