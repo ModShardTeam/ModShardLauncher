@@ -47,6 +47,37 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        public static void AddNewEvent(UndertaleGameObject gameObject, string eventCode, EventType eventType, uint subtype)
+        {
+            try
+            {
+                CheckSubEvent(eventType, subtype);
+                // check if the subEvent already exists
+                Event? subtypeObj = gameObject.Events[(int)eventType].FirstOrDefault(x => x.EventSubtype == subtype);
+                if (subtypeObj != null)
+                {
+                    throw new ArgumentException(string.Format("Cannot add the event {0}_{1} in {2} since it already exists", eventType, subtype, gameObject.Name.Content));
+                }
+
+                // create a new code
+                string newEventName = EventName(gameObject.Name.Content, eventType, subtype);
+                AddCode(eventCode, newEventName);
+                // add the previous code to the event
+                Event newEvent = new() { EventSubtype = subtype };
+                newEvent.Actions.Add(new EventAction()
+                {
+                    CodeId = GetUMTCodeFromFile(newEventName),
+                });
+                
+                gameObject.Events[(int)eventType].Add(newEvent);
+                Log.Information(string.Format("Successfully added event {{{0}_{1}}} in object {{{2}}}", eventType, subtype, gameObject.Name.Content));
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
         private static void CheckSubEvent(EventType eventType, uint subtype)
         { 
             switch(eventType)
