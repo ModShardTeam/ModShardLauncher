@@ -6,6 +6,16 @@ using UndertaleModLib.Models;
 
 namespace ModShardLauncher
 {
+    public static class GameObjectUtils
+    {
+        static public void ApplyEvent(this UndertaleGameObject gameObject, ModFile modFile, params MslEvent[] mslEvents)
+        {
+            foreach (MslEvent mslEvent in mslEvents)
+            {
+                mslEvent.Apply(gameObject, modFile);
+            }
+        }
+    }
     public static partial class Msl
     {
         public static UndertaleGameObject AddObject(
