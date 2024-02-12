@@ -8,6 +8,26 @@ using static UndertaleModLib.Models.UndertaleGameObject;
 
 namespace ModShardLauncher
 {
+    public class MslEvent
+    {
+        public string CodeName { get; set; }
+        public EventType EventType { get; set; }
+        public uint Subtype { get; set; }
+        public MslEvent(string codeName, EventType eventType, uint subtype)
+        {
+            CodeName = codeName;
+            EventType = eventType;
+            Subtype = subtype;
+        }
+        public void Apply(string objectName, ModFile modFile)
+        {
+            Msl.AddNewEvent(objectName, modFile.GetCode(CodeName), EventType, Subtype);
+        }
+        public void Apply(UndertaleGameObject gameObject, ModFile modFile)
+        {
+            Msl.AddNewEvent(gameObject, modFile.GetCode(CodeName), EventType, Subtype);
+        }
+    }
     public static partial class Msl
     {
         public static string EventName(string objectName, EventType eventType, uint subtype)
