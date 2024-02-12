@@ -121,9 +121,8 @@ namespace ModShardLauncher
                 ModLoader.Data.Code.Add(code);
                 return code;
             }
-            catch(Exception ex) 
+            catch
             {
-                Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
@@ -146,9 +145,8 @@ namespace ModShardLauncher
                 Log.Information(string.Format("Successfully added the function : {0}", name.ToString()));
                 return scriptCode;
             }
-            catch(Exception ex) 
+            catch 
             {
-                Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
