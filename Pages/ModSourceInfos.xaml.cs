@@ -25,7 +25,7 @@ namespace ModShardLauncher.Pages
         }
         private async void Save_Click(object sender, EventArgs e)
         {
-            if (DataLoader.data == null)
+            if (DataLoader.data.FORM == null)
             {
                 MessageBox.Show(Application.Current.FindResource("LoadDataWarning").ToString());
                 return;
