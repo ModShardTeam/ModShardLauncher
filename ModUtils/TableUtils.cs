@@ -135,4 +135,74 @@ namespace ModShardLauncher
             ModLoader.SetTable(EditTable("gml_GlobalScript_table_consumables").ToList(), "gml_GlobalScript_table_consumables");
         }
     }
+    public class LocalizationSentence
+    {
+        public string Id { get; set; }
+        public string Tags { get; set; } = "any";
+        public string Role { get; set; } = "any";
+        public string Type { get; set; } = "any";
+        public string Faction { get; set; } = "any";
+        public string Settlement { get; set; } = "any";
+        public Dictionary<ModLanguage, string> Sentence { get; set; } = new();
+        public LocalizationSentence(string id)
+        {
+            Id = id;
+        }
+        public LocalizationSentence(string id, Dictionary<ModLanguage, string> sentence)
+        {
+            Id = id;
+            Localization.SetDictionary(Sentence, sentence);
+            
+        }
+        public LocalizationSentence(string id, string sentence)
+        {
+            Id = id;
+            Localization.SetDictionary(Sentence, sentence);
+        }
+        public string CreateLine()
+        {
+            string line = string.Format("{0};{1};{2};{3};{4};{5}", Id, Tags, Role, Type, Faction, Settlement);
+            foreach (KeyValuePair<ModLanguage, string> kp in Sentence)
+            {
+                line += ";";
+                line += kp.Value;
+            }
+            return line + ";";
+        }
+    }
+    public class LocalizationDialog
+    {
+        public List<LocalizationSentence> Sentences { get; set; } = new();
+        public LocalizationDialog(params LocalizationSentence[] sentences)
+        {
+            foreach (LocalizationSentence sentence in sentences)
+            {   
+                Sentences.Add(sentence);
+            }
+            
+        }
+        private IEnumerable<string> EditTable(IEnumerable<string> table)
+        {
+            foreach (string line in table)
+            {
+                if (line.Contains("NPC - GREETINGS;"))
+                {
+                    yield return line;
+
+                    foreach (LocalizationSentence sentence in Sentences) 
+                    {
+                        yield return sentence.CreateLine();
+                    }
+                }
+            }
+        }
+        private IEnumerable<string> EditTable(string tableName)
+        {
+            return EditTable(Msl.ThrowIfNull(ModLoader.GetTable(tableName)));
+        }
+        public void InjectTable()
+        {
+            ModLoader.SetTable(EditTable("gml_GlobalScript_table_NPC_Lines").ToList(), "gml_GlobalScript_table_NPC_Lines");
+        }
+    }
 }
