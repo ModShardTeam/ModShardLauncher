@@ -31,11 +31,13 @@ namespace ModShardLauncher.Pages
                 return;
             }
 
+            bool patchSucess = false;
+
             try 
             {
                 ModLoader.PatchFile();
                 Log.Information("Successfully patch vanilla");
-                await DataLoader.DoSaveDialog();
+                patchSucess = true;
             }
             catch(Exception ex)
             {
@@ -44,6 +46,7 @@ namespace ModShardLauncher.Pages
                 MessageBox.Show(Application.Current.FindResource("SaveDataWarning").ToString());
             }
 
+            if (patchSucess) await DataLoader.DoSaveDialog();
             Main.Instance.Refresh();
         }
     }
