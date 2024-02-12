@@ -8,7 +8,14 @@ namespace ModShardLauncher
 {
     public static partial class Msl
     {
-        public static UndertaleGameObject AddObject(string name)
+        public static UndertaleGameObject AddObject(
+            string name, 
+            string spriteName = "",
+            string parentName = "", 
+            bool isVisible = false, 
+            bool isPersistent = false, 
+            bool isAwake = false, 
+            CollisionShapeFlags collisionShapeFlags = CollisionShapeFlags.Circle)
         {
             try 
             {
@@ -20,18 +27,29 @@ namespace ModShardLauncher
                     return existingObj;
                 }
 
+                // retrieve possible parent and sprite
+                UndertaleSprite sprite = new();
+                if (spriteName != "") sprite = GetSprite(spriteName);
+                UndertaleGameObject parent = new();
+                if (parentName != "") parent = GetObject(parentName);
+
                 // doesnt exist so it can be added
                 UndertaleGameObject obj = new()
                 {
-                    Name = ModLoader.Data.Strings.MakeString(name)
+                    Name = ModLoader.Data.Strings.MakeString(name),
+                    Sprite = sprite,
+                    ParentId = parent,
+                    Visible = isVisible,
+                    Persistent = isPersistent,
+                    CollisionShape = collisionShapeFlags,
+                    Awake = isAwake,
                 };
                 ModLoader.Data.GameObjects.Add(obj);
                 Log.Information(string.Format("Successfully created gameObject: {0}", name.ToString()));
                 return obj;
             }
-            catch(Exception ex) 
+            catch 
             {
-                Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
