@@ -215,14 +215,6 @@ namespace ModShardLauncher
             PatchMods();
             SetTable(Weapons, "gml_GlobalScript_table_weapons");
             SetTable(WeaponDescriptions, "gml_GlobalScript_table_weapons_text");
-            try
-            {
-                LoadFiles();
-            }
-            catch(Exception ex)
-            {
-                Log.Error(ex, "Something went wrong");
-            }
         }
         internal static void PatchInnerFile()
         {
