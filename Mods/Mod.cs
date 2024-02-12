@@ -39,7 +39,7 @@ namespace ModShardLauncher.Mods
         Chinese,
         German,
         Spanish,
-        Franch,
+        French,
         Italian,
         Portuguese,
         Polish,
