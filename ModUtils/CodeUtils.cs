@@ -841,16 +841,20 @@ namespace ModShardLauncher
         /// <summary>
         /// Wrapper of <see cref="ReplaceBy"/> for the <see cref="FileEnumerable"/> class.
         /// </summary>
-        public static  FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, string inserting)
+        public static FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, string inserting)
         {
             return new(fe.header, fe.ienumerable.ReplaceBy(inserting.Split("\n")));
         }
         /// <summary>
         /// Wrapper of <see cref="ReplaceBy"/> for the <see cref="FileEnumerable"/> class using the content of <paramref name="fileName"/> for the comparison.
         /// </summary>
-        public static  FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, ModFile modFile, string fileName)
+        public static FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, ModFile modFile, string fileName)
         {
             return new(fe.header, fe.ienumerable.ReplaceBy(modFile.GetCode(fileName).Split("\n")));
+        }
+        public static FileEnumerable<string> Apply(this FileEnumerable<string> fe, Func<IEnumerable<string>, IEnumerable<string>> iterator)
+        {
+            return new(fe.header, iterator(fe.ienumerable));
         }
         /// <summary>
         /// Save the code handled during the chain of Matches and Actions.
