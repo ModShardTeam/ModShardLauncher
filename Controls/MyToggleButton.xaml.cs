@@ -21,31 +21,33 @@ namespace ModShardLauncher.Controls
     /// </summary>
     public partial class MyToggleButton : UserControl
     {
-        public MyToggleButton()
-        {
-            InitializeComponent();
-        }
         public ImageSource ImageSource { get; set; }
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            "Text",
-            typeof(string),
-            typeof(MyToggleButton),
-            new PropertyMetadata(default(string), OnTextChanged));
-        private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-        }
         public string Text { get; set; }
         [Category("Behavior")]
         public event EventHandler Checked;
         public event EventHandler Click;
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+            "Text",
+            typeof(string),
+            typeof(MyToggleButton),
+            new PropertyMetadata(default(string), OnTextChanged)
+        );
+        public MyToggleButton()
+        {
+            InitializeComponent();
+        }
+        private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            
+        }
         private void MyButton_Checked(object sender, RoutedEventArgs e)
         {
-            if(Checked != null) Checked.Invoke(this, e);
+            Checked?.Invoke(this, e);
         }
 
         private void MyButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Click != null) Click.Invoke(this, e);
+            Click?.Invoke(this, e);
         }
     }
 }

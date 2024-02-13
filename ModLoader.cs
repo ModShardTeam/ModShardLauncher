@@ -172,16 +172,19 @@ namespace ModShardLauncher
                     continue;
                 }
                 Main.Settings.EnableMods.Add(mod.Name);
-                string version = DataLoader.GetVersion();
-                Regex reg = new("0([0-9])");
-                version = reg.Replace(version, "$1");
-                if (mod.Version != version)
+
+                // work around to find the FileVersion of ModShardLauncher.dll for single file publishing
+                // see: https://github.com/dotnet/runtime/issues/13051
+                ProcessModule mainProcess = Msl.ThrowIfNull(Process.GetCurrentProcess().MainModule);
+                string mainProcessName = Msl.ThrowIfNull(mainProcess.FileName);
+                string mod_version = "v" + FileVersionInfo.GetVersionInfo(mainProcessName).FileVersion;
+
+                if (mod.Version != mod_version)
                 {
                     MessageBoxResult result = MessageBox.Show(
                         Application.Current.FindResource("VersionDifferentWarning").ToString(),
                         Application.Current.FindResource("VersionDifferentWarningTitle").ToString() + " : " + mod.Name, 
-                        MessageBoxButton.YesNo, 
-                        MessageBoxImage.Question
+                        MessageBoxButton.OK
                     );
                     if (result == MessageBoxResult.No) continue;
                 }
@@ -212,14 +215,6 @@ namespace ModShardLauncher
             PatchMods();
             SetTable(Weapons, "gml_GlobalScript_table_weapons");
             SetTable(WeaponDescriptions, "gml_GlobalScript_table_weapons_text");
-            try
-            {
-                LoadFiles();
-            }
-            catch(Exception ex)
-            {
-                Log.Error(ex, "Something went wrong");
-            }
         }
         internal static void PatchInnerFile()
         {

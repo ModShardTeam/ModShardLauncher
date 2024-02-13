@@ -1,18 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.RightsManagement;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Serilog;
 
 namespace ModShardLauncher.Pages
@@ -22,14 +11,13 @@ namespace ModShardLauncher.Pages
     /// </summary>
     public partial class ModInfos : UserControl
     {
+        public static ModInfos Instance;
+        public List<ModFile> Mods { get; set; } = new();
         public ModInfos()
         {
             InitializeComponent();
             Instance = this;
         }
-        public static ModInfos Instance;
-        public List<ModFile> Mods { get; set; } = new List<ModFile>();
-
         private async void Open_Click(object sender, EventArgs e)
         {
             await DataLoader.DoOpenDialog();
@@ -37,24 +25,28 @@ namespace ModShardLauncher.Pages
         }
         private async void Save_Click(object sender, EventArgs e)
         {
-            if (DataLoader.data == null)
+            if (DataLoader.data.FORM == null)
             {
                 MessageBox.Show(Application.Current.FindResource("LoadDataWarning").ToString());
                 return;
             }
 
+            bool patchSucess = false;
+
             try 
             {
                 ModLoader.PatchFile();
                 Log.Information("Successfully patch vanilla");
+                patchSucess = true;
             }
             catch(Exception ex)
             {
                 Log.Error(ex, "Something went wrong");
                 Log.Information("Failed patching vanilla");
+                MessageBox.Show(Application.Current.FindResource("SaveDataWarning").ToString());
             }
-            
-            await DataLoader.DoSaveDialog();
+
+            if (patchSucess) await DataLoader.DoSaveDialog();
             Main.Instance.Refresh();
         }
     }

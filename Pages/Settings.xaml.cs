@@ -7,13 +7,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ModShardLauncher.Pages
 {
@@ -31,7 +24,8 @@ namespace ModShardLauncher.Pages
 
         private void GeneralSettings_Click(object sender, RoutedEventArgs e)
         {
-            if ((bool)(sender as ToggleButton).IsChecked) Viewer.Content = GeneralPage;
+            bool isChecked = Msl.ThrowIfNull(((ToggleButton)sender).IsChecked);
+            if (isChecked) Viewer.Content = GeneralPage;
             else Viewer.Content = null;
         }
     }

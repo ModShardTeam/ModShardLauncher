@@ -20,29 +20,25 @@ namespace ModShardLauncher.Pages
         public GeneralPage()
         {
             InitializeComponent();
-            
-            /*
-            var a = Enum.GetValues(typeof(ModLanguage));
-            foreach(var i in a)
-            {
-                Languages.Add(i.ToString());
-            }*/
+
+            // add Languages
             Languages.Add("中文");
             Languages.Add("English");
             //Languages.Add("Русский");
+
             switch (Main.Settings.Language)
             {
                 case "Chinese":
                     LangSelector.SelectedIndex = 0;
-                    Main.Settings.ChangeLanguage(0);
+                    UserSettings.ChangeLanguage(0);
                     break;
                 case "English":
                     LangSelector.SelectedIndex = 1;
-                    Main.Settings.ChangeLanguage(1);
+                    UserSettings.ChangeLanguage(1);
                     break;
                 case "Russian":
                     LangSelector.SelectedIndex = 2;
-                    Main.Settings.ChangeLanguage(2);
+                    UserSettings.ChangeLanguage(2);
                     break;
             }
         }
@@ -57,15 +53,15 @@ namespace ModShardLauncher.Pages
                 selection = LangSelector.SelectedIndex;
                 return;
             }
-            var combo = sender as ComboBox;
-            Main.Settings.ChangeLanguage(combo.SelectedIndex);
+            ComboBox combo = Msl.ThrowIfNull(sender as ComboBox);
+            UserSettings.ChangeLanguage(combo.SelectedIndex);
             selection = combo.SelectedIndex;
             LangSelector.SelectedIndex = selection;
         }
 
         private void Logger_Checked(object sender, RoutedEventArgs e)
         {
-            Main.Settings.EnableLogger = (bool)Logger.IsChecked;
+            Main.Settings.EnableLogger = Msl.ThrowIfNull(Logger.IsChecked);
             UserSettings.CheckLog(Main.Settings.EnableLogger);
             Main.Settings.SaveSettings();
         }

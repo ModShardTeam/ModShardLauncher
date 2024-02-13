@@ -21,7 +21,6 @@ namespace ModShardLauncher
     public partial class Main : Window
     {
         public static Main Instance;
-        public UndertaleData Data => DataLoader.data;
         public MainPage MainPage;
         public ModInfos ModPage;
         public ModSourceInfos ModSourcePage;
@@ -44,7 +43,7 @@ namespace ModShardLauncher
             Instance = this;
             MainPage = new MainPage();
             ModPage = new ModInfos();
-            Settings.LoadSettings();
+            UserSettings.LoadSettings();
             ModSourcePage = new ModSourceInfos();
             if (!Directory.Exists(ModLoader.ModPath))
                 Directory.CreateDirectory(ModLoader.ModPath);
@@ -75,19 +74,15 @@ namespace ModShardLauncher
             InitializeComponent();
 
             Viewer.Content = MainPage;
-
-            
-            //Viewer.Content = new DescriptionView(Application.Current.FindResource("Welcome_Use").ToString(),
-            //Application.Current.FindResource("Welcome_Desc").ToString());
         }
 
         private void MyToggleButton_Checked(object sender, EventArgs e)
         {
             foreach(var i in stackPanel.Children)
             {
-                if(i != sender && i is MyToggleButton)
+                if(i != sender && i is MyToggleButton button)
                 {
-                    (i as MyToggleButton).MyButton.IsChecked = false;
+                    button.MyButton.IsChecked = false;
                 }
             }
         }
@@ -120,24 +115,24 @@ namespace ModShardLauncher
 
         private void MyToggleButton_Click_1(object sender, EventArgs e)
         {
-            if ((bool)(sender as MyToggleButton).MyButton.IsChecked) Viewer.Content = ModPage;
+            if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = ModPage;
             else Viewer.Content = MainPage;
         }
 
         private void MyToggleButton_Click_2(object sender, EventArgs e)
         {
-            if ((bool)(sender as MyToggleButton).MyButton.IsChecked) Viewer.Content = ModSourcePage;
+            if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = ModSourcePage;
             else Viewer.Content = MainPage;
         }
         private void MyToggleButton_Click_4(object sender, EventArgs e)
         {
-            if ((bool)(sender as MyToggleButton).MyButton.IsChecked) Viewer.Content = SettingsPage;
+            if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = SettingsPage;
             else Viewer.Content = MainPage;
         }
         private void MyToggleButton_Click_3(object sender, EventArgs e)
         {
             WindowState = WindowState.Minimized;
-            (sender as MyToggleButton).MyButton.IsChecked = false;
+            if (sender is MyToggleButton button) button.MyButton.IsChecked = false;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -152,7 +147,7 @@ namespace ModShardLauncher
         public string SavePos = "";
         public string LoadPos = "";
         public List<string> EnableMods = new();
-        public void LoadSettings()
+        public static void LoadSettings()
         {
             // if no settings file, early stop
             if (!File.Exists("Settings.json")) return;
@@ -160,7 +155,7 @@ namespace ModShardLauncher
             // read file
             string settings = File.ReadAllText("Settings.json");
             // convert if as UserSettings
-            Main.Settings = JsonConvert.DeserializeObject<UserSettings>(settings);
+            Main.Settings = Msl.ThrowIfNull(JsonConvert.DeserializeObject<UserSettings>(settings));
 
             CheckLog(Main.Settings.EnableLogger);
 
@@ -195,7 +190,7 @@ namespace ModShardLauncher
                 Main.lls.MinimumLevel = (LogEventLevel) 1 + (int) LogEventLevel.Fatal;
             }
         }
-        public void ChangeLanguage(int index)
+        public static void ChangeLanguage(int index)
         {
             ResourceDictionary resDict;
             switch (index)
@@ -219,7 +214,6 @@ namespace ModShardLauncher
                     Main.Settings.Language = "Русский";
                     break;
             }
-            
         }
         public void SaveSettings()
         {

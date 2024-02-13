@@ -3,29 +3,21 @@ using UndertaleModLib.Models;
 using System.Threading.Tasks;
 using System.IO;
 using System;
-using UndertaleModTool;
 using System.Windows;
-using System.Diagnostics;
-using UndertaleModLib.Decompiler;
-using ModShardLauncher.Mods;
-using System.Text;
-using System.Windows.Threading;
-using UndertaleModLib.ModelsDebug;
 using UndertaleModLib.Util;
 using System.Linq;
 using Microsoft.Win32;
-using System.Windows.Documents;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Serilog;
+using UndertaleModLib.Decompiler;
 
 namespace ModShardLauncher
 {
     public class DataLoader
     {
-        public static UndertaleData data = null;
-        public static UndertaleData dataCache = null;
-        internal static string DataPath = "";
+        public static UndertaleData data = new();
+        internal static string dataPath = "";
         public delegate void FileMessageEventHandler(string message);
         public static event FileMessageEventHandler FileMessageEvent;
         public static void ShowWarning(string warning, string title)
@@ -53,99 +45,107 @@ namespace ModShardLauncher
         }
         public static async Task<bool> DoOpenDialog()
         {
+            // auto load if it can
             if(Main.Settings.LoadPos != "" && File.Exists(Main.Settings.LoadPos))
             {
                 await LoadFile(Main.Settings.LoadPos);
                 return true;
             }
-            OpenFileDialog dlg = new OpenFileDialog();
 
-            dlg.DefaultExt = "win";
-            dlg.Filter = "Game Maker Studio data files (.win, .unx, .ios, .droid, audiogroup*.dat)|*.win;*.unx;*.ios;*.droid;audiogroup*.dat|All files|*";
+            // else open a new dialog
+            OpenFileDialog dlg = new()
+            {
+                DefaultExt = "win",
+                Filter = "Game Maker Studio data files (.win, .unx, .ios, .droid, audiogroup*.dat)|*.win;*.unx;*.ios;*.droid;audiogroup*.dat|All files|*"
+            };
 
+            // load
             if (dlg.ShowDialog() == true)
             {
                 await LoadFile(dlg.FileName);
                 return true;
             }
+
+            // nothing was load
             return false;
+        }
+        private static void ExportData()
+        {
+            File.WriteAllText("json_dump_code.json", JsonConvert.SerializeObject(data.Code.Select(t => t.Name.Content)));
+            File.WriteAllText("json_dump_variables.json", JsonConvert.SerializeObject(data.Variables.Select(t => t.Name.Content)));
+            File.WriteAllText("json_dump_rooms.json", JsonConvert.SerializeObject(data.Rooms.Select(t => t.Name.Content)));
+            Msl.GenerateNRandomLinesFromCode(data.Code, new GlobalDecompileContext(data, false), 100, 1, 0);
+        }
+        private static bool LoadUmt(string filename)
+        {
+            bool hadWarnings = false;
+            using (FileStream stream = new(filename, FileMode.Open, FileAccess.Read))
+            {
+                data = UndertaleIO.Read(
+                    stream, warning =>
+                    {
+                        ShowWarning(warning, "Loading warning");
+
+                        if (warning.Contains("unserializeCountError.txt")
+                            || warning.Contains("object pool size"))
+                            return;
+
+                        hadWarnings = true;
+                    }, 
+                    delegate (string message)
+                    {
+                        FileMessageEvent?.Invoke(message);
+                    }
+                );
+            }
+
+            UndertaleEmbeddedTexture.TexData.ClearSharedStream();
+            Log.Information(string.Format("Successfully load: {0}.", filename));
+
+            return hadWarnings;
         }
         public static async Task LoadFile(string filename, bool re = false)
         {
+            // save the filename for later
+            dataPath = filename;
+            // create a new dialog box
             LoadingDialog dialog = new()
             {
                 Owner = Main.Instance
             };
-            DataPath = filename;
-            Task t = Task.Run(() =>
+            // task load a data.win with umt
+            Task taskLoadDataWinWithUmt = Task.Run(() =>
             {
                 bool hadWarnings = false;
                 try
                 {
-                    using (FileStream stream = new(filename, FileMode.Open, FileAccess.Read))
-                    {
-                        data = UndertaleIO.Read(
-                            stream, warning =>
-                            {
-                                ShowWarning(warning, "Loading warning");
-
-                                if (warning.Contains("unserializeCountError.txt")
-                                    || warning.Contains("object pool size"))
-                                    return;
-
-                                hadWarnings = true;
-                            }, 
-                            delegate (string message)
-                            {
-                                FileMessageEvent?.Invoke(message);
-                            }
-                        );
-
-                        File.WriteAllText("json_dump_code.json", JsonConvert.SerializeObject(data.Code.Select(t => t.Name.Content)));
-                        File.WriteAllText("json_dump_variables.json", JsonConvert.SerializeObject(data.Variables.Select(t => t.Name.Content)));
-                        File.WriteAllText("json_dump_rooms.json", JsonConvert.SerializeObject(data.Rooms.Select(t => t.Name.Content)));
-                        // GenericUtils.GenerateNRandomLinesFromCode(data.Code, new GlobalDecompileContext(data, false), 100, 1, 0);
-
-                        dataCache = UndertaleIO.Read(
-                            stream, warning =>
-                            {
-                                ShowWarning(warning, "Loading warning");
-
-                                if (warning.Contains("unserializeCountError.txt")
-                                    || warning.Contains("object pool size"))
-                                    return;
-
-                                hadWarnings = true;
-                            }, 
-                            delegate (string message)
-                            {
-                                FileMessageEvent?.Invoke(message);
-                            }
-                        );
-                    }
-
-                    UndertaleEmbeddedTexture.TexData.ClearSharedStream();
-                    Log.Information(string.Format("Successfully load: {0}.", filename));
+                    hadWarnings = LoadUmt(filename);
                 }
                 catch (Exception ex)
                 {   
                     Log.Error(ex, "Something went wrong");
                     throw;
                 }
-                Main.Instance.Dispatcher.Invoke(async () =>
+                Main.Instance.Dispatcher.Invoke(() =>
                 {
                     dialog.Hide();
                 });
             });
-
+            // run
             dialog.ShowDialog();
-            await t;
+            await taskLoadDataWinWithUmt;
             ModLoader.Initalize();
+            
             if(Main.Settings.LoadPos == "" && !re)
             {
-                MessageBoxResult result = MessageBox.Show(Application.Current.FindResource("LoadPath").ToString(),
-                        Application.Current.FindResource("LoadPath").ToString(), MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if(result == MessageBoxResult.Yes)
+                MessageBoxResult result = MessageBox.Show(
+                    Application.Current.FindResource("LoadPath").ToString(),
+                    Application.Current.FindResource("LoadPath").ToString(), 
+                    MessageBoxButton.YesNo, 
+                    MessageBoxImage.Question
+                );
+
+                if (result == MessageBoxResult.Yes)
                 {
                     Main.Settings.LoadPos = filename;
                 }
@@ -171,65 +171,77 @@ namespace ModShardLauncher
                 await SaveFile(dlg.FileName);
                 return true;
             }
-            // else await LoadFile(DataPath, true);
+
             return false;
+        }
+        private static void SaveTempWithUmt(string filename)
+        {
+            using (FileStream stream = new(filename + "temp", FileMode.Create, FileAccess.Write))
+            {
+                UndertaleIO.Write(stream, data, message =>
+                {
+                    FileMessageEvent?.Invoke(message);
+                });
+            }
+
+            UndertaleEmbeddedTexture.TexData.ClearSharedStream();
+            QoiConverter.ClearSharedBuffer();
+        }
+        private static void HandleFailedSave(Exception exception)
+        {
+            if (!UndertaleIO.IsDictionaryCleared)
+            {
+                try
+                {
+                    IEnumerable<IUndertaleListChunk> enumerableChunks = data.FORM.Chunks.Values.Where(x => x is not null).Select(x => (IUndertaleListChunk)x);
+                    Parallel.ForEach(enumerableChunks, (chunk) =>
+                    {
+                        chunk.ClearIndexDict();
+                    });
+
+                    UndertaleIO.IsDictionaryCleared = true;
+                }
+                catch { }
+            }
+
+            Main.Instance.Dispatcher.Invoke(() =>
+            {
+                ShowError("An error occured while trying to save:\n" + exception.Message, "Save error");
+            });
         }
         public static async Task SaveFile(string filename)
         {
+            // create a new dialog
             LoadingDialog dialog = new()
             {
                 Owner = Main.Instance
             };
-            Task t = Task.Run(async () =>
+
+            Task t = Task.Run(() =>
             {
                 bool SaveSucceeded = true;
+                // try temp save first
                 try
                 {
-                    using (FileStream stream = new(filename + "temp", FileMode.Create, FileAccess.Write))
-                    {
-                        UndertaleIO.Write(stream, data, message =>
-                        {
-                            FileMessageEvent?.Invoke(message);
-                        });
-                    }
-
-                    UndertaleEmbeddedTexture.TexData.ClearSharedStream();
-                    QoiConverter.ClearSharedBuffer();
+                    SaveTempWithUmt(filename);
                 }
                 catch (Exception e)
                 {
-                    if (!UndertaleIO.IsDictionaryCleared)
-                    {
-                        try
-                        {
-                            IEnumerable<IUndertaleListChunk?> listChunks = data.FORM.Chunks.Values.Select(x => x as IUndertaleListChunk);
-                            Parallel.ForEach(listChunks.Where(x => x is not null), (chunk) =>
-                            {
-                                chunk.ClearIndexDict();
-                            });
-
-                            UndertaleIO.IsDictionaryCleared = true;
-                        }
-                        catch { }
-                    }
-                    Main.Instance.Dispatcher.Invoke(() =>
-                    {
-                        ShowError("An error occured while trying to save:\n" + e.Message, "Save error");
-                    });
+                    HandleFailedSave(e);
                     SaveSucceeded = false;
                 }
+
+                // move save
                 try
                 {
                     if (SaveSucceeded)
                     {
-                        if (File.Exists(filename))
-                            File.Delete(filename);
+                        if (File.Exists(filename)) File.Delete(filename);
                         File.Move(filename + "temp", filename);
                     }
                     else
                     {
-                        if (File.Exists(filename + "temp"))
-                            File.Delete(filename + "temp");
+                        if (File.Exists(filename + "temp")) File.Delete(filename + "temp");
                     }
                 }
                 catch (Exception exc)
@@ -241,26 +253,27 @@ namespace ModShardLauncher
 
                     SaveSucceeded = false;
                 }
+
                 Main.Instance.Dispatcher.Invoke(() =>
                 {
                     dialog.Hide();
                 });
             });
+
+            //run
             dialog.ShowDialog();
             await t;
-            await LoadFile(DataPath, true);
-            try
-            {
-                ModLoader.LoadFiles();
-            }
-            catch(Exception ex)
-            {
-                Log.Error(ex, "Something went wrong");
-            }
+            await LoadFile(dataPath, true);
+
             if (Main.Settings.SavePos == "")
             {
-                MessageBoxResult result = MessageBox.Show(Application.Current.FindResource("SavePath").ToString(),
-                        Application.Current.FindResource("SavePath").ToString(), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show(
+                    Application.Current.FindResource("SavePath").ToString(),
+                    Application.Current.FindResource("SavePath").ToString(), 
+                    MessageBoxButton.YesNo, 
+                    MessageBoxImage.Question
+                );
+
                 if (result == MessageBoxResult.Yes)
                 {
                     Main.Settings.SavePos = filename;

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UndertaleModLib;
+﻿using UndertaleModLib;
 using UndertaleModLib.Models;
 
 namespace ModShardLauncher.Extensions
@@ -20,7 +15,7 @@ namespace ModShardLauncher.Extensions
         }
         public void CreateFunc()
         {
-            var ScriptThread = new UndertaleExtensionFunction()
+            UndertaleExtensionFunction ScriptThread = new()
             {
                 Name = DataLoader.data.Strings.MakeString("ScriptThread"),
                 ExtName = DataLoader.data.Strings.MakeString("ScriptThread"),
@@ -30,7 +25,7 @@ namespace ModShardLauncher.Extensions
                 ID = DataLoader.data.ExtensionFindLastId()
             };
             Functions.Add(ScriptThread);
-            var GetScript = new UndertaleExtensionFunction()
+            UndertaleExtensionFunction GetScript = new()
             {
                 Name = DataLoader.data.Strings.MakeString("GetScript"),
                 ExtName = DataLoader.data.Strings.MakeString("GetScript"),
@@ -40,7 +35,7 @@ namespace ModShardLauncher.Extensions
                 ID = ScriptThread.ID + 1
             };
             Functions.Add(GetScript);
-            var PopScript = new UndertaleExtensionFunction()
+            UndertaleExtensionFunction PopScript = new()
             {
                 Name = DataLoader.data.Strings.MakeString("PopScript"),
                 ExtName = DataLoader.data.Strings.MakeString("PopScript"),
@@ -50,7 +45,7 @@ namespace ModShardLauncher.Extensions
                 ID = GetScript.ID + 1
             };
             Functions.Add(PopScript);
-            var RunCallBack = new UndertaleExtensionFunction()
+            UndertaleExtensionFunction RunCallBack = new()
             {
                 Name = DataLoader.data.Strings.MakeString("RunCallBack"),
                 ExtName = DataLoader.data.Strings.MakeString("RunCallBack"),
