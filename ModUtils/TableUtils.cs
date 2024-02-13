@@ -117,7 +117,7 @@ namespace ModShardLauncher
         }
     }
     /// <summary>
-    /// Class to abstract the localization of items.
+    /// Abstraction the localization of items found in gml_GlobalScript_table_consumables.
     /// </summary>
     public class LocalizationItem
     {
@@ -258,30 +258,86 @@ namespace ModShardLauncher
             ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_consumables");
         }
     }
+    /// <summary>
+    /// Abstraction for the localization of sentences found in gml_GlobalScript_table_NPC_Lines.
+    /// </summary>
     public class LocalizationSentence
     {
+        /// <summary>
+        /// Id of the sentence
+        /// </summary>
         public string Id { get; set; }
         public string Tags { get; set; } = "any";
         public string Role { get; set; } = "any";
         public string Type { get; set; } = "any";
         public string Faction { get; set; } = "any";
         public string Settlement { get; set; } = "any";
+        /// <summary>
+        /// Dictionary that contains for each available languages a translation of the sentence as displayed in dialog.
+        /// </summary>
         public Dictionary<ModLanguage, string> Sentence { get; set; } = new();
+        /// <summary>
+        /// Return an instance of <see cref="LocalizationSentence"/> with an empty <see cref="Sentence"/>.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// LocalizationSentence("mySentenceId");
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="id"></param>
         public LocalizationSentence(string id)
         {
             Id = id;
         }
+        /// <summary>
+        /// Return an instance of <see cref="LocalizationSentence"/> with <see cref="Sentence"/> filled by an input dictionary.
+        /// It is expected to have at least an English key. It does not need to follow the convention order of the localization table.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// LocalizationItem("mySentenceId", 
+        ///     new Dictionary &lt; ModLanguage, string &gt; () { {Russian, "sentenceRu"}, {English, "sentenceEn"}, {Italian, "sentenceIt"} });
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sentence"></param>
         public LocalizationSentence(string id, Dictionary<ModLanguage, string> sentence)
         {
             Id = id;
             Sentence = Localization.SetDictionary(sentence);
             
         }
+        /// <summary>
+        /// Return an instance of <see cref="LocalizationSentence"/> with <see cref="Sentence"/> filled by an input string delimited by semi-colon.
+        /// It is expected to follow the convention order of the localization table.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// LocalizationItem("mySentenceId", 
+        ///     "sentenceRu;sentenceEn;sentenceCh");
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sentence"></param>
         public LocalizationSentence(string id, string sentence)
         {
             Id = id;
             Sentence = Localization.SetDictionary(sentence);
         }
+        /// <summary>
+        /// Create a string delimited by semi-colon that follows the in-game convention order for localization of sentences.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// LocalizationItem("mySentenceId", "sentenceRu;sentenceEn;sentenceCh").CreateLine();
+        /// </code>
+        /// returns the string "mySentenceId;any;any;any;any;any;sentenceRu;sentenceEn;sentenceCh;sentenceEn;sentenceEn;sentenceEn;sentenceEn;sentenceEn;sentenceEn;sentenceEn;sentenceEn;sentenceEn;".
+        /// </example>
+        /// </summary>
+        /// <returns></returns>
         public string CreateLine()
         {
             string line = string.Format("{0};{1};{2};{3};{4};{5}", Id, Tags, Role, Type, Faction, Settlement);
