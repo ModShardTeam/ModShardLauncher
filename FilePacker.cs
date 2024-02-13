@@ -33,8 +33,10 @@ namespace ModShardLauncher
             
             // work around to find the FileVersion of ModShardLauncher.dll for single file publishing
             // see: https://github.com/dotnet/runtime/issues/13051
-            Assembly assembly = Assembly.GetExecutingAssembly() ?? throw new NullReferenceException("ExecutingAssembly");
-            string mod_version = "v" + FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
+            ProcessModule mainProcess = Msl.ThrowIfNull(Process.GetCurrentProcess().MainModule);
+            string mainProcessName = Msl.ThrowIfNull(mainProcess.FileName);
+            string mod_version = "v" + FileVersionInfo.GetVersionInfo(mainProcessName).FileVersion;
+            
             Write(fs, mod_version);
             Log.Information("Writting version...");
 
