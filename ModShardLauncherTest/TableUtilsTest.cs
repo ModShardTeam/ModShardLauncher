@@ -154,7 +154,7 @@ namespace ModShardLauncherTest
         }
     }
 
-    public class CreateLineTest
+    public class CreateLineLocalizationItemTest
     {
         [Fact]
         public void CreateLine()
@@ -186,6 +186,25 @@ namespace ModShardLauncherTest
             // Assert
             Assert.Equal(expectedResult, res);
             
+        }
+    }
+
+    public class CreateLineLocalizationSentenceTest
+    {
+        [Theory]
+        [InlineData(TableUtilsData.oneLanguageString, "id;any;any;any;any;any;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;")]
+        [InlineData(TableUtilsData.multipleLanguagesString, "id;any;any;any;any;any;testRu;testEn;testCh;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;")]
+        [InlineData(TableUtilsData.allLanguagesString, "id;any;any;any;any;any;testRu;testEn;testCh;testGe;testSp;testFr;testIt;testPr;testPl;testTu;testJp;testKr;")]
+        public void CreateLine(string str, string expectedResult)
+        {
+            // Arrange
+            LocalizationSentence sentence = new("id", str);
+
+            // Act
+            string res = sentence.CreateLine();
+
+            // Assert
+            Assert.Equal(expectedResult, res);
         }
     }
 }
