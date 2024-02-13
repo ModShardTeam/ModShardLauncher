@@ -126,15 +126,15 @@ namespace ModShardLauncher
         /// </summary>
         public string OName { get; set; }
         /// <summary>
-        /// Dictionary that contains for each available languages a translation of the item name as displayed in-game.
+        /// Dictionary that contains a translation of the item name as displayed in-game for each available languages.
         /// </summary>
         public Dictionary<ModLanguage, string> ConsumableName { get; set; } = new();
         /// <summary>
-        /// Dictionary that contains for each available languages a translation of the item effect as displayed in-game.
+        /// Dictionary that contains a translation of the item effect as displayed in-game for each available languages.
         /// </summary>
         public Dictionary<ModLanguage, string> ConsumableID { get; set; } = new();
         /// <summary>
-        /// Dictionary that contains for each available languages a translation of the item description as displayed in-game.
+        /// Dictionary that contains a translation of the item description as displayed in-game for each available languages.
         /// </summary>
         public Dictionary<ModLanguage, string> ConsumableDescription { get; set; } = new();
         /// <summary>
@@ -274,7 +274,7 @@ namespace ModShardLauncher
         public string Faction { get; set; } = "any";
         public string Settlement { get; set; } = "any";
         /// <summary>
-        /// Dictionary that contains for each available languages a translation of the sentence as displayed in dialog.
+        /// Dictionary that contains a translation of the sentence as displayed in dialog for each available languages.
         /// </summary>
         public Dictionary<ModLanguage, string> Sentence { get; set; } = new();
         /// <summary>
