@@ -248,7 +248,8 @@ namespace ModShardLauncher
             }
         }
         /// <summary>
-        /// Browse a table with an iterator, and at special lines, insert a new line constructed by the dictionaries <see cref="ConsumableName"/>, <see cref="ConsumableID"/> and <see cref="ConsumableDescription"/>.
+        /// Browse a table with an iterator, and at special lines, 
+        /// insert a new line constructed by the dictionaries <see cref="ConsumableName"/>, <see cref="ConsumableID"/> and <see cref="ConsumableDescription"/> in the gml_GlobalScript_table_consumables table.
         /// </summary>
         /// <param name="table"></param>
         /// <returns></returns>
@@ -349,9 +350,27 @@ namespace ModShardLauncher
             return line + ";";
         }
     }
+    /// <summary>
+    /// Abstraction for carrying a list of sentences.
+    /// </summary>
     public class LocalizationDialog
     {
+        /// <summary>
+        /// List of <see cref="LocalizationSentence"/>
+        /// </summary>
         public List<LocalizationSentence> Sentences { get; set; } = new();
+        /// <summary>
+        /// Return an instance of <see cref="LocalizationDialog"/> with an arbitrary number of <see cref="LocalizationSentence"/>.
+        /// <example>
+        /// For example:
+        /// <code>
+        /// LocalizationDialog(
+        ///     new LocalizationSentence("mySentenceId1"), 
+        ///     new LocalizationSentence("mySentenceId2"));
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="sentences"></param>
         public LocalizationDialog(params LocalizationSentence[] sentences)
         {
             foreach (LocalizationSentence sentence in sentences)
@@ -360,6 +379,12 @@ namespace ModShardLauncher
             }
             
         }
+        /// <summary>
+        /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSentence"/>,
+        /// yield a new line constructed by the dictionary <see cref="Sentence"/>. 
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
         private IEnumerable<string> EditTable(IEnumerable<string> table)
         {
             foreach (string line in table)
@@ -375,13 +400,16 @@ namespace ModShardLauncher
                 }
             }
         }
-        private IEnumerable<string> EditTable(string tableName)
-        {
-            return EditTable(Msl.ThrowIfNull(ModLoader.GetTable(tableName)));
-        }
+        /// <summary>
+        /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSentence"/>,
+        /// insert a new line constructed by the dictionary <see cref="Sentence"/> in the gml_GlobalScript_table_NPC_Lines table. 
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
         public void InjectTable()
         {
-            ModLoader.SetTable(EditTable("gml_GlobalScript_table_NPC_Lines").ToList(), "gml_GlobalScript_table_NPC_Lines");
+            List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_NPC_Lines"));
+            ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_NPC_Lines");
         }
     }
 }
