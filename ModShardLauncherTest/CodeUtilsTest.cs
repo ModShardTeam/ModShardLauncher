@@ -1504,4 +1504,93 @@ state = 25";
             Assert.Equal(stringListReference, stringList_replaceBy);
         }
     }
+
+    public class ApplyTest
+    {
+        private IEnumerable<string> DoNothingIterator(IEnumerable<string> input)
+        {
+            foreach (string element in input)
+            {
+                yield return element;
+            }
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine)]
+        [InlineData(StringDataForTest.multipleLines)]
+        [InlineData(StringDataForTest.randomBlock)]
+        public void Apply_DoNothing(string input)
+        {
+            // Arrange
+            List<string> listStringInput = input.Split('\n').ToList();
+
+            // Act
+            IEnumerable<string> res = listStringInput.Apply(DoNothingIterator);
+            
+            // Assert
+            Assert.Equal(res, listStringInput);
+        }
+        
+        private IEnumerable<string> PickFirstLineIterator(IEnumerable<string> input)
+        {
+            bool send = false;
+            foreach (string element in input)
+            {
+                if (!send)
+                {
+                    yield return element;
+                    send = true;
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.oneLine)]
+        [InlineData(StringDataForTest.multipleLines)]
+        [InlineData(StringDataForTest.randomBlock)]
+        public void Apply_PickFirstLine(string input)
+        {
+            // Arrange
+            List<string> listStringInput = input.Split('\n').ToList();
+
+            // Act
+            IEnumerable<string> res = listStringInput.Apply(PickFirstLineIterator);
+            
+            // Assert
+            Assert.Equal(res, listStringInput.GetRange(0, 1));
+        }
+        private IEnumerable<string> PickFirstTwoLinesIterator(IEnumerable<string> input)
+        {
+            bool send_first = false;
+            bool send_second = false;
+            foreach (string element in input)
+            {
+                if (!send_first)
+                {
+                    yield return element;
+                    send_first = true;
+                }
+                else if (!send_second)
+                {
+                    yield return element;
+                    send_second = true;
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData(StringDataForTest.multipleLines)]
+        [InlineData(StringDataForTest.randomBlock)]
+        public void Apply_PickFirstTwoLines(string input)
+        {
+            // Arrange
+            List<string> listStringInput = input.Split('\n').ToList();
+
+            // Act
+            IEnumerable<string> res = listStringInput.Apply(PickFirstTwoLinesIterator);
+            
+            // Assert
+            Assert.Equal(res, listStringInput.GetRange(0, 2));
+        }
+    }
 }
