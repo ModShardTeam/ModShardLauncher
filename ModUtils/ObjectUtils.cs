@@ -6,6 +6,31 @@ using UndertaleModLib.Models;
 
 namespace ModShardLauncher
 {
+    public static class GameObjectUtils
+    {
+        /// <summary>
+        /// Extension method to apply several <see cref="MslEvent"/> to a <see cref="gameObject"/> simultaneously.
+        /// <example>For example:
+        /// <code>
+        /// gameObject.ApplyEvent(ModFiles, 
+        ///     new MslEvent(fileName0, EventType.Create, 0),
+        ///     new MslEvent(fileName1, EventType.Other, 10),
+        ///     new MslEvent(fileName2, EventType.Other, 11)
+        /// );
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <param name="modFile"></param>
+        /// <param name="mslEvents"></param>
+        static public void ApplyEvent(this UndertaleGameObject gameObject, ModFile modFile, params MslEvent[] mslEvents)
+        {
+            foreach (MslEvent mslEvent in mslEvents)
+            {
+                mslEvent.Apply(gameObject, modFile);
+            }
+        }
+    }
     public static partial class Msl
     {
         /// <summary>
