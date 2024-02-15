@@ -22,6 +22,7 @@
     <sys:String x:Key="EnableMod">是否启用</sys:String>
     <sys:String x:Key="ModVersion">Mod版本</sys:String>
     <sys:String x:Key="GameVersion">游戏版本</sys:String>
+    <sys:String x:Key="SaveDataWarning">打包错误, 未能保存文件</sys:String>
     <sys:String x:Key="Compile">编译</sys:String>
     <sys:String x:Key="LoadDataWarning">请先加载游戏文件!</sys:String>
     <sys:String x:Key="VersionDifferentWarningTitle">Mod版本与游戏版本不一致</sys:String>
@@ -38,4 +39,5 @@
     <sys:String x:Key="Close">关闭</sys:String>
     <sys:String x:Key="Minimize">最小化</sys:String>
     <sys:String x:Key="Loading">加载中...</sys:String>
+    <sys:String x:Key="ServerStart">模组交互服务器已在{0}端口上启动.</sys:String>
 </ResourceDictionary>

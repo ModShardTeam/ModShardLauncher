@@ -30,7 +30,7 @@ namespace ModShardLauncher
 
             Write(fs, "MSLM");
             Log.Information("Writting header...");
-            
+
             // work around to find the FileVersion of ModShardLauncher.dll for single file publishing
             // see: https://github.com/dotnet/runtime/issues/13051
             ProcessModule mainProcess = Msl.ThrowIfNull(Process.GetCurrentProcess().MainModule);

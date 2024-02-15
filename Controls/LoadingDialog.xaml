@@ -12,7 +12,7 @@
         <Label Content="{DynamicResource Loading}" Style="{StaticResource xFont}" 
                Foreground="#95796A" VerticalAlignment="Top" HorizontalAlignment="Center"
                Margin="0,100,0,0"/>
-        <Image gif:AnimationBehavior.SourceUri="/Resources/icon.gif"
+        <Image gif:AnimationBehavior.SourceUri="/Resources/Sprites/icon.gif"
                Height="42" Width="36" VerticalAlignment="Top" Margin="0,40,0,0"/>
     </Grid>
 </Window>

@@ -12,7 +12,7 @@ using System.IO;
 using System.Reflection;
 using UndertaleModLib.Models;
 using ModShardLauncher.Extensions;
-using ModShardLauncher.Pages;
+using ModShardLauncher.Controls;
 using Serilog;
 
 namespace ModShardLauncher
@@ -27,6 +27,7 @@ namespace ModShardLauncher
         private static List<Assembly> Assemblies = new();
         public static List<string> Weapons = new();
         public static List<string> WeaponDescriptions = new();
+        public static Dictionary<string, Action<string>> ScriptCallbacks = new Dictionary<string, Action<string>>();
         public static void ShowMessage(string msg)
         {
             Trace.Write(msg);
@@ -218,52 +219,26 @@ namespace ModShardLauncher
         }
         internal static void PatchInnerFile()
         {
+            Msl.AddInnerFunction("print");
+            Msl.AddInnerFunction("give");
+            Msl.AddInnerFunction("SendMsg");
+            Msl.AddInnerFunction("createHookObj");
             AddExtension(new ModShard());
             UndertaleGameObject engine = Msl.AddObject("o_ScriptEngine");
             engine.Persistent = true;
             UndertaleGameObject.Event ev = new()
             {
-                EventSubtypeStep = EventSubtypeStep.Step
+                EventSubtypeOther = EventSubtypeOther.AsyncNetworking
             };
             ev.Actions.Add(new UndertaleGameObject.EventAction()
             {
-                CodeId = Msl.AddCode(@"if(GetScript() != ""NoScript"")
-{
-    var scr = string_split(GetScript(),"" "")
-    var scriptID = asset_get_index(scr[0])
-    array_delete(scr, 0, 1)
-    for(i = 0;i<array_length(scr);i++)
-        scr[i]=string_replace(scr[i],""_"","" "")
-    var ret = """"
-    if(scriptID == -1)
-        ret = (""script is wrong: "" + GetScript())
-    else
-    {
-        if(array_length(scr) > 0)
-            ret = script_execute_ext(scriptID, scr)
-        else ret = script_execute(scriptID)
-    }
-    RunCallBack(string(ret))
-    PopScript()
-}", "ScriptEngine_step")
+                CodeId = Msl.AddInnerCode("ScriptEngine_server")
             });
-            engine.Events[3].Add(ev);
-            Msl.AddFunction(@"function print(argument0)
-{
-    show_message(argument0)
-}","print");
-            Msl.AddFunction(@"function give(argument0)
-{
-    with (o_inventory)
-    {
-        with (scr_inventory_add_weapon(argument0, (1 << 0)))
-            scr_inv_atr_set(""Duration"", 100)
-    }
-}", "give");
+            engine.Events[7].Add(ev);
             UndertaleGameObject.Event create = new();
             create.Actions.Add(new UndertaleGameObject.EventAction()
             {
-                CodeId = Msl.AddCode(@"ScriptThread()", "ScriptEngine_create")
+                CodeId = Msl.AddInnerCode("ScriptEngine_create")
             });
             engine.Events[0].Add(create);
             UndertaleRoom start = Data.Rooms.First(t => t.Name.Content == "START");

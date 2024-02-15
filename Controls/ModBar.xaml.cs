@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ModShardLauncher.Mods
+namespace ModShardLauncher.Controls
 {
     /// <summary>
     /// ModBar.xaml 的交互逻辑
@@ -33,7 +33,7 @@ namespace ModShardLauncher.Mods
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             byte[] imageData = (byte[])value;
-            if (imageData.Length == 0) return new BitmapImage(new Uri("/Resources/icon_default.png", UriKind.Relative));
+            if (imageData.Length == 0) return new BitmapImage(new Uri("/Resources/Sprites/icon_default.png", UriKind.Relative));
 
             BitmapImage biImg = new();
             MemoryStream ms = new(imageData);

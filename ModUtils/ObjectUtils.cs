@@ -8,6 +8,21 @@ namespace ModShardLauncher
 {
     public static class GameObjectUtils
     {
+        /// <summary>
+        /// Extension method to apply several <see cref="MslEvent"/> to a <see cref="gameObject"/> simultaneously.
+        /// <example>For example:
+        /// <code>
+        /// gameObject.ApplyEvent(ModFiles, 
+        ///     new MslEvent(fileName0, EventType.Create, 0),
+        ///     new MslEvent(fileName1, EventType.Other, 10),
+        ///     new MslEvent(fileName2, EventType.Other, 11)
+        /// );
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <param name="modFile"></param>
+        /// <param name="mslEvents"></param>
         static public void ApplyEvent(this UndertaleGameObject gameObject, ModFile modFile, params MslEvent[] mslEvents)
         {
             foreach (MslEvent mslEvent in mslEvents)
@@ -18,6 +33,20 @@ namespace ModShardLauncher
     }
     public static partial class Msl
     {
+        /// <summary>
+        /// Add and return a new <see cref="UndertaleGameObject"/> named <paramref name="name"/> to the data.win if this name is not used already.
+        /// Else return the existing <see cref="UndertaleGameObject"/>.
+        /// A lot of parametrization is possible when creating this <see cref="UndertaleGameObject"/>.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="spriteName"></param>
+        /// <param name="parentName"></param>
+        /// <param name="isVisible"></param>
+        /// <param name="isPersistent"></param>
+        /// <param name="isAwake"></param>
+        /// <param name="collisionShapeFlags"></param>
+        /// <returns>
+        /// </returns>
         public static UndertaleGameObject AddObject(
             string name, 
             string spriteName = "",
@@ -38,9 +67,9 @@ namespace ModShardLauncher
                 }
 
                 // retrieve possible parent and sprite
-                UndertaleSprite sprite = new();
+                UndertaleSprite? sprite = null;
                 if (spriteName != "") sprite = GetSprite(spriteName);
-                UndertaleGameObject parent = new();
+                UndertaleGameObject? parent = null;
                 if (parentName != "") parent = GetObject(parentName);
 
                 // doesnt exist so it can be added
@@ -63,6 +92,11 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        /// <summary>
+        /// Return the <see cref="UndertaleGameObject"/> named <paramref name="name"/> if it exists. Else raise an exception.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static UndertaleGameObject GetObject(string name)
         {
             try
@@ -71,12 +105,17 @@ namespace ModShardLauncher
                 Log.Information(string.Format("Found gameObject: {0}", name.ToString()));
                 return gameObject;
             }
-            catch(Exception ex) 
+            catch
             {
-                Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
+        /// <summary>
+        /// Replace the <see cref="UndertaleGameObject"/> named <paramref name="name"/> by <paramref name="o"/>. 
+        /// Raise an exception if the <see cref="UndertaleGameObject"/> named <paramref name="name"/> does not exist.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static void SetObject(string name, UndertaleGameObject o)
         {
             try

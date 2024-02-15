@@ -4,16 +4,16 @@ using System.Windows;
 using System.Windows.Controls;
 using Serilog;
 
-namespace ModShardLauncher.Pages
+namespace ModShardLauncher.Controls
 {
     /// <summary>
-    /// ModInfos.xaml 的交互逻辑
+    /// ModSourceInfos.xaml 的交互逻辑
     /// </summary>
-    public partial class ModInfos : UserControl
+    public partial class ModSourceInfos : UserControl
     {
-        public static ModInfos Instance;
-        public List<ModFile> Mods { get; set; } = new();
-        public ModInfos()
+        public static ModSourceInfos Instance;
+        public List<ModSource> ModSources {  get; set; } = new();
+        public ModSourceInfos()
         {
             InitializeComponent();
             Instance = this;

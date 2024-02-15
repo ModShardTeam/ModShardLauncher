@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-namespace ModShardLauncher.Pages
+namespace ModShardLauncher.Controls
 {
     /// <summary>
     /// Settings.xaml 的交互逻辑

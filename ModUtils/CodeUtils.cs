@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
+using ModShardLauncher.Resources.Codes;
 using Serilog;
 using UndertaleModLib;
 using UndertaleModLib.Decompiler;
@@ -127,6 +129,27 @@ namespace ModShardLauncher
             }
         }
         /// <summary>
+        /// Get code from file in this tool.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        internal static string GetCodeRes(string name)
+        {
+            var data = CodeResources.ResourceManager.GetObject(name, CodeResources.Culture) as byte[];
+            if (data == null)
+            {
+                Log.Information($"Code resource not found :{name}");
+                return "";
+            }
+            return Encoding.UTF8.GetString(data);
+        }
+        /// <summary>
+        /// Add a new code from the code in this tool.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        internal static UndertaleCode AddInnerCode(string name) => AddCode(GetCodeRes(name), name);
+        /// <summary>
         /// Add a new function named <paramref name="name"/>.
         /// </summary>
         /// <param name="codeAsString"></param>
@@ -150,6 +173,12 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        /// <summary>
+        /// Add a new function from the code in this tool.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        internal static UndertaleCode AddInnerFunction(string name) => AddFunction(GetCodeRes(name), name);
         /// <summary>
         /// Return the UndertaleCode as string from <paramref name="fileName"/>.
         /// </summary>
@@ -852,9 +881,22 @@ namespace ModShardLauncher
         {
             return new(fe.header, fe.ienumerable.ReplaceBy(modFile.GetCode(fileName).Split("\n")));
         }
+        /// <summary>
+        /// Apply an <paramref name="iterator"/> to an <see cref="IEnumerable"/>.
+        /// </summary>
+        /// <param name="ienumerable"></param>
+        /// <param name="iterator"></param>
+        /// <returns></returns>
+        public static IEnumerable<string> Apply(this IEnumerable<string> ienumerable, Func<IEnumerable<string>, IEnumerable<string>> iterator)
+        {
+            return iterator(ienumerable);
+        }
+        /// <summary>
+        /// Wrapper of <see cref="Apply"/> for the <see cref="FileEnumerable"/>.
+        /// </summary>
         public static FileEnumerable<string> Apply(this FileEnumerable<string> fe, Func<IEnumerable<string>, IEnumerable<string>> iterator)
         {
-            return new(fe.header, iterator(fe.ienumerable));
+            return new(fe.header, fe.ienumerable.Apply(iterator));
         }
         /// <summary>
         /// Save the code handled during the chain of Matches and Actions.

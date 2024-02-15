@@ -1,5 +1,5 @@
 ﻿using ModShardLauncher.Controls;
-using ModShardLauncher.Pages;
+using ModShardLauncher.Controls;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

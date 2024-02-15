@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ModShardLauncher.Pages
+namespace ModShardLauncher.Controls
 {
     /// <summary>
     /// MainPage.xaml 的交互逻辑
