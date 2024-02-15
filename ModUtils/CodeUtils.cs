@@ -870,16 +870,33 @@ namespace ModShardLauncher
         /// <summary>
         /// Wrapper of <see cref="ReplaceBy"/> for the <see cref="FileEnumerable"/> class.
         /// </summary>
-        public static  FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, string inserting)
+        public static FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, string inserting)
         {
             return new(fe.header, fe.ienumerable.ReplaceBy(inserting.Split("\n")));
         }
         /// <summary>
         /// Wrapper of <see cref="ReplaceBy"/> for the <see cref="FileEnumerable"/> class using the content of <paramref name="fileName"/> for the comparison.
         /// </summary>
-        public static  FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, ModFile modFile, string fileName)
+        public static FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, ModFile modFile, string fileName)
         {
             return new(fe.header, fe.ienumerable.ReplaceBy(modFile.GetCode(fileName).Split("\n")));
+        }
+        /// <summary>
+        /// Apply an <paramref name="iterator"/> to an <see cref="IEnumerable"/>.
+        /// </summary>
+        /// <param name="ienumerable"></param>
+        /// <param name="iterator"></param>
+        /// <returns></returns>
+        public static IEnumerable<string> Apply(this IEnumerable<string> ienumerable, Func<IEnumerable<string>, IEnumerable<string>> iterator)
+        {
+            return iterator(ienumerable);
+        }
+        /// <summary>
+        /// Wrapper of <see cref="Apply"/> for the <see cref="FileEnumerable"/>.
+        /// </summary>
+        public static FileEnumerable<string> Apply(this FileEnumerable<string> fe, Func<IEnumerable<string>, IEnumerable<string>> iterator)
+        {
+            return new(fe.header, fe.ienumerable.Apply(iterator));
         }
         /// <summary>
         /// Save the code handled during the chain of Matches and Actions.
