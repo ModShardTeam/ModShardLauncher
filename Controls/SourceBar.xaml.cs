@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ModShardLauncher.Mods
+namespace ModShardLauncher.Controls
 {
     /// <summary>
     /// SourceBar.xaml 的交互逻辑

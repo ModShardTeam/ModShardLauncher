@@ -193,7 +193,7 @@ namespace ModShardLauncher
             {
                 try
                 {
-                    IEnumerable<IUndertaleListChunk> enumerableChunks = data.FORM.Chunks.Values.Where(x => x is not null).Select(x => (IUndertaleListChunk)x);
+                    IEnumerable<IUndertaleListChunk> enumerableChunks = data.FORM.Chunks.Values.Where(x => x is not null).Select((UndertaleChunk x) => x as IUndertaleListChunk);
                     Parallel.ForEach(enumerableChunks, (chunk) =>
                     {
                         chunk.ClearIndexDict();

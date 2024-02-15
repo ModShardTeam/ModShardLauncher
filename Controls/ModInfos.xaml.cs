@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using ModShardLauncher.Mods;
 using Serilog;
 
-namespace ModShardLauncher.Pages
+namespace ModShardLauncher.Controls
 {
     /// <summary>
-    /// ModSourceInfos.xaml 的交互逻辑
+    /// ModInfos.xaml 的交互逻辑
     /// </summary>
-    public partial class ModSourceInfos : UserControl
+    public partial class ModInfos : UserControl
     {
-        public static ModSourceInfos Instance;
-        public List<ModSource> ModSources {  get; set; } = new();
-        public ModSourceInfos()
+        public static ModInfos Instance;
+        public List<ModFile> Mods { get; set; } = new();
+        public ModInfos()
         {
             InitializeComponent();
             Instance = this;
@@ -47,6 +48,12 @@ namespace ModShardLauncher.Pages
             }
 
             if (patchSucess) await DataLoader.DoSaveDialog();
+            Main.Instance.Refresh();
+        }
+
+        private void Server_Click(object sender, EventArgs e)
+        {
+            ModInterfaceServer.StartServer(1333);
             Main.Instance.Refresh();
         }
     }

@@ -71,6 +71,9 @@
     <None Remove="Resources\source_down.png" />
     <None Remove="Resources\source_over.png" />
     <None Remove="Resources\splitter.png" />
+    <None Remove="Resources\Sprites\server.png" />
+    <None Remove="Resources\Sprites\server_down.png" />
+    <None Remove="Resources\Sprites\server_over.png" />
     <None Remove="Resources\SSFont.ttf" />
     <None Remove="Resources\SSicon.png" />
     <None Remove="Resources\stack_slide.png" />
@@ -80,36 +83,47 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Resources\Codes\CodeResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CodeResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="ico.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\icon_default.png" />
-    <Resource Include="Resources\settings_button_over.png" />
+    <Resource Include="Resources\Sprites\icon_default.png" />
+    <Resource Include="Resources\Sprites\server.png" />
+    <Resource Include="Resources\Sprites\server_down.png" />
+    <Resource Include="Resources\Sprites\server_over.png" />
+    <Resource Include="Resources\Sprites\settings_button_over.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\arrow_down.png" />
-    <Resource Include="Resources\arrow_down_down.png" />
-    <Resource Include="Resources\arrow_down_over.png" />
+    <Resource Include="Resources\Sprites\arrow_down.png" />
+    <Resource Include="Resources\Sprites\arrow_down_down.png" />
+    <Resource Include="Resources\Sprites\arrow_down_over.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\arrow_up.png" />
-    <Resource Include="Resources\arrow_up_down.png" />
-    <Resource Include="Resources\arrow_up_over.png" />
-    <Resource Include="Resources\checkbox_0.png" />
-    <Resource Include="Resources\checkbox_1.png" />
-    <Resource Include="Resources\checkbox_2.png" />
-    <Resource Include="Resources\close.png" />
-    <Resource Include="Resources\close_down.png" />
-    <Resource Include="Resources\close_over.png" />
-    <Resource Include="Resources\enable_button.png" />
-    <Resource Include="Resources\enable_button_down.png" />
-    <Resource Include="Resources\enable_button_over.png" />
-    <Resource Include="Resources\icon.gif" />
-    <Resource Include="Resources\leftPanel.png" />
-    <Resource Include="Resources\menu.png" />
+    <Resource Include="Resources\Sprites\arrow_up.png" />
+    <Resource Include="Resources\Sprites\arrow_up_down.png" />
+    <Resource Include="Resources\Sprites\arrow_up_over.png" />
+    <Resource Include="Resources\Sprites\checkbox_0.png" />
+    <Resource Include="Resources\Sprites\checkbox_1.png" />
+    <Resource Include="Resources\Sprites\checkbox_2.png" />
+    <Resource Include="Resources\Sprites\close.png" />
+    <Resource Include="Resources\Sprites\close_down.png" />
+    <Resource Include="Resources\Sprites\close_over.png" />
+    <Resource Include="Resources\Sprites\enable_button.png" />
+    <Resource Include="Resources\Sprites\enable_button_down.png" />
+    <Resource Include="Resources\Sprites\enable_button_over.png" />
+    <Resource Include="Resources\Sprites\icon.gif" />
+    <Resource Include="Resources\Sprites\leftPanel.png" />
+    <Resource Include="Resources\Sprites\menu.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -141,44 +155,49 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\menu_down.png" />
-    <Resource Include="Resources\menu_over.png" />
-    <Resource Include="Resources\min.png" />
-    <Resource Include="Resources\min_down.png" />
-    <Resource Include="Resources\min_over.png" />
-    <Resource Include="Resources\mod.png" />
-    <Resource Include="Resources\ModInfosBG.png" />
-    <Resource Include="Resources\mod_down.png" />
-    <Resource Include="Resources\mod_icon_fore.png" />
-    <Resource Include="Resources\mod_over.png" />
-    <Resource Include="Resources\open.png" />
-    <Resource Include="Resources\open_down.png" />
-    <Resource Include="Resources\open_over.png" />
-    <Resource Include="Resources\patch_icon.png" />
-    <Resource Include="Resources\refresh_icon.png" />
-    <Resource Include="Resources\save.png" />
-    <Resource Include="Resources\save_down.png" />
-    <Resource Include="Resources\save_over.png" />
-    <Resource Include="Resources\scrollbar_vertical.png" />
-    <Resource Include="Resources\scrollbar_vertical_over.png" />
-    <Resource Include="Resources\settings.png" />
-    <Resource Include="Resources\settings_button.png" />
-    <Resource Include="Resources\settings_button_down.png" />
-    <Resource Include="Resources\settings_down.png" />
-    <Resource Include="Resources\settings_over.png" />
-    <Resource Include="Resources\source.png" />
-    <Resource Include="Resources\source_down.png" />
-    <Resource Include="Resources\source_over.png" />
-    <Resource Include="Resources\splitter.png" />
+    <Resource Include="Resources\Sprites\menu_down.png" />
+    <Resource Include="Resources\Sprites\menu_over.png" />
+    <Resource Include="Resources\Sprites\min.png" />
+    <Resource Include="Resources\Sprites\min_down.png" />
+    <Resource Include="Resources\Sprites\min_over.png" />
+    <Resource Include="Resources\Sprites\mod.png" />
+    <Resource Include="Resources\Sprites\ModInfosBG.png" />
+    <Resource Include="Resources\Sprites\mod_down.png" />
+    <Resource Include="Resources\Sprites\mod_icon_fore.png" />
+    <Resource Include="Resources\Sprites\mod_over.png" />
+    <Resource Include="Resources\Sprites\open.png" />
+    <Resource Include="Resources\Sprites\open_down.png" />
+    <Resource Include="Resources\Sprites\open_over.png" />
+    <Resource Include="Resources\Sprites\patch_icon.png" />
+    <Resource Include="Resources\Sprites\refresh_icon.png" />
+    <Resource Include="Resources\Sprites\save.png" />
+    <Resource Include="Resources\Sprites\save_down.png" />
+    <Resource Include="Resources\Sprites\save_over.png" />
+    <Resource Include="Resources\Sprites\scrollbar_vertical.png" />
+    <Resource Include="Resources\Sprites\scrollbar_vertical_over.png" />
+    <Resource Include="Resources\Sprites\settings.png" />
+    <Resource Include="Resources\Sprites\settings_button.png" />
+    <Resource Include="Resources\Sprites\settings_button_down.png" />
+    <Resource Include="Resources\Sprites\settings_down.png" />
+    <Resource Include="Resources\Sprites\settings_over.png" />
+    <Resource Include="Resources\Sprites\source.png" />
+    <Resource Include="Resources\Sprites\source_down.png" />
+    <Resource Include="Resources\Sprites\source_over.png" />
+    <Resource Include="Resources\Sprites\splitter.png" />
     <Resource Include="Resources\SSFont.ttf" />
-    <Resource Include="Resources\SSicon.png" />
+    <Resource Include="Resources\Sprites\SSicon.png" />
     <Resource Include="Resources\zpix.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Codes\CodeResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CodeResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   
   <Target Name="CopyDLLs" AfterTargets="Build">
-    <Copy
-      SourceFiles="ModReference\netstandard.dll;ModReference\System.Collections.dll;ModReference\System.Runtime.dll;"
-      DestinationFolder="$(OutDir)" />
+    <Copy SourceFiles="ModReference\netstandard.dll;ModReference\System.Collections.dll;ModReference\System.Runtime.dll;" DestinationFolder="$(OutDir)" />
   </Target>
 
 </Project>

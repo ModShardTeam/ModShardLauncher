@@ -10,7 +10,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using UndertaleModTool;
 
-namespace ModShardLauncher.Pages
+namespace ModShardLauncher.Controls
 {
     /// <summary>
     /// GeneralPage.xaml 的交互逻辑

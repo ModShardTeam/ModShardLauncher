@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="ModShardLauncher.Pages.GeneralPage"
+﻿<UserControl x:Class="ModShardLauncher.Controls.GeneralPage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ModShardLauncher.Pages" xmlns:controls="clr-namespace:ModShardLauncher.Controls"
+             xmlns:local="clr-namespace:ModShardLauncher.Controls" xmlns:controls="clr-namespace:ModShardLauncher.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="768" d:DesignWidth="600"
     xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
@@ -108,14 +108,14 @@
                             <Border x:Name="templateRoot" Background="#11101A" BorderBrush="#43424D" BorderThickness="2" SnapsToDevicePixels="true">
                                 <Border x:Name="splitBorder" HorizontalAlignment="Right" Margin="0" SnapsToDevicePixels="true" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"/>
                             </Border>
-                            <Image Source="/Resources/arrow_down.png" Width="22" Height="22" 
+                            <Image Source="/Resources/Sprites/arrow_down.png" Width="22" Height="22" 
                                    HorizontalAlignment="Right" Margin="2" Name="arrow"/>
                         </Grid>
                         <ControlTemplate.Triggers>
 
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter Property="BorderThickness" TargetName="templateRoot" Value="2,2,2,0"/>
-                                <Setter Property="Source" TargetName="arrow" Value="/Resources/arrow_up.png"/>
+                                <Setter Property="Source" TargetName="arrow" Value="/Resources/Sprites/arrow_up.png"/>
                             </Trigger>
                             <MultiDataTrigger>
                                 <MultiDataTrigger.Conditions>
@@ -123,7 +123,7 @@
                                     <Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Mode=Self}}" Value="false"/>
                                 </MultiDataTrigger.Conditions>
                                 <MultiDataTrigger.Setters>
-                                    <Setter Property="Source" TargetName="arrow" Value="/Resources/arrow_down_over.png"/>
+                                    <Setter Property="Source" TargetName="arrow" Value="/Resources/Sprites/arrow_down_over.png"/>
                                 </MultiDataTrigger.Setters>
                             </MultiDataTrigger>
                             <MultiDataTrigger>
@@ -132,7 +132,7 @@
                                     <Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Mode=Self}}" Value="true"/>
                                 </MultiDataTrigger.Conditions>
                                 <MultiDataTrigger.Setters>
-                                    <Setter Property="Source" TargetName="arrow" Value="/Resources/arrow_up_over.png"/>
+                                    <Setter Property="Source" TargetName="arrow" Value="/Resources/Sprites/arrow_up_over.png"/>
                                 </MultiDataTrigger.Setters>
                             </MultiDataTrigger>
                             <MultiDataTrigger>
@@ -141,7 +141,7 @@
                                     <Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Mode=Self}}" Value="false"/>
                                 </MultiDataTrigger.Conditions>
                                 <MultiDataTrigger.Setters>
-                                    <Setter Property="Source" TargetName="arrow" Value="/Resources/arrow_down_down.png"/>
+                                    <Setter Property="Source" TargetName="arrow" Value="/Resources/Sprites/arrow_down_down.png"/>
                                 </MultiDataTrigger.Setters>
                             </MultiDataTrigger>
                             <MultiDataTrigger>
@@ -150,7 +150,7 @@
                                     <Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Mode=Self}}" Value="true"/>
                                 </MultiDataTrigger.Conditions>
                                 <MultiDataTrigger.Setters>
-                                    <Setter Property="Source" TargetName="arrow" Value="/Resources/arrow_up_down.png"/>
+                                    <Setter Property="Source" TargetName="arrow" Value="/Resources/Sprites/arrow_up_down.png"/>
                                 </MultiDataTrigger.Setters>
                             </MultiDataTrigger>
                         </ControlTemplate.Triggers>
@@ -279,7 +279,7 @@
                Style="{StaticResource xFont}" FontSize="20"/>
         <Border HorizontalAlignment="Left" VerticalAlignment="Top"
                 Height="6" IsEnabled="False" Margin="20,44,20,0" Width="Auto">
-            <Image Source="/Resources/splitter.png" Stretch="Fill"
+            <Image Source="/Resources/Sprites/splitter.png" Stretch="Fill"
                    RenderOptions.BitmapScalingMode="NearestNeighbor"
                    RenderOptions.ClearTypeHint="Enabled"/>
         </Border>
@@ -306,17 +306,17 @@
                                                LastChildFill="False" Width="{TemplateBinding Width}"
                                                RenderOptions.BitmapScalingMode="NearestNeighbor">
                                     <Image Margin="2,0,4,2" DockPanel.Dock="Left" Height="25" Width="25"
-                                               x:Name="_img" Stretch="Fill" Source="/Resources/checkbox_0.png"/>
+                                               x:Name="_img" Stretch="Fill" Source="/Resources/Sprites/checkbox_0.png"/>
                                     <TextBlock DockPanel.Dock="Left" Foreground="{TemplateBinding Foreground}"
                                                    Margin="2,0,0,0" VerticalAlignment="Center"
                                                    Text="{TemplateBinding Content}"/>
                                 </DockPanel>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsChecked" Value="True">
-                                        <Setter TargetName="_img" Property="Source" Value="/Resources/checkbox_1.png"/>
+                                        <Setter TargetName="_img" Property="Source" Value="/Resources/Sprites/checkbox_1.png"/>
                                     </Trigger>
                                     <Trigger Property="IsChecked" Value="{x:Null}">
-                                        <Setter TargetName="_img" Property="Source" Value="/Resources/checkbox_2.png"/>
+                                        <Setter TargetName="_img" Property="Source" Value="/Resources/Sprites/checkbox_2.png"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>

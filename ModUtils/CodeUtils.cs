@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
+using ModShardLauncher.Resources.Codes;
 using Serilog;
 using UndertaleModLib;
 using UndertaleModLib.Decompiler;
@@ -127,6 +129,27 @@ namespace ModShardLauncher
             }
         }
         /// <summary>
+        /// Get code from file in this tool.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        internal static string GetCodeRes(string name)
+        {
+            var data = CodeResources.ResourceManager.GetObject(name, CodeResources.Culture) as byte[];
+            if (data == null)
+            {
+                Log.Information($"Code resource not found :{name}");
+                return "";
+            }
+            return Encoding.UTF8.GetString(data);
+        }
+        /// <summary>
+        /// Add a new code from the code in this tool.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        internal static UndertaleCode AddInnerCode(string name) => AddCode(GetCodeRes(name), name);
+        /// <summary>
         /// Add a new function named <paramref name="name"/>.
         /// </summary>
         /// <param name="codeAsString"></param>
@@ -150,6 +173,12 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        /// <summary>
+        /// Add a new function from the code in this tool.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        internal static UndertaleCode AddInnerFunction(string name) => AddFunction(GetCodeRes(name), name);
         /// <summary>
         /// Return the UndertaleCode as string from <paramref name="fileName"/>.
         /// </summary>

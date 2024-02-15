@@ -67,9 +67,9 @@ namespace ModShardLauncher
                 }
 
                 // retrieve possible parent and sprite
-                UndertaleSprite sprite = new();
+                UndertaleSprite? sprite = null;
                 if (spriteName != "") sprite = GetSprite(spriteName);
-                UndertaleGameObject parent = new();
+                UndertaleGameObject? parent = null;
                 if (parentName != "") parent = GetObject(parentName);
 
                 // doesnt exist so it can be added
