@@ -58,6 +58,27 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        public static FileEnumerable<UndertaleInstruction> LoadAssemblyAsInstructions(string fileName)
+        {
+            try 
+            {
+                UndertaleCode code = GetUMTCodeFromFile(fileName);
+                
+                return new(
+                    new(
+                        fileName,
+                        code,
+                        PatchingWay.AssemblyAsInstructions
+                    ),
+                    code.Instructions
+                );
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
         /// <summary>
         /// Equivalent of enumerate found in Python but for C# IEnumerable.
         /// </summary>

@@ -30,4 +30,13 @@
     <ProjectReference Include="..\ModShardLauncher.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="UndertaleModLib">
+      <HintPath>..\Reference\UndertaleModLib.dll</HintPath>
+    </Reference>
+    <Reference Include="UndertaleModTool">
+      <HintPath>..\Reference\UndertaleModTool.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

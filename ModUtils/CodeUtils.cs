@@ -97,9 +97,8 @@ namespace ModShardLauncher
 
                 return code;
             }
-            catch(Exception ex) 
+            catch
             {
-                Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
@@ -191,9 +190,8 @@ namespace ModShardLauncher
 
                 return Decompiler.Decompile(code, context);
             }
-            catch(Exception ex) 
+            catch
             {
-                Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
@@ -892,9 +890,26 @@ namespace ModShardLauncher
             return iterator(ienumerable);
         }
         /// <summary>
+        /// Apply an <paramref name="iterator"/> to an <see cref="IEnumerable"/>.
+        /// </summary>
+        /// <param name="ienumerable"></param>
+        /// <param name="iterator"></param>
+        /// <returns></returns>
+        public static IEnumerable<UndertaleInstruction> Apply(this IEnumerable<UndertaleInstruction> ienumerable, Func<IEnumerable<UndertaleInstruction>, IEnumerable<UndertaleInstruction>> iterator)
+        {
+            return iterator(ienumerable);
+        }
+        /// <summary>
         /// Wrapper of <see cref="Apply"/> for the <see cref="FileEnumerable"/>.
         /// </summary>
         public static FileEnumerable<string> Apply(this FileEnumerable<string> fe, Func<IEnumerable<string>, IEnumerable<string>> iterator)
+        {
+            return new(fe.header, fe.ienumerable.Apply(iterator));
+        }
+        /// <summary>
+        /// Wrapper of <see cref="Apply"/> for the <see cref="FileEnumerable"/>.
+        /// </summary>
+        public static FileEnumerable<UndertaleInstruction> Apply(this FileEnumerable<UndertaleInstruction> fe, Func<IEnumerable<UndertaleInstruction>, IEnumerable<UndertaleInstruction>> iterator)
         {
             return new(fe.header, fe.ienumerable.Apply(iterator));
         }
@@ -916,6 +931,48 @@ namespace ModShardLauncher
 
                     case PatchingWay.AssemblyAsString:
                         fe.header.originalCode.Replace(Assembler.Assemble(newCode, ModLoader.Data));
+                    break;
+
+                    case PatchingWay.AssemblyAsInstructions:
+                        throw new ArgumentException(
+                            string.Format("Cannot patch {{0}} with {{1}} using strings. You must have use the wrong Load function.", fe.header.fileName, fe.header.patchingWay.ToString())
+                        );
+
+                    default:
+                    break;
+                }
+                Log.Information("Successfully patched function {{{0}}} with {{{1}}}", fe.header.fileName, fe.header.patchingWay.ToString());
+                return new(
+                    fe.header.fileName,
+                    newCode,
+                    fe.header.patchingWay
+                );
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// Save the code handled during the chain of Matches and Actions.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="ModSummary"/> instance that can be used for debug purpose.
+        /// </returns>
+        public static ModSummary Save(this FileEnumerable<UndertaleInstruction> fe)
+        {
+            try {
+                string newCode = "";
+                switch(fe.header.patchingWay) 
+                {
+                    case PatchingWay.GML:
+                    case PatchingWay.AssemblyAsString:
+                        throw new ArgumentException(
+                            string.Format("Cannot patch {{0}} with {{1}} using UndertaleInstruction. You must have use the wrong Load function.", fe.header.fileName, fe.header.patchingWay.ToString())
+                        );
+
+                    case PatchingWay.AssemblyAsInstructions:
+                        fe.header.originalCode.Replace(fe.ienumerable.ToList() as IList<UndertaleInstruction>);
                     break;
 
                     default:

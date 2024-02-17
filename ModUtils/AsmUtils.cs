@@ -116,7 +116,8 @@ namespace ModShardLauncher
     {
         public static UndertaleInstruction.Reference<UndertaleVariable> CreateRefVariable(string name, UndertaleInstruction.InstanceType instanceType) 
         {
-            if (ModLoader.Data == null) {
+            if (ModLoader.Data == null) 
+            {
                 throw new NullReferenceException("Data is null");
             }
 
@@ -168,9 +169,28 @@ namespace ModShardLauncher
 
             return new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
         }
+        public static UndertaleInstruction.Reference<UndertaleVariable>? GetRefVariable(string name)
+        {
+            try 
+            {
+                UndertaleVariable? variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name);
+                if (variable == null) return null;
+                UndertaleInstruction.Reference<UndertaleVariable> refVariable = new(variable, UndertaleInstruction.VariableType.Normal);
+
+                Log.Information(string.Format("Find variable: {0}", refVariable.ToString()));
+
+                return refVariable;
+            }
+            catch(Exception ex) 
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
         public static UndertaleInstruction.Reference<UndertaleVariable> GetRefVariableOrCreate(string name, UndertaleInstruction.InstanceType instanceType)
         {
-            try {
+            try 
+            {
                 UndertaleInstruction.Reference<UndertaleVariable> refVariable;
                 UndertaleVariable? variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name);
                 
@@ -183,7 +203,8 @@ namespace ModShardLauncher
 
                 return refVariable;
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
@@ -196,7 +217,8 @@ namespace ModShardLauncher
         }
         public static UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> GetStringOrCreate(string name)
         {
-            try {
+            try 
+            {
                 UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> stringById;
                 (int ind, UndertaleString str) = ModLoader.Data.Strings.Enumerate().FirstOrDefault(x => x.Item2.Content == name);
                 
@@ -209,51 +231,65 @@ namespace ModShardLauncher
 
                 return stringById;
             }
-            catch(Exception ex) {
+            catch(Exception ex) 
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
         public static UndertaleInstruction PushShort(short val)
         {
-            return new() {
+            return new() 
+            {
                 Kind = UndertaleInstruction.Opcode.PushI,
                 Value = val,
                 Type1 = UndertaleInstruction.DataType.Int16,
             };
         }
-        
         public static UndertaleInstruction PushInt(int val)
         {
-            return new() {
+            return new() 
+            {
                 Kind = UndertaleInstruction.Opcode.Push,
                 Value = val,
                 Type1 = UndertaleInstruction.DataType.Int32,
             };
         }
-
         public static UndertaleInstruction PushString(string val) 
         {
-            return new() {
+            return new() 
+            {
                 Kind = UndertaleInstruction.Opcode.Push,
                 Value = GetStringOrCreate(val),
                 Type1 = UndertaleInstruction.DataType.String,
             };
         }
-
         public static UndertaleInstruction PushGlb(string val) 
         {
-            return new() {
+            return new() 
+            {
                 Kind = UndertaleInstruction.Opcode.PushGlb,
                 Value = GetRefVariableOrCreate(val, UndertaleInstruction.InstanceType.Global),
                 Type1 = UndertaleInstruction.DataType.Variable,
                 TypeInst = UndertaleInstruction.InstanceType.Global,
             };
         }
-
+        // for reference
+        // see https://harmony.pardeike.net/api/HarmonyLib.CodeInstructionExtensions.html#HarmonyLib_CodeInstructionExtensions_Is_HarmonyLib_CodeInstruction_System_Reflection_Emit_OpCode_System_Object_
+        public static bool IsPop(this UndertaleInstruction instruction, UndertaleInstruction.InstanceType instanceType, UndertaleInstruction.DataType dataType, string name)
+        {
+            UndertaleInstruction.Reference<UndertaleVariable>? refVar = GetRefVariable(name);
+            if (refVar == null) return false;
+            return instruction.Kind == UndertaleInstruction.Opcode.Pop && 
+                instruction.Type1 == UndertaleInstruction.DataType.Variable &&
+                instruction.Type2 == dataType &&
+                instruction.TypeInst == instanceType &&
+                Equals(instruction.Destination, refVar);
+        }
         public static UndertaleInstruction PopIntGlb(string val)
         {
-            return new() {
+            return new() 
+            {
                 Kind = UndertaleInstruction.Opcode.Pop,
                 Destination = GetRefVariableOrCreate(val, UndertaleInstruction.InstanceType.Global),
                 Type1 = UndertaleInstruction.DataType.Variable,
@@ -263,7 +299,8 @@ namespace ModShardLauncher
         }
         public static UndertaleInstruction PopIntLcl(string val)
         {
-            return new() {
+            return new() 
+            {
                 Kind = UndertaleInstruction.Opcode.Pop,
                 Destination = GetRefVariableOrCreate(val, UndertaleInstruction.InstanceType.Local),
                 Type1 = UndertaleInstruction.DataType.Variable,
@@ -271,10 +308,10 @@ namespace ModShardLauncher
                 TypeInst = UndertaleInstruction.InstanceType.Local,
             };
         }
-        
         public static UndertaleInstruction PopIntSelf(string val)
         {
-            return new() {
+            return new() 
+            {
                 Kind = UndertaleInstruction.Opcode.Pop,
                 Destination = GetRefVariableOrCreate(val, UndertaleInstruction.InstanceType.Self),
                 Type1 = UndertaleInstruction.DataType.Variable,

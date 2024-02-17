@@ -1507,7 +1507,7 @@ state = 25";
 
     public class ApplyTest
     {
-        private IEnumerable<string> DoNothingIterator(IEnumerable<string> input)
+        static private IEnumerable<string> DoNothingIterator(IEnumerable<string> input)
         {
             foreach (string element in input)
             {
@@ -1531,7 +1531,7 @@ state = 25";
             Assert.Equal(res, listStringInput);
         }
         
-        private IEnumerable<string> PickFirstLineIterator(IEnumerable<string> input)
+        static private IEnumerable<string> PickFirstLineIterator(IEnumerable<string> input)
         {
             bool send = false;
             foreach (string element in input)
@@ -1559,7 +1559,7 @@ state = 25";
             // Assert
             Assert.Equal(res, listStringInput.GetRange(0, 1));
         }
-        private IEnumerable<string> PickFirstTwoLinesIterator(IEnumerable<string> input)
+        static private IEnumerable<string> PickFirstTwoLinesIterator(IEnumerable<string> input)
         {
             bool send_first = false;
             bool send_second = false;
