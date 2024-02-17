@@ -389,10 +389,10 @@ namespace ModShardLauncher
         {
             foreach (string line in table)
             {
+                yield return line;
+
                 if (line.Contains("NPC - GREETINGS;"))
                 {
-                    yield return line;
-
                     foreach (LocalizationSentence sentence in Sentences) 
                     {
                         yield return sentence.CreateLine();
