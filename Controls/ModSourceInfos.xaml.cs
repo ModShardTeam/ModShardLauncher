@@ -41,6 +41,7 @@ namespace ModShardLauncher.Controls
             }
             catch(Exception ex)
             {
+                Main.Instance.LogModList();
                 Log.Error(ex, "Something went wrong");
                 Log.Information("Failed patching vanilla");
                 MessageBox.Show(Application.Current.FindResource("SaveDataWarning").ToString());

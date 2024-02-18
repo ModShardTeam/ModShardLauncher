@@ -1,5 +1,4 @@
 ﻿using ModShardLauncher.Controls;
-using ModShardLauncher.Controls;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,7 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using System.Runtime.InteropServices;
+using ModShardLauncher.Mods;
 
 namespace ModShardLauncher
 {
@@ -75,7 +75,28 @@ namespace ModShardLauncher
 
             Viewer.Content = MainPage;
         }
+        public void LogModList()
+        {
+            foreach (ModFile modFile in ModPage.Mods.Where(x => x.isEnabled))
+            {
+                string statusMessage = "";
+                switch(modFile.PatchStatus)
+                {
+                    case PatchStatus.Patching:
+                        statusMessage = "Patching failed";
+                    break;
+                    
+                    case PatchStatus.Success:
+                        statusMessage = "Patching successed";
+                    break;
 
+                    case PatchStatus.None:
+                        statusMessage = "Waiting to be patched";
+                    break;
+                }
+                Log.Warning("Patching {{{2}}} for {{{0}}} {{{1}}}", modFile.Name, modFile.Version, statusMessage);
+            }
+        }
         private void MyToggleButton_Checked(object sender, EventArgs e)
         {
             foreach(var i in stackPanel.Children)

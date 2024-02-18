@@ -173,6 +173,7 @@ namespace ModShardLauncher
                     continue;
                 }
                 Main.Settings.EnableMods.Add(mod.Name);
+                mod.PatchStatus = PatchStatus.Patching;
 
                 // work around to find the FileVersion of ModShardLauncher.dll for single file publishing
                 // see: https://github.com/dotnet/runtime/issues/13051
@@ -196,6 +197,7 @@ namespace ModShardLauncher
                     if (type.IsSubclassOf(typeof(Weapon))) 
                         LoadWeapon(type);
                 }
+                mod.PatchStatus = PatchStatus.Success;
             }
         }
         public static void LoadWeapon(Type type)
