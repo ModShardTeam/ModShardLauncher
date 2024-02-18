@@ -87,7 +87,7 @@ namespace ModShardLauncher
                     break;
                     
                     case PatchStatus.Success:
-                        statusMessage = "Patching successed";
+                        statusMessage = "Patching succeeded";
                     break;
 
                     case PatchStatus.None:
