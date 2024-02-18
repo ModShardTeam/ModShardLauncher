@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using ModShardLauncher.Resources.Codes;
 using Serilog;
 using UndertaleModLib;
@@ -72,12 +73,46 @@ namespace ModShardLauncher
     /// </summary>
     public class FileEnumerable<T>
     {
+        private readonly Regex variableRegex = new (@"\bpop\.v\.\w\s(?<var>\w+)\.(?<name>\w+)");
         public readonly Header header;
         public readonly IEnumerable<T> ienumerable;
         public FileEnumerable(Header header, IEnumerable<T> ienumerable) 
         {
             this.header = header;
             this.ienumerable = ienumerable;
+        }
+        /// <summary>
+        /// Check pop variables for intructions as string and create them if needed.
+        /// </summary>
+        /// <param name="instructions"></param>
+        public void CheckInstructionsVariables(string instructions)
+        {
+            if (header.patchingWay != PatchingWay.AssemblyAsString) return;
+
+            foreach (string instruction in instructions.Split('\n').Where(x => x.Contains("pop.v")))
+            {
+                System.Text.RegularExpressions.Match matches = variableRegex.Match(instruction);
+                if (matches.Success) 
+                {
+                    string instanceValue = matches.Groups["var"].Value;
+                    if(instanceValue == "self")
+                    {
+                        AssemblyWrapper.CheckRefVariableOrCreate(matches.Groups["name"].Value, UndertaleInstruction.InstanceType.Self);
+                    }
+                    else if(instanceValue == "global")
+                    {
+                        AssemblyWrapper.CheckRefVariableOrCreate(matches.Groups["name"].Value, UndertaleInstruction.InstanceType.Global);
+                    }
+                    else if(instanceValue == "local")
+                    {
+                        AssemblyWrapper.CheckRefVariableOrCreate(matches.Groups["name"].Value, UndertaleInstruction.InstanceType.Local);
+                    }
+                    else
+                    {
+                        Log.Warning("Cannot infer the instance type of {0}. There is a risk it will lead to an undefined variable.", instruction);
+                    }
+                }
+            }
         }
     }
     /// <summary>
@@ -772,6 +807,7 @@ namespace ModShardLauncher
         /// </summary>
         public static  FileEnumerable<string> InsertBelow(this FileEnumerable<(Match, string)> fe, string inserting)
         {
+            fe.CheckInstructionsVariables(inserting);
             return new(fe.header, fe.ienumerable.InsertBelow(inserting.Split("\n")));
         }
         /// <summary>
@@ -820,6 +856,7 @@ namespace ModShardLauncher
         /// </summary>
         public static  FileEnumerable<string> InsertAbove(this FileEnumerable<(Match, string)> fe, string inserting)
         {
+            fe.CheckInstructionsVariables(inserting);
             return new(fe.header, fe.ienumerable.InsertAbove(inserting.Split("\n")));
         }
         /// <summary>
@@ -872,6 +909,7 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, string inserting)
         {
+            fe.CheckInstructionsVariables(inserting);
             return new(fe.header, fe.ienumerable.ReplaceBy(inserting.Split("\n")));
         }
         /// <summary>
