@@ -168,9 +168,31 @@ namespace ModShardLauncher
 
             return new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
         }
+        public static void CheckRefVariableOrCreate(string name, UndertaleInstruction.InstanceType instanceType)
+        {
+            try
+            {
+                UndertaleVariable? variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name);
+                
+                if (variable == null) 
+                {
+                    CreateRefVariable(name, instanceType);
+                }
+                else
+                {
+                    Log.Information(string.Format("Found variable: {0}", variable.ToString()));
+                }
+                
+            }
+            catch
+            {
+                throw;
+            }
+        }
         public static UndertaleInstruction.Reference<UndertaleVariable> GetRefVariableOrCreate(string name, UndertaleInstruction.InstanceType instanceType)
         {
-            try {
+            try 
+            {
                 UndertaleInstruction.Reference<UndertaleVariable> refVariable;
                 UndertaleVariable? variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name);
                 
@@ -179,12 +201,12 @@ namespace ModShardLauncher
                 else
                     refVariable = new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
 
-                Log.Information(string.Format("Find variable: {0}", refVariable.ToString()));
+                Log.Information(string.Format("Found variable: {0}", refVariable.ToString()));
 
                 return refVariable;
             }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
+            catch
+            {
                 throw;
             }
         }
