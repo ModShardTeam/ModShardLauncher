@@ -30,6 +30,12 @@ namespace ModShardLauncher
             return Name;
         }
     }
+    public enum PatchStatus
+    {
+        None,
+        Patching,
+        Success,
+    }
     public class ModFile
     {
         public string Name;
@@ -41,6 +47,7 @@ namespace ModShardLauncher
         public string Path;
         public Mod instance { get; set; }
         public bool isEnabled { get; set; }
+        public PatchStatus PatchStatus { get; set; } = PatchStatus.None;
         public bool isExisted => File.Exists(Path);
         public byte[] Icon { get; set; } = Array.Empty<byte>();
         public override string ToString()

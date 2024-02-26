@@ -182,7 +182,6 @@ namespace ModShardLauncher
                 {
                     Log.Information(string.Format("Found variable: {0}", variable.ToString()));
                 }
-                
             }
             catch
             {
