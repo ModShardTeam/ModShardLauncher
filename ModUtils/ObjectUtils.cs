@@ -33,6 +33,17 @@ namespace ModShardLauncher
     }
     public static partial class Msl
     {
+        public static UndertaleGameObject AddObject(string name)
+        {
+            return AddObject(
+                name, 
+                spriteName:"", 
+                parentName: "", 
+                isVisible: false, 
+                isPersistent: false, 
+                isAwake: false, 
+                collisionShapeFlags: CollisionShapeFlags.Circle);
+        }
         /// <summary>
         /// Add and return a new <see cref="UndertaleGameObject"/> named <paramref name="name"/> to the data.win if this name is not used already.
         /// Else return the existing <see cref="UndertaleGameObject"/>.
