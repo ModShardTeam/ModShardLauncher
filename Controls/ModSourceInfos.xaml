@@ -13,13 +13,13 @@
         </Grid.Background>
         <Grid Margin="30">
             <Grid Height="64" VerticalAlignment="Top">
-                <controls:MyToggleButton ImageSource="/Resources/Sprites/open.png" Click="Open_Click">
+                <controls:MyToggleButton ImageSource="/Resources/Sprites/open.png" Click="Open_Click" ToolTip="Open Data File">
                     <controls:MyToggleButton.Resources>
                         <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/open_down.png"/>
                         <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/open_over.png"/>
                     </controls:MyToggleButton.Resources>
                 </controls:MyToggleButton>
-                <controls:MyToggleButton ImageSource="/Resources/Sprites/save.png" Click="Save_Click"
+                <controls:MyToggleButton ImageSource="/Resources/Sprites/save.png" Click="Save_Click" ToolTip="Save Data File"
                          Margin="64,0,0,0">
                     <controls:MyToggleButton.Resources>
                         <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/save_down.png"/>

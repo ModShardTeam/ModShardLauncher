@@ -30,6 +30,10 @@ namespace ModShardLauncher.Mods
         public void Initalize()
         {
             HookDelegates.Add("OnGameStart", new ModDelegate());
+            HookDelegates["OnGameStart"] += (object[] paras) =>
+            {
+                ModInterfaceServer.Window.MsgBox.AppendText("[Client]: StoneShard connect successfully.");
+            };
         }
 
         public Dictionary<string, EngineObject> Variables;
@@ -45,11 +49,9 @@ namespace ModShardLauncher.Mods
             objects.ToList().ForEach(o => code += " " + o.ToString());
             ModInterfaceServer.SendScript(code);
         }
-        public void DoHook(string hook)
+        public void DoHook(string name, object[] parameters)
         {
-            var data = hook.Split(" ");
-            var parameters = data.Length > 1 ? data.Skip(1).ToArray() : new object[] { };
-            if (HookDelegates.ContainsKey(data[0])) HookDelegates[data[0]].Invoke(parameters);
+            if (HookDelegates.ContainsKey(name)) HookDelegates[name].Invoke(parameters);
         }
         public void AddHook(string hook, Action<object[]> action)
         {
@@ -120,14 +122,20 @@ namespace ModShardLauncher.Mods
 
     public class ModInterfaceServer
     {
-        public static Socket Server { get; private set; }
+        public static Socket Server { get; internal set; }
 
-        public static Socket Client { get; private set; }
+        public static Socket Client { get; internal set; }
 
         internal static ScriptEnginePage Window;
 
         public static void StartServer(int port)
         {
+            if (Server != null)
+            {
+                MessageBox.Show("Mod Interface Server already open.");
+                return;
+            }
+
             string host = "127.0.0.1";
             IPAddress ip = IPAddress.Parse(host);
             IPEndPoint ipe = new IPEndPoint(ip, port);
@@ -145,7 +153,7 @@ namespace ModShardLauncher.Mods
 
                 Server.BeginAccept(new AsyncCallback((IAsyncResult ar) =>
                 {
-                    if (ar.AsyncState as Socket == null || !(ar.AsyncState as Socket).Connected) return;
+                    if (ar.AsyncState as Socket == null) return;
 
                     Client = Server.EndAccept(ar);
 
@@ -170,10 +178,10 @@ namespace ModShardLauncher.Mods
                             }
                             else if (message.StartsWith("[HOK]"))
                             {
-                                var data = message.Replace("[HOK]", "").Split("<EXTRAMSG>");
-                                var extra = data[1].Split("<BUILTIN>");
-                                var param = data.Length > 1 ? data.Skip(1).ToArray() : new string[] { };
-                                if (extra[1] == "true") ModInterfaceEngine.Instance.DoHook(data[0], param);
+                                var data = message.Replace("[HOK]", "").Split("<BUILTIN>");
+                                var hokInfo = data[0].Split("<EXTRAMSG>");
+                                var param = hokInfo.Length > 1 ? hokInfo[1].Split(" ") : new string[] { };
+                                if (data[1] == "1") ModInterfaceEngine.Instance.DoHook(data[0], param);
                             }
                         });
                     }

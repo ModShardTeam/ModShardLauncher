@@ -59,5 +59,65 @@ namespace ModShardLauncher.Resources.Codes {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] createHookObj {
+            get {
+                object obj = ResourceManager.GetObject("createHookObj", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] give {
+            get {
+                object obj = ResourceManager.GetObject("give", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] print {
+            get {
+                object obj = ResourceManager.GetObject("print", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] ScriptEngine_create {
+            get {
+                object obj = ResourceManager.GetObject("ScriptEngine_create", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] ScriptEngine_server {
+            get {
+                object obj = ResourceManager.GetObject("ScriptEngine_server", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] SendMsg {
+            get {
+                object obj = ResourceManager.GetObject("SendMsg", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

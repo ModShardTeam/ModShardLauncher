@@ -113,7 +113,7 @@
                                   IsEnabled="False"/>
                     <Grid Height="40"/>
                     <local:MyToggleButton ImageSource="/Resources/Sprites/mod.png" Text="{DynamicResource Mod}" 
-                                          Checked="MyToggleButton_Checked"
+                                          Checked="MyToggleButton_Checked" ToolTip="Mod Page"
                                           Click="MyToggleButton_Click_1">
                         <local:MyToggleButton.Resources>
                             <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/mod_down.png"/>
@@ -122,7 +122,7 @@
                     </local:MyToggleButton>
                     <Grid Height="30"/>
                     <local:MyToggleButton ImageSource="/Resources/Sprites/source.png" Text="{DynamicResource ModSource}" 
-                                          Checked="MyToggleButton_Checked"
+                                          Checked="MyToggleButton_Checked" ToolTip="ModSource Page"
                                           Click="MyToggleButton_Click_2">
                         <local:MyToggleButton.Resources>
                             <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/source_down.png"/>
@@ -131,7 +131,7 @@
                     </local:MyToggleButton>
                     <Grid Height="30"/>
                     <local:MyToggleButton ImageSource="/Resources/Sprites/settings.png" Text="{DynamicResource Settings}" 
-                                          Checked="MyToggleButton_Checked"
+                                          Checked="MyToggleButton_Checked"  ToolTip="Settings Page"
                                           Click="MyToggleButton_Click_4">
                         <local:MyToggleButton.Resources>
                             <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/settings_down.png"/>
