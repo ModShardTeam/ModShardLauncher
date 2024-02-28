@@ -153,7 +153,7 @@ namespace ModShardLauncher.Mods
 
                 Server.BeginAccept(new AsyncCallback((IAsyncResult ar) =>
                 {
-                    if (ar.AsyncState as Socket == null) return;
+                    if (ar.AsyncState as Socket == null || Server == null) return;
 
                     Client = Server.EndAccept(ar);
 
