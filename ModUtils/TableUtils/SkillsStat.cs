@@ -201,7 +201,7 @@ public partial class Msl
         List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_skills_stat"));
         
         // Prepare line
-        string newline = $"{id};{Object};{GetEnumMemberValue(Target)};{Range};{KD};{MP};{Reserv};{Duration};{AOE_Lenght};{AOE_Width};{is_movement};{Pattern};{Class};{Bonus_Range};{Starcast};{GetEnumMemberValue(Branch)};{is_knockback};{Crime};{GetEnumMemberValue(metacategory)};{FMB};{AP};{Attack};{Stance};{Charge};{Maneuver};{Spell}";
+        string newline = $"{id};{Object};{GetEnumMemberValue(Target)};{Range};{KD};{MP};{Reserv};{Duration};{AOE_Lenght};{AOE_Width};{(is_movement ? "1" : "0")};{Pattern};{Class};{(Bonus_Range ? "1" : "0")};{Starcast};{GetEnumMemberValue(Branch)};{(is_knockback ? "1" : "0")};{(Crime ? "1" : "")};{GetEnumMemberValue(metacategory)};{FMB};{AP};{(Attack ? "1" : "")};{(Stance ? "1" : "")};{(Charge ? "1" : "")};{(Maneuver ? "1" : "")};{(Spell ? "1" : "")}";
         
         // Find Meta Category in table
         string? foundLine = table.FirstOrDefault(line => line.Contains(GetEnumMemberValue(metaGroup)));

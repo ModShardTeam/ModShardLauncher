@@ -150,17 +150,6 @@ public partial class Msl
     }
     
     // https://stackoverflow.com/questions/27372816/how-to-read-the-value-for-an-enummember-attribute
-    private static string? GetEnumMemberValue<T>(this T value)
-        where T : Enum
-    {
-        return typeof(T)
-            .GetTypeInfo()
-            .DeclaredMembers
-            .SingleOrDefault(x => x.Name == value.ToString())?
-            .GetCustomAttribute<EnumMemberAttribute>(false)?
-            .Value;
-    }
-    
     /// <summary>
     /// Adds a line to the Consumable Parameters table with the given parameters.
     /// </summary>
