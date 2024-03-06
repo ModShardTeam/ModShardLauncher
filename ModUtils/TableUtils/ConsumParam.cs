@@ -132,9 +132,9 @@ public partial class Msl
         return typeof(T)
             .GetTypeInfo()
             .DeclaredMembers
-            .SingleOrDefault(x => x.Name == value.ToString())
-            ?.GetCustomAttribute<EnumMemberAttribute>(false)
-            ?.Value;
+            .SingleOrDefault(x => x.Name == value.ToString())?
+            .GetCustomAttribute<EnumMemberAttribute>(false)?
+            .Value;
     }
     
     public static void InjectTableConsumableParameters(
