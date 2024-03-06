@@ -1,15 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Windows;
-using System.Windows.Documents;
-using Microsoft.CodeAnalysis;
 using ModShardLauncher.Mods;
-using UndertaleModLib.Models;
 
-namespace ModShardLauncher
-{
+namespace ModShardLauncher;
+
     /// <summary>
     /// Utility class for localization.
     /// </summary>
@@ -412,4 +408,3 @@ namespace ModShardLauncher
             ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_NPC_Lines");
         }
     }
-}
