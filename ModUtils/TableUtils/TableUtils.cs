@@ -2,10 +2,6 @@ namespace ModShardLauncher
 { 
     public partial class Msl
     {
-        public static void InjectTableSkillsStat()
-        {
-            string table = "gml_GlobalScript_table_skills_stat";
-        }
         public static void InjectTableAnimalsAI()
         {
             string table = "gml_GlobalScript_table_animals_ai";
