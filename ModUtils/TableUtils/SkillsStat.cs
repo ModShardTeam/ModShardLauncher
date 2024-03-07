@@ -25,6 +25,7 @@ public partial class Msl
         TWOHANDEDMACES,
         [EnumMember(Value = "2H AXES")]
         TWOHANDEDAXES,
+        [EnumMember(Value = "AXES")]
         AXES,
         MACES,
         STAVES,
@@ -162,7 +163,7 @@ public partial class Msl
     /// <param name="Crime">Whether using this skill is considered a crime.</param>
     /// <param name="metacategory">The metacategory this skill belongs to.</param>
     /// <param name="FMB">The backfire chance when using this skill if it's a spell.</param>
-    /// <param name="AP">The amount of armor piercing the skill has. (Can be `x` for default)</param>
+    /// <param name="AP">The amount of armor piercing the skill has. (Can be `x` for player default or any integer)</param>
     /// <param name="Attack">Whether this skill is an attack.</param>
     /// <param name="Stance">Whether this skill is a stance.</param>
     /// <param name="Charge">Whether this skill is a charge.</param>
@@ -204,13 +205,14 @@ public partial class Msl
         string newline = $"{id};{Object};{GetEnumMemberValue(Target)};{Range};{KD};{MP};{Reserv};{Duration};{AOE_Lenght};{AOE_Width};{(is_movement ? "1" : "0")};{Pattern};{Class};{(Bonus_Range ? "1" : "0")};{Starcast};{GetEnumMemberValue(Branch)};{(is_knockback ? "1" : "0")};{(Crime ? "1" : "")};{GetEnumMemberValue(metacategory)};{FMB};{AP};{(Attack ? "1" : "")};{(Stance ? "1" : "")};{(Charge ? "1" : "")};{(Maneuver ? "1" : "")};{(Spell ? "1" : "")}";
         
         // Find Meta Category in table
-        string? foundLine = table.FirstOrDefault(line => line.Contains(GetEnumMemberValue(metaGroup)));
+        string? foundLine = table.FirstOrDefault(line => line.Contains("// " + GetEnumMemberValue(metaGroup)));
         
         // Add line to table
         if (foundLine != null)
         {
             table.Insert(table.IndexOf(foundLine) + 1, newline);
             ModLoader.SetTable(table, "gml_GlobalScript_table_skills_stat");
+            Log.Information($"Injected Skill Stat {id} into Meta Group {metaGroup}");
         }
         else
         {
