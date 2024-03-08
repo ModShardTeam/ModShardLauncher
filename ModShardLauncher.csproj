@@ -197,7 +197,7 @@
   </ItemGroup>
   
   <Target Name="CopyDLLs" AfterTargets="Build">
-    <Copy SourceFiles="ModReference\netstandard.dll;ModReference\System.Collections.dll;ModReference\System.Runtime.dll;" DestinationFolder="$(OutDir)" />
+    <Copy SourceFiles="ModReference\netstandard.dll;ModReference\System.Collections.dll;ModReference\System.Runtime.dll;ModReference\System.Linq.dll;ModReference\System.ObjectModel.dll" DestinationFolder="$(OutDir)" />
   </Target>
 
 </Project>
