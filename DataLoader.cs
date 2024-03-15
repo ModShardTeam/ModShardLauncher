@@ -263,7 +263,6 @@ namespace ModShardLauncher
             //run
             dialog.ShowDialog();
             await t;
-            await LoadFile(dataPath, true);
 
             if (Main.Settings.SavePos == "")
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using ModShardLauncher.Mods;
@@ -48,7 +49,16 @@ namespace ModShardLauncher.Controls
                 MessageBox.Show(Application.Current.FindResource("SaveDataWarning").ToString());
             }
 
-            if (patchSucess) await DataLoader.DoSaveDialog();
+            // attempt to save the patched data
+            if (patchSucess) 
+            {
+                Task<bool> save = DataLoader.DoSaveDialog();
+                await save;
+                if (!save.Result) Log.Information("Saved cancelled.");
+            }
+
+            // reload the data
+            await DataLoader.LoadFile(DataLoader.dataPath, true);
             Main.Instance.Refresh();
         }
 
