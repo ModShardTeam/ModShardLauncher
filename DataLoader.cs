@@ -76,6 +76,13 @@ namespace ModShardLauncher
             File.WriteAllText("json_dump_rooms.json", JsonConvert.SerializeObject(data.Rooms.Select(t => t.Name.Content)));
             Msl.GenerateNRandomLinesFromCode(data.Code, new GlobalDecompileContext(data, false), 100, 1, 0);
         }
+        private static void ExportPreset()
+        {
+            GlobalDecompileContext context = new(ModLoader.Data, false);
+            File.WriteAllText("json_preset_bastion.json", Decompiler.Decompile(data.Code.First(t => t.Name.Content.Contains("scr_preset_bastion_1")), context));
+            File.WriteAllText("json_preset_catacombs.json", Decompiler.Decompile(data.Code.First(t => t.Name.Content.Contains("scr_preset_catacombs")), context));
+            File.WriteAllText("json_preset_crypt.json", Decompiler.Decompile(data.Code.First(t => t.Name.Content.Contains("scr_preset_crypt_1")), context));
+        }
         private static bool LoadUmt(string filename)
         {
             bool hadWarnings = false;
