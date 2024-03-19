@@ -8,22 +8,35 @@ using System.IO;
 
 namespace ModShardLauncher
 {
+    public class RandomLootTable
+    {
+        public int[] TableLootWeight { get; }
+        public string[] TableLootItems { get; }
+        public int[] TableLootRarity { get; }
+        public int[] TableLootDurability { get; }
+
+        public RandomLootTable(int[] tableLootWeight, string[] tableLootItems, int[] tableLootRarity, int[] tableLootDurability)
+        {
+            TableLootWeight = tableLootWeight;
+            TableLootItems = tableLootItems;
+            TableLootRarity = tableLootRarity;
+            TableLootDurability = tableLootDurability;
+        }
+    }
     public class LootElement
     {
         public string[] GuaranteedItems { get; }
         public int RandomLootMin { get; }
         public int RandomLootMax { get; }
         public int EmptyWeight { get; }
-        public int[] TableLootWeight { get; }
-        public string[] TableLootItems { get; }
-        public LootElement(string[] guaranteedItems, int randomLootMin, int randomLootMax, int emptyWeight, string[] tableLoot, int[] weightLoot)
+        public RandomLootTable RandomLootTable { get; }
+        public LootElement(string[] guaranteedItems, int randomLootMin, int randomLootMax, int emptyWeight, RandomLootTable randomLootTable)
         {
             GuaranteedItems = guaranteedItems;
             RandomLootMin = randomLootMin;
             RandomLootMax = randomLootMax;
             EmptyWeight = emptyWeight;
-            TableLootWeight = weightLoot;
-            TableLootItems = tableLoot;
+            RandomLootTable = randomLootTable;
         }
     }
     public static class LootUtils
@@ -32,9 +45,9 @@ namespace ModShardLauncher
     }
     public static partial class Msl
     {
-        public static void AddLoot(string nameObject, string[] guaranteedItems, int randomLootMin, int randomLootMax, int emptyWeight, string[] tableLoot, int[] weightLoot) 
+        public static void AddLoot(string nameObject, string[] guaranteedItems, int randomLootMin, int randomLootMax, int emptyWeight, RandomLootTable randomLootTable)
         {
-            LootElement lootElement = new(guaranteedItems, randomLootMin, randomLootMax, emptyWeight, tableLoot, weightLoot);
+            LootElement lootElement = new(guaranteedItems, randomLootMin, randomLootMax, emptyWeight, randomLootTable);
             LootUtils.LootTable.Add(nameObject, lootElement);
         }
 
@@ -92,14 +105,27 @@ namespace ModShardLauncher
                 var iteration = randomLootMin + irandom(randomLootMax - randomLootMin);
                 scr_actionsLogUpdate(""iteration "" + string(iteration));
 
-                if (!variable_struct_exists(lootStruct, ""TableLootWeight"") || !variable_struct_exists(lootStruct, ""TableLootItems""))
+                if (!variable_struct_exists(lootStruct, ""RandomLootTable""))
                 {
-                    scr_actionsLogUpdate(""no tableLoot"");
+                    scr_actionsLogUpdate(""no RandomLootTable"");
                     return 0;
                 }
 
-                var tableLootWeight = variable_struct_get(lootStruct, ""TableLootWeight"");
-                var tableLootItems = variable_struct_get(lootStruct, ""TableLootItems"");
+                var randomLootTable = variable_struct_get(lootStruct, ""RandomLootTable"");
+                
+                if (!variable_struct_exists(randomLootTable, ""TableLootWeight"") 
+                    || !variable_struct_exists(randomLootTable, ""TableLootItems"")
+                    || !variable_struct_exists(randomLootTable, ""TableLootRarity"")
+                    || !variable_struct_exists(randomLootTable, ""TableLootDurability""))
+                {
+                    scr_actionsLogUpdate(""no tableLoot data"");
+                    return 0;
+                }
+
+                var tableLootWeight = variable_struct_get(randomLootTable, ""TableLootWeight"");
+                var tableLootItems = variable_struct_get(randomLootTable, ""TableLootItems"");
+                var tableLootRarity = variable_struct_get(randomLootTable, ""TableLootRarity"");
+                var tableLootDurability = variable_struct_get(randomLootTable, ""TableLootDurability"");
 
                 var sizeTableLoot = array_length(tableLootWeight);
                 var totalWeight = emptyWeight;
@@ -130,16 +156,28 @@ namespace ModShardLauncher
                     if (index != -1)
                     {
                         scr_actionsLogUpdate(""found "" + string(index));
-                        objectName = tableLootItems[index];
-                        obj = asset_get_index(objectName)
-                        if (obj > -1)
+                        
+                        if (tableLootRarity[index] == -1)
                         {
-                            scr_inventory_add_item(obj);
+                            objectName = tableLootItems[index];
+                            obj = asset_get_index(objectName)
+                            if (obj > -1)
+                            {
+                                scr_inventory_add_item(obj);
+                            }
+                            else
+                            {
+                                scr_actionsLogUpdate(""invalid object "" + string(objectName));
+                            }
                         }
                         else
                         {
-                            scr_actionsLogUpdate(""invalid object "" + string(objectName));
+                            with (scr_inventory_add_weapon(tableLootItems[index], (tableLootRarity[index] << 0)))
+                            {
+                                scr_inv_atr_set(""Duration"", tableLootDurability[index]);
+                            }
                         }
+                        
                     }
                     else 
                     {
