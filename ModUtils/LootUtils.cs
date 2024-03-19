@@ -24,6 +24,16 @@ namespace ModShardLauncher
             TableLootDurability = tableLootDurability;
         }
     }
+    public class ReferenceTable
+    {
+        public int[] Ids { get; }
+        public string[] Refs { get; }
+        public ReferenceTable(string[] refs, int[] ids)
+        {
+            Ids = ids;
+            Refs = refs;
+        }
+    }
     public class LootTable
     {
         public string[] GuaranteedItems { get; }
@@ -42,34 +52,96 @@ namespace ModShardLauncher
     }
     public static class LootUtils
     {
+        public static Dictionary<string, ReferenceTable> ReferenceTables = new();
         public static Dictionary<string, LootTable> LootTables = new();
         public static void ResetLootTables()
         {
+            ReferenceTables.Clear();
             LootTables.Clear();
         }
         public static void SaveLootTables(string DirPath)
         {
-            if (LootTables.Count == 0)  return;
-          
-            File.WriteAllText(Path.Combine(DirPath, "loot_table.json"), JsonConvert.SerializeObject(LootTables));
-            Log.Information("Successfully saving the loot table json.");
+            if (LootTables.Count > 0)
+            {
+                File.WriteAllText(Path.Combine(DirPath, "loot_table.json"), JsonConvert.SerializeObject(LootTables));
+                Log.Information("Successfully saving the loot table json.");
+            }
+            if (ReferenceTables.Count > 0)
+            {
+                File.WriteAllText(Path.Combine(DirPath, "reference_table.json"), JsonConvert.SerializeObject(ReferenceTables));
+                Log.Information("Successfully saving the reference table json.");
+            }
         }
         public static void InjectLootScripts()
         {
-            if (LootTables.Count == 0)  return;
+            if (LootTables.Count == 0 && ReferenceTables.Count == 0)  return;
 
             string lootFunction = @"function scr_resolve_loot_table(argument0)
             {
-                file = file_text_open_read(""loot_table.json""); 
-                json = file_text_read_string(file);
-                var data = json_parse(json);
+                var objectName = object_get_name(argument0.object_index);
+                scr_actionsLogUpdate(""instance: "" + string(argument0.id) + "" of "" + objectName);
 
-                if (!variable_struct_exists(data, argument0))
+                var refFile = file_text_open_read(""reference_table.json""); 
+                var refJson = file_text_read_string(refFile);
+                var refData = json_parse(refJson);
+
+                var min_lvl = scr_globaltile_dungeon_get(""mob_lvl_min"");
+                var max_lvl = scr_globaltile_dungeon_get(""mob_lvl_max"");
+                var tier = floor(((max_lvl + min_lvl) / 2));
+
+                if (!variable_struct_exists(refData, objectName))
                 {
-                    scr_actionsLogUpdate(""cant find: "" + string(argument0));
+                    scr_actionsLogUpdate(""cant find object "" + objectName);
                     return 0;
                 }
-                var lootStruct = variable_struct_get(data, argument0);
+                var refStruct = variable_struct_get(refData, objectName);
+                var referenceLootTableIndex = -1;
+
+                if (!variable_struct_exists(refStruct, ""Ids""))
+                {
+                    scr_actionsLogUpdate(""cant find Ids"");
+                    return 0;
+                }
+                var idsArray = variable_struct_get(refStruct, ""Ids"");
+
+                for (var i = 0; i < array_length(idsArray); i += 1)
+                {
+                    if (idsArray[i] == argument0.id)
+                    {
+                        referenceLootTableIndex = i;
+                        break;
+                    }
+                }
+                scr_actionsLogUpdate(""id ref: "" + string(referenceLootTableIndex));
+
+                if (!variable_struct_exists(refStruct, ""Refs""))
+                {
+                    scr_actionsLogUpdate(""cant find Refs"");
+                    return 0;
+                }
+                var refsTable = variable_struct_get(refStruct, ""Refs"");
+                var referenceLootTable = refsTable[referenceLootTableIndex + 1];
+
+                scr_actionsLogUpdate(""ref: "" + referenceLootTable);
+
+                if (!variable_struct_exists(refStruct, ""Refs""))
+                {
+                    scr_actionsLogUpdate(""cant find Refs"");
+                    return 0;
+                }
+                var refsTable = variable_struct_get(refStruct, ""Refs"");
+                var referenceLootTable = refsTable[referenceLootTableIndex + 1];
+
+                var file = file_text_open_read(""loot_table.json""); 
+                var json = file_text_read_string(file);
+                var data = json_parse(json);
+
+                if (!variable_struct_exists(data, referenceLootTable))
+                {
+                    scr_actionsLogUpdate(""cant find ref "" + referenceLootTable);
+                    return 0;
+                }
+                var lootStruct = variable_struct_get(data, referenceLootTable);
 
                 var objectName = """";
                 var obj = -1;
@@ -207,12 +279,12 @@ namespace ModShardLauncher
 
             Msl.LoadGML("gml_Object_o_chest_p_Alarm_1")
                 .MatchFrom("script_execute")
-                .InsertBelow("scr_resolve_loot_table(object_get_namZe(other.object_index))")
+                .InsertBelow("scr_resolve_loot_table(other)")
                 .Save();
                 
             Msl.LoadGML("gml_Object_c_container_Other_10")
                 .MatchFrom("script_execute")
-                .InsertBelow("scr_resolve_loot_table(object_get_name(other.object_index))")
+                .InsertBelow("scr_resolve_loot_table(other)")
                 .Save();
         }
     }
@@ -222,6 +294,12 @@ namespace ModShardLauncher
         {
             LootTable lootTable = new(guaranteedItems, randomLootMin, randomLootMax, emptyWeight, randomLootTable);
             LootUtils.LootTables.Add(lootTableID, lootTable);
+        }
+        public static void AddReferenceTable(string nameObject, string[] refs, int[]? ids = null)
+        {
+            ids ??= Array.Empty<int>();
+            ReferenceTable referenceTable = new(refs, ids);
+            LootUtils.ReferenceTables.Add(nameObject, referenceTable);
         }
     }
 }
