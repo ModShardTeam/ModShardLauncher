@@ -218,6 +218,8 @@ namespace ModShardLauncher
             PatchMods();
             SetTable(Weapons, "gml_GlobalScript_table_weapons");
             SetTable(WeaponDescriptions, "gml_GlobalScript_table_weapons_text");
+            // add the new loot related functions if there is any
+            if (LootUtils.LootTable.Count > 0) LootUtils.InjectLootScripts();
         }
         internal static void PatchInnerFile()
         {

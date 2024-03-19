@@ -142,6 +142,8 @@ namespace ModShardLauncher
             dialog.ShowDialog();
             await taskLoadDataWinWithUmt;
             ModLoader.Initalize();
+            // cleaning loot table
+            LootUtils.LootTable.Clear();
             
             if(Main.Settings.LoadPos == "" && !re)
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -55,6 +56,8 @@ namespace ModShardLauncher.Controls
                 Task<bool> save = DataLoader.DoSaveDialog();
                 await save;
                 if (!save.Result) Log.Information("Saved cancelled.");
+                // copy the dataloot.json in the stoneshard directory
+                if (LootUtils.LootTable.Count > 0) LootUtils.SaveLootTable(Msl.ThrowIfNull(Path.GetDirectoryName(DataLoader.dataPath)));
             }
 
             // reload the data

@@ -5,6 +5,7 @@ using Serilog;
 using UndertaleModLib.Models;
 using Newtonsoft.Json;
 using System.IO;
+using Microsoft.Win32;
 
 namespace ModShardLauncher
 {
@@ -42,18 +43,13 @@ namespace ModShardLauncher
     public static class LootUtils
     {
         public static Dictionary<string, LootElement> LootTable = new();
-    }
-    public static partial class Msl
-    {
-        public static void AddLoot(string nameObject, string[] guaranteedItems, int randomLootMin, int randomLootMax, int emptyWeight, RandomLootTable randomLootTable)
+        public static void SaveLootTable(string DirPath)
         {
-            LootElement lootElement = new(guaranteedItems, randomLootMin, randomLootMax, emptyWeight, randomLootTable);
-            LootUtils.LootTable.Add(nameObject, lootElement);
+            File.WriteAllText(Path.Combine(DirPath, "loot_table.json"), JsonConvert.SerializeObject(LootTable));
+            Log.Information("Successfully saving the loot table json.");
         }
-
-        public static void InjectLoot()
+        public static void InjectLootScripts()
         {
-            File.WriteAllText("loot_table.json", JsonConvert.SerializeObject(LootUtils.LootTable));
             string lootFunction = @"function scr_resolve_loot_table(argument0)
             {
                 file = file_text_open_read(""loot_table.json""); 
@@ -128,16 +124,25 @@ namespace ModShardLauncher
                 var tableLootDurability = variable_struct_get(randomLootTable, ""TableLootDurability"");
 
                 var sizeTableLoot = array_length(tableLootWeight);
-                var totalWeight = emptyWeight;
-                for (var i = 0; i < sizeTableLoot; i += 1)
-                {
-                    totalWeight += tableLootWeight[i];
-                }
-
-                scr_actionsLogUpdate(""totalWeight "" + string(totalWeight));
+                var tableLootSpecialLootAlready = array_create(sizeTableLoot, 0);
 
                 for (var j = 0; j < iteration; j += 1)
                 {
+                    var totalWeight = emptyWeight;
+                    for (var i = 0; i < sizeTableLoot; i += 1)
+                    {
+                        if (tableLootRarity[i] == 6 && (ds_list_find_index(scr_atr(""specialItemsPool""), tableLootItems[i]) != -1))
+                        {
+                            tableLootSpecialLootAlready[i] = 1;
+                        }
+                        else
+                        {
+                            totalWeight += tableLootWeight[i];
+                        }
+                    }
+
+                    scr_actionsLogUpdate(""totalWeight "" + string(totalWeight));
+
                     var randomWeight = irandom(totalWeight - 1);
                     scr_actionsLogUpdate(""randomWeight "" + string(randomWeight));
                     var cumulativeWeight = 0;
@@ -145,6 +150,10 @@ namespace ModShardLauncher
 
                     for (var i = 0; i < sizeTableLoot; i += 1)
                     {
+                        if (tableLootSpecialLootAlready[i] == 1)
+                        {
+                            continue;
+                        }
                         cumulativeWeight += tableLootWeight[i]
                         if (randomWeight < cumulativeWeight) 
                         {
@@ -156,7 +165,7 @@ namespace ModShardLauncher
                     if (index != -1)
                     {
                         scr_actionsLogUpdate(""found "" + string(index));
-                        
+
                         if (tableLootRarity[index] == -1)
                         {
                             objectName = tableLootItems[index];
@@ -186,17 +195,25 @@ namespace ModShardLauncher
                 }
             }";
 
-            AddFunction(lootFunction, "scr_resolve_loot_table");
+            Msl.AddFunction(lootFunction, "scr_resolve_loot_table");
 
-            LoadGML("gml_Object_o_chest_p_Alarm_1")
+            Msl.LoadGML("gml_Object_o_chest_p_Alarm_1")
                 .MatchFrom("script_execute")
                 .InsertBelow("scr_resolve_loot_table(object_get_name(other.object_index))")
                 .Save();
                 
-            LoadGML("gml_Object_c_container_Other_10")
+            Msl.LoadGML("gml_Object_c_container_Other_10")
                 .MatchFrom("script_execute")
                 .InsertBelow("scr_resolve_loot_table(object_get_name(other.object_index))")
                 .Save();
+        }
+    }
+    public static partial class Msl
+    {
+        public static void AddLoot(string nameObject, string[] guaranteedItems, int randomLootMin, int randomLootMax, int emptyWeight, RandomLootTable randomLootTable)
+        {
+            LootElement lootElement = new(guaranteedItems, randomLootMin, randomLootMax, emptyWeight, randomLootTable);
+            LootUtils.LootTable.Add(nameObject, lootElement);
         }
     }
 }
