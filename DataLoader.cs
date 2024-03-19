@@ -143,7 +143,7 @@ namespace ModShardLauncher
             await taskLoadDataWinWithUmt;
             ModLoader.Initalize();
             // cleaning loot table
-            LootUtils.LootTable.Clear();
+            LootUtils.ResetLootTables();
             
             if(Main.Settings.LoadPos == "" && !re)
             {

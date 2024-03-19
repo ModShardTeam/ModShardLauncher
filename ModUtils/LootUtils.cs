@@ -24,14 +24,14 @@ namespace ModShardLauncher
             TableLootDurability = tableLootDurability;
         }
     }
-    public class LootElement
+    public class LootTable
     {
         public string[] GuaranteedItems { get; }
         public int RandomLootMin { get; }
         public int RandomLootMax { get; }
         public int EmptyWeight { get; }
         public RandomLootTable RandomLootTable { get; }
-        public LootElement(string[] guaranteedItems, int randomLootMin, int randomLootMax, int emptyWeight, RandomLootTable randomLootTable)
+        public LootTable(string[] guaranteedItems, int randomLootMin, int randomLootMax, int emptyWeight, RandomLootTable randomLootTable)
         {
             GuaranteedItems = guaranteedItems;
             RandomLootMin = randomLootMin;
@@ -42,14 +42,22 @@ namespace ModShardLauncher
     }
     public static class LootUtils
     {
-        public static Dictionary<string, LootElement> LootTable = new();
-        public static void SaveLootTable(string DirPath)
+        public static Dictionary<string, LootTable> LootTables = new();
+        public static void ResetLootTables()
         {
-            File.WriteAllText(Path.Combine(DirPath, "loot_table.json"), JsonConvert.SerializeObject(LootTable));
+            LootTables.Clear();
+        }
+        public static void SaveLootTables(string DirPath)
+        {
+            if (LootTables.Count == 0)  return;
+          
+            File.WriteAllText(Path.Combine(DirPath, "loot_table.json"), JsonConvert.SerializeObject(LootTables));
             Log.Information("Successfully saving the loot table json.");
         }
         public static void InjectLootScripts()
         {
+            if (LootTables.Count == 0)  return;
+
             string lootFunction = @"function scr_resolve_loot_table(argument0)
             {
                 file = file_text_open_read(""loot_table.json""); 
@@ -131,7 +139,7 @@ namespace ModShardLauncher
                     var totalWeight = emptyWeight;
                     for (var i = 0; i < sizeTableLoot; i += 1)
                     {
-                        if (tableLootRarity[i] == 6 && (ds_list_find_index(scr_atr(""specialItemsPool""), tableLootItems[i]) != -1))
+                        if (ds_list_find_index(scr_atr(""specialItemsPool""), tableLootItems[i]) != -1)
                         {
                             tableLootSpecialLootAlready[i] = 1;
                         }
@@ -199,7 +207,7 @@ namespace ModShardLauncher
 
             Msl.LoadGML("gml_Object_o_chest_p_Alarm_1")
                 .MatchFrom("script_execute")
-                .InsertBelow("scr_resolve_loot_table(object_get_name(other.object_index))")
+                .InsertBelow("scr_resolve_loot_table(object_get_namZe(other.object_index))")
                 .Save();
                 
             Msl.LoadGML("gml_Object_c_container_Other_10")
@@ -210,10 +218,10 @@ namespace ModShardLauncher
     }
     public static partial class Msl
     {
-        public static void AddLoot(string nameObject, string[] guaranteedItems, int randomLootMin, int randomLootMax, int emptyWeight, RandomLootTable randomLootTable)
+        public static void AddLootTable(string lootTableID, string[] guaranteedItems, int randomLootMin, int randomLootMax, int emptyWeight, RandomLootTable randomLootTable)
         {
-            LootElement lootElement = new(guaranteedItems, randomLootMin, randomLootMax, emptyWeight, randomLootTable);
-            LootUtils.LootTable.Add(nameObject, lootElement);
+            LootTable lootTable = new(guaranteedItems, randomLootMin, randomLootMax, emptyWeight, randomLootTable);
+            LootUtils.LootTables.Add(lootTableID, lootTable);
         }
     }
 }
