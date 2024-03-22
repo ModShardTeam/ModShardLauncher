@@ -298,6 +298,7 @@ namespace ModShardLauncher
         // and add them in a List<TextureInfo>
         private static void ScanForTextures(ModFile modFile)
         {
+            SourceTextures.Clear();
             // look for all elements in the modFile
             // and save the png ones
             foreach (FileChunk fileChunk in modFile.Files)
