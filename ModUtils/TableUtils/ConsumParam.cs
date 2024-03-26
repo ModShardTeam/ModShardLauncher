@@ -210,8 +210,8 @@ public partial class Msl
     /// <param name="purse"></param>
     /// <param name="bottle"></param>
     public static void InjectTableConsumableParameters(
-        ConsumParamMetaGroup metaGroup, 
-        string id, 
+        ConsumParamMetaGroup metaGroup,
+        string id,
         ConsumParamCategory Cat,
         ConsumParamMaterial Material,
         ConsumParamWeight Weight,
@@ -268,18 +268,19 @@ public partial class Msl
         bool bottle = false)
     {
         // Load table if it exists
-        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_Consumable_Parameters"));
+        List<string> table = ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_Consumable_Parameters"));
         
         // Prepare line
         string newline = $"{id};{Cat};{GetEnumMemberValue(Subcat)};{Price};{EffPrice};{Material};{Weight};{Fresh};{Duration};{Hunger};{Hunger_Change};{Hunger_Resistance};{Thirsty};{Thirst_Change};{Intoxication};{Toxicity_Change};{Toxicity_Resistance};{Pain};{Pain_Resistance};{Pain_Change};{Pain_Limit};{Sanity};{Sanity_Change};{Morale};{Morale_Change};{max_mp_res};{MP_Restoration};{max_hp_res};{Health_Restoration};{Healing_Received};{Condition};{Immunity};{Fatigue};{Fatigue_Change};{Fatigue_Gain};{Physical_Resistance};{Nature_Resistance};{Magic_Resistance};{Slashing_Resistance};{Piercing_Resistance};{Blunt_Resistance};{Rending_Resistance};{Fire_Resistance};{Shock_Resistance};{Poison_Resistance};{Caustic_Resistance};{Frost_Resistance};{Arcane_Resistance};{Unholy_Resistance};{Sacred_Resistance};{Psionic_Resistance};{Bleeding_Resistance};{(purse ? "1" : "")};{(bottle ? "1" : "")};{GetEnumMemberValue(tags)}";
         
         // Find Meta Category in table
-        string? foundLine = table.FirstOrDefault(line => line.Contains(GetEnumMemberValue(metaGroup)));
+        string metaGroupStr = ThrowIfNull(GetEnumMemberValue(metaGroup));
+        (int ind, string? foundLine) = table.Enumerate().FirstOrDefault(x => x.Item2.Contains(metaGroupStr));
         
         // Add line to table
         if (foundLine != null)
         {
-            table.Insert(table.IndexOf(foundLine) + 1, newline);
+            table.Insert(ind + 1, newline);
             ModLoader.SetTable(table, "gml_GlobalScript_table_Consumable_Parameters");
         }
         else

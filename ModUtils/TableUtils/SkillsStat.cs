@@ -174,7 +174,7 @@ public partial class Msl
         string id,
         string Object,
         SkillsStatTarget Target = SkillsStatTarget.NoTarget,
-        string Range = "0",
+        int Range = 0,
         int KD = 0,
         int MP = 0,
         int Reserv = 0,
@@ -199,18 +199,19 @@ public partial class Msl
         bool Spell = false)
     {
         // Load table if it exists
-        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_skills_stat"));
+        List<string> table = ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_skills_stat"));
         
         // Prepare line
         string newline = $"{id};{Object};{GetEnumMemberValue(Target)};{Range};{KD};{MP};{Reserv};{Duration};{AOE_Lenght};{AOE_Width};{(is_movement ? "1" : "0")};{Pattern};{Class};{(Bonus_Range ? "1" : "0")};{Starcast};{GetEnumMemberValue(Branch)};{(is_knockback ? "1" : "0")};{(Crime ? "1" : "")};{GetEnumMemberValue(metacategory)};{FMB};{AP};{(Attack ? "1" : "")};{(Stance ? "1" : "")};{(Charge ? "1" : "")};{(Maneuver ? "1" : "")};{(Spell ? "1" : "")}";
         
         // Find Meta Category in table
-        string? foundLine = table.FirstOrDefault(line => line.Contains("// " + GetEnumMemberValue(metaGroup)));
+        string metaGroupStr = "// " + GetEnumMemberValue(metaGroup);
+        (int ind, string? foundLine) = table.Enumerate().FirstOrDefault(x => x.Item2.Contains(metaGroupStr));
         
         // Add line to table
         if (foundLine != null)
         {
-            table.Insert(table.IndexOf(foundLine) + 1, newline);
+            table.Insert(ind + 1, newline);
             ModLoader.SetTable(table, "gml_GlobalScript_table_skills_stat");
             Log.Information($"Injected Skill Stat {id} into Meta Group {metaGroup}");
         }
