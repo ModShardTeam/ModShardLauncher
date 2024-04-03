@@ -174,7 +174,7 @@ public partial class Msl
         string id,
         string Object,
         SkillsStatTarget Target = SkillsStatTarget.NoTarget,
-        int Range = 0,
+        string Range = "0",
         int KD = 0,
         int MP = 0,
         int Reserv = 0,
