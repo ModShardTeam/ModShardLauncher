@@ -17,6 +17,7 @@
     <Compile Include="ModUtils\TableUtils\ConsumParam.cs" />
     <Compile Include="ModUtils\TableUtils\SkillsStat.cs" />
     <Compile Include="ModUtils\TableUtils\TableUtils.cs" />
+    <Compile Include="ModUtils\TableUtils\LocalizationUtils.cs" />
     <Compile Include="Pages/*.cs" />
     <Compile Include="Extensions/*.cs" />
     <Compile Include="Mods/*.cs" />
