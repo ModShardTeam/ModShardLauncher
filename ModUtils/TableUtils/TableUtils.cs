@@ -20,30 +20,37 @@ namespace ModShardLauncher
         public static void InjectTableAnimalsAI()
         {
             string table = "gml_GlobalScript_table_animals_ai";
+            throw new NotImplementedException();
         }
         public static void InjectTableWeapons()
         {
             string table = "gml_GlobalScript_table_weapons";
+            throw new NotImplementedException();
         }
         public static void InjectTableEnemyBalance()
         {
             string table = "gml_GlobalScript_table_enemy_balance";
+            throw new NotImplementedException();
         }
         public static void InjectTableArmor()
         {
             string table = "gml_GlobalScript_table_armor";
+            throw new NotImplementedException();
         }
         public static void InjectTableCreditsBackers()
         {
             string table = "gml_GlobalScript_table_credits_backers";
+            throw new NotImplementedException();
         }
         public static void InjectTablePotion()
         {
             string table = "gml_GlobalScript_table_Potion";
+            throw new NotImplementedException();
         }
         public static void InjectTableContract()
         {
             string table = "gml_GlobalScript_table_Contract";
+            throw new NotImplementedException();
         }
     }
 }
