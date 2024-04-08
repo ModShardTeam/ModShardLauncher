@@ -65,7 +65,7 @@ namespace ModShardLauncher
 
             // https://sonarsource.github.io/rspec/#/rspec/S6602/csharp
             // for list, Find should be used instead of FirstOrDefault
-            FileChunk? file = Files.Find(t => t.name == fileName) ?? Files.Find(t => t.name.Split("\\")[^1] == fileName);
+            FileChunk? file = Files.Find(t => System.IO.Path.GetFileName(t.name) == fileName);
             if (file != null)
             {
                 if(!Stream.CanRead) Stream = new FileStream(Path, FileMode.Open);
