@@ -15,7 +15,7 @@ namespace ModShardLauncher
                 .DeclaredMembers
                 .SingleOrDefault(x => x.Name == value.ToString())?
                 .GetCustomAttribute<EnumMemberAttribute>(false)?
-                .Value;
+                .Value ?? value.ToString();
         }
         public static void InjectTableAnimalsAI()
         {
