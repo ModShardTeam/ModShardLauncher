@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Serilog;
 using UndertaleModLib;
 using UndertaleModLib.Decompiler;
@@ -164,23 +165,50 @@ namespace ModShardLauncher
                 NameStringID = id
             };
             ModLoader.Data.Variables.Add(variable);
-            Log.Information(string.Format("Created variable: {0}", variable.ToString()));
+            Log.Information($"Created {variable.InstanceType} variable: {variable.Name.Content} {variable.VarID}");
 
             return new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
+        }
+        public static void CheckRefLocalVariableOrCreate(UndertaleCode code, string name)
+        {
+            UndertaleCodeLocals locals = ModLoader.Data.CodeLocals.For(code);
+            UndertaleCodeLocals.LocalVar? localvar = locals.Locals.FirstOrDefault(t => t.Name?.Content == name);
+
+            if (localvar == null)
+            {
+                UndertaleInstruction.Reference<UndertaleVariable> refVariable = CreateRefVariable(name, UndertaleInstruction.InstanceType.Local);
+                localvar = new() { 
+                    Index = (uint)refVariable.Target.VarID, 
+                    Name = refVariable.Target.Name 
+                };
+                locals.Locals.Add(localvar);
+            }
+            else
+            {
+                Log.Information($"Found local variable: {localvar.Name.Content}");
+            }
         }
         public static void CheckRefVariableOrCreate(string name, UndertaleInstruction.InstanceType instanceType)
         {
             try
             {
-                UndertaleVariable? variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name);
-                
-                if (variable == null) 
+                UndertaleVariable? variable = null;
+                if (instanceType == UndertaleInstruction.InstanceType.Local)
+                {
+                    throw new ArgumentException("Wrong method used for checking Local Variables");
+                }
+                else
+                {
+                    variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name && t.InstanceType == instanceType);
+                }
+
+                if (variable == null)
                 {
                     CreateRefVariable(name, instanceType);
                 }
                 else
                 {
-                    Log.Information(string.Format("Found variable: {0}", variable.ToString()));
+                    Log.Information($"Found variable: {variable.Name.Content} of type {variable.InstanceType}");
                 }
             }
             catch
@@ -208,6 +236,27 @@ namespace ModShardLauncher
             {
                 throw;
             }
+        }
+        public static string CreateLocalVarAssemblyAsString(UndertaleCode code)
+        {
+            IEnumerable<string> originalLocalVarsName = code.FindReferencedLocalVars().Select(x => x.Name.Content);
+            IEnumerable<UndertaleCodeLocals.LocalVar> newLocalVars = ModLoader.Data.CodeLocals.For(code).Locals;
+            StringBuilder sb = new();
+
+            foreach(UndertaleCodeLocals.LocalVar newLocalVar in newLocalVars)
+            {
+                if (originalLocalVarsName.Contains(newLocalVar.Name.Content)) continue;
+                UndertaleVariable? refVar = ModLoader.Data.Variables.FirstOrDefault(x => x.Name.Content == newLocalVar.Name.Content && x.VarID == newLocalVar.Index);
+                sb.Append($".localvar {newLocalVar.Index} {newLocalVar.Name.Content}");
+
+                if (refVar != null) sb.Append($" {ModLoader.Data.Variables.IndexOf(refVar)}\n");
+            }
+            if (sb.Length != 0)
+            {
+                Log.Information("New local var to inject.");
+            }
+
+            return sb.ToString();
         }
         public static UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> CreateString(string name) 
         {
