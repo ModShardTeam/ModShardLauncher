@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using ModShardLauncher.Resources.Codes;
@@ -85,10 +83,10 @@ namespace ModShardLauncher
         /// Check pop variables for intructions as string and create them if needed.
         /// </summary>
         /// <param name="instructions"></param>
-        public void CheckInstructionsVariables(string instructions)
+        public void CheckInstructionsVariables(UndertaleCode originalCode, string instructions)
         {
             if (header.patchingWay != PatchingWay.AssemblyAsString) return;
-
+            
             foreach (string instruction in instructions.Split('\n').Where(x => x.Contains("pop.v")))
             {
                 System.Text.RegularExpressions.Match matches = variableRegex.Match(instruction);
@@ -105,11 +103,11 @@ namespace ModShardLauncher
                     }
                     else if(instanceValue == "local")
                     {
-                        AssemblyWrapper.CheckRefVariableOrCreate(matches.Groups["name"].Value, UndertaleInstruction.InstanceType.Local);
+                        AssemblyWrapper.CheckRefLocalVariableOrCreate(originalCode, matches.Groups["name"].Value);
                     }
                     else
                     {
-                        Log.Warning("Cannot infer the instance type of {0}. There is a risk it will lead to an undefined variable.", instruction);
+                        Log.Warning($"Cannot infer the instance type of {instruction}. There is a risk it will lead to an undefined variable.");
                     }
                 }
             }
@@ -807,7 +805,6 @@ namespace ModShardLauncher
         /// </summary>
         public static  FileEnumerable<string> InsertBelow(this FileEnumerable<(Match, string)> fe, string inserting)
         {
-            fe.CheckInstructionsVariables(inserting);
             return new(fe.header, fe.ienumerable.InsertBelow(inserting.Split("\n")));
         }
         /// <summary>
@@ -856,7 +853,6 @@ namespace ModShardLauncher
         /// </summary>
         public static  FileEnumerable<string> InsertAbove(this FileEnumerable<(Match, string)> fe, string inserting)
         {
-            fe.CheckInstructionsVariables(inserting);
             return new(fe.header, fe.ienumerable.InsertAbove(inserting.Split("\n")));
         }
         /// <summary>
@@ -909,7 +905,6 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, string inserting)
         {
-            fe.CheckInstructionsVariables(inserting);
             return new(fe.header, fe.ienumerable.ReplaceBy(inserting.Split("\n")));
         }
         /// <summary>
@@ -953,6 +948,9 @@ namespace ModShardLauncher
                     break;
 
                     case PatchingWay.AssemblyAsString:
+                        fe.CheckInstructionsVariables(fe.header.originalCode, newCode);
+                        string newLocalVarsAsString = AssemblyWrapper.CreateLocalVarAssemblyAsString(fe.header.originalCode);
+                        newCode = newCode.Insert(newCode.IndexOf('\n') + 1, newLocalVarsAsString);
                         fe.header.originalCode.Replace(Assembler.Assemble(newCode, ModLoader.Data));
                     break;
 
