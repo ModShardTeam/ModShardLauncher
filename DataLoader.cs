@@ -79,8 +79,7 @@ namespace ModShardLauncher
                     {
                         ShowWarning(warning, "Loading warning");
 
-                        if (warning.Contains("unserializeCountError.txt")
-                            || warning.Contains("object pool size"))
+                        if (warning.Contains("unserializeCountError.txt") || warning.Contains("object pool size"))
                             return;
 
                         hadWarnings = true;
