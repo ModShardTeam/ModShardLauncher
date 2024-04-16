@@ -37,10 +37,5 @@ namespace ModShardLauncher
             string table = "gml_GlobalScript_table_Potion";
             throw new NotImplementedException();
         }
-        public static void InjectTableContract()
-        {
-            string table = "gml_GlobalScript_table_Contract";
-            throw new NotImplementedException();
-        }
     }
 }
