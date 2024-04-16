@@ -18,6 +18,7 @@
     <Compile Include="ModUtils\TableUtils\SkillsStat.cs" />
     <Compile Include="ModUtils\TableUtils\TableUtils.cs" />
     <Compile Include="ModUtils\TableUtils\LocalizationUtils.cs" />
+    <Compile Include="ModUtils\TableUtils\TableWeapons.cs" />
     <Compile Include="Pages/*.cs" />
     <Compile Include="Extensions/*.cs" />
     <Compile Include="Mods/*.cs" />
