@@ -216,8 +216,8 @@ namespace ModShardLauncher
         {
             PatchInnerFile();
             PatchMods();
-            SetTable(Weapons, "gml_GlobalScript_table_weapons");
-            SetTable(WeaponDescriptions, "gml_GlobalScript_table_weapons_text");
+            // SetTable(Weapons, "gml_GlobalScript_table_weapons");
+            // SetTable(WeaponDescriptions, "gml_GlobalScript_table_weapons_text");
         }
         internal static void PatchInnerFile()
         {
