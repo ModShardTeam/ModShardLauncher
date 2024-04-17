@@ -22,10 +22,5 @@ namespace ModShardLauncher
             string table = "gml_GlobalScript_table_animals_ai";
             throw new NotImplementedException();
         }
-        public static void InjectTableArmor()
-        {
-            string table = "gml_GlobalScript_table_armor";
-            throw new NotImplementedException();
-        }
     }
 }
