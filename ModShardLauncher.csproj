@@ -16,6 +16,7 @@
     <Compile Include="*.cs" Exclude="bin\**;obj\**;ModShardLauncherTest\**.*cs" />
     <Compile Include="ModUtils\TableUtils\ConsumParam.cs" />
     <Compile Include="ModUtils\TableUtils\Contract.cs" />
+    <Compile Include="ModUtils\TableUtils\CreditsBackers.cs" />
     <Compile Include="ModUtils\TableUtils\EnemyBalance.cs" />
     <Compile Include="ModUtils\TableUtils\Potion.cs" />
     <Compile Include="ModUtils\TableUtils\SkillsStat.cs" />

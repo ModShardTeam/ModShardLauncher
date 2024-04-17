@@ -27,7 +27,7 @@ public partial class Msl
         // Prepare line
         string newline = $"{name};{effectScript};{string.Join(";", blockedEffects)};";
         
-        // Adding potentially missing ; at the end of the line. Could be unnecessary ?
+        // Adding potentially missing ; at the end of the line. Could be unnecessary ?  
         while (newline.Count(t => t == ';') < 28)
             newline += ';';
         

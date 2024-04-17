@@ -27,11 +27,5 @@ namespace ModShardLauncher
             string table = "gml_GlobalScript_table_armor";
             throw new NotImplementedException();
         }
-        public static void InjectTableCreditsBackers()
-        {
-            string table = "gml_GlobalScript_table_credits_backers";
-            throw new NotImplementedException();
-        }
-        
     }
 }
