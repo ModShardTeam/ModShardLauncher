@@ -27,7 +27,8 @@ namespace ModShardLauncher
         private static List<Assembly> Assemblies = new();
         public static List<string> Weapons = new();
         public static List<string> WeaponDescriptions = new();
-        private static List<(string, UndertaleRoom.GameObject)> disclaimers = new();
+        private static List<(string, string[])> Credits = new();
+        private static List<(string, UndertaleRoom.GameObject)> Disclaimers = new();
         public static Dictionary<string, Action<string>> ScriptCallbacks = new Dictionary<string, Action<string>>();
         public static void ShowMessage(string msg)
         {
@@ -38,9 +39,13 @@ namespace ModShardLauncher
             Weapons = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons"));
             WeaponDescriptions = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons_text"));
         }
+        internal static void AddCredit(string modNameShort, string[] authors)
+        {
+            Credits.Add((modNameShort, authors));
+        }
         internal static void AddDisclaimer(string modNameShort, UndertaleRoom.GameObject overlay)
         {
-            disclaimers.Add((modNameShort, overlay));
+            Disclaimers.Add((modNameShort, overlay));
         }
         public static List<string>? GetTable(string name)
         {
@@ -168,7 +173,8 @@ namespace ModShardLauncher
         }
         public static void PatchMods()
         {
-            disclaimers = new();
+            Credits = new();
+            Disclaimers = new();
             List<ModFile> mods = ModInfos.Instance.Mods;
             foreach (ModFile mod in mods)
             {
@@ -205,7 +211,8 @@ namespace ModShardLauncher
                 }
                 mod.PatchStatus = PatchStatus.Success;
             }
-            Msl.ChainDisclaimerRooms(disclaimers);
+            Msl.AddDisclaimerRoom(Credits.Select(x => x.Item1).ToArray(), Credits.SelectMany(x => x.Item2).Distinct().ToArray());
+            Msl.ChainDisclaimerRooms(Disclaimers);
         }
         public static void LoadWeapon(Type type)
         {

@@ -223,11 +223,10 @@ namespace ModShardLauncher
                 throw;
             }
         }
-        public static UndertaleRoom AddDisclaimerRoom(string modName, params string[] authorsName)
+        internal static UndertaleRoom AddDisclaimerRoom(string[] modName, string[] authorsName)
         {
-            string modNameShort = Regex.Replace(modName, @"[\s\+-]+", "");
-            UndertaleGameObject o_mod_disclaimer = AddObject(
-                name: $"o_mod_disclaimer_{modNameShort}", 
+            UndertaleGameObject o_msl_mod_disclaimer = AddObject(
+                name: "o_msl_mod_disclaimer", 
                 spriteName: "", 
                 parentName: "", 
                 isVisible: true, 
@@ -235,7 +234,15 @@ namespace ModShardLauncher
                 isAwake: true,
                 collisionShapeFlags: CollisionShapeFlags.Circle
             );
-            string disclaimerText = $@"scr_draw_text_doublecolor((global.cameraWidth / 2), (global.cameraHeight / 2), ""You are playing with {modName}. Please"", "" do not report bugs to main developers."", 16777215, make_color_rgb(155, 27, 49), 1, 1, 0.69999999999999996, global.f_digits, 0, 16777215, ""only report bugs to modding team."")";
+
+            string intro = $"You are playing with a modded version.";
+            if (modName.Length > 0)
+            {
+                string names = string.Join(", ", modName);
+                intro = $"You are playing with {names} mods.";
+            }
+
+            string disclaimerText = $@"scr_draw_text_doublecolor((global.cameraWidth / 2), (global.cameraHeight / 2), ""{intro}\nPlease do not report bugs to main developers."", """", 16777215, make_color_rgb(155, 27, 49), 1, 1, 0.69999999999999996, global.f_digits, 0, 16777215, ""only report bugs to modding team."")";
             int delta = 55;
             foreach(string author in authorsName)
             {
@@ -244,23 +251,26 @@ scr_draw_text_doublecolor((global.cameraWidth / 2), ((global.cameraHeight / 2) +
                 delta += 30;
             }
             
-            AddNewEvent(o_mod_disclaimer, disclaimerText, EventType.Draw, 0);
+            AddNewEvent(o_msl_mod_disclaimer, disclaimerText, EventType.Draw, 0);
             
-            UndertaleRoom room = AddRoom($"r_mod_disclaimer_{modNameShort}");
+            UndertaleRoom room = AddRoom("r_msl_mod_disclaimer");
 
             UndertaleRoom.Layer layerInstance = room.AddLayerInstance("NewInstancesLayer");
             room.AddLayerBackground("NewBackgroundLayer");
             
             UndertaleRoom.GameObject overlay = room.AddGameObject(layerInstance, "o_init_overlay");
-            room.AddGameObject(layerInstance, $"o_mod_disclaimer_{modNameShort}");
+            room.AddGameObject(layerInstance, $"o_msl_mod_disclaimer");
 
-            ModLoader.AddDisclaimer(modNameShort, overlay);
+            ModLoader.AddDisclaimer("r_msl_mod_disclaimer", overlay);
             return room;
         }
-        public static void AddCustomDisclaimerRoom(string modName, UndertaleRoom.GameObject overlay)
+        public static void AddCreditDisclaimerRoom(string modName, params string[] authorsName)
         {
-            string modNameShort = Regex.Replace(modName, @"[\s\+-]+", "");
-            ModLoader.AddDisclaimer(modNameShort, overlay);
+            ModLoader.AddCredit(modName, authorsName);
+        }
+        public static void AddCustomDisclaimerRoom(string roomName, UndertaleRoom.GameObject overlay)
+        {
+            ModLoader.AddDisclaimer(roomName, overlay);
         }
         internal static void ChainDisclaimerRooms(List<(string, UndertaleRoom.GameObject)> disclaimers)
         {
@@ -268,28 +278,31 @@ scr_draw_text_doublecolor((global.cameraWidth / 2), ((global.cameraHeight / 2) +
 
             string disclaimerCreationCode;
             int index = 0;
-            string modNameShort = disclaimers[index].Item1;
+            string roomName = disclaimers[index].Item1;
             LoadGML("gml_RoomCC_r_disclaimer2_0_Create")
                 .MatchFrom("roomNext")
-                .ReplaceBy($"roomNext = r_mod_disclaimer_{modNameShort}")
+                .ReplaceBy($"roomNext = {roomName}")
                 .Save();
 
             foreach((string, UndertaleRoom.GameObject) disclaimer in disclaimers)
             {
-                if (index+1 < disclaimers.Count)
+                if (index+1 < disclaimers.Count && index < 3)
                 {
-                    modNameShort = disclaimers[index+1].Item1;
-                    modNameShort = $"r_mod_disclaimer_{modNameShort}";
+                    roomName = disclaimers[index+1].Item1;
                 }
                 else
                 {
-                    modNameShort = "global.mainMenuRoom";
+                    roomName = "global.mainMenuRoom";
                 }
                 disclaimerCreationCode = $@"skippable = 0
-roomNext = {modNameShort}
+roomNext = {roomName}
 animationSpeed = 0.015
 koeficient = 5";
                 disclaimer.Item2.CreationCode = AddCode(disclaimerCreationCode, $"disclaimer_creation_{index++}");
+                if (index > 3)
+                {
+                    break;
+                }
             }
         }
     }
