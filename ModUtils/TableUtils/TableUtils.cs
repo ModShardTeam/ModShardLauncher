@@ -32,10 +32,6 @@ namespace ModShardLauncher
             string table = "gml_GlobalScript_table_credits_backers";
             throw new NotImplementedException();
         }
-        public static void InjectTablePotion()
-        {
-            string table = "gml_GlobalScript_table_Potion";
-            throw new NotImplementedException();
-        }
+        
     }
 }

@@ -17,6 +17,7 @@
     <Compile Include="ModUtils\TableUtils\ConsumParam.cs" />
     <Compile Include="ModUtils\TableUtils\Contract.cs" />
     <Compile Include="ModUtils\TableUtils\EnemyBalance.cs" />
+    <Compile Include="ModUtils\TableUtils\Potion.cs" />
     <Compile Include="ModUtils\TableUtils\SkillsStat.cs" />
     <Compile Include="ModUtils\TableUtils\TableUtils.cs" />
     <Compile Include="ModUtils\TableUtils\LocalizationUtils.cs" />
