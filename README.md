@@ -17,6 +17,9 @@ Whether you want to tweak the **game mechanics**, add **new content**, or **anyt
 - [Documentation](https://modshardteam.github.io/ModShardLauncher/guides/introduction.html)
 - [这里是文档](https://modshardteam.github.io/ModShardLauncher/zh/guides/introduction.html)
 
+## Roadmap
+
+See roadmap [here](https://github.com/ModShardTeam/ModShardLauncher/milestones).
 
 ## Usage
 ### For Players
@@ -30,7 +33,7 @@ Whether you want to tweak the **game mechanics**, add **new content**, or **anyt
 - [Quicksave](https://github.com/Nylux/Stoneshard-Quicksave)
 - [SpeedManager](https://github.com/Nylux/Stoneshard-SpeedManager)
 - [NeoConsole](https://github.com/Nylux/Stoneshard-NeoConsole)
-- [ExamplesForLog] (https://github.com/remyCases/ExamplesForLogMod)
+- [ExamplesForLog](https://github.com/remyCases/ExamplesForLogMod)
 
 ## Features
 
