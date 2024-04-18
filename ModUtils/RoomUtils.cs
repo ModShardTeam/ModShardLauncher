@@ -24,20 +24,29 @@ namespace ModShardLauncher
             }
             catch
             {
+                Log.Error($"Cannot find room {name}.");
                 throw;
             }
         }
         public static UndertaleRoom AddRoom(string name)
         {
-            UndertaleRoom room = new()
+            try
             {
-                Name = ModLoader.Data.Strings.MakeString(name),
-                Caption = ModLoader.Data.Strings.MakeString(""),
-                Flags = UndertaleRoom.RoomEntryFlags.IsGMS2 ^ UndertaleRoom.RoomEntryFlags.EnableViews,
-            };
-            ModLoader.Data.Rooms.Add(room);
-            Log.Information($"Successfully created room {name}");
-            return room;
+                UndertaleRoom room = new()
+                {
+                    Name = ModLoader.Data.Strings.MakeString(name),
+                    Caption = ModLoader.Data.Strings.MakeString(""),
+                    Flags = UndertaleRoom.RoomEntryFlags.IsGMS2 ^ UndertaleRoom.RoomEntryFlags.EnableViews,
+                };
+                ModLoader.Data.Rooms.Add(room);
+                Log.Information($"Successfully created room {name}.");
+                return room;
+            }
+            catch
+            {
+                Log.Error($"Cannot add Room {name} since it already exists.");
+                throw;
+            }
         }
         public static UndertaleRoom AddRoom(string name, uint width, uint height)
         {
@@ -126,7 +135,7 @@ namespace ModShardLauncher
             }
             newLayer.ParentRoom = room;
 
-            Log.Information($"Successfully created layer {name} of type {type} in room {room.Name}");
+            Log.Information($"Successfully created layer {name} of type {type} in room {room.Name}.");
             return newLayer;
         }
         public static UndertaleRoom.Layer AddLayer<T>(this UndertaleRoom room, UndertaleRoom.LayerType type, string name) where T : UndertaleRoom.Layer.LayerData, new()
@@ -146,15 +155,16 @@ namespace ModShardLauncher
             try
             {
                 UndertaleRoom.Layer layer = room.Layers.First(t => t.LayerName.Content == name && t.LayerType == type);
-                Log.Information($"Found layer {name} of type {type}");
+                Log.Information($"Found layer {name} of type {type} in room {room.Name}.");
                 return layer;
             }
             catch
             {
+                Log.Error($"Cannot find layer {name} of type {type} in room {room.Name}.");
                 throw;
             }
         }
-        public static UndertaleRoom.GameObject AddGameObject(this UndertaleRoom room, string layerName, string obName)
+        public static UndertaleRoom.GameObject AddGameObject(this UndertaleRoom room, string layerName, string obName, UndertaleCode? creationCode = null, int x = 0, int y = 0)
         {
             try
             {
@@ -162,8 +172,12 @@ namespace ModShardLauncher
                 UndertaleRoom.GameObject gameObject = new()
                 {
                     InstanceID = ModLoader.Data.GeneralInfo.LastObj++,
-                    ObjectDefinition = ob
+                    ObjectDefinition = ob,
+                    X = x,
+                    Y = y
                 };
+                if (creationCode != null) gameObject.CreationCode = creationCode;
+
                 room.GameObjects.Add(gameObject);
                 room.GetLayer(UndertaleRoom.LayerType.Instances, layerName).InstancesData.Instances.Add(gameObject);
 
@@ -172,10 +186,11 @@ namespace ModShardLauncher
             }
             catch
             {
+                Log.Error($"Cannot add the gameobject {obName} in layer {layerName} in room {room.Name}.");
                 throw;
             }
         }
-        public static UndertaleRoom.GameObject AddGameObject(this UndertaleRoom room, UndertaleRoom.Layer layer, string obName)
+        public static UndertaleRoom.GameObject AddGameObject(this UndertaleRoom room, UndertaleRoom.Layer layer, string obName, UndertaleCode? creationCode = null, int x = 0, int y = 0)
         {
             try
             {
@@ -183,8 +198,12 @@ namespace ModShardLauncher
                 UndertaleRoom.GameObject gameObject = new()
                 {
                     InstanceID = ModLoader.Data.GeneralInfo.LastObj++,
-                    ObjectDefinition = ob
+                    ObjectDefinition = ob,
+                    X = x,
+                    Y = y
                 };
+                if (creationCode != null) gameObject.CreationCode = creationCode;
+
                 room.GameObjects.Add(gameObject);
                 layer.InstancesData.Instances.Add(gameObject);
 
@@ -193,22 +212,59 @@ namespace ModShardLauncher
             }
             catch
             {
+                Log.Error($"Cannot add the gameobject {obName} in layer {layer.LayerName} in room {room.Name}.");
                 throw;
             }
         }
-        public static UndertaleRoom.GameObject AddGameObject(this UndertaleRoom room, UndertaleRoom.Layer layer, string obName, UndertaleCode creationCode)
+        public static UndertaleRoom.GameObject AddGameObject(this UndertaleRoom room, string layerName, UndertaleGameObject ob, UndertaleCode? creationCode = null, int x = 0, int y = 0)
         {
-            UndertaleRoom.GameObject gameObject = room.AddGameObject(layer, obName);
-            gameObject.CreationCode = creationCode;
-            return gameObject;
+            try
+            {
+                UndertaleRoom.GameObject gameObject = new()
+                {
+                    InstanceID = ModLoader.Data.GeneralInfo.LastObj++,
+                    ObjectDefinition = ob,
+                    X = x,
+                    Y = y
+                };
+                if (creationCode != null) gameObject.CreationCode = creationCode;
+
+                room.GameObjects.Add(gameObject);
+                room.GetLayer(UndertaleRoom.LayerType.Instances, layerName).InstancesData.Instances.Add(gameObject);
+
+                Log.Information($"Successfully created gameobject {ob.Name} in layer {layerName} in room {room.Name}");
+                return gameObject;
+            }
+            catch
+            {
+                Log.Error($"Cannot add the gameobject {ob.Name} in layer {layerName} in room {room.Name}.");
+                throw;
+            }
         }
-        public static UndertaleRoom.GameObject AddGameObject(this UndertaleRoom room, UndertaleRoom.Layer layer, string obName, UndertaleCode creationCode, int x, int y)
+        public static UndertaleRoom.GameObject AddGameObject(this UndertaleRoom room, UndertaleRoom.Layer layer, UndertaleGameObject ob, UndertaleCode? creationCode = null, int x = 0, int y = 0)
         {
-            UndertaleRoom.GameObject gameObject = room.AddGameObject(layer, obName);
-            gameObject.CreationCode = creationCode;
-            gameObject.X = x;
-            gameObject.Y = y;
-            return gameObject;
+            try
+            {
+                UndertaleRoom.GameObject gameObject = new()
+                {
+                    InstanceID = ModLoader.Data.GeneralInfo.LastObj++,
+                    ObjectDefinition = ob,
+                    X = x,
+                    Y = y
+                };
+                if (creationCode != null) gameObject.CreationCode = creationCode;
+
+                room.GameObjects.Add(gameObject);
+                layer.InstancesData.Instances.Add(gameObject);
+
+                Log.Information($"Successfully created gameobject {ob.Name} in layer {layer.LayerName} in room {room.Name}");
+                return gameObject;
+            }
+            catch
+            {
+                Log.Error($"Cannot add the gameobject {ob.Name} in layer {layer.LayerName} in room {room.Name}.");
+                throw;
+            }
         }
         public static UndertaleRoom.GameObject GetGameObject(this UndertaleRoom room, string layerName, string obName)
         {
@@ -220,6 +276,7 @@ namespace ModShardLauncher
             }
             catch
             {
+                Log.Error($"Cannot find instance of gameobject {obName} in layer {layerName} in room {room.Name}.");
                 throw;
             }
         }
