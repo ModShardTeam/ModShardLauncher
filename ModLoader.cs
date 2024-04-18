@@ -26,6 +26,7 @@ namespace ModShardLauncher
         public static Dictionary<string, ModFile> Mods = new();
         public static Dictionary<string, ModSource> ModSources = new();
         private static List<Assembly> Assemblies = new();
+        private static List<Menu> Menus = new();
         public static List<string> Weapons = new();
         public static List<string> WeaponDescriptions = new();
         private static List<(string, string[])> Credits = new();
@@ -47,6 +48,10 @@ namespace ModShardLauncher
         internal static void AddDisclaimer(string modNameShort, UndertaleRoom.GameObject overlay)
         {
             Disclaimers.Add((modNameShort, overlay));
+        }
+        public static void AddMenu(string name, params UIComponent[] components)
+        {
+            Menus.Add(new Menu(name, components));
         }
         public static List<string>? GetTable(string name)
         {
@@ -177,6 +182,7 @@ namespace ModShardLauncher
             Credits = new();
             Disclaimers = new();
             List<ModFile> mods = ModInfos.Instance.Mods;
+            Menus = new();
             foreach (ModFile mod in mods)
             {
                 if (!mod.isEnabled) continue;
@@ -214,6 +220,7 @@ namespace ModShardLauncher
             }
             Msl.AddDisclaimerRoom(Credits.Select(x => x.Item1).ToArray(), Credits.SelectMany(x => x.Item2).Distinct().ToArray());
             Msl.ChainDisclaimerRooms(Disclaimers);
+            Msl.CreateMenu(Menus);
         }
         public static void LoadWeapon(Type type)
         {
@@ -231,8 +238,8 @@ namespace ModShardLauncher
         {
             PatchInnerFile();
             PatchMods();
-            // SetTable(Weapons, "gml_GlobalScript_table_weapons");
-            // SetTable(WeaponDescriptions, "gml_GlobalScript_table_weapons_text");
+            // add the new loot related functions if there is any
+            LootUtils.InjectLootScripts();
         }
         internal static void PatchInnerFile()
         {
