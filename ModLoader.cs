@@ -25,6 +25,7 @@ namespace ModShardLauncher
         public static Dictionary<string, ModFile> Mods = new();
         public static Dictionary<string, ModSource> ModSources = new();
         private static List<Assembly> Assemblies = new();
+        private static List<Menu> Menus = new();
         public static List<string> Weapons = new();
         public static List<string> WeaponDescriptions = new();
         public static Dictionary<string, Action<string>> ScriptCallbacks = new Dictionary<string, Action<string>>();
@@ -36,6 +37,10 @@ namespace ModShardLauncher
         {
             Weapons = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons"));
             WeaponDescriptions = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons_text"));
+        }
+        public static void AddMenu(string name, params UICompoment[] components)
+        {
+            Menus.Add(new Menu(name, components));
         }
         public static List<string>? GetTable(string name)
         {
@@ -164,6 +169,7 @@ namespace ModShardLauncher
         public static void PatchMods()
         {
             List<ModFile> mods = ModInfos.Instance.Mods;
+            Menus = new();
             foreach (ModFile mod in mods)
             {
                 if (!mod.isEnabled) continue;
@@ -199,6 +205,7 @@ namespace ModShardLauncher
                 }
                 mod.PatchStatus = PatchStatus.Success;
             }
+            Msl.CreateMenu(Menus);
         }
         public static void LoadWeapon(Type type)
         {
