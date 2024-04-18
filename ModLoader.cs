@@ -14,6 +14,7 @@ using UndertaleModLib.Models;
 using ModShardLauncher.Extensions;
 using ModShardLauncher.Controls;
 using Serilog;
+using Xunit.Sdk;
 
 namespace ModShardLauncher
 {
@@ -235,36 +236,52 @@ namespace ModShardLauncher
         }
         internal static void PatchInnerFile()
         {
-            Msl.AddInnerFunction("print");
-            Msl.AddInnerFunction("give");
-            Msl.AddInnerFunction("SendMsg");
-            Msl.AddInnerFunction("createHookObj");
-            AddExtension(new ModShard());
-            UndertaleGameObject engine = Msl.AddObject("o_ScriptEngine");
-            engine.Persistent = true;
-            UndertaleGameObject.Event ev = new()
+            if (Data.Code.All(x => x.Name.Content != "print"))
+                Msl.AddInnerFunction("print");
+            if (Data.Code.All(x => x.Name.Content != "give"))
+                Msl.AddInnerFunction("give");
+            if (Data.Code.All(x => x.Name.Content != "SendMsg"))
+                Msl.AddInnerFunction("SendMsg");
+            if (Data.Code.All(x => x.Name.Content != "createHookObj"))
+                Msl.AddInnerFunction("createHookObj");
+            
+            if (Data.Extensions.All(x => x.Name.Content != "display_mouse_lock"))
+                throw new InvalidOperationException("The display_mouse_lock extension is not found.");
+            if (Data.Extensions.First(x => x.Name.Content == "display_mouse_lock")
+                .Files.All(x => x.Filename.Content != "ModShard.dll"))
+                AddExtension(new ModShard());
+            
+            if (Data.GameObjects.All(x => x.Name.Content != "o_ScriptEngine"))
             {
-                EventSubtypeOther = EventSubtypeOther.AsyncNetworking
-            };
-            ev.Actions.Add(new UndertaleGameObject.EventAction()
-            {
-                CodeId = Msl.AddInnerCode("ScriptEngine_server")
-            });
-            engine.Events[7].Add(ev);
-            UndertaleGameObject.Event create = new();
-            create.Actions.Add(new UndertaleGameObject.EventAction()
-            {
-                CodeId = Msl.AddInnerCode("ScriptEngine_create")
-            });
-            engine.Events[0].Add(create);
-            UndertaleRoom start = Data.Rooms.First(t => t.Name.Content == "START");
-            UndertaleRoom.GameObject newObj = new()
-            {
-                ObjectDefinition = engine,
-                InstanceID = Data.GeneralInfo.LastObj++
-            };
+                UndertaleGameObject engine = Msl.AddObject("o_ScriptEngine");
+                engine.Persistent = true;
+                UndertaleGameObject.Event ev = new()
+                {
+                    EventSubtypeOther = EventSubtypeOther.AsyncNetworking
+                };
+                ev.Actions.Add(new UndertaleGameObject.EventAction()
+                {
+                    CodeId = Msl.AddInnerCode("ScriptEngine_server")
+                });
+                engine.Events[7].Add(ev);
+                UndertaleGameObject.Event create = new();
+                create.Actions.Add(new UndertaleGameObject.EventAction()
+                {
+                    CodeId = Msl.AddInnerCode("ScriptEngine_create")
+                });
+                engine.Events[0].Add(create);
+                UndertaleRoom start = Data.Rooms.First(t => t.Name.Content == "START");
+                UndertaleRoom.GameObject newObj = new()
+                {
+                    ObjectDefinition = engine,
+                    InstanceID = Data.GeneralInfo.LastObj++
+                };
 
-            start.GameObjects.Add(newObj);
+                start.GameObjects.Add(newObj);
+            }
+            else
+                // Should probably be replaced with a dialog box as it's not very visible as it is 
+                Log.Warning("You are patching a non-vanilla .win file. This may cause some issues and is not recommended.");
         }
         public static void AddExtension(UndertaleExtensionFile file)
         {
