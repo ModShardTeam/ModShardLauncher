@@ -367,3 +367,6 @@ FodyWeavers.xsd
 
 # VSCode Markdown linting configuration
 .markdownlint.json
+
+# MSL related
+Settings.json

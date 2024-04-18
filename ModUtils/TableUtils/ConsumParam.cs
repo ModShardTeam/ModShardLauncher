@@ -267,11 +267,14 @@ public partial class Msl
         bool purse = false,
         bool bottle = false)
     {
+        // Table filename
+        const string tableName = "gml_GlobalScript_table_Consumable_Parameters";
+        
         // Load table if it exists
-        List<string> table = ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_Consumable_Parameters"));
+        List<string> table = ThrowIfNull(ModLoader.GetTable(tableName));
         
         // Prepare line
-        string newline = $"{id};{Cat};{GetEnumMemberValue(Subcat)};{Price};{EffPrice};{Material};{Weight};{Fresh};{Duration};{Hunger};{Hunger_Change};{Hunger_Resistance};{Thirsty};{Thirst_Change};{Intoxication};{Toxicity_Change};{Toxicity_Resistance};{Pain};{Pain_Resistance};{Pain_Change};{Pain_Limit};{Sanity};{Sanity_Change};{Morale};{Morale_Change};{max_mp_res};{MP_Restoration};{max_hp_res};{Health_Restoration};{Healing_Received};{Condition};{Immunity};{Fatigue};{Fatigue_Change};{Fatigue_Gain};{Physical_Resistance};{Nature_Resistance};{Magic_Resistance};{Slashing_Resistance};{Piercing_Resistance};{Blunt_Resistance};{Rending_Resistance};{Fire_Resistance};{Shock_Resistance};{Poison_Resistance};{Caustic_Resistance};{Frost_Resistance};{Arcane_Resistance};{Unholy_Resistance};{Sacred_Resistance};{Psionic_Resistance};{Bleeding_Resistance};{(purse ? "1" : "")};{(bottle ? "1" : "")};{GetEnumMemberValue(tags)}";
+        string newline = $"{id};{Cat};{GetEnumMemberValue(Subcat)};{Price};{EffPrice};{Material};{Weight};{Fresh};{Duration};{Hunger};{Hunger_Change};{Hunger_Resistance};{Thirsty};{Thirst_Change};{Intoxication};{Toxicity_Change};{Toxicity_Resistance};{Pain};{Pain_Resistance};{Pain_Change};{Pain_Limit};{Sanity};{Sanity_Change};{Morale};{Morale_Change};{max_mp_res};{MP_Restoration};{max_hp_res};{Health_Restoration};{Healing_Received};{Condition};{Immunity};{Fatigue};{Fatigue_Change};{Fatigue_Gain};{Physical_Resistance};{Nature_Resistance};{Magic_Resistance};{Slashing_Resistance};{Piercing_Resistance};{Blunt_Resistance};{Rending_Resistance};{Fire_Resistance};{Shock_Resistance};{Poison_Resistance};{Caustic_Resistance};{Frost_Resistance};{Arcane_Resistance};{Unholy_Resistance};{Sacred_Resistance};{Psionic_Resistance};{Bleeding_Resistance};{(purse ? "1" : "")};{(bottle ? "1" : "")};{GetEnumMemberValue(tags)};";
         
         // Find Meta Category in table
         string metaGroupStr = ThrowIfNull(GetEnumMemberValue(metaGroup));
@@ -281,7 +284,7 @@ public partial class Msl
         if (foundLine != null)
         {
             table.Insert(ind + 1, newline);
-            ModLoader.SetTable(table, "gml_GlobalScript_table_Consumable_Parameters");
+            ModLoader.SetTable(table, tableName);
         }
         else
         {

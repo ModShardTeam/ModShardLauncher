@@ -198,11 +198,14 @@ public partial class Msl
         bool Maneuver = false,
         bool Spell = false)
     {
+        // Table filename
+        const string tableName = "gml_GlobalScript_table_skills_stat";
+        
         // Load table if it exists
-        List<string> table = ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_skills_stat"));
+        List<string> table = ThrowIfNull(ModLoader.GetTable(tableName));
         
         // Prepare line
-        string newline = $"{id};{Object};{GetEnumMemberValue(Target)};{Range};{KD};{MP};{Reserv};{Duration};{AOE_Lenght};{AOE_Width};{(is_movement ? "1" : "0")};{Pattern};{Class};{(Bonus_Range ? "1" : "0")};{Starcast};{GetEnumMemberValue(Branch)};{(is_knockback ? "1" : "0")};{(Crime ? "1" : "")};{GetEnumMemberValue(metacategory)};{FMB};{AP};{(Attack ? "1" : "")};{(Stance ? "1" : "")};{(Charge ? "1" : "")};{(Maneuver ? "1" : "")};{(Spell ? "1" : "")}";
+        string newline = $"{id};{Object};{GetEnumMemberValue(Target)};{Range};{KD};{MP};{Reserv};{Duration};{AOE_Lenght};{AOE_Width};{(is_movement ? "1" : "0")};{Pattern};{Class};{(Bonus_Range ? "1" : "0")};{Starcast};{GetEnumMemberValue(Branch)};{(is_knockback ? "1" : "0")};{(Crime ? "1" : "")};{GetEnumMemberValue(metacategory)};{FMB};{AP};{(Attack ? "1" : "")};{(Stance ? "1" : "")};{(Charge ? "1" : "")};{(Maneuver ? "1" : "")};{(Spell ? "1" : "")};";
         
         // Find Meta Category in table
         string metaGroupStr = "// " + GetEnumMemberValue(metaGroup);
@@ -212,7 +215,7 @@ public partial class Msl
         if (foundLine != null)
         {
             table.Insert(ind + 1, newline);
-            ModLoader.SetTable(table, "gml_GlobalScript_table_skills_stat");
+            ModLoader.SetTable(table, tableName);
             Log.Information($"Injected Skill Stat {id} into Meta Group {metaGroup}");
         }
         else
