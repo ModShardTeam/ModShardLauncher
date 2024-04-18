@@ -38,7 +38,7 @@ namespace ModShardLauncher
             Weapons = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons"));
             WeaponDescriptions = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons_text"));
         }
-        public static void AddMenu(string name, params UICompoment[] components)
+        public static void AddMenu(string name, params UIComponent[] components)
         {
             Menus.Add(new Menu(name, components));
         }
