@@ -45,13 +45,6 @@ namespace ModShardLauncher
         }
         public static async Task<bool> DoOpenDialog()
         {
-            // auto load if it can
-            if(Main.Settings.LoadPos != "" && File.Exists(Main.Settings.LoadPos))
-            {
-                await LoadFile(Main.Settings.LoadPos);
-                return true;
-            }
-
             // else open a new dialog
             OpenFileDialog dlg = new()
             {
@@ -93,8 +86,7 @@ namespace ModShardLauncher
                     {
                         ShowWarning(warning, "Loading warning");
 
-                        if (warning.Contains("unserializeCountError.txt")
-                            || warning.Contains("object pool size"))
+                        if (warning.Contains("unserializeCountError.txt") || warning.Contains("object pool size"))
                             return;
 
                         hadWarnings = true;
@@ -144,30 +136,9 @@ namespace ModShardLauncher
             ModLoader.Initalize();
             // cleaning loot table
             LootUtils.ResetLootTables();
-            
-            if(Main.Settings.LoadPos == "" && !re)
-            {
-                MessageBoxResult result = MessageBox.Show(
-                    Application.Current.FindResource("LoadPath").ToString(),
-                    Application.Current.FindResource("LoadPath").ToString(), 
-                    MessageBoxButton.YesNo, 
-                    MessageBoxImage.Question
-                );
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    Main.Settings.LoadPos = filename;
-                }
-            }
         }
         public static async Task<bool> DoSaveDialog()
-        {
-            if (Main.Settings.SavePos != "")
-            {
-                await SaveFile(Main.Settings.SavePos);
-                return true;
-            }
-            
+        {   
             SaveFileDialog dlg = new()
             {
                 DefaultExt = "win",
@@ -272,21 +243,6 @@ namespace ModShardLauncher
             //run
             dialog.ShowDialog();
             await t;
-
-            if (Main.Settings.SavePos == "")
-            {
-                MessageBoxResult result = MessageBox.Show(
-                    Application.Current.FindResource("SavePath").ToString(),
-                    Application.Current.FindResource("SavePath").ToString(), 
-                    MessageBoxButton.YesNo, 
-                    MessageBoxImage.Question
-                );
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    Main.Settings.SavePos = filename;
-                }
-            }
         }
     }
 }

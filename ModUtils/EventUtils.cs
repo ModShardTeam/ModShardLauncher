@@ -165,6 +165,7 @@ namespace ModShardLauncher
         { 
             switch(eventType)
             {
+                case EventType.PreCreate:
                 case EventType.Create:
                 case EventType.Destroy:
                 case EventType.Trigger:

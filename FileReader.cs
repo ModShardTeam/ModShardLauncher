@@ -65,7 +65,7 @@ namespace ModShardLauncher
 
             // https://sonarsource.github.io/rspec/#/rspec/S6602/csharp
             // for list, Find should be used instead of FirstOrDefault
-            FileChunk? file = Files.Find(t => t.name == fileName) ?? Files.Find(t => t.name.Split("\\")[^1] == fileName);
+            FileChunk? file = Files.Find(t => System.IO.Path.GetFileName(t.name) == System.IO.Path.GetFileName(fileName));
             if (file != null)
             {
                 if(!Stream.CanRead) Stream = new FileStream(Path, FileMode.Open);
@@ -82,7 +82,11 @@ namespace ModShardLauncher
             try
             {
                 byte[] data = GetFile(fileName);
-
+                if (data.Length == 0) 
+                {
+                    Log.Warning($"{fileName} is empty.");
+                    return "";
+                }
                 // if a BOM is found aka: 0xEF 0xBB 0xBF at the beginning of the file, remove it since UTMT will not understand these characters.
                 // BOM are produced if a script is made through Visual Studio
                 if (data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF) data = data.Skip(3).ToArray();

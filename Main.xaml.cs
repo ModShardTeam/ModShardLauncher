@@ -165,8 +165,6 @@ namespace ModShardLauncher
     {
         public string Language = "English";
         public bool EnableLogger = true;
-        public string SavePos = "";
-        public string LoadPos = "";
         public List<string> EnableMods = new();
         public static void LoadSettings()
         {
@@ -179,10 +177,6 @@ namespace ModShardLauncher
             Main.Settings = Msl.ThrowIfNull(JsonConvert.DeserializeObject<UserSettings>(settings));
 
             CheckLog(Main.Settings.EnableLogger);
-
-            // auto load if loadpos not empty
-            if (Main.Settings.LoadPos != "")
-                Main.Instance.Dispatcher.Invoke(async () => await DataLoader.LoadFile(Main.Settings.LoadPos));
 
             // auto check active mods
             if (Main.Settings.EnableMods.Count > 0)

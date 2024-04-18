@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using ModShardLauncher.Mods;
 using System.Reflection;
 using ModShardLauncher.Extensions;
+using ModShardLauncher;
 
 namespace ModShardLauncherTest
 {
-    public static class TableUtilsData
+    public static class LocalizationUtilsData
     {
         public const string oneLanguageString = "testEn";
         public const string multipleLanguagesString = "testRu;testEn;testCh";
@@ -16,8 +17,8 @@ namespace ModShardLauncherTest
     public class ToDictTest
     {
         [Theory]
-        [InlineData(TableUtilsData.oneLanguageString, 0)]
-        [InlineData(TableUtilsData.oneLanguageString, 1)]
+        [InlineData(LocalizationUtilsData.oneLanguageString, 0)]
+        [InlineData(LocalizationUtilsData.oneLanguageString, 1)]
         public void ToDict_OneElement(string str, int index)
         {
             // Arrange
@@ -29,7 +30,7 @@ namespace ModShardLauncherTest
             };
 
             // Act
-            MethodInfo? methodInfo = typeof(Localization).GetMethod("ToDict", BindingFlags.NonPublic | BindingFlags.Static);
+            MethodInfo? methodInfo = typeof(ModShardLauncher.Localization).GetMethod("ToDict", BindingFlags.NonPublic | BindingFlags.Static);
             if (methodInfo == null)
             {
                 Assert.Fail("Cannot find the tested method ToDict");
@@ -51,7 +52,7 @@ namespace ModShardLauncherTest
         }
 
         [Theory]
-        [InlineData(TableUtilsData.multipleLanguagesString)]
+        [InlineData(LocalizationUtilsData.multipleLanguagesString)]
         public void ToDict_MultipleElements(string str)
         {
             // Arrange
@@ -85,8 +86,8 @@ namespace ModShardLauncherTest
         }
 
         [Theory]
-        [InlineData(TableUtilsData.multipleLanguagesString, 0)]
-        [InlineData(TableUtilsData.multipleLanguagesString, 100)]
+        [InlineData(LocalizationUtilsData.multipleLanguagesString, 0)]
+        [InlineData(LocalizationUtilsData.multipleLanguagesString, 100)]
         public void ToDict_MultipleElementsDifferentDefault(string str, int index)
         {
             // Arrange
@@ -120,7 +121,7 @@ namespace ModShardLauncherTest
         }
         
         [Theory]
-        [InlineData(TableUtilsData.allLanguagesString)]
+        [InlineData(LocalizationUtilsData.allLanguagesString)]
         public void ToDict_AllElements(string str)
         {
             // Arrange
@@ -192,9 +193,9 @@ namespace ModShardLauncherTest
     public class CreateLineLocalizationSentenceTest
     {
         [Theory]
-        [InlineData(TableUtilsData.oneLanguageString, "id;any;any;any;any;any;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;")]
-        [InlineData(TableUtilsData.multipleLanguagesString, "id;any;any;any;any;any;testRu;testEn;testCh;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;")]
-        [InlineData(TableUtilsData.allLanguagesString, "id;any;any;any;any;any;testRu;testEn;testCh;testGe;testSp;testFr;testIt;testPr;testPl;testTu;testJp;testKr;")]
+        [InlineData(LocalizationUtilsData.oneLanguageString, "id;any;any;any;any;any;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;")]
+        [InlineData(LocalizationUtilsData.multipleLanguagesString, "id;any;any;any;any;any;testRu;testEn;testCh;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;")]
+        [InlineData(LocalizationUtilsData.allLanguagesString, "id;any;any;any;any;any;testRu;testEn;testCh;testGe;testSp;testFr;testIt;testPr;testPl;testTu;testJp;testKr;")]
         public void CreateLine(string str, string expectedResult)
         {
             // Arrange
