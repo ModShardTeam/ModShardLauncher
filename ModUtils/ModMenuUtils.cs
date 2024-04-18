@@ -21,14 +21,14 @@ public class UIComponent
     public string AssociatedGlobal { get; }
     public (int, int) SliderValues { get; }
     private string[] DropDownValues { get; } = Array.Empty<string>();
-    public string DefaultValue { get; }
+    public int DefaultValue { get; }
     public bool OnlyInMainMenu { get; }
-    public UIComponent(string name, string associatedGlobal, UIComponentType compomentType, bool onlyInMainMenu = false)
+    public UIComponent(string name, string associatedGlobal, UIComponentType compomentType, int defaultValue, bool onlyInMainMenu = false)
     {
         CompomentType = compomentType;
         Name = name;
         AssociatedGlobal = associatedGlobal;
-        DefaultValue = "0";
+        DefaultValue = defaultValue;
         OnlyInMainMenu = onlyInMainMenu;
         switch(CompomentType)
         {
@@ -47,7 +47,6 @@ public class UIComponent
         DropDownValues = dropDownValues;
         Name = name;
         AssociatedGlobal = associatedGlobal;
-        DefaultValue = dropDownValues[0];
         OnlyInMainMenu = onlyInMainMenu;
         switch(CompomentType)
         {
@@ -60,13 +59,13 @@ public class UIComponent
                 break;
         }
     }
-    public UIComponent(string name, string associatedGlobal, UIComponentType compomentType, (int, int) sliderValues, bool onlyInMainMenu = false)
+    public UIComponent(string name, string associatedGlobal, UIComponentType compomentType, (int, int) sliderValues, int defaultValue, bool onlyInMainMenu = false)
     {
         CompomentType = compomentType;
         SliderValues = sliderValues;
         Name = name;
         AssociatedGlobal = associatedGlobal;
-        DefaultValue = SliderValues.Item1.ToString();
+        DefaultValue = defaultValue;
         OnlyInMainMenu = onlyInMainMenu;
         switch(CompomentType)
         {
@@ -92,11 +91,11 @@ public class UIComponent
                 break;
 
             case UIComponentType.Slider:
-                AddSlider(Name, AssociatedGlobal, SliderValues, DefaultValue, sectionName, index);
+                AddSlider(AssociatedGlobal, SliderValues, DefaultValue, sectionName, index);
                 break;
         }
     }
-    private static void AddCheckBox(string name, string associatedGlobal, string defaultValue, string sectionName, int index)
+    private static void AddCheckBox(string name, string associatedGlobal, int defaultValue, string sectionName, int index)
     {
         UndertaleGameObject checkbox = Msl.AddObject($"o_msl_component_{index}", "s_point", "o_checkbox", isVisible:true, isAwake:true);
         Msl.AddNewEvent(checkbox, @$"event_inherited()
@@ -132,7 +131,7 @@ if ((optionIndex == -1))
         ";
         Msl.AddNewEvent(checkbox, other24, EventType.Other, 24);
     }
-    private static void AddSlider(string name, string associatedGlobal, (int, int) sliderValues, string defaultValue, string sectionName, int index)
+    private static void AddSlider(string associatedGlobal, (int, int) sliderValues, int defaultValue, string sectionName, int index)
     {
         UndertaleGameObject slider = Msl.AddObject($"o_msl_component_{index}", "s_music_slide", "o_music_slider", isVisible:true, isAwake:true);
         Msl.AddNewEvent(
@@ -320,16 +319,43 @@ ini_close();
     }
     public static void AddMenu(string name, params UIComponent[] components)
     {
-        // add global if needed
-        UndertaleGameObject ob = AddObject("o_msl_initializer");
-        AddNewEvent(ob, "", EventType.Create, 0);
-
-        // initializer in START room
-
+        string tmp = "";
         foreach(UIComponent component in components)
         {
-            AssemblyWrapper.CheckRefVariableOrCreate(component.AssociatedGlobal, UndertaleInstruction.InstanceType.Global);
+            switch(component.CompomentType)
+            {
+                case UIComponentType.CheckBox:
+                case UIComponentType.Slider:
+                    tmp += @$"global.{component.AssociatedGlobal} = ini_read_real(""{name}"", ""{component.AssociatedGlobal}"", {component.DefaultValue})";
+                break;
+
+                case UIComponentType.ComboBox:
+                    tmp += @$"global.{component.AssociatedGlobal} = ini_read_string(""{name}"", ""{component.AssociatedGlobal}"", ""{component.DefaultValue}"")";
+                break;
+            }
+           
         }
+        string txtGlobalCreation = $@"ini_open(""msl_menu_mod.ini"");
+{tmp}
+ini_close();";
+
+        // add global if needed
+        if (!ModLoader.Data.GameObjects.Select(x => x.Name.Content).Contains("o_msl_initializer"))
+        {
+            UndertaleGameObject ob = AddObject("o_msl_initializer", isPersistent:true);
+            AddNewEvent(ob, txtGlobalCreation, EventType.Create, 0);
+            // initializer in START room
+            UndertaleRoom room = GetRoom("START");
+            room.AddGameObject("Instances", ob);
+        }
+        else
+        {
+            LoadGML(EventName("o_msl_initializer", EventType.Create, 0))
+                .MatchAll()
+                .InsertBelow(txtGlobalCreation)
+                .Save();
+        }
+        
         ModLoader.AddMenu(name, components);
     }
 }
