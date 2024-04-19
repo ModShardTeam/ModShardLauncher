@@ -299,7 +299,7 @@ namespace ModShardLauncher
                 intro = $"You are playing with {names} mods.";
             }
 
-            string disclaimerText = $@"scr_draw_text_doublecolor((global.cameraWidth / 2), (global.cameraHeight / 2), ""{intro}\nPlease do not report bugs to main developers."", """", 16777215, make_color_rgb(155, 27, 49), 1, 1, 0.69999999999999996, global.f_digits, 0, 16777215, ""only report bugs to modding team."")";
+            string disclaimerText = $@"scr_draw_text_doublecolor((global.cameraWidth / 2), (global.cameraHeight / 2), ""{intro}\nPlease do not report bugs to main developers."", """", 16777215, make_color_rgb(155, 27, 49), 1, 1, 0.69999999999999996, global.f_digits, 0, 16777215, "" Only report bugs to modding team."")";
             int delta = 55;
             foreach(string author in authorsName)
             {
