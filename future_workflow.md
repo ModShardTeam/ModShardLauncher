@@ -1,0 +1,9 @@
+- change the csproj version
+- dotnet publish -r win-x64 -c Release /p:PublishSingleFile=true /p:IncludeAllContentForSelfExtract=true /p:PublishReadyToRun=true
+- locate publish folder (somewhere in bin/release and again in bin or something)
+- Move required dlls (everything in ModReference + Reference folders) in the folder
+- Archive to msl.zip
+- Test in sandbox environment (no need to install .NET, use latest Stoneshard + a mod you KNOW works)
+- Add to release
+- Add ModShard.dll to release (take yours / find in previous releases of MSL)
+- Publish release
