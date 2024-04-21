@@ -57,6 +57,32 @@ namespace ModShardLauncher.ModUtils
                 }
                 
                 // Actually build the .de2 file
+                /*
+                 
+                <topic_start>                   // New Topic Marker.
+                topic4                          // Topic Name. (unique name of this entire topic)
+                arena_cooldown                  // Topic Text.
+                ...                             // Topic Script. Called when this topic opens. Empty line if none.
+                trade                           // Option Name. (unique name to lookup in tables or regular string message)
+                scr_trade_open                  // Option Script. Called when this option is selected. Empty line if none. 
+                ...                             // The next topic this dialogue leads to. Empty line if none.
+                Leave                           // Option Name. (unique name to lookup in tables or regular string message)
+                scr_close_dialog                // Option Script. Called when this option is selected. Empty line if none.
+                ...                             // The next topic this dialogue leads to. Empty line if none.
+                <de2_opt>88/35/6051070/300      // Topic Closing Marker. (X/Y/OLE COLOR/Width)
+                 
+                 */
+                
+                // Write `<topic_start>`
+                // Write topic name
+                // Write topic text if any
+                // Write topic script if any
+                // For each option:
+                //    Write option name
+                //    Write option script if any
+                //    Write option next topic if any
+                // Write `<de2_opt>X/Y/COLOR/300`
+                
                 throw new NotImplementedException();
             }
         }
