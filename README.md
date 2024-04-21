@@ -45,13 +45,13 @@ See roadmap [here](https://github.com/ModShardTeam/ModShardLauncher/milestones).
 | Version Checking | :x: |
 | Auto-updates | :x: |
 | Conflict Checking | :x: |
-| Mod Settings | :x: |
+| Mod Settings | :heavy_check_mark: |
 
 ### For Modders
 
 | Name | Status |
 | :------ | :--------: |
-| Mod Settings | :x: |
+| Mod Settings | :heavy_check_mark: |
 | GML Editing  | :heavy_check_mark: |
 | Assembly Editing | :heavy_check_mark: |
 | GameObjects | :heavy_check_mark: |
@@ -59,7 +59,7 @@ See roadmap [here](https://github.com/ModShardTeam/ModShardLauncher/milestones).
 | Functions | :heavy_check_mark: |
 | Tables | :heavy_check_mark: |
 | Weapons | :heavy_check_mark: |
-| Rooms | :x: |
+| Rooms | :heavy_check_mark: |
 | Sounds | :x: |
 | Sprites | :heavy_check_mark: |
 | Shaders | :x: |
