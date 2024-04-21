@@ -7,25 +7,25 @@ assignees: ''
 
 ---
 
-**Describe the Bug :**
+## **Describe the Bug :**
 ...
 
-**Steps To Reproduce :**
+## **Steps To Reproduce :**
 ...
 
-**Expected Behavior :**
+## **Expected Behavior :**
 ...
 
-**Screenshots if applicable :**
+## **Screenshots if applicable :**
 _You can directly paste screenshots here, no need for external hosting._
 ...
 
 ---
 
-**Additional Information :**
+## **Additional Information :**
 - Stoneshard Version : **X.X.X.X**
 - MSL Version : **X.X.X.X**
 
-**Additional Context :**
+## **Additional Context :**
 _Add any other context about the problem here._
 ...
