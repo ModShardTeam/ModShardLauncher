@@ -7,14 +7,14 @@ assignees: ''
 
 ---
 
-**Describe the problem which requires a new feature.**
+## **Describe the problem which requires a new feature.**
 ...
 
-**Describe the solution you'd like**
+## **Describe the solution you'd like**
 ...
 
-**Describe alternatives you've considered if any**
+## **Describe alternatives you've considered if any**
 ...
 
-**Additional context**
+## **Additional context**
 ...
