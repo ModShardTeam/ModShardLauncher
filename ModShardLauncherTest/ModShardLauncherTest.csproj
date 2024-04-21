@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Compile Include="*.cs" Exclude="bin\**;obj\**"/>
+    <Compile Include="TableUtils\TableUtilsTest.cs" />
   </ItemGroup>
 
   <ItemGroup>
