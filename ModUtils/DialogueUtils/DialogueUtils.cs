@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ModShardLauncher.ModUtils
+namespace ModShardLauncher
 {
     /* the builder class `AddDE2Dialogue` should lead to the following syntax :
      
@@ -15,7 +15,7 @@ namespace ModShardLauncher.ModUtils
     .Build();
     
     */
-    public static partial class Msl
+    public partial class Msl
     {
         public class AddDE2Dialogue
         {
@@ -55,9 +55,14 @@ namespace ModShardLauncher.ModUtils
                             throw new ArgumentException($"Option {option.Text} in topic {topic.Name} references a non-existent topic {option.NextTopic} in dialogue {_dialogue.Name}");
                     }
                 }
-                
-                // Actually build the .de2 file
                 /*
+                HEX RGB to OLE color conversion formula : http://www.pneity.org/rgb-ole.html
+                Should make an enum containing default colors.
+                
+                Needs Issue#65 to be resolved to implement .de2 writing, as we want to write to the dialogs folder.
+                (https://github.com/ModShardTeam/ModShardLauncher/issues/65)
+                
+                Example of .de2 file:
                  
                 <topic_start>                   // New Topic Marker.
                 topic4                          // Topic Name. (unique name of this entire topic)
@@ -71,17 +76,22 @@ namespace ModShardLauncher.ModUtils
                 ...                             // The next topic this dialogue leads to. Empty line if none.
                 <de2_opt>88/35/6051070/300      // Topic Closing Marker. (X/Y/OLE COLOR/Width)
                  
-                 */
+                */
                 
-                // Write `<topic_start>`
-                // Write topic name
-                // Write topic text if any
-                // Write topic script if any
-                // For each option:
-                //    Write option name
-                //    Write option script if any
-                //    Write option next topic if any
-                // Write `<de2_opt>X/Y/COLOR/300`
+                /*
+                Pseudo code for writing .de2 file:
+                
+                Write <topic_start>
+                Write topic name
+                Write topic text if any
+                Write topic script if any
+                For each option:
+                   Write option name
+                   Write option script if any
+                   Write option next topic if any
+                Write <de2_opt>X/Y/COLOR/300
+                
+                */
                 
                 throw new NotImplementedException();
             }
