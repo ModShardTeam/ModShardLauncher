@@ -74,6 +74,7 @@ namespace ModShardLauncher
             InitializeComponent();
 
             Viewer.Content = MainPage;
+            ModLoader.LocateStoneshardFolder();
         }
         public void LogModList()
         {
@@ -166,6 +167,7 @@ namespace ModShardLauncher
         public string Language = "English";
         public bool EnableLogger = true;
         public List<string> EnableMods = new();
+        public string? StoneshardPath = null;
         public static void LoadSettings()
         {
             // if no settings file, early stop

@@ -8,13 +8,18 @@ using UndertaleModLib.Decompiler;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using System;
+using System.CodeDom.Compiler;
 using System.IO;
 using System.Reflection;
+using System.Windows.Forms;
+using Microsoft.Win32;
 using UndertaleModLib.Models;
 using ModShardLauncher.Extensions;
 using ModShardLauncher.Controls;
 using Serilog;
 using Xunit.Sdk;
+using Application = System.Windows.Application;
+using MessageBox = System.Windows.MessageBox;
 
 namespace ModShardLauncher
 {
@@ -23,6 +28,7 @@ namespace ModShardLauncher
         internal static UndertaleData Data => DataLoader.data;
         public static string ModPath => Path.Join(Environment.CurrentDirectory, "Mods");
         public static string ModSourcesPath => Path.Join(Environment.CurrentDirectory, "ModSources");
+        public static string? StoneshardInstallPath = null;
         public static Dictionary<string, ModFile> Mods = new();
         public static Dictionary<string, ModSource> ModSources = new();
         private static List<Assembly> Assemblies = new();
@@ -40,6 +46,168 @@ namespace ModShardLauncher
         {
             Weapons = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons"));
             WeaponDescriptions = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons_text"));
+        }
+        public static void LocateStoneshardFolder()
+        {
+            HashSet<string?> locations = new();
+            string? selectedPath = null;
+            
+            // Check Settings for existing path
+            if (Main.Settings.StoneshardPath != null)
+            {
+                locations.Add(Main.Settings.StoneshardPath);
+                if (VerifyInstallLocations(locations).Count >= 1)
+                {
+                    Log.Information("Stoneshard path loaded from settings.");
+                    StoneshardInstallPath = Main.Settings.StoneshardPath;
+                    return;
+                }
+                Log.Warning($"Stoneshard path loaded from settings is not a valid installation. ({Main.Settings.StoneshardPath})");
+                Log.Warning("Saved path has been removed.");
+                Main.Settings.StoneshardPath = null;
+                locations.Clear();
+            }
+            
+            Log.Information("No valid Stoneshard install found in Settings. Scanning...");
+            
+            // Check steam + gog default locations
+            locations.UnionWith(GetDefaultInstallLocations());
+            
+            // Check registry for installed programs
+            locations.UnionWith(GetRegistryInstallLocations());
+            
+            // Verify the folder contains `Stoneshard.exe` and `dialogs` folder
+            locations = VerifyInstallLocations(locations); 
+            
+            // TODO REMOVE DEBUG: print all locations found
+            Log.Information("Found valid install locations :");
+            foreach (string location in locations.OfType<string>())
+                Log.Information(location);
+            
+            switch (locations.Count)
+            {
+                case 1:
+                {
+                    selectedPath = locations.FirstOrDefault();
+                    break;
+                }
+                // No path found: Ask user to locate the folder
+                case < 1:
+                {
+                    Log.Warning("Couldn't locate Stoneshard folder, asking user.");
+                    FolderBrowserDialog dialog = new();
+                    HashSet<string?> toVerify = new();
+                        
+                    dialog.Description = "Select your Stoneshard installation folder";
+                    dialog.ShowDialog();
+                    
+                    toVerify.Add(dialog.SelectedPath); if (VerifyInstallLocations(toVerify).Count == 1)
+                        selectedPath = dialog.SelectedPath;
+
+                    if (string.IsNullOrEmpty(selectedPath))
+                    {
+                        Log.Error("No Stoneshard install directory was selected.This could cause issues when patching mods.");
+                        MessageBox.Show(
+                            "No Stoneshard install directory was selected.\nThis could cause issues when patching mods.",
+                            "Error", MessageBoxButton.OK,
+                            MessageBoxImage.Error
+                            );
+                        return;
+                    }
+
+                    break;
+                }
+                
+                // More than 1 path found: Ask user to pick one
+                case >= 2:
+                {
+                    Log.Information("Multiple Stoneshard installs found, asking user.");
+                    // TODO: open list dialog
+                    break;
+                }
+            }
+            
+            // Save to Settings
+            if (!string.IsNullOrEmpty(selectedPath))
+            {
+                Log.Information($"Saving Stoneshard install path to Settings.");
+                Main.Settings.StoneshardPath = selectedPath;
+            }
+            else
+                Log.Error("Failed saving path to settings.");
+            
+            
+            // Expose to modders
+            StoneshardInstallPath = Main.Settings.StoneshardPath;
+        }
+
+        private static HashSet<string?> GetDefaultInstallLocations()
+        {
+            HashSet<string?> results = new();
+
+            string[] defaultPaths =
+            {
+                @"C:\Program Files (x86)\Steam\steamapps\common\Stoneshard", // Steam
+                @"$HOME\GOG Games", // GOG
+                @"C:\GOG Games" // GOG Galaxy ?
+            };
+
+            foreach (string path in defaultPaths)
+            {
+                if (Directory.Exists(path))
+                    results.Add(path);
+            }
+            
+            return results;
+        }
+        private static HashSet<string?> GetRegistryInstallLocations()
+        {
+            string[] registryKeys = {
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+                @"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+            };
+            RegistryHive[] hives = {
+                RegistryHive.LocalMachine,
+                RegistryHive.CurrentUser
+            };
+            RegistryView[] views = {
+                RegistryView.Registry32,
+                RegistryView.Registry64
+            };
+            HashSet<string?> results = new();
+
+            foreach (RegistryHive hive in hives)
+            {
+                foreach (string registryKey in registryKeys)
+                {
+                    foreach (RegistryView view in views)
+                    {
+                        using RegistryKey? key = RegistryKey.OpenBaseKey(hive, view).OpenSubKey(registryKey);
+                        if (key == null) continue;
+                        foreach (string subkeyName in key.GetSubKeyNames())
+                        {
+                            using RegistryKey? subkey = key.OpenSubKey(subkeyName);
+                            if (subkey?.GetValue("DisplayName")?.ToString()?.Equals("Stoneshard") == true)
+                                results.Add(subkey.GetValue("InstallLocation")?.ToString());
+                        }
+                    }
+                }
+            }
+
+            return results;
+        }
+
+        private static HashSet<string?> VerifyInstallLocations(HashSet<string?> locations)
+        {
+            HashSet<string?> results = new();
+            
+            foreach (string? location in locations)
+            {
+                if (File.Exists(location + @"\Stoneshard.exe") && Directory.Exists(location + @"\dialogs"))
+                    results.Add(location);
+            }
+            
+            return results;
         }
         internal static void AddCredit(string modNameShort, string[] authors)
         {

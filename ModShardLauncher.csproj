@@ -156,6 +156,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\6.0.11\System.Windows.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="UndertaleModLib">
       <HintPath>Reference\UndertaleModLib.dll</HintPath>
     </Reference>
