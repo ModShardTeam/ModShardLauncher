@@ -57,7 +57,7 @@ namespace ModShardLauncher.Controls
                 await save;
                 if (!save.Result) Log.Information("Saved cancelled.");
                 // copy the dataloot.json in the stoneshard directory
-                LootUtils.SaveLootTables(Msl.ThrowIfNull(Path.GetDirectoryName(DataLoader.dataPath)));
+                LootUtils.SaveLootTables(Msl.ThrowIfNull(Path.GetDirectoryName(DataLoader.savedDataPath)));
             }
 
             // reload the data

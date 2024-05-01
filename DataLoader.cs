@@ -18,6 +18,7 @@ namespace ModShardLauncher
     {
         public static UndertaleData data = new();
         internal static string dataPath = "";
+        internal static string savedDataPath = "";
         public delegate void FileMessageEventHandler(string message);
         public static event FileMessageEventHandler FileMessageEvent;
         public static void ShowWarning(string warning, string title)
@@ -148,6 +149,7 @@ namespace ModShardLauncher
 
             if (dlg.ShowDialog() == true)
             {
+                savedDataPath = dlg.FileName;
                 await SaveFile(dlg.FileName);
                 return true;
             }
