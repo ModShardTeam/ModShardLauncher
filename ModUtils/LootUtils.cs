@@ -133,14 +133,14 @@ namespace ModShardLauncher
     {
         if (argument3 == 0)
         {
-            with (scr_inventory_add_weapon(items, argument1))
+            with (scr_inventory_add_weapon(argument0, argument1))
             {
                 scr_inv_atr_set(""Duration"", argument2);
             }
         }
         else
         {
-            with (scr_weapon_loot(argument0, argument4.x, argument4.y, 100))
+            with (scr_weapon_loot(argument0, argument4.x, argument4.y, 100, argument1))
             {
                 scr_inv_atr_set(""Duration"", argument2)
             }
@@ -242,6 +242,81 @@ namespace ModShardLauncher
     return 1;
 }
 ";
+            string mslLootRandomItemsFunction = @"function scr_msl_resolve_random_items(argument0, argument1, argument2, argument3, argument4)
+{
+    if (!variable_struct_exists(argument0, ""ItemsTable"") 
+        || !variable_struct_exists(argument0, ""ListWeight""))
+    {
+        scr_actionsLogUpdate(""no randomLoot data"");
+        return 0;
+    }
+
+    var itemsTable = variable_struct_get(argument0, ""ItemsTable"");
+    var weight = variable_struct_get(argument0, ""ListWeight"");
+
+    if (!variable_struct_exists(itemsTable, ""ListItems"")
+        || !variable_struct_exists(itemsTable, ""ListRarity"")
+        || !variable_struct_exists(itemsTable, ""ListDurability""))
+    {
+        scr_actionsLogUpdate(""no randomLoot data"");
+        return 0;
+    }
+
+    var items = variable_struct_get(itemsTable, ""ListItems"");
+    var rarity = variable_struct_get(itemsTable, ""ListRarity"");
+    var durability = variable_struct_get(itemsTable, ""ListDurability"");
+
+    var sizeItems = array_length(items);
+    var tableItemsSpecialLootAlready = array_create(sizeItems, 0);
+
+    for (var _j = 0; _j < argument3; _j++)
+    {
+        var totalWeight = argument4;
+        for (var _i = 0; _i < sizeItems; _i++)
+        {
+            if (ds_list_find_index(scr_atr(""specialItemsPool""), items[_i]) != -1)
+            {
+                tableItemsSpecialLootAlready[_i] = 1;
+            }
+            else
+            {
+                totalWeight += weight[_i];
+            }
+        }
+        scr_actionsLogUpdate(""totalWeight "" + string(totalWeight));
+
+        var randomWeight = irandom(totalWeight - 1);
+        scr_actionsLogUpdate(""randomWeight "" + string(randomWeight));
+        var cumulativeWeight = 0;
+        var index = -1;
+
+        for (var _i = 0; _i < sizeItems; _i++)
+        {
+            if (tableItemsSpecialLootAlready[_i] == 1)
+            {
+                continue;
+            }
+            cumulativeWeight += weight[_i]
+            if (randomWeight < cumulativeWeight) 
+            {
+                index = _i;
+                break;
+            }
+        }
+
+        if (index != -1)
+        {
+            scr_actionsLogUpdate(""found "" + string(index));
+            scr_msl_resolve_items(items[index], rarity[index], durability[index], argument1, argument2);
+        }
+        else 
+        {
+            scr_actionsLogUpdate(""found empty"");
+        }
+    }
+
+    return 1;
+}";
 
             string mslLootFunction = @"function scr_msl_resolve_loot_table(argument0, argument1)
 {
@@ -305,136 +380,17 @@ namespace ModShardLauncher
 
     var randomItemsTable = variable_struct_get(lootStruct, ""RandomItemsTable"");
 
+    scr_msl_resolve_random_items(randomItemsTable, argument1, argument0, iteration, emptyWeight);
+
     file_text_close(file);
 
     return 1;
 }";
 
-            string lootFunction = @"function scr_resolve_loot_table(argument0, argument1)
-            {
-                
-                var objectName = """";
-                var obj = -1;
-
-                
-                
-    
-                
-
-                
-
-                var randomLootTable = variable_struct_get(lootStruct, ""RandomLootTable"");
-                
-                if (!variable_struct_exists(randomLootTable, ""TableLootWeight"") 
-                    || !variable_struct_exists(randomLootTable, ""TableLootItems"")
-                    || !variable_struct_exists(randomLootTable, ""TableLootRarity"")
-                    || !variable_struct_exists(randomLootTable, ""TableLootDurability""))
-                {
-                    scr_actionsLogUpdate(""no tableLoot data"");
-                    file_text_close(""loot_table.json"");
-                    return 0;
-                }
-
-                var tableLootWeight = variable_struct_get(randomLootTable, ""TableLootWeight"");
-                var tableLootItems = variable_struct_get(randomLootTable, ""TableLootItems"");
-                var tableLootRarity = variable_struct_get(randomLootTable, ""TableLootRarity"");
-                var tableLootDurability = variable_struct_get(randomLootTable, ""TableLootDurability"");
-
-                var sizeTableLoot = array_length(tableLootWeight);
-                var tableLootSpecialLootAlready = array_create(sizeTableLoot, 0);
-
-                for (var j = 0; j < iteration; j += 1)
-                {
-                    var totalWeight = emptyWeight;
-                    for (var i = 0; i < sizeTableLoot; i += 1)
-                    {
-                        if (ds_list_find_index(scr_atr(""specialItemsPool""), tableLootItems[i]) != -1)
-                        {
-                            tableLootSpecialLootAlready[i] = 1;
-                        }
-                        else
-                        {
-                            totalWeight += tableLootWeight[i];
-                        }
-                    }
-
-                    scr_actionsLogUpdate(""totalWeight "" + string(totalWeight));
-
-                    var randomWeight = irandom(totalWeight - 1);
-                    scr_actionsLogUpdate(""randomWeight "" + string(randomWeight));
-                    var cumulativeWeight = 0;
-                    var index = -1;
-
-                    for (var i = 0; i < sizeTableLoot; i += 1)
-                    {
-                        if (tableLootSpecialLootAlready[i] == 1)
-                        {
-                            continue;
-                        }
-                        cumulativeWeight += tableLootWeight[i]
-                        if (randomWeight < cumulativeWeight) 
-                        {
-                            index = i;
-                            break;
-                        }
-                    }
-
-                    if (index != -1)
-                    {
-                        scr_actionsLogUpdate(""found "" + string(index));
-
-                        if (tableLootRarity[index] == -1)
-                        {
-                            objectName = tableLootItems[index];
-                            obj = asset_get_index(objectName)
-                            if (obj > -1)
-                            {
-                                if (argument1 == 0)
-                                {
-                                    scr_inventory_add_item(obj.inv_object);
-                                }
-                                else
-                                {
-                                    scr_loot_drop(argument0.x, argument0.y, obj)
-                                }
-                            }
-                            else
-                            {
-                                scr_actionsLogUpdate(""invalid object "" + string(objectName));
-                            }
-                        }
-                        else
-                        {
-                            if (argument1 == 0)
-                            {
-                                with (scr_inventory_add_weapon(tableLootItems[index], (tableLootRarity[index] << 0)))
-                                {
-                                    scr_inv_atr_set(""Duration"", tableLootDurability[index]);
-                                }
-                            }
-                            else
-                            {
-                                with (scr_weapon_loot(tableLootItems[index], argument0.x, argument0.y, 100))
-                                {
-                                    scr_inv_atr_set(""Duration"", tableLootDurability[index])
-                                }
-                            }
-                            
-                        }
-                        
-                    }
-                    else 
-                    {
-                        scr_actionsLogUpdate(""found empty"");
-                    }
-                }
-
-                file_text_close(""loot_table.json"");
-            }";
-
             Msl.AddFunction(mslItemsFunction, "scr_msl_resolve_items");
             Msl.AddFunction(mslRefFunction, "scr_msl_resolve_refence_table");
             Msl.AddFunction(mslLootGuaranteedItemsFunction, "scr_msl_resolve_guaranteed_items");
+            Msl.AddFunction(mslLootRandomItemsFunction, "scr_msl_resolve_random_items");
             Msl.AddFunction(mslLootFunction, "scr_msl_resolve_loot_table");
 
             Msl.LoadGML("gml_Object_o_chest_p_Alarm_1")
