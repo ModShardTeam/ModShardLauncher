@@ -48,12 +48,14 @@ namespace ModShardLauncher
     }
     public class ReferenceTable
     {
-        public int[] Ids { get; }
-        public string[] Refs { get; }
-        public ReferenceTable(string[] refs, int[] ids)
+        public string DefaultTable { get; }
+        public Dictionary<int, string> Ids { get; }
+        public Dictionary<int, string> Tiers { get; }
+        public ReferenceTable(string defaultTable, Dictionary<int, string> ids, Dictionary<int, string> tiers)
         {
+            DefaultTable = defaultTable;
             Ids = ids;
-            Refs = refs;
+            Tiers = tiers;
         }
     }
     public class LootTable
@@ -158,6 +160,7 @@ namespace ModShardLauncher
     var min_lvl = scr_globaltile_dungeon_get(""mob_lvl_min"");
     var max_lvl = scr_globaltile_dungeon_get(""mob_lvl_max"");
     var tier = floor(((max_lvl + min_lvl) / 2));
+    scr_actionsLogUpdate(""current tier: "" + string(tier));
 
     if (!variable_struct_exists(refData, objectName))
     {
@@ -168,46 +171,64 @@ namespace ModShardLauncher
     var refStruct = variable_struct_get(refData, objectName);
     var referenceLootTableIndex = -1;
 
+    if (!variable_struct_exists(refStruct, ""DefaultTable""))
+    {
+        scr_actionsLogUpdate(""cant find DefaultTable"");
+        file_text_close(refFile);
+        return -4;
+    }
+    var defaultTable = variable_struct_get(refStruct, ""DefaultTable"");
+    
     if (!variable_struct_exists(refStruct, ""Ids""))
     {
         scr_actionsLogUpdate(""cant find Ids"");
         file_text_close(refFile);
         return -4;
     }
-    var idsArray = variable_struct_get(refStruct, ""Ids"");
+    var idsStruct = variable_struct_get(refStruct, ""Ids"");
 
-    for (var i = 0; i < array_length(idsArray); i += 1)
+    if (variable_struct_exists(idsStruct, argument0.id))
     {
-        if (idsArray[i] == argument0.id)
+        var referenceLootTable = variable_struct_get(idsStruct, argument0.id);
+        scr_actionsLogUpdate(""ref: "" + referenceLootTable);
+        file_text_close(refFile);
+        return referenceLootTable;
+    }
+
+    if (!variable_struct_exists(refStruct, ""Tiers""))
+    {
+        scr_actionsLogUpdate(""cant find Tiers"");
+        file_text_close(refFile);
+        return -4;
+    }
+    var tiersStruct = variable_struct_get(refStruct, ""Tiers"");
+    var tiers = variable_struct_get_names(tiersStruct);
+    var indexTier = -1;
+
+    for (var i = 0; i < array_length(tiers); i++;)
+    {
+        if (tier < tiers[i])
         {
-            referenceLootTableIndex = i;
+            indexTier = i - 1;
             break;
         }
+        else
+        {
+            indexTier = i;
+        }
     }
-    scr_actionsLogUpdate(""id ref: "" + string(referenceLootTableIndex));
 
-    if (!variable_struct_exists(refStruct, ""Refs""))
+    if (indexTier == -1)
     {
-        scr_actionsLogUpdate(""cant find Refs"");
-        file_text_close(refFile);
-        return -4;
+        var referenceLootTable = defaultTable;
     }
-    var refsTable = variable_struct_get(refStruct, ""Refs"");
-    var referenceLootTable = refsTable[referenceLootTableIndex + 1];
-
+    else
+    {
+        var referenceLootTable = variable_struct_get(tiersStruct, tiers[indexTier]);
+    }
+    
     scr_actionsLogUpdate(""ref: "" + referenceLootTable);
-
-    if (!variable_struct_exists(refStruct, ""Refs""))
-    {
-        scr_actionsLogUpdate(""cant find Refs"");
-        file_text_close(refFile);
-        return -4;
-    }
-    var refsTable = variable_struct_get(refStruct, ""Refs"");
-    var referenceLootTable = refsTable[referenceLootTableIndex + 1];
-
     file_text_close(refFile);
-
     return referenceLootTable;
 }";
 
@@ -416,11 +437,20 @@ namespace ModShardLauncher
             LootTable lootTable = new(guaranteedItems, randomLootMin, randomLootMax, emptyWeight, randomItemsTable);
             LootUtils.LootTables.Add(lootTableID, lootTable);
         }
-        public static void AddReferenceTable(string nameObject, string[] refs, int[]? ids = null)
+        public static void AddReferenceTable(string nameObject, string table)
         {
-            ids ??= Array.Empty<int>();
-            ReferenceTable referenceTable = new(refs, ids);
-            LootUtils.ReferenceTables.Add(nameObject, referenceTable);
+            LootUtils.ReferenceTables.Add(nameObject, new ReferenceTable(table, new Dictionary<int, string>(), new Dictionary<int, string>()));
+        }
+        public static void AddReferenceTable(string nameObject, string table, Dictionary<int, string>? ids, Dictionary<int, string>? tiers)
+        {
+            LootUtils.ReferenceTables.Add(nameObject, new ReferenceTable(table, ids ?? new Dictionary<int, string>(), tiers ?? new Dictionary<int, string>()));
+        }
+        public static void AddReferenceTableForMultipleObjects(string table, params string[] nameObjects)
+        {
+            foreach(string nameObject in nameObjects)
+            {
+                LootUtils.ReferenceTables.Add(nameObject, new ReferenceTable(table, new Dictionary<int, string>(), new Dictionary<int, string>()));
+            }
         }
     }
 }
