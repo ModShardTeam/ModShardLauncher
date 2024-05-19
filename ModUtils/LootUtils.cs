@@ -184,12 +184,16 @@ namespace ModShardLauncher
     }
     var idsStruct = variable_struct_get(refStruct, ""Ids"");
 
-    if (variable_struct_exists(idsStruct, string(argument0.id)))
+    var _ids = variable_struct_get_names(idsStruct);
+    for (var i = 0; i < array_length(_ids); i++;)
     {
-        var referenceLootTable = variable_struct_get(idsStruct, argument0.id);
-        scr_msl_log(""ref with id: "" + referenceLootTable);
-        file_text_close(refFile);
-        return referenceLootTable;
+        if (real(_ids[i]) == argument0.id)
+        {
+            var referenceLootTable = variable_struct_get(idsStruct, _ids[i]);
+            scr_msl_log(""ref with id: "" + referenceLootTable);
+            file_text_close(refFile);
+            return referenceLootTable;
+        }
     }
 
     if (!variable_struct_exists(refStruct, ""Tiers""))
