@@ -236,6 +236,8 @@ namespace ModShardLauncher
         }
         public static void PatchFile()
         {
+            // add new msl log function
+            LogUtils.InjectLog();
             PatchInnerFile();
             PatchMods();
             // add the new loot related functions if there is any

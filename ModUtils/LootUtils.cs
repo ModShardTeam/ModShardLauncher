@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Serilog;
-using UndertaleModLib.Models;
 using Newtonsoft.Json;
 using System.IO;
-using Microsoft.Win32;
 
 namespace ModShardLauncher
 {
@@ -115,7 +112,7 @@ namespace ModShardLauncher
             }
             else
             {
-                scr_actionsLogUpdate(""invalid object "" + string(objectName));
+                scr_msl_log(""invalid object "" + string(objectName));
             }
         }
         else
@@ -127,7 +124,7 @@ namespace ModShardLauncher
             }
             else
             {
-                scr_actionsLogUpdate(""invalid object "" + string(objectName));
+                scr_msl_log(""invalid object "" + string(objectName));
             }
         }
     }
@@ -160,11 +157,11 @@ namespace ModShardLauncher
     var min_lvl = scr_globaltile_dungeon_get(""mob_lvl_min"");
     var max_lvl = scr_globaltile_dungeon_get(""mob_lvl_max"");
     var tier = floor(((max_lvl + min_lvl) / 2));
-    scr_actionsLogUpdate(""current tier: "" + string(tier));
+    scr_msl_log(""current tier: "" + string(tier));
 
     if (!variable_struct_exists(refData, objectName))
     {
-        scr_actionsLogUpdate(""cant find object "" + objectName);
+        scr_msl_log(""cant find object "" + objectName);
         file_text_close(refFile);
         return -4;
     }
@@ -173,7 +170,7 @@ namespace ModShardLauncher
 
     if (!variable_struct_exists(refStruct, ""DefaultTable""))
     {
-        scr_actionsLogUpdate(""cant find DefaultTable"");
+        scr_msl_log(""cant find DefaultTable"");
         file_text_close(refFile);
         return -4;
     }
@@ -181,23 +178,23 @@ namespace ModShardLauncher
     
     if (!variable_struct_exists(refStruct, ""Ids""))
     {
-        scr_actionsLogUpdate(""cant find Ids"");
+        scr_msl_log(""cant find Ids"");
         file_text_close(refFile);
         return -4;
     }
     var idsStruct = variable_struct_get(refStruct, ""Ids"");
 
-    if (variable_struct_exists(idsStruct, argument0.id))
+    if (variable_struct_exists(idsStruct, string(argument0.id)))
     {
         var referenceLootTable = variable_struct_get(idsStruct, argument0.id);
-        scr_actionsLogUpdate(""ref: "" + referenceLootTable);
+        scr_msl_log(""ref with id: "" + referenceLootTable);
         file_text_close(refFile);
         return referenceLootTable;
     }
 
     if (!variable_struct_exists(refStruct, ""Tiers""))
     {
-        scr_actionsLogUpdate(""cant find Tiers"");
+        scr_msl_log(""cant find Tiers"");
         file_text_close(refFile);
         return -4;
     }
@@ -207,7 +204,7 @@ namespace ModShardLauncher
 
     for (var i = 0; i < array_length(tiers); i++;)
     {
-        if (tier < tiers[i])
+        if (tier < real(tiers[i]))
         {
             indexTier = i - 1;
             break;
@@ -221,13 +218,14 @@ namespace ModShardLauncher
     if (indexTier == -1)
     {
         var referenceLootTable = defaultTable;
+        scr_msl_log(""ref with default: "" + referenceLootTable);
     }
     else
     {
         var referenceLootTable = variable_struct_get(tiersStruct, tiers[indexTier]);
+        scr_msl_log(""ref with tier: "" + referenceLootTable);
     }
     
-    scr_actionsLogUpdate(""ref: "" + referenceLootTable);
     file_text_close(refFile);
     return referenceLootTable;
 }";
@@ -238,7 +236,7 @@ namespace ModShardLauncher
         || !variable_struct_exists(argument0, ""ListRarity"")
         || !variable_struct_exists(argument0, ""ListDurability""))
     {
-        scr_actionsLogUpdate(""no ItemsTable data"");
+        scr_msl_log(""no ItemsTable data"");
         return 0;
     }
 
@@ -251,7 +249,7 @@ namespace ModShardLauncher
     if (size_array != array_length(rarity) ||
         size_array != array_length(durability))
     {
-        scr_actionsLogUpdate(""List with incorrect size"");
+        scr_msl_log(""List with incorrect size"");
         return 0;
     }
 
@@ -268,7 +266,7 @@ namespace ModShardLauncher
     if (!variable_struct_exists(argument0, ""ItemsTable"") 
         || !variable_struct_exists(argument0, ""ListWeight""))
     {
-        scr_actionsLogUpdate(""no randomLoot data"");
+        scr_msl_log(""no randomLoot data"");
         return 0;
     }
 
@@ -279,7 +277,7 @@ namespace ModShardLauncher
         || !variable_struct_exists(itemsTable, ""ListRarity"")
         || !variable_struct_exists(itemsTable, ""ListDurability""))
     {
-        scr_actionsLogUpdate(""no randomLoot data"");
+        scr_msl_log(""no randomLoot data"");
         return 0;
     }
 
@@ -304,10 +302,10 @@ namespace ModShardLauncher
                 totalWeight += weight[_i];
             }
         }
-        scr_actionsLogUpdate(""totalWeight "" + string(totalWeight));
+        scr_msl_log(""totalWeight "" + string(totalWeight));
 
         var randomWeight = irandom(totalWeight - 1);
-        scr_actionsLogUpdate(""randomWeight "" + string(randomWeight));
+        scr_msl_log(""randomWeight "" + string(randomWeight));
         var cumulativeWeight = 0;
         var index = -1;
 
@@ -327,12 +325,12 @@ namespace ModShardLauncher
 
         if (index != -1)
         {
-            scr_actionsLogUpdate(""found "" + string(index));
+            scr_msl_log(""found "" + string(index));
             scr_msl_resolve_items(items[index], rarity[index], durability[index], argument1, argument2);
         }
         else 
         {
-            scr_actionsLogUpdate(""found empty"");
+            scr_msl_log(""found empty"");
         }
     }
 
@@ -342,12 +340,12 @@ namespace ModShardLauncher
             string mslLootFunction = @"function scr_msl_resolve_loot_table(argument0, argument1)
 {
     var objectName = object_get_name(argument0.object_index);
-    scr_actionsLogUpdate(""instance: "" + string(argument0.id) + "" of "" + objectName);
+    scr_msl_log(""instance: "" + string(argument0.id) + "" of "" + objectName);
 
     var referenceLootTable = scr_msl_resolve_refence_table(argument0);
     if (referenceLootTable == noone)
     {
-        scr_actionsLogUpdate(""Reference Table resolution failed"");
+        scr_msl_log(""Reference Table resolution failed"");
         return 0;
     }
 
@@ -357,7 +355,7 @@ namespace ModShardLauncher
 
     if (!variable_struct_exists(data, referenceLootTable))
     {
-        scr_actionsLogUpdate(""cant find ref "" + referenceLootTable);
+        scr_msl_log(""cant find ref "" + referenceLootTable);
         file_text_close(file);
         return 0;
     }
@@ -365,7 +363,7 @@ namespace ModShardLauncher
 
     if (!variable_struct_exists(lootStruct, ""GuaranteedItems""))
     {
-        scr_actionsLogUpdate(""no guaranteedItems"");
+        scr_msl_log(""no guaranteedItems"");
         file_text_close(""loot_table.json"");
         return 0;
     }
@@ -373,14 +371,14 @@ namespace ModShardLauncher
 
     if (!scr_msl_resolve_guaranteed_items(guaranteedItems, argument1, argument0))
     {
-        scr_actionsLogUpdate(""Guaranteed Items resolution failed"");
+        scr_msl_log(""Guaranteed Items resolution failed"");
         file_text_close(""loot_table.json"");
         return 0;
     }
 
     if (!variable_struct_exists(lootStruct, ""RandomLootMin"") || !variable_struct_exists(lootStruct, ""RandomLootMax"") || !variable_struct_exists(lootStruct, ""EmptyWeight""))
     {
-        scr_actionsLogUpdate(""no int"");
+        scr_msl_log(""no int"");
         file_text_close(""loot_table.json"");
         return 0;
     }
@@ -390,11 +388,11 @@ namespace ModShardLauncher
     var emptyWeight = variable_struct_get(lootStruct, ""EmptyWeight"");
 
     var iteration = randomLootMin + irandom(randomLootMax - randomLootMin);
-    scr_actionsLogUpdate(""iteration "" + string(iteration));
+    scr_msl_log(""iteration "" + string(iteration));
 
     if (!variable_struct_exists(lootStruct, ""RandomItemsTable""))
     {
-        scr_actionsLogUpdate(""no RandomItemsTable"");
+        scr_msl_log(""no RandomItemsTable"");
         file_text_close(""loot_table.json"");
         return 0;
     }
