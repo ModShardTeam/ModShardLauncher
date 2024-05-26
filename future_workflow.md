@@ -1,5 +1,5 @@
 - change the csproj version
-- dotnet publish -r win-x64 -c Release /p:PublishSingleFile=true /p:IncludeAllContentForSelfExtract=true /p:PublishReadyToRun=true
+- dotnet publish -r win-x64 -c Release /p:PublishSingleFile=true /p:IncludeAllContentForSelfExtract=true /p:PublishReadyToRun=true --self-contained
 - locate publish folder (somewhere in bin/release and again in bin or something)
 - Move required dlls (everything in ModReference + Reference folders) in the folder
 - Archive to msl.zip
