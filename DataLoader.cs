@@ -70,6 +70,47 @@ namespace ModShardLauncher
             File.WriteAllText("json_dump_rooms.json", JsonConvert.SerializeObject(data.Rooms.Select(t => t.Name.Content)));
             Msl.GenerateNRandomLinesFromCode(data.Code, new GlobalDecompileContext(data, false), 100, 1, 0);
         }
+        /// <summary>
+        /// Export all items, weapons and armors in csv files.
+        /// </summary>
+        private static void ExportItems()
+        {
+            try
+            {
+                DirectoryInfo dir = new("export");
+                if (dir.Exists) dir.Delete(true);
+                dir.Create();
+
+                List<string>? weapons = ModLoader.GetTable("gml_GlobalScript_table_weapons");
+                List<string>? armor = ModLoader.GetTable("gml_GlobalScript_table_armor");
+
+                File.WriteAllLines(
+                    Path.Join(dir.FullName, Path.DirectorySeparatorChar.ToString(), "_all_items.csv"), 
+                    data.GameObjects.Select(t => t.Name.Content).Where(x => x.Contains("o_inv_")).Select(x => x.Replace("o_inv_", ""))
+                );
+
+                if (weapons != null)
+                {
+                    File.WriteAllLines(
+                        Path.Join(dir.FullName, Path.DirectorySeparatorChar.ToString(), "_all_weapons.csv"), 
+                        weapons.Select(x => string.Join(';', x.Split(';').Take(4)))
+                    );
+                }
+                
+                if (armor != null)
+                {
+                    File.WriteAllLines(
+                        Path.Join(dir.FullName, Path.DirectorySeparatorChar.ToString(), "_all_armors.csv"), 
+                        armor.Select(x => string.Join(';', x.Split(';').Take(6)))
+                    );
+                }
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Something went wrong");
+                throw;
+            }
+        }
         private static void ExportPreset()
         {
             GlobalDecompileContext context = new(ModLoader.Data, false);
@@ -137,6 +178,7 @@ namespace ModShardLauncher
             ModLoader.Initalize();
             // cleaning loot table
             LootUtils.ResetLootTables();
+            ExportItems();
         }
         public static async Task<bool> DoSaveDialog()
         {   
