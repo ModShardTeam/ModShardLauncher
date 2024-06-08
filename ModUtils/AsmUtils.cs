@@ -284,6 +284,10 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        public static UndertaleInstruction.Reference<UndertaleFunction> GetRefFunction(string name)
+        {
+            return new() { Target = ModLoader.Data.Functions.ByName(name) };
+        }
         public static UndertaleInstruction PushShort(short val)
         {
             return new() {
@@ -292,7 +296,6 @@ namespace ModShardLauncher
                 Type1 = UndertaleInstruction.DataType.Int16,
             };
         }
-        
         public static UndertaleInstruction PushInt(int val)
         {
             return new() {
@@ -301,7 +304,6 @@ namespace ModShardLauncher
                 Type1 = UndertaleInstruction.DataType.Int32,
             };
         }
-
         public static UndertaleInstruction PushString(string val) 
         {
             return new() {
@@ -310,7 +312,6 @@ namespace ModShardLauncher
                 Type1 = UndertaleInstruction.DataType.String,
             };
         }
-
         public static UndertaleInstruction PushGlb(string val) 
         {
             return new() {
@@ -320,7 +321,6 @@ namespace ModShardLauncher
                 TypeInst = UndertaleInstruction.InstanceType.Global,
             };
         }
-
         public static UndertaleInstruction PopIntGlb(string val)
         {
             return new() {
@@ -341,7 +341,6 @@ namespace ModShardLauncher
                 TypeInst = UndertaleInstruction.InstanceType.Local,
             };
         }
-        
         public static UndertaleInstruction PopIntSelf(string val)
         {
             return new() {
@@ -350,6 +349,31 @@ namespace ModShardLauncher
                 Type1 = UndertaleInstruction.DataType.Variable,
                 Type2 = UndertaleInstruction.DataType.Int32,
                 TypeInst = UndertaleInstruction.InstanceType.Self,
+            };
+        }
+        public static UndertaleInstruction Popz()
+        {
+            return new() {
+                Kind = UndertaleInstruction.Opcode.Popz,
+                Type1 = UndertaleInstruction.DataType.Variable,
+            };
+        }
+        public static UndertaleInstruction ConvStringVar()
+        {
+            return new() {
+                Kind = UndertaleInstruction.Opcode.Conv,
+                Type1 = UndertaleInstruction.DataType.String,
+                Type2 = UndertaleInstruction.DataType.Variable
+            };
+        }
+        public static UndertaleInstruction Call(string name, ushort argNumber)
+        {
+            return new() {
+                Kind = UndertaleInstruction.Opcode.Call,
+                Type1 = UndertaleInstruction.DataType.Int32,
+                Type2 = UndertaleInstruction.DataType.Double,
+                Function = GetRefFunction(name),
+                ArgumentsCount = argNumber,
             };
         }
     }
