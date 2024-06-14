@@ -120,30 +120,6 @@
     | :--- | :--- |
     | `N/A` | N/A |
 
-??? example "EventName `method`"
-    <h3>Summary</h3>
-    Given a gameobject name, event type and subtype, gets the name of the associated script.</br></br>
-    Note : This expects the vanilla syntax for event names and will not work without it: </br>
-    `gml_Object_` + `objectName` + `_` + `eventType` + `_` + `subtype`  -->  `gml_Object_o_msl_initializer_Create_0`
-    <h3>Example</h3>
-    ```c#
-    // Example : Returns the name of the script associated with the Create event of `o_msl_initializer`
-    Msl.EventName("o_msl_initializer", EventType.Create, 0)     
-    ```
-    <h3>Arguments</h3>
-
-    | **Type** | **Name** | **Description** |
-    | :---: | :---: | :--- |
-    | `String` | `objectName` | The name of the event is on. |
-    | `Msl.EventType` | `eventType` | The type of event to get the name of. |
-    | `uint` | `subtype` | The subtype of the event to get the name of. |
-
-    <h3>Returns</h3>
-
-    | **Type** | **Description** |
-    | :--- | :--- |
-    | `String` | The script's expected name. |
-
 ---
 
 ## Sprites
@@ -473,21 +449,70 @@
 
 ## Settings
 
-??? example "AddMenu `method`"
+??? example "UIComponent `type`"
     <h3>Summary</h3>
-    Adds an entry to the in-game mod menu, which lets users configure settings at runtime.
+    Hold data needed to create an entry in the in-game mod menu.
     <h3>Example</h3>
     ```c#
-    // Example : Adds a slider to the mod menu to configure the amount of tiles walked by turn.
+    // Example : Creates a slider that changes the value held by a global named menu_test in gml.
     // The slider will have a range from 2 to 5, with a default value of 4.
-    Msl.AddMenu("MyMod", new UIComponent(name: "Tiles walked by turn", associatedGlobal: "tiles_by_turn", UIComponentType.Slider, (2, 5), 4)
+    UIComponent sliderEntry = new(name: "This is a slider", associatedGlobal: "menu_test", UIComponentType.Slider, (2, 5), 4)
+    ```
+    !!! tip "Arguments"
+
+        === "Slider"
+
+            | **Type** | **Name** | **Description**|
+            | :---: | :---: | :--- |
+            | `String` | `name` | The displayed name in the menu. |
+            | `String` | `associatedGlobal` | The name of the global variable modified by this component. In the case of a slider, the global variable will hold a real value. |
+            | `UIComponentType` | `componentType` | The type of the component. Can be a `CheckBox`, `ComboBox` or `Slider` |
+            | `(int, int)` | `sliderValues` | Min and Max values for a slider, floating-point values are not supported. |
+            | `int` | `defaultValue` | Default value of the component. |
+            | `bool` | `onlyInMainMenu` | If true, this entry will only appear in the main menu of the game. False by default. |
+
+        === "ComboBox"
+
+            | **Type** | **Name** | **Description**|
+            | :---: | :---: | :--- |
+            | `String` | `name` | The displayed name in the menu. |
+            | `String` | `associatedGlobal` | The name of the global variable modified by this component. In the case of a combobox, the global variable will hold a string. |
+            | `UIComponentType` | `componentType` | The type of the component. Can be a `CheckBox`, `ComboBox` or `Slider` |
+            | `string[]` | `dropDownValues` | List of all possible values held by the global variable. |
+            | `bool` | `onlyInMainMenu` | If true, this entry will only appear in the main menu of the game. False by default. |
+            
+        === "CheckBox"
+
+            | **Type** | **Name** | **Description**|
+            | :---: | :---: | :--- |
+            | `String` | `name` | The displayed name in the menu. |
+            | `String` | `associatedGlobal` | The name of the global variable modified by this component. In the case of a combobox, the global variable will hold either 0 or 1. |
+            | `UIComponentType` | `componentType` | The type of the component. Can be a `CheckBox`, `ComboBox` or `Slider` |
+            | `int` | `defaultValue` | Default value of the component. |
+            | `bool` | `onlyInMainMenu` | If true, this entry will only appear in the main menu of the game. False by default. |
+
+
+    <h3>Returns</h3>
+
+    | **Type** | **Description** |
+    | :--- | :--- |
+    | `UIComponent` | A ui component |
+
+??? example "AddMenu `method`"
+    <h3>Summary</h3>
+    Adds entries to the in-game mod menu, which lets users configure settings at runtime.
+    <h3>Example</h3>
+    ```c#
+    // Example : Adds a slider to the mod menu to change a value hold by a global named menu_test in gml.
+    // The slider will have a range from 2 to 5, with a default value of 4.
+    Msl.AddMenu("MyMod", new UIComponent(name: "The displayed name in the menu", associatedGlobal: "menu_test", UIComponentType.Slider, (2, 5), 4))
     ```
     <h3>Arguments</h3>
 
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the category in which to place the new entry. |
-    | `UIComponent` | `components` | The component(s) to add to the mod menu. Can be a `CheckBox`, `ComboBox` or `Slider`. |
+    | `UIComponent[]` | `components` | The component(s) to add to the mod menu. Can be a `CheckBox`, `ComboBox` or `Slider`. |
 
     <h3>Returns</h3>
 
