@@ -47,7 +47,7 @@ namespace ModShardLauncher
                 originalCode.Insert(position, codeAsString);
                 SetAssemblyString(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with InsertDisassemblyCode: {0}", fileName.ToString()));
+                Log.Information(string.Format("Patched function with InsertAssemblyString: {0}", fileName.ToString()));
             }
             catch(Exception ex) 
             {
@@ -65,7 +65,7 @@ namespace ModShardLauncher
                 originalCode[position] = codeAsString;
                 SetAssemblyString(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with ReplaceDisassemblyCode: {0}", fileName.ToString()));
+                Log.Information(string.Format("Patched function with ReplaceAssemblyString: {0}", fileName.ToString()));
             }
             catch(Exception ex) 
             {
@@ -87,7 +87,7 @@ namespace ModShardLauncher
 
                 SetAssemblyString(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with ReplaceDisassemblyCode: {0}", fileName.ToString()));
+                Log.Information(string.Format("Patched function with ReplaceAssemblyString: {0}", fileName.ToString()));
             }
             catch(Exception ex) 
             {
@@ -99,12 +99,12 @@ namespace ModShardLauncher
         {
             try 
             {
-                Log.Information(string.Format("Trying patch assembly in: {0}", name.ToString()));
+                Log.Information(string.Format("Trying inject assembly in: {0}", name.ToString()));
 
                 UndertaleCode originalCode = GetUMTCodeFromFile(name);
                 originalCode.Replace(patch(originalCode.Instructions).ToList());
 
-                Log.Information(string.Format("Patched function with PatchDisassemblyCode: {0}", name.ToString()));
+                Log.Information(string.Format("Patched function with InjectAssemblyInstruction: {0}", name.ToString()));
             }
             catch(Exception ex) 
             {
