@@ -34,13 +34,25 @@
     Adds a gameobject to the game.
     <h3>Example</h3>
     ```c#
-    Msl.AddObject("o_myobject")
+    UndertaleGameObject npcTrainer = Msl.AddObject(
+            name:"o_npc_trainer",
+            spriteName:"s_npc_merc_inn_fight",
+            parentName:"o_npc_baker",
+            isVisible:true,
+            isAwake:true,
+            collisionShapeFlags:CollisionShapeFlags.Circle
+    );
     ```
     <h3>Arguments</h3>
 
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the gameobject to create. |
+    | `String` | `spriteName` | The name of the gameobject to create. |
+    | `String` | `parentName` | The name of the gameobject to create. |
+    | `String` | `isVisible` | The name of the gameobject to create. |
+    | `String` | `isAwake` | The name of the gameobject to create. |
+    | `String` | `collisionShapeFlags` | The name of the gameobject to create. |
 
     <h3>Returns</h3>
 
@@ -95,24 +107,35 @@
     <h3>Summary</h3>
     Adds a new event to a gameobject.
     <h3>Examples</h3>
-    ```c#
-    // Example 1 : Create Event from string, with object name
-    Msl.AddNewEvent("o_myobject", "scr_actionsLogUpdate(\"hello world\")", EventType.Create, 0);
+    === "By object name"
+        ```c#
+        // Example 1 : Create Event from string, with object name
+        Msl.AddNewEvent("o_myobject", "scr_actionsLogUpdate(\"hello world\")", EventType.Create, 0);
 
-    // Example 2 : Other Event from file, with object name
-    Msl.AddNewEvent("o_anotherobject", ModFiles.GetCode("myScript.gml"), EventType.Other, 24);
-
-    // Example 3 : Create Event from string, with object as variable
-    Msl.AddNewEvent(myVarContainingAGameObject, "scr_actionsLogUpdate(\"hello world\")", EventType.Create, 0);
-    ```
+        // Example 2 : Other Event from file, with object name
+        Msl.AddNewEvent("o_anotherobject", ModFiles.GetCode("myScript.gml"), EventType.Other, 24);
+        ```
+    
+    === "By object as a variable"
+        ```c#
+        // Example 3 : Create Event from string, with object as a variable
+        Msl.AddNewEvent(myVarContainingAGameObject, "scr_actionsLogUpdate(\"hello world\")", EventType.Create, 0);
+        ```
     <h3>Arguments</h3>
-
-    | **Type** | **Name** | **Description** |
-    | :---: | :---: | :--- |
-    | `String` | `gameObject` | The name of the gameobject to add the event to. |
-    | `String` | `eventCode` | The code for the event you're adding. |
-    | `Msl.EventType` | `eventType` | The type of event to add. |
-    | `uint` | `subtype` | The subtype of the event to add. </br>(Some events have different sub-events, like `Other` or `Draw`) |
+    === "By object name"
+        | **Type** | **Name** | **Description** |
+        | :---: | :---: | :--- |
+        | `String` | `objectName` | The name of the gameobject to add the event to. |
+        | `String` | `eventCode` | The code for the event you're adding. |
+        | `Msl.EventType` | `eventType` | The type of event to add. |
+        | `uint` | `subtype` | The subtype of the event to add. </br>(Some events have different sub-events, like `Other` or `Draw`) |
+    === "By object as a variable"
+        | **Type** | **Name** | **Description** |
+        | :---: | :---: | :--- |
+        | `UndertaleGameObject` | `gameObject` | Reference to the gameobject to add the event to. |
+        | `String` | `eventCode` | The code for the event you're adding. |
+        | `Msl.EventType` | `eventType` | The type of event to add. |
+        | `uint` | `subtype` | The subtype of the event to add. </br>(Some events have different sub-events, like `Other` or `Draw`) |
 
     <h3>Returns</h3>
 
@@ -120,6 +143,11 @@
     | :--- | :--- |
     | `N/A` | N/A |
 
+    <h3>Exception</h3>
+    `ArgumentException` thown if the event already exists.
+
+??? example "ApplyEvent `method`"
+    _TODO_
 ---
 
 ## Sprites
@@ -339,7 +367,13 @@
 
 ## Assembly
 
-??? info "InsertAssemblyString `method`"
+??? info "GetAssemblyString `legacy method`"
+    _TODO_
+
+??? info "SetAssemblyString `legacy method`"
+    _TODO_
+
+??? info "InsertAssemblyString `legacy method`"
     <h3>Summary</h3>
     Inserts an assembly instruction below the provided line.
     <h3>Example</h3>
@@ -361,21 +395,34 @@
     | :--- | :--- |
     | `N/A` | N/A |
 
-??? info "ReplaceAssemblyString `method`"
+??? info "ReplaceAssemblyString `legacy method`"
     <h3>Summary</h3>
-    Replaces the provided line with an assembly instruction.
+    Replaces the provided line with an assembly instruction given as string.
     <h3>Example</h3>
-    ```c#
-    // Example : Replaces the 8th line in 'gml_GlobalScript_scr_sessionDataInit' with 'pushi.e 1'.
-    Msl.ReplaceAssemblyString("pushi.e 1", "gml_GlobalScript_scr_sessionDataInit", 8)
-    ```
+    === "Replace"
+        ```c#
+        // Example : Replaces the 8th line in 'gml_GlobalScript_scr_sessionDataInit' with 'pushi.e 1'.
+        Msl.ReplaceAssemblyString("pushi.e 1", "gml_GlobalScript_scr_sessionDataInit", 8)
+        ```
+    === "Replace and Erase"
+        ```c#
+        // Example : Replaces the 8th line in 'gml_GlobalScript_scr_sessionDataInit' with 'pushi.e 1' and erases the 3 lines below.
+        Msl.ReplaceAssemblyString("pushi.e 1", "gml_GlobalScript_scr_sessionDataInit", 8, 3)
+        ```
     <h3>Arguments</h3>
-
-    | **Type** | **Name** | **Description**|
-    | :---: | :---: | :--- |
-    | `String` | `codeAsString` | The string of assembly instruction(s) to insert. |
-    | `String` | `fileName` | The name of the code to insert the assembly into |
-    | `Int` | `position` | The line below which we inject the assembly instruction(s) |
+    === "Replace"
+        | **Type** | **Name** | **Description**|
+        | :---: | :---: | :--- |
+        | `String` | `codeAsString` | The string of assembly instruction(s) to insert. |
+        | `String` | `fileName` | The name of the code to insert the assembly into. |
+        | `Int` | `position` | The line to be replaced. |
+    === "Replace and Erase"
+        | **Type** | **Name** | **Description**|
+        | :---: | :---: | :--- |
+        | `String` | `codeAsString` | The string of assembly instruction(s) to insert. |
+        | `String` | `fileName` | The name of the code to insert the assembly into. |
+        | `Int` | `start` | The line to be replaced. |
+        | `Int` | `len` | The number of lines to be erased after the replacement. |
 
     <h3>Returns</h3>
 
@@ -383,6 +430,8 @@
     | :--- | :--- |
     | `N/A` | N/A |
 
+??? info "InjectAssemblyInstruction `legacy method`"
+    _TODO_
 ---
 
 ## Functions / Strings / Variables
@@ -453,43 +502,63 @@
     <h3>Summary</h3>
     Hold data needed to create an entry in the in-game mod menu.
     <h3>Example</h3>
-    ```c#
-    // Example : Creates a slider that changes the value held by a global named menu_test in gml.
-    // The slider will have a range from 2 to 5, with a default value of 4.
-    UIComponent sliderEntry = new(name: "This is a slider", associatedGlobal: "menu_test", UIComponentType.Slider, (2, 5), 4)
-    ```
-    !!! tip "Arguments"
 
-        === "Slider"
+    === "Slider"
 
-            | **Type** | **Name** | **Description**|
-            | :---: | :---: | :--- |
-            | `String` | `name` | The displayed name in the menu. |
-            | `String` | `associatedGlobal` | The name of the global variable modified by this component. In the case of a slider, the global variable will hold a real value. |
-            | `UIComponentType` | `componentType` | The type of the component. Can be a `CheckBox`, `ComboBox` or `Slider` |
-            | `(int, int)` | `sliderValues` | Min and Max values for a slider, floating-point values are not supported. |
-            | `int` | `defaultValue` | Default value of the component. |
-            | `bool` | `onlyInMainMenu` | If true, this entry will only appear in the main menu of the game. False by default. |
+        ```c#
+        // Example : Creates a slider that changes the value held by a global variable named menu_slider in gml.
+        // The slider will have a range from 2 to 5, with a default value of 4.
+        UIComponent sliderEntry = new(name: "This is a slider", associatedGlobal: "menu_slider", UIComponentType.Slider, (2, 5), 4)
+        ```
 
-        === "ComboBox"
+    === "ComboBox (Drop Down List)"
 
-            | **Type** | **Name** | **Description**|
-            | :---: | :---: | :--- |
-            | `String` | `name` | The displayed name in the menu. |
-            | `String` | `associatedGlobal` | The name of the global variable modified by this component. In the case of a combobox, the global variable will hold a string. |
-            | `UIComponentType` | `componentType` | The type of the component. Can be a `CheckBox`, `ComboBox` or `Slider` |
-            | `string[]` | `dropDownValues` | List of all possible values held by the global variable. |
-            | `bool` | `onlyInMainMenu` | If true, this entry will only appear in the main menu of the game. False by default. |
-            
-        === "CheckBox"
+        ```c#
+        // Example : Creates a drop down list that changes the value held by a global variable named menu_combo in gml.
+        // The drop down list will display only two elements, Option_1 and Option_2.
+        UIComponent comboEntry = new(name: "This is a drop down list", associatedGlobal: "menu_combo", UIComponentType.ComboBox, new string[] { "Option_1", "Option_2",})
+        ```
 
-            | **Type** | **Name** | **Description**|
-            | :---: | :---: | :--- |
-            | `String` | `name` | The displayed name in the menu. |
-            | `String` | `associatedGlobal` | The name of the global variable modified by this component. In the case of a combobox, the global variable will hold either 0 or 1. |
-            | `UIComponentType` | `componentType` | The type of the component. Can be a `CheckBox`, `ComboBox` or `Slider` |
-            | `int` | `defaultValue` | Default value of the component. |
-            | `bool` | `onlyInMainMenu` | If true, this entry will only appear in the main menu of the game. False by default. |
+    === "CheckBox"
+
+        ```c#
+        // Example : Creates a check box that changes the value held by a global variable named menu_check in gml.
+        // The check box will have the value 0 if not slected, 10 else.
+        UIComponent checkEntry = new(name: "This is a check box", associatedGlobal: "menu_check", UIComponentType.CheckBox, 10)
+        ```
+
+    <h3>Arguments</h3>
+
+    === "Slider"
+
+        | **Type** | **Name** | **Description**|
+        | :---: | :---: | :--- |
+        | `String` | `name` | The displayed name in the menu. |
+        | `String` | `associatedGlobal` | The name of the global variable modified by this component. In the case of a slider, the global variable will hold a real value. |
+        | `UIComponentType` | `componentType` | The type of the component. Expected to be a `UIComponentType.Slider`. |
+        | `(int, int)` | `sliderValues` | Min and Max values for a slider, floating-point values are not supported. |
+        | `int` | `defaultValue` | Default value of the component. |
+        | `bool` | `onlyInMainMenu` | If true, this entry will only appear in the main menu of the game. False by default. |
+
+    === "ComboBox (Drop Down List)"
+
+        | **Type** | **Name** | **Description**|
+        | :---: | :---: | :--- |
+        | `String` | `name` | The displayed name in the menu. |
+        | `String` | `associatedGlobal` | The name of the global variable modified by this component. In the case of a combobox, the global variable will hold a string. |
+        | `UIComponentType` | `componentType` | The type of the component. Expected to be a `UIComponentType.ComboBox`. |
+        | `string[]` | `dropDownValues` | List of all possible values held by the global variable. |
+        | `bool` | `onlyInMainMenu` | If true, this entry will only appear in the main menu of the game. False by default. |
+        
+    === "CheckBox"
+
+        | **Type** | **Name** | **Description**|
+        | :---: | :---: | :--- |
+        | `String` | `name` | The displayed name in the menu. |
+        | `String` | `associatedGlobal` | The name of the global variable modified by this component. In the case of a combobox, the global variable will hold either 0 or 1. |
+        | `UIComponentType` | `componentType` | The type of the component. Expected to be a `UIComponentType.CheckBox`. |
+        | `int` | `defaultValue` | Default value of the component. |
+        | `bool` | `onlyInMainMenu` | If true, this entry will only appear in the main menu of the game. False by default. |
 
 
     <h3>Returns</h3>
