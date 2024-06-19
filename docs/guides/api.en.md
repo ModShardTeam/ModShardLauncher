@@ -34,6 +34,8 @@
     Adds a gameobject to the game.
     <h3>Example</h3>
     ```c#
+    // Example: adds a visible, non persistent and non awake object named 'o_npc_trainer' with a sprite named 's_npc_merc_inn_fight'.
+    // This object inherits from 'o_npc_baker' and will use a circle as a collision shape.
     UndertaleGameObject npcTrainer = Msl.AddObject(
             name:"o_npc_trainer",
             spriteName:"s_npc_merc_inn_fight",
@@ -70,6 +72,7 @@
     Gets a gameobject from the game files.
     <h3>Example</h3>
     ```c#
+    // Example: gets the object named 'o_myobject'.
     Msl.GetObject("o_myobject")
     ```
     <h3>Arguments</h3>
@@ -92,6 +95,7 @@
     Replaces a gameobject from the game with your own.
     <h3>Example</h3>
     ```c#
+    // Example: replaces the object named 'o_myobject' with myObject (a UnderTaleGameObject abstraction).
     Msl.SetObject("o_myobject", myObject)
     ```
     <h3>Arguments</h3>
@@ -167,6 +171,7 @@
     Gets a sprite from the game files.
     <h3>Example</h3>
     ```c#
+    // Example: gets the sprite named 's_mySprite'.
     Msl.GetSprite("s_mySprite")
     ```
     <h3>Arguments</h3>
@@ -189,6 +194,7 @@
     Gets an embedded texture from the game files.
     <h3>Example</h3>
     ```c#
+    // Example: gets the embedded texture (also known as sprite sheet) named 'Texture X'.
     Msl.GetEmbeddedTexture("Texture X")
     ```
     <h3>Arguments</h3>
@@ -211,6 +217,7 @@
     Gets a texture page item from the game files.
     <h3>Example</h3>
     ```c#
+    // Example: gets the texture page item (which is an element of a sprite sheet) named 'PageItem X'.
     Msl.GetTexturePageItem("PageItem X")
     ```
     <h3>Arguments</h3>
@@ -237,7 +244,7 @@
 
 ## Tables
 
-??? info "GetTable `method`"
+??? info "GetTable `legacy method`"
     <h3>Summary</h3>
     Gets a table from the game's files.
     <h3>Example</h3>
@@ -256,7 +263,7 @@
     | :--- | :--- |
     | `List<string>?` | The table's content as a list of strings. |
 
-??? info "SetTable `method`"
+??? info "SetTable `legacy method`"
     <h3>Summary</h3>
     Replaces a table from the game with your own.
     <h3>Example</h3>
@@ -310,6 +317,7 @@
     Adds a code to the game.
     <h3>Example</h3>
     ```c#
+    // Example: adds 'scr_actionsLogUpdate(\"Hello World !\")' in a new code file named 'myCode'.
     Msl.AddCode("scr_actionsLogUpdate(\"Hello World !\")", "myCode")
     ```
     <h3>Arguments</h3>
@@ -333,6 +341,7 @@
     Gets a code from the game files.
     <h3>Example</h3>
     ```c#
+    // Example: gets the content of 'gml_GlobalScript_scr_sessionDataInit' as a UnderTaleCode abstraction.
     Msl.GetUMTCodeFromFile("gml_GlobalScript_scr_sessionDataInit")
     ```
     <h3>Arguments</h3>
@@ -348,13 +357,14 @@
     | `UndertaleCode` | The code if found. |
     
     <h3>Exception</h3>
-    `ArgumentNullException` trown if the code does not exist.
+    `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "GetStringGMLFromFile `legacy method`"
     <h3>Summary</h3>
     Gets the content of a code from the game files as a string of GML.
     <h3>Example</h3>
     ```c#
+    // Example: gets the content of 'gml_GlobalScript_scr_sessionDataInit' that can be manipulated as a string.
     Msl.GetStringGMLFromFile("gml_GlobalScript_scr_sessionDataInit")
     ```
     <h3>Arguments</h3>
@@ -368,12 +378,16 @@
     | **Type** | **Description** |
     | :--- | :--- |
     | `String` | The content of the code if found. |
+    
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "SetStringGMLInFile `legacy method`"
     <h3>Summary</h3>
     Replaces the file's code with a string of GML.
     <h3>Example</h3>
     ```c#
+    // Example: replaces the code file 'gml_Object_o_player_KeyPress_116' with the code 'scr_actionsLogUpdate(\"hello world\")'.
     SetStringGMLInFile("scr_actionsLogUpdate(\"hello world\")", "gml_Object_o_player_KeyPress_116");
     ```
     <h3>Arguments</h3>
@@ -388,33 +402,54 @@
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A |
+    
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "ReplaceGMLString `legacy method`"
     <h3>Summary</h3>
-    Replaces a code in the game with a string of GML.
+    Replace a string of GML into a file at a specific position.
     <h3>Example</h3>
-    ```c#
-    Msl.ReplaceGMLString("gml_GlobalScript_scr_sessionDataInit")
-    ```
+    === "Replace"
+        ```c#
+        // Example : Replaces the 14th line in 'gml_GlobalScript_scr_sessionDataInit' with 'scr_actionsLogUpdate(\"hello world\")'.
+        Msl.ReplaceGMLString("scr_actionsLogUpdate(\"hello world\")", "gml_GlobalScript_scr_sessionDataInit", 14)
+        ```
+    === "Replace and Erase"
+        ```c#
+        // Example : Replaces the 14th line in 'gml_GlobalScript_scr_sessionDataInit' with 'scr_actionsLogUpdate(\"hello world\")' and erases the 3 lines below.
+        Msl.ReplaceGMLString("scr_actionsLogUpdate(\"hello world\")", "gml_GlobalScript_scr_sessionDataInit", 14, 3)
+        ```
     <h3>Arguments</h3>
-
-    | **Type** | **Name** | **Description**|
-    | :---: | :---: | :--- |
-    | `String` | `codeAsString` | The string of GML code to insert. |
-    | `String` | `fileName` | The name of the code to replace a line. |
-    | `Int` | `position` | The line to replace with the provided GML. |
+    === "Replace"
+        | **Type** | **Name** | **Description**|
+        | :---: | :---: | :--- |
+        | `String` | `codeAsString` | The string of GML code to insert. |
+        | `String` | `fileName` | The name of the code to replace a line. |
+        | `Int` | `position` | The line to replace with the provided GML. |
+    === "Replace and Erase"
+        | **Type** | **Name** | **Description**|
+        | :---: | :---: | :--- |
+        | `String` | `codeAsString` | The string of GML code to insert. |
+        | `String` | `fileName` | The name of the code to replace a line. |
+        | `Int` | `position` | The line to replace with the provided GML. |
+        | `Int` | `len` | The number of lines to be erased after the replacement. |
 
     <h3>Returns</h3>
 
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A |
+    
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "InsertGMLString `legacy method`"
     <h3>Summary</h3>
     Inserts a string of GML into a file at a specific position.
     <h3>Example</h3>
     ```c#
+    // Example : Inserts 'scr_actionsLogUpdate(\"hello world\")' at the 14th line in 'gml_GlobalScript_scr_sessionDataInit'.
     Msl.InsertGMLString("scr_actionsLogUpdate(\"Hello World !\")", "gml_GlobalScript_scr_sessionDataInit", 14)
     ```
     <h3>Arguments</h3>
@@ -430,6 +465,9 @@
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A |
+    
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the code file does not exist.
 
 ---
 
