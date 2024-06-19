@@ -391,6 +391,10 @@
     `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "SetStringGMLInFile `legacy method`"
+
+    !!! warning
+        While usable, the use of this function is discouraged for correct modding. Indeed, it's slow, not flexible enough for real cases and most importantly it will break compability with other mods. Instead you should use methods from the [Patching](#patching) section.
+
     <h3>Summary</h3>
     Replaces the file's code with a string of GML.
     <h3>Example</h3>
@@ -415,6 +419,10 @@
     `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "ReplaceGMLString `legacy method`"
+
+    !!! warning
+        While usable, the use of this function is discouraged for correct modding. Indeed, it's slow, not flexible enough for real cases and most importantly it will break compability with other mods. Instead you should use methods from the [Patching](#patching) section.
+
     <h3>Summary</h3>
     Replace a string of GML into a file at a specific position.
     <h3>Example</h3>
@@ -454,6 +462,11 @@
     `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "InsertGMLString `legacy method`"
+
+    !!! warning
+        While usable, the use of this function is discouraged for correct modding. Indeed, it's slow, not flexible enough for real cases and most importantly it will break compability with other mods. Instead you should use methods from the [Patching](#patching) section.
+
+
     <h3>Summary</h3>
     Inserts a string of GML into a file at a specific position.
     <h3>Example</h3>
@@ -489,7 +502,8 @@
     In the following, assembly is often called assembly abstraction. Indeed it's not a real language (as asm arm64 for instance), *
     more a construction made by UTMT devs to transpose data from the .win file into a comprehensive code.
 
-??? info "GetAssemblyString `legacy method`"
+??? info "GetAssemblyString `method`"
+
     <h3>Summary</h3>
     Gets the content of a code from the game files as a string of assembly.
     <h3>Example</h3>
@@ -513,6 +527,10 @@
     `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "SetAssemblyString `legacy method`"
+
+    !!! warning
+        While usable, the use of this function is discouraged for correct modding. Indeed, it's slow, not flexible enough for real cases and most importantly it will break compability with other mods. Instead you should use methods from the [Patching](#patching) section.
+
     <h3>Summary</h3>
     Replaces the file's code with a string of assembly.
     <h3>Example</h3>
@@ -546,6 +564,10 @@
     `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "InsertAssemblyString `legacy method`"
+
+    !!! warning
+        While usable, the use of this function is discouraged for correct modding. Indeed, it's slow, not flexible enough for real cases and most importantly it will break compability with other mods. Instead you should use methods from the [Patching](#patching) section.
+
     <h3>Summary</h3>
     Inserts an assembly instruction below the provided line.
     <h3>Example</h3>
@@ -571,6 +593,10 @@
     `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "ReplaceAssemblyString `legacy method`"
+
+    !!! warning
+        While usable, the use of this function is discouraged for correct modding. Indeed, it's slow, not flexible enough for real cases and most importantly it will break compability with other mods. Instead you should use methods from the [Patching](#patching) section.
+
     <h3>Summary</h3>
     Replaces the provided line with an assembly instruction given as string.
     <h3>Example</h3>
@@ -609,6 +635,10 @@
     `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "InjectAssemblyInstruction `legacy method`"
+
+    !!! warning
+        While usable, the use of this function is discouraged for correct modding. Indeed, it's slow, not flexible enough for real cases and most importantly it will break compability with other mods. Instead you should use methods from the [Patching](#patching) section.
+
     _TODO_
     
     <h3>Exception</h3>
