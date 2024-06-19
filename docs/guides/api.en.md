@@ -39,6 +39,7 @@
             spriteName:"s_npc_merc_inn_fight",
             parentName:"o_npc_baker",
             isVisible:true,
+            isPersistent:false,
             isAwake:true,
             collisionShapeFlags:CollisionShapeFlags.Circle
     );
@@ -48,17 +49,21 @@
     | **Type** | **Name** | **Description**|
     | :---: | :---: | :--- |
     | `String` | `name` | The name of the gameobject to create. |
-    | `String` | `spriteName` | The name of the gameobject to create. |
-    | `String` | `parentName` | The name of the gameobject to create. |
-    | `String` | `isVisible` | The name of the gameobject to create. |
-    | `String` | `isAwake` | The name of the gameobject to create. |
-    | `String` | `collisionShapeFlags` | The name of the gameobject to create. |
+    | `String` | `spriteName` | The name of the sprite linked to the gameobject. Empty string by default. |
+    | `String` | `parentName` | The name of the parent of the gameobject. Empty string by default. |
+    | `bool` | `isVisible` | If true, the gameobject is visible in the game world. `False` by default. |
+    | `bool` | `isPersistent` | If true, the gameobject is persistent through all rooms. `False` by default. |
+    | `bool` | `isAwake` | If true, the gameobject is awake (_TODO_: explain). `False` by default. |
+    | `CollisionShapeFlags` | `collisionShapeFlags` | The shape of the collision object. `Circle` by default. |
 
     <h3>Returns</h3>
 
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleGameObject` | The gameobject created. |
+
+    <h3>Exception</h3>
+    `ArgumentException` thown if the gameobject already exists.
 
 ??? info "GetObject `method`"
     <h3>Summary</h3>
@@ -78,6 +83,9 @@
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleGameObject` | The gameobject if found. |
+
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the object does not exist.
 
 ??? info "SetObject `method`"
     <h3>Summary</h3>
@@ -99,6 +107,8 @@
     | :--- | :--- |
     | `N/A` | N/A. |
 
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the object does not exist.
 ---
 
 ## Events
