@@ -124,7 +124,7 @@
     === "By object name"
         ```c#
         // Example 1 : Create Event from string, with object name
-        Msl.AddNewEvent("o_myobject", "scr_actionsLogUpdate(\"hello world\")", EventType.Create, 0);
+        Msl.AddNewEvent("o_myobject", "scr_actionsLogUpdate(\"Hello world !\")", EventType.Create, 0);
 
         // Example 2 : Other Event from file, with object name
         Msl.AddNewEvent("o_anotherobject", ModFiles.GetCode("myScript.gml"), EventType.Other, 24);
@@ -133,7 +133,7 @@
     === "By object as a variable"
         ```c#
         // Example 3 : Create Event from string, with object as a variable
-        Msl.AddNewEvent(myVarContainingAGameObject, "scr_actionsLogUpdate(\"hello world\")", EventType.Create, 0);
+        Msl.AddNewEvent(myVarContainingAGameObject, "scr_actionsLogUpdate(\"Hello world !\")", EventType.Create, 0);
         ```
     <h3>Arguments</h3>
     === "By object name"
@@ -245,6 +245,10 @@
 ## Tables
 
 ??? info "GetTable `legacy method`"
+
+    !!! warning
+        This methods is outdated and should be used only if no other specific methods exist for a given table.
+
     <h3>Summary</h3>
     Gets a table from the game's files.
     <h3>Example</h3>
@@ -264,6 +268,10 @@
     | `List<string>?` | The table's content as a list of strings. |
 
 ??? info "SetTable `legacy method`"
+
+    !!! warning
+        This methods is outdated and should be used only if no other specific methods exist for a given table.
+
     <h3>Summary</h3>
     Replaces a table from the game with your own.
     <h3>Example</h3>
@@ -317,7 +325,7 @@
     Adds a code to the game.
     <h3>Example</h3>
     ```c#
-    // Example: adds 'scr_actionsLogUpdate(\"Hello World !\")' in a new code file named 'myCode'.
+    // Example: adds 'scr_actionsLogUpdate("Hello World !")' in a new code file named 'myCode'.
     Msl.AddCode("scr_actionsLogUpdate(\"Hello World !\")", "myCode")
     ```
     <h3>Arguments</h3>
@@ -387,8 +395,8 @@
     Replaces the file's code with a string of GML.
     <h3>Example</h3>
     ```c#
-    // Example: replaces the code file 'gml_Object_o_player_KeyPress_116' with the code 'scr_actionsLogUpdate(\"hello world\")'.
-    SetStringGMLInFile("scr_actionsLogUpdate(\"hello world\")", "gml_Object_o_player_KeyPress_116");
+    // Example: replaces the code file 'gml_Object_o_player_KeyPress_116' with the code 'scr_actionsLogUpdate("Hello world !")'.
+    SetStringGMLInFile("scr_actionsLogUpdate(\"Hello world !\")", "gml_Object_o_player_KeyPress_116");
     ```
     <h3>Arguments</h3>
 
@@ -412,13 +420,14 @@
     <h3>Example</h3>
     === "Replace"
         ```c#
-        // Example : Replaces the 14th line in 'gml_GlobalScript_scr_sessionDataInit' with 'scr_actionsLogUpdate(\"hello world\")'.
-        Msl.ReplaceGMLString("scr_actionsLogUpdate(\"hello world\")", "gml_GlobalScript_scr_sessionDataInit", 14)
+        // Example : replaces the 14th line in 'gml_GlobalScript_scr_sessionDataInit' with 'scr_actionsLogUpdate("Hello world !")'.
+        Msl.ReplaceGMLString("scr_actionsLogUpdate(\"Hello world !\")", "gml_GlobalScript_scr_sessionDataInit", 14)
         ```
     === "Replace and Erase"
         ```c#
-        // Example : Replaces the 14th line in 'gml_GlobalScript_scr_sessionDataInit' with 'scr_actionsLogUpdate(\"hello world\")' and erases the 3 lines below.
-        Msl.ReplaceGMLString("scr_actionsLogUpdate(\"hello world\")", "gml_GlobalScript_scr_sessionDataInit", 14, 3)
+        // Example : replaces the 14th line in 'gml_GlobalScript_scr_sessionDataInit' with 'scr_actionsLogUpdate("Hello world !")' and erases the 3 lines below.
+        // It is a way to replace the 14h to 17h (included) lines with 'scr_actionsLogUpdate("Hello world !")'.
+        Msl.ReplaceGMLString("scr_actionsLogUpdate(\"Hello world !\")", "gml_GlobalScript_scr_sessionDataInit", 14, 3)
         ```
     <h3>Arguments</h3>
     === "Replace"
@@ -449,7 +458,7 @@
     Inserts a string of GML into a file at a specific position.
     <h3>Example</h3>
     ```c#
-    // Example : Inserts 'scr_actionsLogUpdate(\"hello world\")' at the 14th line in 'gml_GlobalScript_scr_sessionDataInit'.
+    // Example : Inserts 'scr_actionsLogUpdate("Hello world !")' at the 14th line in 'gml_GlobalScript_scr_sessionDataInit'.
     Msl.InsertGMLString("scr_actionsLogUpdate(\"Hello World !\")", "gml_GlobalScript_scr_sessionDataInit", 14)
     ```
     <h3>Arguments</h3>
@@ -472,12 +481,69 @@
 ---
 
 ## Assembly
+!!! warning
+    Since the assembly abstraction language is not documented, it can be difficult to change codes using it.
+    Sadly, some code files are not well decompiled by UTMT, thus they require to be patched using assembly only.
+
+!!! note
+    In the following, assembly is often called assembly abstraction. Indeed it's not a real language (as asm arm64 for instance), *
+    more a construction made by UTMT devs to transpose data from the .win file into a comprehensive code.
 
 ??? info "GetAssemblyString `legacy method`"
-    _TODO_
+    <h3>Summary</h3>
+    Gets the content of a code from the game files as a string of assembly.
+    <h3>Example</h3>
+    ```c#
+    // Example: gets the content of 'gml_GlobalScript_scr_sessionDataInit' that can be manipulated as a string of assembly.
+    Msl.GetAssemblyString("gml_GlobalScript_scr_sessionDataInit")
+    ```
+    <h3>Arguments</h3>
+
+    | **Type** | **Name** | **Description**|
+    | :---: | :---: | :--- |
+    | `String` | `fileName` | The name of the code to get. |
+
+    <h3>Returns</h3>
+
+    | **Type** | **Description** |
+    | :--- | :--- |
+    | `String` | The content of the code if found. |
+    
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "SetAssemblyString `legacy method`"
-    _TODO_
+    <h3>Summary</h3>
+    Replaces the file's code with a string of assembly.
+    <h3>Example</h3>
+    ```c#
+    // Example: replaces the code file 'gml_Object_o_player_KeyPress_116' with an assembly code
+    // This code is equivalent to 'scr_actionsLogUpdate("Hello world !")'.
+    SetStringGMLInFile(
+        @"
+        push.s ""Hello world !""
+        conv.s.v
+        call.i gml_Script_scr_actionsLogUpdate(argc=1)
+        popz.v
+        ", 
+        "gml_Object_o_player_KeyPress_116"
+    );
+    ```
+    <h3>Arguments</h3>
+
+    | **Type** | **Name** | **Description**|
+    | :---: | :---: | :--- |
+    | `String` | `codeAsString` | The string of assembly code to insert. |
+    | `String` | `fileName` | The name of the code to replace. |
+
+    <h3>Returns</h3>
+
+    | **Type** | **Description** |
+    | :--- | :--- |
+    | `N/A` | N/A |
+    
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "InsertAssemblyString `legacy method`"
     <h3>Summary</h3>
@@ -500,6 +566,9 @@
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A |
+    
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "ReplaceAssemblyString `legacy method`"
     <h3>Summary</h3>
@@ -535,9 +604,15 @@
     | **Type** | **Description** |
     | :--- | :--- |
     | `N/A` | N/A |
+    
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the code file does not exist.
 
 ??? info "InjectAssemblyInstruction `legacy method`"
     _TODO_
+    
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the code file does not exist.
 ---
 
 ## Functions / Strings / Variables
