@@ -181,6 +181,58 @@
     | :--- | :--- |
     | `UndertaleSprite` | The sprite if found. |
 
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the sprite does not exist.
+    
+??? info "GetEmbeddedTexture `method`"
+    <h3>Summary</h3>
+    Gets an embedded texture from the game files.
+    <h3>Example</h3>
+    ```c#
+    Msl.GetEmbeddedTexture("Texture X")
+    ```
+    <h3>Arguments</h3>
+
+    | **Type** | **Name** | **Description**|
+    | :---: | :---: | :--- |
+    | `String` | `name` | The name of the embedded texture to get. |
+
+    <h3>Returns</h3>
+
+    | **Type** | **Description** |
+    | :--- | :--- |
+    | `UndertaleEmbeddedTexture` | The embedded texture if found. |
+
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the embedded texture does not exist.
+        
+??? info "GetTexturePageItem `method`"
+    <h3>Summary</h3>
+    Gets a texture page item from the game files.
+    <h3>Example</h3>
+    ```c#
+    Msl.GetTexturePageItem("PageItem X")
+    ```
+    <h3>Arguments</h3>
+
+    | **Type** | **Name** | **Description**|
+    | :---: | :---: | :--- |
+    | `String` | `name` | The name of the texture page item to get. |
+
+    <h3>Returns</h3>
+
+    | **Type** | **Description** |
+    | :--- | :--- |
+    | `UndertaleEmbeddedTexture` | The texture page item if found. |
+
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the texture page item does not exist.
+
+??? info "AddNewTexturePageItem `method`"
+    _TODO_
+
+??? info "AddNewSprite `method`"
+    _TODO_
 ---
 
 ## Tables
@@ -273,6 +325,9 @@
     | :--- | :--- |
     | `UndertaleCode` | The code created. |
 
+    <h3>Exception</h3>
+    _TODO_
+
 ??? info "GetUMTCodeFromFile `method`"
     <h3>Summary</h3>
     Gets a code from the game files.
@@ -291,8 +346,11 @@
     | **Type** | **Description** |
     | :--- | :--- |
     | `UndertaleCode` | The code if found. |
+    
+    <h3>Exception</h3>
+    `ArgumentNullException` trown if the code does not exist.
 
-??? info "GetStringGMLFromFile `method`"
+??? info "GetStringGMLFromFile `legacy method`"
     <h3>Summary</h3>
     Gets the content of a code from the game files as a string of GML.
     <h3>Example</h3>
@@ -311,7 +369,7 @@
     | :--- | :--- |
     | `String` | The content of the code if found. |
 
-??? info "SetStringGMLInFile `method`"
+??? info "SetStringGMLInFile `legacy method`"
     <h3>Summary</h3>
     Replaces the file's code with a string of GML.
     <h3>Example</h3>
@@ -331,7 +389,7 @@
     | :--- | :--- |
     | `N/A` | N/A |
 
-??? info "ReplaceGMLString `method`"
+??? info "ReplaceGMLString `legacy method`"
     <h3>Summary</h3>
     Replaces a code in the game with a string of GML.
     <h3>Example</h3>
@@ -352,7 +410,7 @@
     | :--- | :--- |
     | `N/A` | N/A |
 
-??? info "InsertGMLString `method`"
+??? info "InsertGMLString `legacy method`"
     <h3>Summary</h3>
     Inserts a string of GML into a file at a specific position.
     <h3>Example</h3>
