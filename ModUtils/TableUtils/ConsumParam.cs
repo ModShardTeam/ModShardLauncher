@@ -69,7 +69,7 @@ public partial class Msl
         book,
         quest,
         scroll,
-        trasure,
+        treasure,
         upgrade,
         treatise
     }
