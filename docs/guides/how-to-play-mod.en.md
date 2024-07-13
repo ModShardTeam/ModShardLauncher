@@ -8,12 +8,12 @@ You can grab it on **Github** by clicking the button below. </br>
 
 [ModShardLauncher :octicons-link-external-16:](https://github.com/DDDDDragon/ModShardLauncher/releases){ .md-button .md-button--primary}&emsp;
 
-Make sure you download the `ModShardLauncher.zip` file, and ^^**not the source code**^^. </br>
+Make sure you download the `msl.zip` file, and ^^**not the source code**^^. </br>
 <div style="color:Gray">
 Alternatively, you can build ModShardLauncher from source, but it's out of this guide's scope.
 </div>
 
-You will also require the **.NET Desktop Runtime 6.0**
+If launching MSL opens a console and closes immediately, you may require the **.NET Desktop Runtime 6.0**
 
 [.NET Desktop Runtime 6.0 :octicons-link-external-16:](https://dotnet.microsoft.com/en-us/download/dotnet/6.0){ .md-button .md-button--primary}&emsp;
 
@@ -22,7 +22,6 @@ You will also require the **.NET Desktop Runtime 6.0**
 ## ModShardLauncher Setup
 
 - **Extract** `ModShardLauncher.zip` anywhere.
-- **Move** `ModShard.dll` to your Stoneshard folder.
 - **Rename** `data.win` to `vanilla.win`  in your Stoneshard folder.
 - **Run** `ModShardLauncher.exe`.
 
