@@ -71,46 +71,12 @@ namespace ModShardLauncher
     /// </summary>
     public class FileEnumerable<T>
     {
-        private readonly Regex variableRegex = new (@"\bpop\.v\.\w\s(?<var>\w+)\.(?<name>\w+)");
         public readonly Header header;
         public readonly IEnumerable<T> ienumerable;
         public FileEnumerable(Header header, IEnumerable<T> ienumerable) 
         {
             this.header = header;
             this.ienumerable = ienumerable;
-        }
-        /// <summary>
-        /// Check pop variables for intructions as string and create them if needed.
-        /// </summary>
-        /// <param name="instructions"></param>
-        public void CheckInstructionsVariables(UndertaleCode originalCode, string instructions)
-        {
-            if (header.patchingWay != PatchingWay.AssemblyAsString) return;
-            
-            foreach (string instruction in instructions.Split('\n').Where(x => x.Contains("pop.v")))
-            {
-                System.Text.RegularExpressions.Match matches = variableRegex.Match(instruction);
-                if (matches.Success) 
-                {
-                    string instanceValue = matches.Groups["var"].Value;
-                    if(instanceValue == "self")
-                    {
-                        AssemblyWrapper.CheckRefVariableOrCreate(matches.Groups["name"].Value, UndertaleInstruction.InstanceType.Self);
-                    }
-                    else if(instanceValue == "global")
-                    {
-                        AssemblyWrapper.CheckRefVariableOrCreate(matches.Groups["name"].Value, UndertaleInstruction.InstanceType.Global);
-                    }
-                    else if(instanceValue == "local")
-                    {
-                        AssemblyWrapper.CheckRefLocalVariableOrCreate(originalCode, matches.Groups["name"].Value);
-                    }
-                    else
-                    {
-                        Log.Warning($"Cannot infer the instance type of {instruction}. There is a risk it will lead to an undefined variable.");
-                    }
-                }
-            }
         }
     }
     /// <summary>
@@ -153,6 +119,34 @@ namespace ModShardLauncher
                 code.LocalsCount = 1;
                 ModLoader.Data.CodeLocals.Add(locals);
                 code.ReplaceGML(codeAsString, ModLoader.Data);
+                ModLoader.Data.Code.Add(code);
+                return code;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public static UndertaleCode AddCodeAsm(string codeAsString, string name)
+        {
+            try
+            {
+                UndertaleCode code = new();
+                UndertaleCodeLocals locals = new();
+                code.Name = ModLoader.Data.Strings.MakeString(name);
+                locals.Name = code.Name;
+                UndertaleCodeLocals.LocalVar argsLocal = new()
+                {
+                    Name = ModLoader.Data.Strings.MakeString("arguments"),
+                    Index = 0
+                };
+                locals.Locals.Add(argsLocal);
+                code.LocalsCount = 1;
+                ModLoader.Data.CodeLocals.Add(locals);
+                CheckInstructionsVariables(code, codeAsString);
+                string newLocalVarsAsString = AssemblyWrapper.CreateLocalVarAssemblyAsString(code);
+                codeAsString = codeAsString.Insert(codeAsString.IndexOf('\n') + 1, newLocalVarsAsString);
+                code.Replace(Assembler.Assemble(codeAsString, ModLoader.Data));
                 ModLoader.Data.Code.Add(code);
                 return code;
             }
@@ -948,7 +942,7 @@ namespace ModShardLauncher
                     break;
 
                     case PatchingWay.AssemblyAsString:
-                        fe.CheckInstructionsVariables(fe.header.originalCode, newCode);
+                        CheckInstructionsVariables(fe.header.originalCode, newCode);
                         string newLocalVarsAsString = AssemblyWrapper.CreateLocalVarAssemblyAsString(fe.header.originalCode);
                         newCode = newCode.Insert(newCode.IndexOf('\n') + 1, newLocalVarsAsString);
                         fe.header.originalCode.Replace(Assembler.Assemble(newCode, ModLoader.Data));
