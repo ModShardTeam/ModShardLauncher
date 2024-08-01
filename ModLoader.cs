@@ -23,9 +23,6 @@ namespace ModShardLauncher
         internal static UndertaleData Data => DataLoader.data;
         public static string ModPath => Path.Join(Environment.CurrentDirectory, "Mods");
         public static string ModSourcesPath => Path.Join(Environment.CurrentDirectory, "ModSources");
-        public static Dictionary<string, ModFile> Mods = new();
-        public static Dictionary<string, ModSource> ModSources = new();
-        private static List<Assembly> Assemblies = new();
         private static List<Menu> Menus = new();
         public static List<string> Weapons = new();
         public static List<string> WeaponDescriptions = new();
@@ -99,9 +96,7 @@ namespace ModShardLauncher
                 i.Stream?.Close();
             
             List<ModFile> modCaches = new();
-            Mods.Clear();
             modSources.Clear();
-            ModSources.Clear();
 
             // List all folders being a C# project
             // Currently only test the existence of a .csproj file
@@ -124,7 +119,6 @@ namespace ModShardLauncher
                     Path = source
                 };
                 modSources.Add(info);
-                ModSources.Add(info.Name, info);
             }
 
             string[] files = Directory.GetFiles(ModPath, "*.sml");
@@ -164,7 +158,6 @@ namespace ModShardLauncher
 
                         modCaches.Add(f);
                     }
-                    Assemblies.Add(assembly);
                 }
                 catch
                 {
@@ -174,7 +167,6 @@ namespace ModShardLauncher
             mods.Clear();
             modCaches.ForEach(i => {
                 mods.Add(i);
-                Mods.Add(i.Name, i);
             });
         }
         public static void PatchMods()
