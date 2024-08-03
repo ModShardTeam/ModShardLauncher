@@ -38,6 +38,7 @@ namespace ModShardLauncher.Controls
                 ModLoader.PatchFile();
                 Log.Information("Successfully patch vanilla");
                 patchSucess = true;
+                Main.Instance.LogModList();
             }
             catch(Exception ex)
             {
