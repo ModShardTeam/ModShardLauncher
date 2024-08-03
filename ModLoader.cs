@@ -194,12 +194,7 @@ namespace ModShardLauncher
 
                 if (mod.Version != mod_version)
                 {
-                    MessageBoxResult result = MessageBox.Show(
-                        Application.Current.FindResource("VersionDifferentWarning").ToString(),
-                        Application.Current.FindResource("VersionDifferentWarningTitle").ToString() + " : " + mod.Name, 
-                        MessageBoxButton.OK
-                    );
-                    if (result == MessageBoxResult.No) continue;
+                    Log.Warning("Mod {{{0}}} was built with msl {{{1}}} which is different from the current msl {{{2}}}", mod.Name, mod.Version, mod_version);
                 }
                 TextureLoader.LoadTextures(mod);
                 mod.instance.PatchMod();
