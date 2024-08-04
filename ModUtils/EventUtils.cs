@@ -14,7 +14,7 @@ namespace ModShardLauncher
         /// <summary>
         /// File where the code of the event is stored.
         /// </summary>
-        public string CodeName { get; set; }
+        public string Code { get; set; }
         /// <summary>
         /// The <see cref="EventType"/> of the event.
         /// </summary>
@@ -29,9 +29,9 @@ namespace ModShardLauncher
         /// <param name="codeName"></param>
         /// <param name="eventType"></param>
         /// <param name="subtype"></param>
-        public MslEvent(string codeName, EventType eventType, uint subtype)
+        public MslEvent(string code, EventType eventType, uint subtype)
         {
-            CodeName = codeName;
+            Code = code;
             EventType = eventType;
             Subtype = subtype;
         }
@@ -42,7 +42,14 @@ namespace ModShardLauncher
         /// <param name="modFile"></param>
         public void Apply(string objectName, ModFile modFile)
         {
-            Msl.AddNewEvent(objectName, modFile.GetCode(CodeName), EventType, Subtype);
+            try
+            {
+                Msl.AddNewEvent(objectName, modFile.GetCode(Code), EventType, Subtype);
+            }
+            catch
+            {
+                throw;
+            }
         }
         /// <summary>
         /// Given a <paramref name="gameObject"/>, load the source code of the event and add it in the data.win through the <see cref="AddNewEvent"/> function.
@@ -51,7 +58,41 @@ namespace ModShardLauncher
         /// <param name="modFile"></param>
         public void Apply(UndertaleGameObject gameObject, ModFile modFile)
         {
-            Msl.AddNewEvent(gameObject, modFile.GetCode(CodeName), EventType, Subtype);
+            try
+            {
+                Msl.AddNewEvent(gameObject, modFile.GetCode(Code), EventType, Subtype);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// Given an <see cref="UndertaleGameObject"/> named <paramref name="objectName"/>, load the source code of the event and add it in the data.win through the <see cref="AddNewEvent"/> function.
+        /// </summary>
+        /// <param name="objectName"></param>
+        /// <param name="modFile"></param>
+        public void Apply(string objectName)
+        {
+            try
+            {
+                Msl.AddNewEvent(objectName, Code, EventType, Subtype);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public void Apply(UndertaleGameObject objectName)
+        {
+            try
+            {
+                Msl.AddNewEvent(objectName, Code, EventType, Subtype);
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
     public static partial class Msl
@@ -122,7 +163,14 @@ namespace ModShardLauncher
         }
         public static void AddNewEvent(UndertaleGameObject objectName, string eventCode, EventType eventType, uint subtype)
         {
-            AddNewEvent(objectName, eventCode, eventType, subtype, false);
+            try
+            {
+                AddNewEvent(objectName, eventCode, eventType, subtype, false);
+            }
+            catch
+            {
+                throw;
+            }
         }
         /// <summary>
         /// Add a new event (<paramref name="eventType"/>, <paramref name="subtype"/>) associated to an <paramref name="gameObject"/>
