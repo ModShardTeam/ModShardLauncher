@@ -30,21 +30,6 @@ namespace ModShardLauncher
         {
             Console.WriteLine(title + ":" + error);
         }
-        public static string GetVersion()
-        {
-            string version = data.Strings.First(t => t.Content.EndsWith(" Build date: ")).Content;
-            // version is spelled Verison in the code base
-            // so dont touch this part even if it feels like a mistake
-            List<string> sp = version.Replace(" Build date: ", "").Replace("Verison: ", "").Split(".").ToList();
-            List<string> sp2 = new();
-            sp.ForEach(i =>
-            {
-                if (i.Length < 2) sp2.Add(0 + i);
-                else sp2.Add(i);
-            });
-            version = "v" + string.Join(".", sp2);
-            return version;
-        }
         public static async Task<bool> DoOpenDialog()
         {
             // else open a new dialog
