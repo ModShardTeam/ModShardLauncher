@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Serilog;
 using UndertaleModLib.Decompiler;
+using System.Security.Cryptography;
 
 namespace ModShardLauncher
 {
@@ -118,11 +119,27 @@ namespace ModShardLauncher
             File.WriteAllText("json_preset_catacombs.json", Decompiler.Decompile(data.Code.First(t => t.Name.Content.Contains("scr_preset_catacombs")), context));
             File.WriteAllText("json_preset_crypt.json", Decompiler.Decompile(data.Code.First(t => t.Name.Content.Contains("scr_preset_crypt_1")), context));
         }
+        private static string ComputeChecksum(FileStream stream)
+        {
+            using var md5 = MD5.Create();
+            return Convert.ToHexString(md5.ComputeHash(stream));
+        }
+        private static bool CompareChecksum(FileStream stream)
+        {
+            string hash = ComputeChecksum(stream);
+            const string hashGog = "6E37E076EDFDC25468195EC1FFA937A5";
+            const string hashSteam = "392EE0E8C6A09A16DED58C5737ECF1B5";
+            return hash ==  hashGog || hash == hashSteam;
+        }
         private static bool LoadUmt(string filename)
         {
             bool hadWarnings = false;
             using (FileStream stream = new(filename, FileMode.Open, FileAccess.Read))
             {
+                if(!CompareChecksum(stream))
+                {
+                    Log.Warning("Checksum inconsistency, {{{0}}} is not vanilla.", filename);
+                }
                 data = UndertaleIO.Read(
                     stream, warning =>
                     {
