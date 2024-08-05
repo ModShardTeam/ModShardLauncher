@@ -12,6 +12,7 @@ using Serilog.Core;
 using Serilog.Events;
 using System.Runtime.InteropServices;
 using ModShardLauncher.Mods;
+using System.Diagnostics;
 
 namespace ModShardLauncher
 {
@@ -34,7 +35,7 @@ namespace ModShardLauncher
         public const int SW_HIDE = 0;
         public const int SW_SHOW = 5;
         public static IntPtr handle;
-
+        public string mslVersion;
         public Main()
         {
             handle = GetConsoleWindow();
@@ -60,6 +61,21 @@ namespace ModShardLauncher
                 );
 
             Log.Logger = logger.CreateLogger();
+            
+            // work around to find the FileVersion of ModShardLauncher.dll for single file publishing
+            // see: https://github.com/dotnet/runtime/issues/13051
+            try
+            {
+                ProcessModule mainProcess = Msl.ThrowIfNull(Process.GetCurrentProcess().MainModule);
+                string mainProcessName = Msl.ThrowIfNull(mainProcess.FileName);
+                mslVersion = "v" + FileVersionInfo.GetVersionInfo(mainProcessName).FileVersion;
+            }
+            catch(FileNotFoundException ex)
+            {
+                Log.Error(ex, "Cannot find the dll of ModShardLauncher");
+                throw;
+            }
+            Log.Information("Launching msl {{{0}}}", mslVersion);
 
             try
             {
@@ -127,13 +143,11 @@ namespace ModShardLauncher
             else if (Viewer.Content is Settings) Viewer.Content = SettingsPage;
             else Viewer.Content = MainPage;
         }
-
         private void MyToggleButton_Click(object sender, EventArgs e)
         {
-            Log.CloseAndFlushAsync();
+            _ = Log.CloseAndFlushAsync();
             Close();
         }
-
         private void MyToggleButton_Click_1(object sender, EventArgs e)
         {
             if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = ModPage;

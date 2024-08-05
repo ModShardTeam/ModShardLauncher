@@ -186,15 +186,9 @@ namespace ModShardLauncher
                 Main.Settings.EnableMods.Add(mod.Name);
                 mod.PatchStatus = PatchStatus.Patching;
 
-                // work around to find the FileVersion of ModShardLauncher.dll for single file publishing
-                // see: https://github.com/dotnet/runtime/issues/13051
-                ProcessModule mainProcess = Msl.ThrowIfNull(Process.GetCurrentProcess().MainModule);
-                string mainProcessName = Msl.ThrowIfNull(mainProcess.FileName);
-                string mod_version = "v" + FileVersionInfo.GetVersionInfo(mainProcessName).FileVersion;
-
-                if (mod.Version != mod_version)
+                if (mod.Version != Main.Instance.mslVersion)
                 {
-                    Log.Warning("Mod {{{0}}} was built with msl {{{1}}} which is different from the current msl {{{2}}}", mod.Name, mod.Version, mod_version);
+                    Log.Warning("Mod {{{0}}} was built with msl {{{1}}} which is different from the current msl {{{2}}}", mod.Name, mod.Version, Main.Instance.mslVersion);
                 }
                 TextureLoader.LoadTextures(mod);
                 mod.instance.PatchMod();
