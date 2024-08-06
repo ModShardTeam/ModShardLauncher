@@ -34,7 +34,7 @@ namespace ModShardLauncher
         /// Extension method to apply several <see cref="MslEvent"/> to a <see cref="gameObject"/> simultaneously. It is expected that all MslEvent.Code contain their code directly.
         /// <example>For example:
         /// <code>
-        /// gameObject.ApplyEvent(ModFiles, 
+        /// gameObject.ApplyEvent(
         ///     new MslEvent(code0, EventType.Create, 0),
         ///     new MslEvent(code1, EventType.Other, 10),
         ///     new MslEvent(code2, EventType.Other, 11)
@@ -43,7 +43,6 @@ namespace ModShardLauncher
         /// </example>
         /// </summary>
         /// <param name="gameObject"></param>
-        /// <param name="modFile"></param>
         /// <param name="mslEvents"></param>
         static public void ApplyEvent(this UndertaleGameObject gameObject, params MslEvent[] mslEvents)
         {
