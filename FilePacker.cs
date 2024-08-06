@@ -8,6 +8,11 @@ namespace ModShardLauncher
 {
     public static class UtilsPacker
     {
+        /// <summary>
+        /// Pack a mod located in <paramref name="path"/> using the packing method from <see cref="ModShardPackerReference"/>.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static bool Pack(string path)
         {
             bool resultPacking = false;
@@ -34,7 +39,6 @@ namespace ModShardLauncher
                     Log.Error(ex, "Unexpected error");
                 }
                 Console.WriteLine(ex.Message);
-                Log.Error(ex.ToString());
             }
 
             return resultPacking;
