@@ -122,7 +122,6 @@ namespace ModShardLauncher
         /// <param name="eventCode"></param>
         /// <param name="eventType"></param>
         /// <param name="subtype"></param>
-        /// <param name="asAsm"></param>
         public static void AddNewEvent(string objectName, string eventCode, EventType eventType, uint subtype)
         {
             AddNewEvent(objectName, eventCode, eventType, subtype, false);
