@@ -104,11 +104,21 @@ namespace ModShardLauncher
             File.WriteAllText("json_preset_catacombs.json", Decompiler.Decompile(data.Code.First(t => t.Name.Content.Contains("scr_preset_catacombs")), context));
             File.WriteAllText("json_preset_crypt.json", Decompiler.Decompile(data.Code.First(t => t.Name.Content.Contains("scr_preset_crypt_1")), context));
         }
+        /// <summary>
+        /// Compute the MD5 checksum of a file located in a FileStream.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
         private static string ComputeChecksum(FileStream stream)
         {
             using var md5 = MD5.Create();
             return Convert.ToHexString(md5.ComputeHash(stream));
         }
+        /// <summary>
+        /// Return True if the MD5 checksum of a file is equal either to the MD5 checksum of the GOG data.win of Stoneshard or to the MD5 checksum of the STEAM data.win of Stoneshard.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
         private static bool CompareChecksum(FileStream stream)
         {
             string hash = ComputeChecksum(stream);

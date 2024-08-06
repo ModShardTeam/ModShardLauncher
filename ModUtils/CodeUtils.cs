@@ -102,6 +102,12 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        /// <summary>
+        /// Add a new UndertaleCode named <paramref name="name"/> using the code <paramref name="codeAsString"/>. It is expected to be written in GML.
+        /// </summary>
+        /// <param name="codeAsString"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static UndertaleCode AddCode(string codeAsString, string name)
         {
             try
@@ -127,6 +133,12 @@ namespace ModShardLauncher
                 throw;
             }
         }
+        /// <summary>
+        /// Add a new UndertaleCode named <paramref name="name"/> using the code <paramref name="codeAsString"/>. It is expected to be written in ASM abstraction.
+        /// </summary>
+        /// <param name="codeAsString"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static UndertaleCode AddCodeAsm(string codeAsString, string name)
         {
             try
