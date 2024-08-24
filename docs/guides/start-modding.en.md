@@ -45,7 +45,7 @@ Here are some **resources** to get you started on that :
     You can download the official template for MSL Mods to avoid having to write boilerplate code. </br>
     The easiest way to install it is to open a terminal and run the following command :
 
-    `dotnet new install ModShardLauncher.Templates`
+    `dotnet new --install ModShardLauncher.Templates`
 
 ## Getting Started
 
