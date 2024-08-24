@@ -162,7 +162,7 @@ namespace MyMod
 
         public override void PatchMod()
         {
-            ModLoader.InsertGMLString("scr_smoothSaveAuto()", "gml_Object_o_player_KeyPress_116", 0);  // (1)!
+            Msl.InsertGMLString("scr_smoothSaveAuto()", "gml_Object_o_player_KeyPress_116", 0);  // (1)!
         }
     }
 }
@@ -201,7 +201,7 @@ namespace MyMod
 
         public override void PatchMod()
         {
-            ModLoader.InsertGMLString(ModFiles.GetCode("myCode.gml"), "gml_Object_o_player_KeyPress_116", 0);  
+            Msl.InsertGMLString(ModFiles.GetCode("myCode.gml"), "gml_Object_o_player_KeyPress_116", 0);  
             // (1)!
         }
     }
@@ -229,7 +229,7 @@ namespace MyMod
 
         public override void PatchMod()
         {
-            ModLoader.InsertAssemblyString(":[0]\ncall.i gml_Script_scr_smoothSaveAuto(argc=0)\npopz.v", "gml_Object_o_player_KeyPress_116", 1 );
+            Msl.InsertAssemblyString(":[0]\ncall.i gml_Script_scr_smoothSaveAuto(argc=0)\npopz.v", "gml_Object_o_player_KeyPress_116", 1 );
             // (1)!
         }
     }
@@ -260,7 +260,7 @@ They are divided in 4 different stages, namely :
 Here's an example of that :
 
 ``` c# title="Chained Methods"
-ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit") // Loading a script from the game's files
+Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit") // Loading a script from the game's files
 .MatchFrom("global.HP = -1") // Finding the line containing `global.HP = -1`
 .ReplaceBy("global.HP = 50") // Replacing it with `gobal.HP = 50`
 .Save() // Saving the file
