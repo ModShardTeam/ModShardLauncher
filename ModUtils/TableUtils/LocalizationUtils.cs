@@ -111,15 +111,20 @@ static public class Localization
         }
         return dest;
     }
+    static public void InjectTable(string tableName, Func<IEnumerable<string>, IEnumerable<string>> editTable)
+    {
+        Msl.LoadGML(tableName)
+            .Apply(editTable)
+            .Save();
+    }
 }
 public interface ILocalizationElement
 {
     string Id  { get; set; }
-    Dictionary<ModLanguage, string> Loc { get; set; }
     string CreateLine();
 }
 public interface ILocalizationElementCollection
 {
-    List<LocalizationSpeech> Locs { get; set; }
+    List<ILocalizationElement> Locs { get; set; }
     void InjectTable();
 }
