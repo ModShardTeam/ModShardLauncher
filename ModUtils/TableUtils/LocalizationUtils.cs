@@ -1,8 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using ModShardLauncher.Mods;
+using Serilog;
+using UndertaleModLib;
+using UndertaleModLib.Decompiler;
+using UndertaleModLib.Models;
 
 namespace ModShardLauncher;
 
@@ -111,10 +117,24 @@ static public class Localization
         }
         return dest;
     }
-    static public void InjectTable(string tableName, Func<IEnumerable<string>, IEnumerable<string>> editTable)
+    static public void InjectTable(string tableName, params (string anchor, IEnumerable<string> elements)[] datas)
     {
-        Msl.LoadGML(tableName)
-            .Apply(editTable)
+        IEnumerable<string> func(IEnumerable<string> input)
+        {
+            foreach (string item in input)
+            {
+                foreach(string element in datas.Where(_ => item.Contains(_.anchor)).SelectMany(_ => _.elements))
+                {
+                    yield return $"push.s {element}";
+                    yield return "conv.s.v";
+                }
+                
+                yield return item;
+            }
+        }
+
+        Msl.LoadAssemblyAsString(tableName)
+            .Apply(func)
             .Save();
     }
 }
@@ -127,4 +147,31 @@ public interface ILocalizationElementCollection
 {
     List<ILocalizationElement> Locs { get; set; }
     void InjectTable();
+}
+public partial class Msl
+{  
+    static public void ExportTable(string tableName, string outputName)
+    {
+        DirectoryInfo dir = new (DataLoader.exportPath);
+        if (!dir.Exists) dir.Create();
+
+        try
+        {
+            UndertaleCode code = GetUMTCodeFromFile(tableName); // can fail InvalidOperationException
+
+            string table = code.Disassemble(ModLoader.Data.Variables, ModLoader.Data.CodeLocals.For(code));
+            IEnumerable<System.Text.RegularExpressions.Match> matches = Regex.Matches(table, @"push.s ""(.+)""@\d+").Reverse();
+
+            using var stream = File.OpenWrite(Path.Join(dir.FullName, outputName));
+            using StreamWriter writer = new(stream);
+            foreach(System.Text.RegularExpressions.Match match in matches)
+            {
+                writer.WriteLine(match.Groups[1].Value);
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            Log.Warning($"{tableName} is not a valid table.");
+        }
+    }
 }
