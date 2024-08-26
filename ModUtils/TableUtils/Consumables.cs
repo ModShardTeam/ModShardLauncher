@@ -12,7 +12,7 @@ public class LocalizationItem
     /// <summary>
     /// Name of the object in the localization table.
     /// </summary>
-    public string OName { get; set; }
+    public string Id { get; set; }
     /// <summary>
     /// Dictionary that contains a translation of the item name as displayed in-game for each available languages.
     /// </summary>
@@ -37,7 +37,7 @@ public class LocalizationItem
     /// <param name="oName"></param>
     public LocalizationItem(string oName)
     {
-        OName = oName;
+        Id = oName;
     }
     /// <summary>
     /// Return an instance of <see cref="LocalizationItem"/> with <see cref="ConsumableName"/>, <see cref="ConsumableID"/> and <see cref="ConsumableDescription"/> filled by input dictionaries.
@@ -58,7 +58,7 @@ public class LocalizationItem
     /// <param name="dictDescription"></param>
     public LocalizationItem(string oName, Dictionary<ModLanguage, string> dictName, Dictionary<ModLanguage, string> dictID, Dictionary<ModLanguage, string> dictDescription)
     {
-        OName = oName;
+        Id = oName;
         ConsumableName = Localization.SetDictionary(dictName);
         ConsumableID = Localization.SetDictionary(dictID);
         ConsumableDescription = Localization.SetDictionary(dictDescription);
@@ -82,7 +82,7 @@ public class LocalizationItem
     /// <param name="valuesDescription"></param>
     public LocalizationItem(string oName, string valuesName, string valuesID, string valuesDescription)
     {
-        OName = oName;
+        Id = oName;
         ConsumableName = Localization.SetDictionary(valuesName);
         ConsumableID = Localization.SetDictionary(valuesID);
         ConsumableDescription = Localization.SetDictionary(valuesDescription);
@@ -122,15 +122,15 @@ public class LocalizationItem
         {
             if (line.Contains("consum_name_end"))
             {
-                yield return CreateLine(OName, ConsumableName);
+                yield return CreateLine(Id, ConsumableName);
             }
             else if (line.Contains("consum_mid_end"))
             {
-                yield return CreateLine(OName, ConsumableID);
+                yield return CreateLine(Id, ConsumableID);
             }
             else if (line.Contains("consum_desc_end"))
             {
-                yield return CreateLine(OName, ConsumableDescription);
+                yield return CreateLine(Id, ConsumableDescription);
             }
             yield return line;
         }
