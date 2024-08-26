@@ -20,6 +20,7 @@ namespace ModShardLauncher
         public static UndertaleData data = new();
         internal static string dataPath = "";
         internal static string savedDataPath = "";
+        internal static string exportPath = "";
         public delegate void FileMessageEventHandler(string message);
         public static event FileMessageEventHandler FileMessageEvent;
         public static void ShowWarning(string warning, string title)
@@ -59,12 +60,12 @@ namespace ModShardLauncher
         /// <summary>
         /// Export all items, weapons and armors in csv files.
         /// </summary>
-        private static void ExportItems()
+        private static void ExportItems(bool deleteBeforeExport = false)
         {
             try
             {
-                DirectoryInfo dir = new("export");
-                if (dir.Exists) dir.Delete(true);
+                DirectoryInfo dir = new(exportPath);
+                if (deleteBeforeExport && dir.Exists) dir.Delete(true);
                 dir.Create();
 
                 List<string>? weapons = ModLoader.GetTable("gml_GlobalScript_table_weapons");
@@ -161,6 +162,8 @@ namespace ModShardLauncher
         {
             // save the filename for later
             dataPath = filename;
+            // save export folder
+            exportPath = Path.Join(Directory.GetCurrentDirectory(), Path.DirectorySeparatorChar.ToString(), "export");
             // create a new dialog box
             LoadingDialog dialog = new()
             {
