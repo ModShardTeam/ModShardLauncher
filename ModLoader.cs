@@ -175,7 +175,7 @@ namespace ModShardLauncher
             Disclaimers = new();
             List<ModFile> mods = ModInfos.Instance.Mods;
             Menus = new();
-
+            
             Stopwatch watch = Stopwatch.StartNew();
             foreach (ModFile mod in mods)
             {
