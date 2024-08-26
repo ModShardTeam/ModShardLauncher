@@ -7,7 +7,7 @@ namespace ModShardLauncher;
 /// <summary>
 /// Abstraction for the localization of sentences found in gml_GlobalScript_table_NPC_Lines.
 /// </summary>
-public class LocalizationSentence
+public class LocalizationSentence : ILocalizationElement
 {
     /// <summary>
     /// Id of the sentence
@@ -86,24 +86,21 @@ public class LocalizationSentence
     /// <returns></returns>
     public string CreateLine()
     {
-        string line = string.Format("{0};{1};{2};{3};{4};{5}", Id, Tags, Role, Type, Faction, Settlement);
-        foreach (KeyValuePair<ModLanguage, string> kp in Sentence)
-        {
-            line += ";";
-            line += kp.Value;
-        }
-        return line + ";";
+        string line = string.Format("{0};{1};{2};{3};{4};{5};", Id, Tags, Role, Type, Faction, Settlement);
+        line += string.Concat(Sentence.Values.Select(x => @$"{x};"));
+        
+        return line;
     }
 }
 /// <summary>
 /// Abstraction for carrying a list of sentences.
 /// </summary>
-public class LocalizationDialog
+public class LocalizationDialog : ILocalizationElementCollection
 {
     /// <summary>
     /// List of <see cref="LocalizationSentence"/>
     /// </summary>
-    public List<LocalizationSentence> Sentences { get; set; } = new();
+    public List<ILocalizationElement> Locs { get; set; } = new();
     /// <summary>
     /// Return an instance of <see cref="LocalizationDialog"/> with an arbitrary number of <see cref="LocalizationSentence"/>.
     /// <example>
@@ -120,7 +117,7 @@ public class LocalizationDialog
     {
         foreach (LocalizationSentence sentence in sentences)
         {   
-            Sentences.Add(sentence);
+            Locs.Add(sentence);
         }
         
     }
@@ -138,7 +135,7 @@ public class LocalizationDialog
 
             if (line.Contains("NPC - GREETINGS;"))
             {
-                foreach (LocalizationSentence sentence in Sentences) 
+                foreach (LocalizationSentence sentence in Locs) 
                 {
                     yield return sentence.CreateLine();
                 }
@@ -153,8 +150,7 @@ public class LocalizationDialog
     /// <returns></returns>
     public void InjectTable()
     {
-        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_NPC_Lines"));
-        ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_NPC_Lines");
+        Localization.InjectTable("gml_GlobalScript_table_NPC_Lines", EditTable);
     }
 }
 public static partial class Msl
