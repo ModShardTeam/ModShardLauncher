@@ -1,9 +1,5 @@
-using Xunit;
-using System.Collections.Generic;
 using ModShardLauncher.Mods;
 using System.Reflection;
-using ModShardLauncher.Extensions;
-using ModShardLauncher;
 
 namespace ModShardLauncherTest
 {
