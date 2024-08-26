@@ -92,7 +92,7 @@ public class LocalizationSpeeches : ILocalizationElementCollection
     /// <summary>
     /// List of <see cref="LocalizationSpeech"/>
     /// </summary>
-    public List<LocalizationSpeech> Locs { get; set; } = new();
+    public List<ILocalizationElement> Locs { get; set; } = new();
     /// <summary>
     /// Return an instance of <see cref="LocalizationSpeech"/> with an arbitrary number of <see cref="LocalizationSpeech"/>.
     /// <example>
@@ -145,9 +145,7 @@ public class LocalizationSpeeches : ILocalizationElementCollection
     /// <returns></returns>
     public void InjectTable()
     {
-        Msl.LoadGML("gml_GlobalScript_table_speech")
-            .Apply(EditTable)
-            .Save();
+        Localization.InjectTable("gml_GlobalScript_table_speech", EditTable);
     }
 }
 public static partial class Msl
