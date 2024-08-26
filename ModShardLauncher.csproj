@@ -14,6 +14,7 @@
 
   <ItemGroup> <!-- Include the specific files to exclude the ones in the test folder -->
     <Compile Include="*.cs" Exclude="bin\**;obj\**;ModShardLauncherTest\**.*cs" />
+    <Compile Include="ModUtils\TableUtils\Consumables.cs" />
     <Compile Include="ModUtils\TableUtils\ConsumParam.cs" />
     <Compile Include="ModUtils\TableUtils\Contract.cs" />
     <Compile Include="ModUtils\TableUtils\CreditsBackers.cs" />
@@ -23,7 +24,9 @@
     <Compile Include="ModUtils\TableUtils\TableArmor.cs" />
     <Compile Include="ModUtils\TableUtils\TableUtils.cs" />
     <Compile Include="ModUtils\TableUtils\LocalizationUtils.cs" />
+    <Compile Include="ModUtils\TableUtils\NPCLines.cs" />
     <Compile Include="ModUtils\TableUtils\TableWeapons.cs" />
+    <Compile Include="ModUtils\TableUtils\Speech.cs" />
     <Compile Include="Pages/*.cs" />
     <Compile Include="Extensions/*.cs" />
     <Compile Include="Mods/*.cs" />
