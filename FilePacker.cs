@@ -23,7 +23,7 @@ namespace ModShardLauncher
                     null, 
                     path, 
                     ModLoader.ModPath, 
-                    path, 
+                    Path.GetDirectoryName(Path.GetDirectoryName(path)) ?? path, 
                     Main.Instance.mslVersion, 
                     new Type[2] {typeof(ModShardLauncher.Mods.Mod), typeof(UndertaleModLib.Models.UndertaleCode)}
                 );
