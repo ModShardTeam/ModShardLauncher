@@ -123,34 +123,17 @@ public class LocalizationDialog : ILocalizationElementCollection
     }
     /// <summary>
     /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSentence"/>,
-    /// yield a new line constructed by the dictionary <see cref="Sentence"/>. 
-    /// </summary>
-    /// <param name="table"></param>
-    /// <returns></returns>
-    private IEnumerable<string> EditTable(IEnumerable<string> table)
-    {
-        foreach (string line in table)
-        {
-            yield return line;
-
-            if (line.Contains("NPC - GREETINGS;"))
-            {
-                foreach (LocalizationSentence sentence in Locs) 
-                {
-                    yield return sentence.CreateLine();
-                }
-            }
-        }
-    }
-    /// <summary>
-    /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSentence"/>,
     /// insert a new line constructed by the dictionary <see cref="Sentence"/> in the gml_GlobalScript_table_NPC_Lines table. 
     /// </summary>
     /// <param name="table"></param>
     /// <returns></returns>
     public void InjectTable()
     {
-        Localization.InjectTable("gml_GlobalScript_table_NPC_Lines", EditTable);
+        Localization.InjectTable("gml_GlobalScript_table_NPC_Lines", (
+                anchor:"NPC - GREETINGS;",
+                elements: Locs.Select(x => x.CreateLine())
+            )
+        );
     }
 }
 public static partial class Msl

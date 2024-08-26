@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ModShardLauncher.Mods;
@@ -77,9 +78,9 @@ public class LocalizationSpeech : ILocalizationElement
     /// <returns></returns>
     public string CreateLine()
     {
-        string _start = string.Concat(Enumerable.Repeat(@$"{Id};", 15));
+        string _start = string.Concat(Enumerable.Repeat(@$"{Id};", Msl.ModLanguageSize));
         string _speech = string.Concat(Loc.Values.Select(x => @$"{x};"));
-        string _end = string.Concat(Enumerable.Repeat(@$"{Id}_end;", 15));
+        string _end = string.Concat(Enumerable.Repeat(@$"{Id}_end;", Msl.ModLanguageSize));
 
         return @$"""{_start}"",""{_speech}"",""{_end}"",";
     }
@@ -115,37 +116,17 @@ public class LocalizationSpeeches : ILocalizationElementCollection
     }
     /// <summary>
     /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSpeech"/>,
-    /// insert a new line constructed by the dictionary <see cref="Sentence"/>. 
-    /// </summary>
-    /// <param name="table"></param>
-    /// <returns></returns>
-    private IEnumerable<string> EditTable(IEnumerable<string> input)
-    {
-        string anchor = "\";;// FORBIDDEN MAGIC;// FORBIDDEN MAGIC;;;;;;// FORBIDDEN MAGIC;;;;\",";
-        string speeches = string.Concat(Locs.Select(x => x.CreateLine()));
-       
-        foreach (string item in input)
-        {
-            if (item.Contains(anchor))
-            {
-                string newItem = item.Insert(item.IndexOf(anchor) + anchor.Length, speeches);
-                yield return newItem;
-            }
-            else
-            {
-                yield return item;
-            }
-        }
-    }
-    /// <summary>
-    /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSpeech"/>,
     /// insert a new line constructed by the dictionary <see cref="Loc"/> in the gml_GlobalScript_table_speech table. 
     /// </summary>
     /// <param name="table"></param>
     /// <returns></returns>
     public void InjectTable()
     {
-        Localization.InjectTable("gml_GlobalScript_table_speech", EditTable);
+        Localization.InjectTable("gml_GlobalScript_table_speech", (
+                anchor:"FORBIDDEN MAGIC;",
+                elements: Locs.Select(x => x.CreateLine())
+            )
+        );
     }
 }
 public static partial class Msl
