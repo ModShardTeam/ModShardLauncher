@@ -210,25 +210,25 @@ public static partial class Msl
     /// Wrapper for the LocalizationTextTrees class
     /// </summary>
     /// <param tier="modifiers"></param>
-    public static void InjectTableTextTreesLocalization(params ILocalizationElement[] modifiers)
+    public static void InjectTableTextTreesLocalization(params LocalizationTextTree[] modifiers)
     {
         LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_text",
             ("Tier_name;", "tier"), ("skilltree_hover;", "hover")
         );
-        localizationBaseTable.InjectTable(modifiers.ToList());
+        localizationBaseTable.InjectTable(modifiers.Select(x => x as ILocalizationElement).ToList());
     }
-    public static void InjectTableTextRaritysLocalization(params ILocalizationElement[] modifiers)
+    public static void InjectTableTextRaritysLocalization(params LocalizationTextRarity[] modifiers)
     {
         LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_text",
             ("rarity;", null)
         );
-        localizationBaseTable.InjectTable(modifiers.ToList());
+        localizationBaseTable.InjectTable(modifiers.Select(x => x as ILocalizationElement).ToList());
     }
-    public static void InjectTableTextContextsLocalization(params ILocalizationElement[] modifiers)
+    public static void InjectTableTextContextsLocalization(params LocalizationTextContext[] modifiers)
     {
         LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_text",
             ("context_menu;", null)
         );
-        localizationBaseTable.InjectTable(modifiers.ToList());
+        localizationBaseTable.InjectTable(modifiers.Select(x => x as ILocalizationElement).ToList());
     }
 }

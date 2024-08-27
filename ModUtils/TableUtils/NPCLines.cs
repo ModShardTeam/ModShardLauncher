@@ -84,11 +84,11 @@ public static partial class Msl
     /// Wrapper for the LocalizationDialog class
     /// </summary>
     /// <param name="sentences"></param>
-    public static void InjectTableDialogLocalization(params ILocalizationElement[] sentences)
+    public static void InjectTableDialogLocalization(params LocalizationSentence[] sentences)
     {
         LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_NPC_Lines",
             ("NPC - GREETINGS;", null)
         );
-        localizationBaseTable.InjectTable(sentences.ToList());
+        localizationBaseTable.InjectTable(sentences.Select(x => x as ILocalizationElement).ToList());
     }
 }

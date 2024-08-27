@@ -111,11 +111,11 @@ public partial class Msl
     /// <param name="name"></param>
     /// <param name="effect"></param>
     /// <param name="description"></param>
-    public static void InjectTableItemsLocalization(string id, params ILocalizationElement[] items)
+    public static void InjectTableItemsLocalization(string id, params LocalizationItem[] items)
     {
         LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_consumables",
             ("consum_name;", "name"), ("consum_mid;", "effect"), ("consum_desc;", "description")
         );
-        localizationBaseTable.InjectTable(items.ToList());
+        localizationBaseTable.InjectTable(items.Select(x => x as ILocalizationElement).ToList());
     }
 }
