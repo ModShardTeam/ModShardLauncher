@@ -138,15 +138,26 @@ static public class Localization
             .Save();
     }
 }
-public interface ILocalizationElement
+public interface ILocalizationSingleTableElement
 {
     string Id  { get; set; }
     IEnumerable<string> CreateLine();
 }
-public interface ILocalizationElementCollection
+public interface ILocalizationSingleTableElementCollection
 {
-    List<ILocalizationElement> Locs { get; set; }
+    List<ILocalizationSingleTableElement> Locs { get; set; }
     IEnumerable<string> CreateLines();
+    void InjectTable();
+}
+public interface ILocalizationMultiTableElement
+{
+    string Id  { get; set; }
+    IEnumerable<string> CreateLine(string selector);
+}
+public interface ILocalizationMultiTableElementCollection
+{
+    List<ILocalizationMultiTableElement> Locs { get; set; }
+    IEnumerable<string> CreateLines(string selector);
     void InjectTable();
 }
 public partial class Msl
