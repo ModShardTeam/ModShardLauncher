@@ -86,7 +86,7 @@ public static partial class Msl
     /// <param name="modifiers"></param>
     public static void InjectTableSkillsLocalization(params LocalizationSkill[] skills)
     {
-        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_weapons_text",
+        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_skills",
             ("skill_name;", "name"), ("skill_desc;", "description")
         );
         localizationBaseTable.InjectTable(skills.Select(x => x as ILocalizationElement).ToList());
