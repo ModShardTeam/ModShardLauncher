@@ -15,7 +15,7 @@ public class LocalizationModifier : ILocalizationMultiTableElement
     /// Dictionary that contains a translation of the modifier as displayed in the log for each available languages.
     /// </summary>
     public Dictionary<ModLanguage, string> Name { get; set; } = new();
-    public Dictionary<ModLanguage, string> Description { get; set; } = new();
+    public Dictionary<ModLanguage, string>? Description { get; set; } = null;
     /// <summary>
     /// Return an instance of <see cref="LocalizationModifier"/> with an empty <see cref="Loc"/>.
     /// <example>
@@ -43,11 +43,11 @@ public class LocalizationModifier : ILocalizationMultiTableElement
     /// </summary>
     /// <param name="id"></param>
     /// <param name="modifier"></param>
-    public LocalizationModifier(string id, Dictionary<ModLanguage, string> name, Dictionary<ModLanguage, string> description)
+    public LocalizationModifier(string id, Dictionary<ModLanguage, string> name, Dictionary<ModLanguage, string>? description)
     {
         Id = id;
         Name = Localization.SetDictionary(name);
-        Description = Localization.SetDictionary(description);
+        if (description != null) Description = Localization.SetDictionary(description);
     }
     /// <summary>
     /// Return an instance of <see cref="LocalizationModifier"/> with <see cref="Loc"/> filled by an input string delimited by semi-colon.
@@ -62,11 +62,11 @@ public class LocalizationModifier : ILocalizationMultiTableElement
     /// </summary>
     /// <param name="id"></param>
     /// <param name="modifier"></param>
-    public LocalizationModifier(string id, string name, string description)
+    public LocalizationModifier(string id, string name, string? description)
     {
         Id = id;
         Name = Localization.SetDictionary(name);
-        Description = Localization.SetDictionary(description);
+        if (description != null) Description = Localization.SetDictionary(description);
     }
     /// <summary>
     /// Create a string delimited by semi-colon that follows the in-game convention order for localization of speechs.
@@ -87,7 +87,8 @@ public class LocalizationModifier : ILocalizationMultiTableElement
         yield return $"{Id};{string.Concat(Name.Values.Select(x => @$"{x};"))}";
             break;
         case "description":
-        yield return $"{Id};{string.Concat(Description.Values.Select(x => @$"{x};"))}";
+        if (Description == null) yield return $"{Id};{string.Concat(Enumerable.Repeat("None;", Msl.ModLanguageSize))}";
+        else yield return $"{Id};{string.Concat(Description.Values.Select(x => @$"{x};"))}";
             break;
         }
     }
