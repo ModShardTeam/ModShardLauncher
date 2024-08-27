@@ -123,9 +123,9 @@ static public class Localization
         {
             foreach (string item in input)
             {
-                foreach(string element in datas.Where(_ => item.Contains(_.anchor)).SelectMany(_ => _.elements))
+                foreach(string element in datas.Where(_ => item.Contains(_.anchor)).SelectMany(_ => _.elements).Reverse())
                 {
-                    yield return $"push.s {element}";
+                    yield return $"push.s \"{element}\"";
                     yield return "conv.s.v";
                 }
                 
@@ -141,11 +141,12 @@ static public class Localization
 public interface ILocalizationElement
 {
     string Id  { get; set; }
-    string CreateLine();
+    IEnumerable<string> CreateLine();
 }
 public interface ILocalizationElementCollection
 {
     List<ILocalizationElement> Locs { get; set; }
+    IEnumerable<string> CreateLines();
     void InjectTable();
 }
 public partial class Msl
