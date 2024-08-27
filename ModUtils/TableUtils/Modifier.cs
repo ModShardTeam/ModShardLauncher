@@ -84,10 +84,10 @@ public class LocalizationModifier : ILocalizationMultiTableElement
         switch(selector)
         {
         case "name":
-        yield return string.Concat(Name.Values.Select(x => @$"{x};"));
+        yield return $"{Id};{string.Concat(Name.Values.Select(x => @$"{x};"))}";
             break;
         case "description":
-        yield return string.Concat(Description.Values.Select(x => @$"{x};"));
+        yield return $"{Id};{string.Concat(Description.Values.Select(x => @$"{x};"))}";
             break;
         }
     }
@@ -134,11 +134,11 @@ public class LocalizationModifiers : ILocalizationMultiTableElementCollection
     {
         Localization.InjectTable("gml_GlobalScript_table_Modifiers", 
             (
-                anchor:"buff_name;\",",
+                anchor:"buff_name;",
                 elements: CreateLines("name")
             ),
             (
-                anchor:"buff_desc;\",",
+                anchor:"buff_desc;",
                 elements: CreateLines("description")
             )
         );
@@ -147,10 +147,10 @@ public class LocalizationModifiers : ILocalizationMultiTableElementCollection
 public static partial class Msl
 {
     /// <summary>
-    /// Wrapper for the LocalizationSpeeches class
+    /// Wrapper for the LocalizationModifiers class
     /// </summary>
     /// <param name="modifiers"></param>
-    public static void InjectTableSpeechesLocalization(params LocalizationModifier[] modifiers)
+    public static void InjectTableModifiersLocalization(params LocalizationModifier[] modifiers)
     {
         LocalizationModifiers localizationModifiers = new(modifiers);
         localizationModifiers.InjectTable();
