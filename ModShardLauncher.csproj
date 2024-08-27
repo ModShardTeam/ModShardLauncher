@@ -24,6 +24,7 @@
     <Compile Include="ModUtils\TableUtils\TableArmor.cs" />
     <Compile Include="ModUtils\TableUtils\TableUtils.cs" />
     <Compile Include="ModUtils\TableUtils\LocalizationUtils.cs" />
+    <Compile Include="ModUtils\TableUtils\Modifier.cs" />
     <Compile Include="ModUtils\TableUtils\NPCLines.cs" />
     <Compile Include="ModUtils\TableUtils\TableWeapons.cs" />
     <Compile Include="ModUtils\TableUtils\Speech.cs" />
