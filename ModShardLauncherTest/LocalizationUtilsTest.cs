@@ -166,10 +166,9 @@ namespace ModShardLauncherTest
             };
 
             // Act
-            string res = new LocalizationItem("testItem"){
-                Name = input
-            }.CreateLine("name")
-            .Collect();
+            string res = new LocalizationItem("testItem", input, input, input)
+                .CreateLine("name")
+                .Collect();
             
             // Assert
             Assert.Equal(expectedResult, res);
