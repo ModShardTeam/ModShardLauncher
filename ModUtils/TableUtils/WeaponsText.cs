@@ -5,7 +5,7 @@ using ModShardLauncher.Mods;
 
 namespace ModShardLauncher;
 
-public class LocalizationWeaponText : ILocalizationMultiTableElement
+public class LocalizationWeaponText : ILocalizationElement
 {
     /// <summary>
     /// Id of the modifier
@@ -79,7 +79,7 @@ public class LocalizationWeaponText : ILocalizationMultiTableElement
     /// </example>
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<string> CreateLine(string selector)
+    public IEnumerable<string> CreateLine(string? selector)
     {
         switch(selector)
         {
@@ -92,67 +92,17 @@ public class LocalizationWeaponText : ILocalizationMultiTableElement
         }
     }
 }
-/// <summary>
-/// Abstraction for carrying a list of modifiers.
-/// </summary>
-public class LocalizationWeaponTexts : ILocalizationMultiTableElementCollection
-{
-    /// <summary>
-    /// List of <see cref="LocalizationWeaponText"/>
-    /// </summary>
-    public List<ILocalizationMultiTableElement> Locs { get; set; } = new();
-    /// <summary>
-    /// Return an instance of <see cref="LocalizationWeaponText"/> with an arbitrary number of <see cref="LocalizationWeaponText"/>.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationWeaponText(
-    ///     new LocalizationWeaponText("mySpeechId1"), 
-    ///     new LocalizationWeaponText("mySpeechId2"));
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="modifiers"></param>
-    public LocalizationWeaponTexts(params LocalizationWeaponText[] modifiers)
-    {
-        foreach (LocalizationWeaponText modifier in modifiers)
-        {   
-            Locs.Add(modifier);
-        }
-    }
-    public IEnumerable<string> CreateLines(string selector)
-    {
-        return Locs.SelectMany(x => x.CreateLine(selector));
-    }
-    /// <summary>
-    /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationWeaponText"/>,
-    /// insert a new line constructed by the dictionary <see cref="Loc"/> in the gml_GlobalScript_table_speech table. 
-    /// </summary>
-    /// <param name="table"></param>
-    /// <returns></returns>
-    public void InjectTable()
-    {
-        Localization.InjectTable("gml_GlobalScript_table_weapons_text", 
-            (
-                anchor:"weapon_name;",
-                elements: CreateLines("name")
-            ),
-            (
-                anchor:"weapon_desc;weapon_desc;", // double is important, believe me
-                elements: CreateLines("description")
-            )
-        );
-    }
-}
 public static partial class Msl
 {
     /// <summary>
     /// Wrapper for the LocalizationWeaponTexts class
     /// </summary>
     /// <param name="modifiers"></param>
-    public static void InjectTableWeaponTextsLocalization(params LocalizationWeaponText[] weaponTexts)
+    public static void InjectTableWeaponTextsLocalization(params ILocalizationElement[] weaponTexts)
     {
-        LocalizationWeaponTexts localizationWeaponTexts = new(weaponTexts);
-        localizationWeaponTexts.InjectTable();
+        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_weapons_text",
+        ("weapon_name;", "name"), ("weapon_desc;weapon_desc;", "description")
+        );
+        localizationBaseTable.InjectTable(weaponTexts.ToList());
     }
 }

@@ -138,27 +138,34 @@ static public class Localization
             .Save();
     }
 }
-public interface ILocalizationSingleTableElement
+public interface ILocalizationElement
 {
     string Id  { get; set; }
-    IEnumerable<string> CreateLine();
+    IEnumerable<string> CreateLine(string? selector);
 }
-public interface ILocalizationSingleTableElementCollection
+public class LocalizationBaseTable
 {
-    List<ILocalizationSingleTableElement> Locs { get; set; }
-    IEnumerable<string> CreateLines();
-    void InjectTable();
-}
-public interface ILocalizationMultiTableElement
-{
-    string Id  { get; set; }
-    IEnumerable<string> CreateLine(string selector);
-}
-public interface ILocalizationMultiTableElementCollection
-{
-    List<ILocalizationMultiTableElement> Locs { get; set; }
-    IEnumerable<string> CreateLines(string selector);
-    void InjectTable();
+    public string TableName;
+    public List<(string anchor, string? selector)> Anchors = new();
+    public LocalizationBaseTable(string tableName, params (string, string?)[] anchors)
+    {
+        TableName = tableName;
+        foreach ((string, string?) anchor in anchors)
+        {   
+            Anchors.Add(anchor);
+        }
+    }
+    public static IEnumerable<string> CreateLines(List<ILocalizationElement> Locs, string? selector)
+    {
+        return Locs.SelectMany(x => x.CreateLine(selector));
+    }
+    public void InjectTable(List<ILocalizationElement> Locs)
+    {
+        Localization.InjectTable(
+            TableName, 
+            Anchors.Select(x => (x.anchor, CreateLines(Locs, x.selector))).ToArray()
+        );
+    }
 }
 public partial class Msl
 {  

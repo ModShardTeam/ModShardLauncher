@@ -7,7 +7,7 @@ namespace ModShardLauncher;
 /// <summary>
 /// Abstraction for the localization of sentences found in gml_GlobalScript_table_NPC_Lines.
 /// </summary>
-public class LocalizationSentence : ILocalizationSingleTableElement
+public class LocalizationSentence : ILocalizationElement
 {
     /// <summary>
     /// Id of the sentence
@@ -84,60 +84,12 @@ public class LocalizationSentence : ILocalizationSingleTableElement
     /// </example>
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<string> CreateLine()
+    public IEnumerable<string> CreateLine(string? _)
     {
         string line = string.Format("{0};{1};{2};{3};{4};{5};", Id, Tags, Role, Type, Faction, Settlement);
         line += string.Concat(Sentence.Values.Select(x => @$"{x};"));
         
         yield return line;
-    }
-}
-/// <summary>
-/// Abstraction for carrying a list of sentences.
-/// </summary>
-public class LocalizationDialog : ILocalizationSingleTableElementCollection
-{
-    /// <summary>
-    /// List of <see cref="LocalizationSentence"/>
-    /// </summary>
-    public List<ILocalizationSingleTableElement> Locs { get; set; } = new();
-    /// <summary>
-    /// Return an instance of <see cref="LocalizationDialog"/> with an arbitrary number of <see cref="LocalizationSentence"/>.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationDialog(
-    ///     new LocalizationSentence("mySentenceId1"), 
-    ///     new LocalizationSentence("mySentenceId2"));
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="sentences"></param>
-    public LocalizationDialog(params LocalizationSentence[] sentences)
-    {
-        foreach (LocalizationSentence sentence in sentences)
-        {   
-            Locs.Add(sentence);
-        }
-        
-    }
-    public IEnumerable<string> CreateLines()
-    {
-        return Locs.SelectMany(x => x.CreateLine());
-    }
-    /// <summary>
-    /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSentence"/>,
-    /// insert a new line constructed by the dictionary <see cref="Sentence"/> in the gml_GlobalScript_table_NPC_Lines table. 
-    /// </summary>
-    /// <param name="table"></param>
-    /// <returns></returns>
-    public void InjectTable()
-    {
-        Localization.InjectTable("gml_GlobalScript_table_NPC_Lines", (
-                anchor:"NPC - GREETINGS;",
-                elements: CreateLines()
-            )
-        );
     }
 }
 public static partial class Msl
@@ -146,9 +98,11 @@ public static partial class Msl
     /// Wrapper for the LocalizationDialog class
     /// </summary>
     /// <param name="sentences"></param>
-    public static void InjectTableDialogLocalization(params LocalizationSentence[] sentences)
+    public static void InjectTableDialogLocalization(params ILocalizationElement[] sentences)
     {
-        LocalizationDialog localizationDialog = new(sentences);
-        localizationDialog.InjectTable();
+        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_NPC_Lines",
+            ("NPC - GREETINGS;", null)
+        );
+        localizationBaseTable.InjectTable(sentences.ToList());
     }
 }

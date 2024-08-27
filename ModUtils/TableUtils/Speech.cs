@@ -5,7 +5,7 @@ using ModShardLauncher.Mods;
 
 namespace ModShardLauncher;
 
-public class LocalizationSpeech : ILocalizationSingleTableElement
+public class LocalizationSpeech : ILocalizationElement
 {
     /// <summary>
     /// Id of the speech
@@ -76,7 +76,7 @@ public class LocalizationSpeech : ILocalizationSingleTableElement
     /// </example>
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<string> CreateLine()
+    public IEnumerable<string> CreateLine(string? _)
     {
         yield return string.Concat(Enumerable.Repeat(@$"{Id};", Msl.ModLanguageSize));
 
@@ -88,63 +88,17 @@ public class LocalizationSpeech : ILocalizationSingleTableElement
         yield return string.Concat(Enumerable.Repeat(@$"{Id}_end;", Msl.ModLanguageSize));
     }
 }
-/// <summary>
-/// Abstraction for carrying a list of speeches.
-/// </summary>
-public class LocalizationSpeeches : ILocalizationSingleTableElementCollection
-{
-    /// <summary>
-    /// List of <see cref="LocalizationSpeech"/>
-    /// </summary>
-    public List<ILocalizationSingleTableElement> Locs { get; set; } = new();
-    /// <summary>
-    /// Return an instance of <see cref="LocalizationSpeech"/> with an arbitrary number of <see cref="LocalizationSpeech"/>.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationSpeech(
-    ///     new LocalizationSpeech("mySpeechId1"), 
-    ///     new LocalizationSpeech("mySpeechId2"));
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="speeches"></param>
-    public LocalizationSpeeches(params LocalizationSpeech[] speeches)
-    {
-        foreach (LocalizationSpeech speech in speeches)
-        {   
-            Locs.Add(speech);
-        }
-        
-    }
-    public IEnumerable<string> CreateLines()
-    {
-        return Locs.SelectMany(x => x.CreateLine());
-    }
-    /// <summary>
-    /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSpeech"/>,
-    /// insert a new line constructed by the dictionary <see cref="Loc"/> in the gml_GlobalScript_table_speech table. 
-    /// </summary>
-    /// <param name="table"></param>
-    /// <returns></returns>
-    public void InjectTable()
-    {
-        Localization.InjectTable("gml_GlobalScript_table_speech", (
-                anchor:"FORBIDDEN MAGIC;",
-                elements: CreateLines()
-            )
-        );
-    }
-}
 public static partial class Msl
 {
     /// <summary>
     /// Wrapper for the LocalizationSpeeches class
     /// </summary>
     /// <param name="speeches"></param>
-    public static void InjectTableSpeechesLocalization(params LocalizationSpeech[] speeches)
+    public static void InjectTableSpeechesLocalization(params ILocalizationElement[] speeches)
     {
-        LocalizationSpeeches localizationSpeeches = new(speeches);
-        localizationSpeeches.InjectTable();
+        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_speech",
+            ("FORBIDDEN MAGIC;", null)
+        );
+        localizationBaseTable.InjectTable(speeches.ToList());
     }
 }
