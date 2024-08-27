@@ -198,7 +198,7 @@ namespace ModShardLauncherTest
             LocalizationSentence sentence = new("id", str);
 
             // Act
-            string res = sentence.CreateLine();
+            string res = sentence.CreateLine().First();
 
             // Assert
             Assert.Equal(expectedResult, res);
