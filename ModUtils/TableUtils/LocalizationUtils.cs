@@ -140,7 +140,6 @@ static public class Localization
 }
 public interface ILocalizationElement
 {
-    string Id  { get; set; }
     IEnumerable<string> CreateLine(string? selector);
 }
 public class LocalizationBaseTable
