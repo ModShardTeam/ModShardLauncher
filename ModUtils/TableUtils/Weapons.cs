@@ -234,7 +234,7 @@ public partial class Msl
         string newline = $"{name};{id};{GetEnumMemberValue(Slot)};{GetEnumMemberValue(rarity)};{GetEnumMemberValue(Mat)};{MaxDuration};{LVL};{E};{Price};{Rng};{Weapon_Damage};{Armor_Damage};{Armor_Piercing};{Bodypart_Damage};{Slashing_Damage};{Piercing_Damage};{Blunt_Damage};{Rending_Damage};{Fire_Damage};{Shock_Damage};{Poison_Damage};{Caustic_Damage};{Frost_Damage};{Arcane_Damage};{Unholy_Damage};{Sacred_Damage};{Psionic_Damage};{Hit_Chance};{CRT};{CRTD};{PRR};{Block_Power};{CTA};{FMB};{EVS};{Bleeding_Chance};{Daze_Chance};{Stun_Chance};{Knockback_Chance};{Immob_Chance};{Stagger_Chance};{MP};{MP_Restoration};{Cooldown_Reduction};{Skills_Energy_Cost};{Spells_Energy_Cost};{Magic_Power};{Miscast_Chance};{Miracle_Chance};{Miracle_Power};{Backfire_Damage};{Pyromantic_Power};{Geomantic_Power};{Venomantic_Power};{Electroantic_Power};{Cryomantic_Power};{Arcanistic_Power};{Astromantic_Power};{Psimantic_Power};{Chronomantic_Power};{Health_Restoration};{Lifesteal};{Manasteal};{Bonus_Range};{Range_Modifier};{Damage_Received};{Damage_Returned};{Healing_Received};{STL};{Noise_Produced};{Balance};{Offhand_Efficiency};{Slaying_Chance};{GetEnumMemberValue(tags)};{(NoDrop ? "1" : "")};";
         
         // Find Meta Category in table
-        string metaGroupStr = GetEnumMemberValue(metaGroup);
+        string metaGroupStr = ThrowIfNull(GetEnumMemberValue(metaGroup));
         (int ind, string? foundLine) = table.Enumerate().FirstOrDefault(x => x.Item2.Contains(metaGroupStr));
         
         // Add line to table
