@@ -17,20 +17,6 @@ public class LocalizationModifier : ILocalizationElement
     public Dictionary<ModLanguage, string> Name { get; set; } = new();
     public Dictionary<ModLanguage, string>? Description { get; set; } = null;
     /// <summary>
-    /// Return an instance of <see cref="LocalizationModifier"/> with an empty <see cref="Loc"/>.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationModifier("mySpeechId");
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="id"></param>
-    public LocalizationModifier(string id)
-    {
-        Id = id;
-    }
-    /// <summary>
     /// Return an instance of <see cref="LocalizationModifier"/> with <see cref="Loc"/> filled by an input dictionary.
     /// It is expected to have at least an English key. It does not need to follow the convention order of the localization table.
     /// <example>
