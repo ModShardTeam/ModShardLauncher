@@ -21,12 +21,13 @@
     <Compile Include="ModUtils\TableUtils\EnemyBalance.cs" />
     <Compile Include="ModUtils\TableUtils\Potion.cs" />
     <Compile Include="ModUtils\TableUtils\SkillsStat.cs" />
-    <Compile Include="ModUtils\TableUtils\TableArmor.cs" />
+    <Compile Include="ModUtils\TableUtils\Armor.cs" />
     <Compile Include="ModUtils\TableUtils\TableUtils.cs" />
     <Compile Include="ModUtils\TableUtils\LocalizationUtils.cs" />
     <Compile Include="ModUtils\TableUtils\Modifier.cs" />
     <Compile Include="ModUtils\TableUtils\NPCLines.cs" />
-    <Compile Include="ModUtils\TableUtils\TableWeapons.cs" />
+    <Compile Include="ModUtils\TableUtils\Weapons.cs" />
+    <Compile Include="ModUtils\TableUtils\WeaponsText.cs" />
     <Compile Include="ModUtils\TableUtils\Speech.cs" />
     <Compile Include="Pages/*.cs" />
     <Compile Include="Extensions/*.cs" />
