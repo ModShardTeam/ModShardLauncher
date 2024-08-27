@@ -31,6 +31,7 @@
     <Compile Include="ModUtils\TableUtils\WeaponsText.cs" />
     <Compile Include="ModUtils\TableUtils\Speech.cs" />
     <Compile Include="ModUtils\TableUtils\Text.cs" />
+    <Compile Include="ModUtils\TableUtils\Skills.cs" />
     <Compile Include="Pages/*.cs" />
     <Compile Include="Extensions/*.cs" />
     <Compile Include="Mods/*.cs" />
