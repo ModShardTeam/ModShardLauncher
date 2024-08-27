@@ -65,12 +65,10 @@ public class LocalizationSpeech : ILocalizationElement
     public IEnumerable<string> CreateLine(string? _)
     {
         yield return string.Concat(Enumerable.Repeat(@$"{Id};", Msl.ModLanguageSize));
-
         foreach(Dictionary<ModLanguage, string> speech in Speeches)
         {
-            yield return string.Concat(speech.Values.Select(x => @$"{x};"));
+            yield return $";{string.Concat(speech.Values.Select(x => @$"{x};"))}";
         }
-
         yield return string.Concat(Enumerable.Repeat(@$"{Id}_end;", Msl.ModLanguageSize));
     }
 }
@@ -80,11 +78,11 @@ public static partial class Msl
     /// Wrapper for the LocalizationSpeeches class
     /// </summary>
     /// <param name="speeches"></param>
-    public static void InjectTableSpeechesLocalization(params ILocalizationElement[] speeches)
+    public static void InjectTableSpeechesLocalization(params LocalizationSpeech[] speeches)
     {
         LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_speech",
             ("FORBIDDEN MAGIC;", null)
         );
-        localizationBaseTable.InjectTable(speeches.ToList());
+        localizationBaseTable.InjectTable(speeches.Select(x => x as ILocalizationElement).ToList());
     }
 }

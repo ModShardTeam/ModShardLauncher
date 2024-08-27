@@ -112,7 +112,7 @@ public static partial class Msl
     /// Wrapper for the LocalizationBooks class
     /// </summary>
     /// <param name="modifiers"></param>
-    public static void InjectTableBooksLocalization(params ILocalizationElement[] modifiers)
+    public static void InjectTableBooksLocalization(params LocalizationBook[] modifiers)
     {
         LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_Books",
             ("book_name;", "name"), 
@@ -121,6 +121,6 @@ public static partial class Msl
             ("book_desc;", "desc"),
             ("book_type;", "type")
         );
-        localizationBaseTable.InjectTable(modifiers.ToList());
+        localizationBaseTable.InjectTable(modifiers.Select(x => x as ILocalizationElement).ToList());
     }
 }
