@@ -7,7 +7,7 @@ namespace ModShardLauncher;
 /// <summary>
 /// Abstraction the localization of items found in gml_GlobalScript_table_consumables.
 /// </summary>
-public class LocalizationItem : ILocalizationMultiTableElement
+public class LocalizationItem : ILocalizationElement
 {
     /// <summary>
     /// Name of the object in the localization table.
@@ -100,7 +100,7 @@ public class LocalizationItem : ILocalizationMultiTableElement
     /// </summary>
     /// <param name="selector"></param>
     /// <returns></returns>
-    public IEnumerable<string> CreateLine(string selector)
+    public IEnumerable<string> CreateLine(string? selector)
     {
         switch(selector)
         {
@@ -116,59 +116,6 @@ public class LocalizationItem : ILocalizationMultiTableElement
         }
     }
 }
-public class LocalizationItems : ILocalizationMultiTableElementCollection
-{
-    /// <summary>
-    /// List of <see cref="LocalizationItem"/>
-    /// </summary>
-    public List<ILocalizationMultiTableElement> Locs { get; set; } = new();
-    /// <summary>
-    /// Return an instance of <see cref="LocalizationItem"/> with an arbitrary number of <see cref="LocalizationItem"/>.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationItem(
-    ///     new LocalizationItem("mySpeechId1"), 
-    ///     new LocalizationItem("mySpeechId2"));
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="modifiers"></param>
-    public LocalizationItems(params LocalizationItem[] items)
-    {
-        foreach (LocalizationItem modifier in items)
-        {   
-            Locs.Add(modifier);
-        }
-    }
-    public IEnumerable<string> CreateLines(string selector)
-    {
-        return Locs.SelectMany(x => x.CreateLine(selector));
-    }
-    /// <summary>
-    /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationItem"/>,
-    /// insert a new line constructed by the dictionary <see cref="Loc"/> in the gml_GlobalScript_table_speech table. 
-    /// </summary>
-    /// <param name="table"></param>
-    /// <returns></returns>
-    public void InjectTable()
-    {
-        Localization.InjectTable("gml_GlobalScript_table_consumables", 
-            (
-                anchor:"consum_name;",
-                elements: CreateLines("name")
-            ),
-            (
-                anchor:"consum_mid;",
-                elements: CreateLines("effect")
-            ),
-            (
-                anchor:"consum_desc;",
-                elements: CreateLines("description")
-            )
-        );
-    }
-}
 public partial class Msl
 {
     /// <summary>
@@ -178,9 +125,11 @@ public partial class Msl
     /// <param name="name"></param>
     /// <param name="effect"></param>
     /// <param name="description"></param>
-    public static void InjectTableItemsLocalization(string id, params LocalizationItem[] items)
+    public static void InjectTableItemsLocalization(string id, params ILocalizationElement[] items)
     {
-        LocalizationItems localizationItems = new(items);
-        localizationItems.InjectTable();
+        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_consumables",
+            ("consum_name;", "name"), ("consum_mid;", "effect"), ("consum_desc;", "description")
+        );
+        localizationBaseTable.InjectTable(items.ToList());
     }
 }

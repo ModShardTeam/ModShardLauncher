@@ -166,20 +166,11 @@ namespace ModShardLauncherTest
             };
 
             // Act
-            MethodInfo? methodInfo = typeof(LocalizationItem).GetMethod("CreateLine", BindingFlags.NonPublic | BindingFlags.Static);
-            if (methodInfo == null)
-            {
-                Assert.Fail("Cannot find the tested method CreateLine");
-            }
+            string res = new LocalizationItem("testItem"){
+                Name = input
+            }.CreateLine("name")
+            .Collect();
             
-            object? result = methodInfo.Invoke(null, new object[] { "testItem", input });
-            if (result == null)
-            {
-                Assert.Fail("Invalid result from CreateLine");
-            }
-
-            string res = (string)result;
-
             // Assert
             Assert.Equal(expectedResult, res);
             
@@ -198,7 +189,7 @@ namespace ModShardLauncherTest
             LocalizationSentence sentence = new("id", str);
 
             // Act
-            string res = sentence.CreateLine().First();
+            string res = sentence.CreateLine(null).First();
 
             // Assert
             Assert.Equal(expectedResult, res);
