@@ -7,7 +7,7 @@ namespace ModShardLauncher;
 /// <summary>
 /// Abstraction for the localization of sentences found in gml_GlobalScript_table_NPC_Lines.
 /// </summary>
-public class LocalizationSentence : ILocalizationElement
+public class LocalizationSentence : ILocalizationSingleTableElement
 {
     /// <summary>
     /// Id of the sentence
@@ -95,12 +95,12 @@ public class LocalizationSentence : ILocalizationElement
 /// <summary>
 /// Abstraction for carrying a list of sentences.
 /// </summary>
-public class LocalizationDialog : ILocalizationElementCollection
+public class LocalizationDialog : ILocalizationSingleTableElementCollection
 {
     /// <summary>
     /// List of <see cref="LocalizationSentence"/>
     /// </summary>
-    public List<ILocalizationElement> Locs { get; set; } = new();
+    public List<ILocalizationSingleTableElement> Locs { get; set; } = new();
     /// <summary>
     /// Return an instance of <see cref="LocalizationDialog"/> with an arbitrary number of <see cref="LocalizationSentence"/>.
     /// <example>

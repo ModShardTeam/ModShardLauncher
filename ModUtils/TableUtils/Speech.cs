@@ -5,7 +5,7 @@ using ModShardLauncher.Mods;
 
 namespace ModShardLauncher;
 
-public class LocalizationSpeech : ILocalizationElement
+public class LocalizationSpeech : ILocalizationSingleTableElement
 {
     /// <summary>
     /// Id of the speech
@@ -91,12 +91,12 @@ public class LocalizationSpeech : ILocalizationElement
 /// <summary>
 /// Abstraction for carrying a list of speeches.
 /// </summary>
-public class LocalizationSpeeches : ILocalizationElementCollection
+public class LocalizationSpeeches : ILocalizationSingleTableElementCollection
 {
     /// <summary>
     /// List of <see cref="LocalizationSpeech"/>
     /// </summary>
-    public List<ILocalizationElement> Locs { get; set; } = new();
+    public List<ILocalizationSingleTableElement> Locs { get; set; } = new();
     /// <summary>
     /// Return an instance of <see cref="LocalizationSpeech"/> with an arbitrary number of <see cref="LocalizationSpeech"/>.
     /// <example>
