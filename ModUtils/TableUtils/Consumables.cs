@@ -26,20 +26,6 @@ public class LocalizationItem : ILocalizationElement
     /// </summary>
     public Dictionary<ModLanguage, string> Description { get; set; } = new();
     /// <summary>
-    /// Return an instance of <see cref="LocalizationItem"/> with empty <see cref="Name"/>, <see cref="Effect"/> and <see cref="Description"/>.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationItem("myTestItem");
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="id"></param>
-    public LocalizationItem(string id)
-    {
-        Id = id;
-    }
-    /// <summary>
     /// Return an instance of <see cref="LocalizationItem"/> with <see cref="Name"/>, <see cref="Effect"/> and <see cref="Description"/> filled by input dictionaries.
     /// It is expected to have at least an English key for each dictionary. It does not need to follow the convention order of the localization table.
     /// <example>

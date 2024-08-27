@@ -17,20 +17,6 @@ public class LocalizationWeaponText : ILocalizationElement
     public Dictionary<ModLanguage, string> Name { get; set; } = new();
     public Dictionary<ModLanguage, string> Description { get; set; } = new();
     /// <summary>
-    /// Return an instance of <see cref="LocalizationWeaponText"/> with an empty <see cref="Loc"/>.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationWeaponText("mySpeechId");
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="id"></param>
-    public LocalizationWeaponText(string id)
-    {
-        Id = id;
-    }
-    /// <summary>
     /// Return an instance of <see cref="LocalizationWeaponText"/> with <see cref="Loc"/> filled by an input dictionary.
     /// It is expected to have at least an English key. It does not need to follow the convention order of the localization table.
     /// <example>

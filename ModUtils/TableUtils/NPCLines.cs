@@ -23,20 +23,6 @@ public class LocalizationSentence : ILocalizationElement
     /// </summary>
     public Dictionary<ModLanguage, string> Sentence { get; set; } = new();
     /// <summary>
-    /// Return an instance of <see cref="LocalizationSentence"/> with an empty <see cref="Sentence"/>.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationSentence("mySentenceId");
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="id"></param>
-    public LocalizationSentence(string id)
-    {
-        Id = id;
-    }
-    /// <summary>
     /// Return an instance of <see cref="LocalizationSentence"/> with <see cref="Sentence"/> filled by an input dictionary.
     /// It is expected to have at least an English key. It does not need to follow the convention order of the localization table.
     /// <example>
