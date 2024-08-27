@@ -84,12 +84,12 @@ public class LocalizationSentence : ILocalizationElement
     /// </example>
     /// </summary>
     /// <returns></returns>
-    public string CreateLine()
+    public IEnumerable<string> CreateLine()
     {
         string line = string.Format("{0};{1};{2};{3};{4};{5};", Id, Tags, Role, Type, Faction, Settlement);
         line += string.Concat(Sentence.Values.Select(x => @$"{x};"));
         
-        return line;
+        yield return line;
     }
 }
 /// <summary>
@@ -121,6 +121,10 @@ public class LocalizationDialog : ILocalizationElementCollection
         }
         
     }
+    public IEnumerable<string> CreateLines()
+    {
+        return Locs.SelectMany(x => x.CreateLine());
+    }
     /// <summary>
     /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSentence"/>,
     /// insert a new line constructed by the dictionary <see cref="Sentence"/> in the gml_GlobalScript_table_NPC_Lines table. 
@@ -131,7 +135,7 @@ public class LocalizationDialog : ILocalizationElementCollection
     {
         Localization.InjectTable("gml_GlobalScript_table_NPC_Lines", (
                 anchor:"NPC - GREETINGS;",
-                elements: Locs.Select(x => x.CreateLine())
+                elements: CreateLines()
             )
         );
     }

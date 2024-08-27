@@ -14,7 +14,7 @@ public class LocalizationSpeech : ILocalizationElement
     /// <summary>
     /// Dictionary that contains a translation of the speech as displayed in the log for each available languages.
     /// </summary>
-    public Dictionary<ModLanguage, string> Loc { get; set; } = new();
+    public List<Dictionary<ModLanguage, string>> Speeches { get; set; } = new();
     /// <summary>
     /// Return an instance of <see cref="LocalizationSpeech"/> with an empty <see cref="Loc"/>.
     /// <example>
@@ -42,10 +42,10 @@ public class LocalizationSpeech : ILocalizationElement
     /// </summary>
     /// <param name="id"></param>
     /// <param name="speech"></param>
-    public LocalizationSpeech(string id, Dictionary<ModLanguage, string> speech)
+    public LocalizationSpeech(string id, params Dictionary<ModLanguage, string>[] speeches)
     {
         Id = id;
-        Loc = Localization.SetDictionary(speech);
+        Speeches = speeches.Select(x => Localization.SetDictionary(x)).ToList();
     }
     /// <summary>
     /// Return an instance of <see cref="LocalizationSpeech"/> with <see cref="Loc"/> filled by an input string delimited by semi-colon.
@@ -60,10 +60,10 @@ public class LocalizationSpeech : ILocalizationElement
     /// </summary>
     /// <param name="id"></param>
     /// <param name="speech"></param>
-    public LocalizationSpeech(string id, string speech)
+    public LocalizationSpeech(string id, string[] speeches)
     {
         Id = id;
-        Loc = Localization.SetDictionary(speech);
+        Speeches = speeches.Select(x => Localization.SetDictionary(x)).ToList();
     }
     /// <summary>
     /// Create a string delimited by semi-colon that follows the in-game convention order for localization of speechs.
@@ -76,13 +76,16 @@ public class LocalizationSpeech : ILocalizationElement
     /// </example>
     /// </summary>
     /// <returns></returns>
-    public string CreateLine()
+    public IEnumerable<string> CreateLine()
     {
-        string _start = string.Concat(Enumerable.Repeat(@$"{Id};", Msl.ModLanguageSize));
-        string _speech = string.Concat(Loc.Values.Select(x => @$"{x};"));
-        string _end = string.Concat(Enumerable.Repeat(@$"{Id}_end;", Msl.ModLanguageSize));
+        yield return string.Concat(Enumerable.Repeat(@$"{Id};", Msl.ModLanguageSize));
 
-        return @$"""{_start}"",""{_speech}"",""{_end}"",";
+        foreach(Dictionary<ModLanguage, string> speech in Speeches)
+        {
+            yield return string.Concat(speech.Values.Select(x => @$"{x};"));
+        }
+
+        yield return string.Concat(Enumerable.Repeat(@$"{Id}_end;", Msl.ModLanguageSize));
     }
 }
 /// <summary>
@@ -114,6 +117,10 @@ public class LocalizationSpeeches : ILocalizationElementCollection
         }
         
     }
+    public IEnumerable<string> CreateLines()
+    {
+        return Locs.SelectMany(x => x.CreateLine());
+    }
     /// <summary>
     /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSpeech"/>,
     /// insert a new line constructed by the dictionary <see cref="Loc"/> in the gml_GlobalScript_table_speech table. 
@@ -124,7 +131,7 @@ public class LocalizationSpeeches : ILocalizationElementCollection
     {
         Localization.InjectTable("gml_GlobalScript_table_speech", (
                 anchor:"FORBIDDEN MAGIC;",
-                elements: Locs.Select(x => x.CreateLine())
+                elements: CreateLines()
             )
         );
     }
