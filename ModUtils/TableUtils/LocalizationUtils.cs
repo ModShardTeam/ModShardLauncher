@@ -121,15 +121,25 @@ static public class Localization
     {
         IEnumerable<string> func(IEnumerable<string> input)
         {
+            int extraLines = 0;
             foreach (string item in input)
             {
                 foreach(string element in datas.Where(_ => item.Contains(_.anchor)).SelectMany(_ => _.elements).Reverse())
                 {
+                    extraLines++;
                     yield return $"push.s \"{element}\"";
                     yield return "conv.s.v";
                 }
-                
-                yield return item;
+
+                if (item.Contains("NewGMLArray"))
+                {
+                    int nLines = int.Parse(Regex.Match(item, @"argc=(\d+)").Groups[1].Value);
+                    yield return $"call.i @@NewGMLArray@@(argc={nLines + extraLines})";
+                }
+                else
+                {
+                    yield return item;
+                }
             }
         }
 
