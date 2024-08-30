@@ -3,6 +3,8 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="ToolDescription">一款用于StoneShard的模组工具.</sys:String>
     <sys:String x:Key="ToolStart">模组之旅从这里启程.</sys:String>
+    <sys:String x:Key="FutureFeature">即将推出.</sys:String>
+    <sys:String x:Key="BuilderTitle">A weapon and armor builder</sys:String>
     <sys:String x:Key="FileHeader">文件</sys:String>
     <sys:String x:Key="SettingHeader">设置</sys:String>
     <sys:String x:Key="FileHeader_Open">打开</sys:String>

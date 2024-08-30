@@ -139,9 +139,13 @@
                         </local:MyToggleButton.Resources>
                     </local:MyToggleButton>
                     <Grid Height="30"/>
-                    <local:MyToggleButton ImageSource="/Resources/Sprites/__placeholder.png" Text="{DynamicResource Settings}" 
+                    <local:MyToggleButton ImageSource="/Resources/Sprites/__placeholder.png" Text="{DynamicResource AWBuilder}" 
                                           Checked="MyToggleButton_Checked"  ToolTip="Armor and Weapon Builder"
                                           Click="AWBuilderButtonHandler">
+                        <local:MyToggleButton.Resources>
+                            <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/__placeholder_down.png"/>
+                            <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/__placeholder_over.png"/>
+                        </local:MyToggleButton.Resources>
                     </local:MyToggleButton>
                     <Grid Height="194"/>
                     <local:MyToggleButton ImageSource="/Resources/Sprites/min.png" Text="{DynamicResource Minimize}" Click="MinimizeButtonHandler">

@@ -26,6 +26,7 @@ namespace ModShardLauncher
         public ModInfos ModPage;
         public ModSourceInfos ModSourcePage;
         public Settings SettingsPage;
+        public AWBuilder AWBuilderPage;
         public static UserSettings Settings = new();
         public static LoggingLevelSwitch lls = new();
         [DllImport("kernel32.dll")]
@@ -42,10 +43,12 @@ namespace ModShardLauncher
             ShowWindow(handle, SW_HIDE);
 
             Instance = this;
-            MainPage = new MainPage();
-            ModPage = new ModInfos();
+            MainPage = new();
+            ModPage = new();
             UserSettings.LoadSettings();
-            ModSourcePage = new ModSourceInfos();
+            ModSourcePage = new();
+            AWBuilderPage = new();
+            
             if (!Directory.Exists(ModLoader.ModPath))
                 Directory.CreateDirectory(ModLoader.ModPath);
             if (!Directory.Exists(ModLoader.ModSourcesPath))
@@ -171,7 +174,7 @@ namespace ModShardLauncher
         }
         private void AWBuilderButtonHandler(object sender, EventArgs e)
         {
-            if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = SettingsPage;
+            if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = AWBuilderPage;
             else Viewer.Content = MainPage;
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

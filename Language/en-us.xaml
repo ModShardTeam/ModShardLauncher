@@ -3,6 +3,8 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="ToolDescription">A tool for StoneShard modding.</sys:String>
     <sys:String x:Key="ToolStart">Start your first mod from here.</sys:String>
+    <sys:String x:Key="FutureFeature">Coming soon.</sys:String>
+    <sys:String x:Key="BuilderTitle">A weapon and armor builder</sys:String>
     <sys:String x:Key="FileHeader">File</sys:String>
     <sys:String x:Key="SettingHeader">Settings</sys:String>
     <sys:String x:Key="FileHeader_Open">Open</sys:String>
