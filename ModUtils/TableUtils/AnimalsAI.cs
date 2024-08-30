@@ -45,15 +45,17 @@ public static class DataAI
         return i <= j ? j*j + i: i*i + 2*i - j;
     }
     public static readonly string TableName = "gml_GlobalScript_table_animals_ai";
-    public static List<string> Factions = new();
+    public static List<string> ActingFactions = new(); // each row represent how a faction acts to the presence of another one
+    public static List<string> RespondingFactions = new(); // each columns represents how others factions respond to the present of another one
     // Behaviours matrix is represented by layers instead of a class row, column representation.
     // see https://cs.stackexchange.com/questions/27627/algorithm-dimension-increase-in-1d-representation-of-square-matrix for more information.
     public static List<Behaviour> Behaviours = new();
     internal static void LoadAITable()
     {
-        if (Factions.Any() || Behaviours.Any())
+        if (ActingFactions.Any() || RespondingFactions.Any() || Behaviours.Any())
         {
             // already Imported
+            Log.Warning("The AITable was already loaded.");
             return;
         }
 
@@ -68,19 +70,34 @@ public static class DataAI
             {
                 string line = match.Groups[1].Value;
                 if (line.Contains("1;- Combat")) break;
-                if (line.Contains("x;")) continue;
+                if (line.Contains("x;"))
+                {
+                    foreach((int j, string s) in line.Split(';').Enumerate())
+                    {
+                        if (j == 0) continue;
+                        RespondingFactions.Add(s);
+                        Log.Information("found responding faction {0}", s);
+                    }
+                    continue;
+                }
 
                 foreach((int j, string s) in line.Split(';').Enumerate())
                 {
                     if (j == 0)
                     {
-                        Factions.Add(s);
-                        Log.Information("found faction {0}", s);
+                        ActingFactions.Add(s);
+                        Log.Information("found acting faction {0}", s);
                         continue;
                     }
 
                     int index = ConvertSquaredCoordinates(i - 1, j - 1);
-                    if (Behaviours.Count <= index) Behaviours.AddRange(Enumerable.Repeat(Behaviour.None, 2*Behaviours.Count + 1));
+                    if (Behaviours.Count <= index)
+                    {
+                        int old_size = Behaviours.Count;
+                        int increasing_size = (int)(2 *Math.Sqrt(Behaviours.Count) + 1);
+                        Log.Information("By adding {2}, need to increase behaviours size from {0} to {1}.", old_size, old_size + increasing_size, index);
+                        Behaviours.AddRange(Enumerable.Repeat(Behaviour.None, increasing_size));
+                    }
                     Behaviours[index] = ParseBehaviour(s);
                 }
             }
@@ -90,58 +107,69 @@ public static class DataAI
             Log.Error(ex, ex.Message);
         }
 
-        Log.Information("found {0} factions", Factions.Count);
+        Log.Information("found {0} acting factions", ActingFactions.Count);
+        Log.Information("found {0} responding factions", RespondingFactions.Count);
         Log.Information("found {0} behaviours", Behaviours.Count);
     }
     internal static void PrintAITable()
     {
-        int N = Factions.Count;
+        int N = ActingFactions.Count;
+        int M = RespondingFactions.Count;
+
+        string l = "x\t\t";
+        for(int j = 0; j < M; j++)
+        {
+            l += $" {RespondingFactions[j]}";
+        }
 
         for(int i = 0; i < N; i++)
         {
-            string l = Factions[i];
-             for(int j = 0; j < N; j++)
+            l = $"{ActingFactions[i]}\t\t";
+             for(int j = 0; j < M; j++)
             {
-                l += $"\t{Behaviours[ConvertSquaredCoordinates(i, j)]}";
+                // l += $"\t{Behaviours[ConvertSquaredCoordinates(i, j)]}";
+                l += $" {StrBehaviour(Behaviours[ConvertSquaredCoordinates(i, j)])}";
             }
             Log.Information(l);
         }
     }
     internal static IEnumerable<string> CreateIATable()
     {
-        yield return $"x;{string.Concat(Factions.Select(x => $"{x};"))}";
+        yield return $"x;{string.Concat(RespondingFactions.Select(x => $"{x};"))}";
 
-        int N = Factions.Count;
+        int N = ActingFactions.Count;
+        int M = RespondingFactions.Count;
+
         for(int i = 0; i < N; i++)
         {
-            string l = $"{Factions[i]};";
-             for(int j = 0; j < N; j++)
+            string l = $"{ActingFactions[i]};";
+             for(int j = 0; j < M; j++)
             {
-                l += $"{Behaviours[ConvertSquaredCoordinates(i, j)]};";
+                l += $"{StrBehaviour(Behaviours[ConvertSquaredCoordinates(i, j)])};";
             }
             yield return l;
         }
 
-        yield return $"1;- Combat-переход;{string.Concat(Enumerable.Repeat(';', N))}";
-        yield return $"1;- Threat-переход;{string.Concat(Enumerable.Repeat(';', N))}";
-        yield return $"1;- Flee-переход;{string.Concat(Enumerable.Repeat(';', N))}";
+        yield return $"1;- Combat-переход;{string.Concat(Enumerable.Repeat(';', M))}";
+        yield return $"1;- Threat-переход;{string.Concat(Enumerable.Repeat(';', M))}";
+        yield return $"1;- Flee-переход;{string.Concat(Enumerable.Repeat(';', M))}";
     }
 }
 public class StatAI
 {
-    private static void SetElements(string faction, Func<int, int, int> conv, params (string, DataAI.Behaviour)[] actions)
+    private static void SetElements(string faction, List<string> factionsList, Func<int, int, int> conv, params (string, DataAI.Behaviour)[] actions)
     {
-        if (!DataAI.Factions.Contains(faction))
+        if (!factionsList.Contains(faction))
         {
-            DataAI.Behaviours.AddRange(Enumerable.Repeat(DataAI.Behaviour.None, 2*DataAI.Factions.Count + 1));
-            DataAI.Factions.Add(faction);
+            DataAI.Behaviours.AddRange(Enumerable.Repeat(DataAI.Behaviour.None, (int)(2 *Math.Sqrt(DataAI.Behaviours.Count) + 1)));
+            factionsList.Add(faction);
         }
 
-        (int i, string _) = DataAI.Factions.Enumerate().First(x => x.Item2 == faction);
+        (int i, string _) = factionsList.Enumerate().First(x => x.Item2 == faction);
 
         foreach ((string f, DataAI.Behaviour b) in actions)
         {
-            (int j, string? factionFound) = DataAI.Factions.Enumerate().FirstOrDefault(x => x.Item2 == f);
+            (int j, string? factionFound) = factionsList.Enumerate().FirstOrDefault(x => x.Item2 == f);
             if (factionFound != null)
             {
                 int index = conv(i, j);
@@ -152,12 +180,12 @@ public class StatAI
     public static void SetAction(string faction, params (string, DataAI.Behaviour)[] responses)
     {
         // add or change a line
-        SetElements(faction, DataAI.ConvertSquaredCoordinates, responses);
+        SetElements(faction, DataAI.RespondingFactions, DataAI.ConvertSquaredCoordinates, responses);
     }
     public static void SetResponse(string faction, params (string, DataAI.Behaviour)[] responses)
     {
         // add or change a column
-        SetElements(faction, (i, j) => DataAI.ConvertSquaredCoordinates(j, i), responses);
+        SetElements(faction, DataAI.ActingFactions, (i, j) => DataAI.ConvertSquaredCoordinates(j, i), responses);
     }
 }
 public partial class Msl
@@ -178,7 +206,7 @@ public partial class Msl
                 if (item.Contains("setowner"))
                 {
                     yield return item;
-                    IEnumerable<string> table = DataAI.CreateIATable();
+                    IEnumerable<string> table = DataAI.CreateIATable().Reverse();
                     foreach(string line in table)
                     {
                         sizeTable++;
@@ -195,10 +223,6 @@ public partial class Msl
                 }
 
                 if (!ignore_lines)
-                {
-                    yield return item;
-                }
-                else
                 {
                     yield return item;
                 }
