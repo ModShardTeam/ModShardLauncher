@@ -14,7 +14,5 @@ namespace ModShardLauncher.Controls
         {
             InitializeComponent();
         }
-        public List<object> List { get; set; } = new List<object>();
-        public GeneralPage GeneralPage = new();
     }
 }
