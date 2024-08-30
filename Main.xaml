@@ -114,7 +114,7 @@
                     <Grid Height="40"/>
                     <local:MyToggleButton ImageSource="/Resources/Sprites/mod.png" Text="{DynamicResource Mod}" 
                                           Checked="MyToggleButton_Checked" ToolTip="Mod Page"
-                                          Click="MyToggleButton_Click_1">
+                                          Click="ModButtonHandler">
                         <local:MyToggleButton.Resources>
                             <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/mod_down.png"/>
                             <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/mod_over.png"/>
@@ -123,7 +123,7 @@
                     <Grid Height="30"/>
                     <local:MyToggleButton ImageSource="/Resources/Sprites/source.png" Text="{DynamicResource ModSource}" 
                                           Checked="MyToggleButton_Checked" ToolTip="ModSource Page"
-                                          Click="MyToggleButton_Click_2">
+                                          Click="SourceButtonHandler">
                         <local:MyToggleButton.Resources>
                             <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/source_down.png"/>
                             <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/source_over.png"/>
@@ -132,20 +132,25 @@
                     <Grid Height="30"/>
                     <local:MyToggleButton ImageSource="/Resources/Sprites/settings.png" Text="{DynamicResource Settings}" 
                                           Checked="MyToggleButton_Checked"  ToolTip="Settings Page"
-                                          Click="MyToggleButton_Click_4">
+                                          Click="SettingsButtonHandler">
                         <local:MyToggleButton.Resources>
                             <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/settings_down.png"/>
                             <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/settings_over.png"/>
                         </local:MyToggleButton.Resources>
                     </local:MyToggleButton>
-                    <Grid Height="256"/>
-                    <local:MyToggleButton ImageSource="/Resources/Sprites/min.png" Text="{DynamicResource Minimize}" Click="MyToggleButton_Click_3">
+                    <Grid Height="30"/>
+                    <local:MyToggleButton ImageSource="/Resources/Sprites/__placeholder.png" Text="{DynamicResource Settings}" 
+                                          Checked="MyToggleButton_Checked"  ToolTip="Armor and Weapon Builder"
+                                          Click="AWBuilderButtonHandler">
+                    </local:MyToggleButton>
+                    <Grid Height="194"/>
+                    <local:MyToggleButton ImageSource="/Resources/Sprites/min.png" Text="{DynamicResource Minimize}" Click="MinimizeButtonHandler">
                         <local:MyToggleButton.Resources>
                             <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/min_down.png"/>
                             <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/min_over.png"/>
                         </local:MyToggleButton.Resources>
                     </local:MyToggleButton>
-                    <local:MyToggleButton ImageSource="/Resources/Sprites/close.png" Text="{DynamicResource Close}" Click="MyToggleButton_Click">
+                    <local:MyToggleButton ImageSource="/Resources/Sprites/close.png" Text="{DynamicResource Close}" Click="CloseButtonHandler">
                         <local:MyToggleButton.Resources>
                             <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/close_down.png"/>
                             <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/close_over.png"/>

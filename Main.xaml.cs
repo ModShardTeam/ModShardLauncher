@@ -143,33 +143,37 @@ namespace ModShardLauncher
             else if (Viewer.Content is Settings) Viewer.Content = SettingsPage;
             else Viewer.Content = MainPage;
         }
-        private void MyToggleButton_Click(object sender, EventArgs e)
+        private void CloseButtonHandler(object sender, EventArgs e)
         {
             _ = Log.CloseAndFlushAsync();
             Close();
         }
-        private void MyToggleButton_Click_1(object sender, EventArgs e)
+        private void ModButtonHandler(object sender, EventArgs e)
         {
             if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = ModPage;
             else Viewer.Content = MainPage;
         }
 
-        private void MyToggleButton_Click_2(object sender, EventArgs e)
+        private void SourceButtonHandler(object sender, EventArgs e)
         {
             if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = ModSourcePage;
             else Viewer.Content = MainPage;
         }
-        private void MyToggleButton_Click_4(object sender, EventArgs e)
+        private void SettingsButtonHandler(object sender, EventArgs e)
         {
             if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = SettingsPage;
             else Viewer.Content = MainPage;
         }
-        private void MyToggleButton_Click_3(object sender, EventArgs e)
+        private void MinimizeButtonHandler(object sender, EventArgs e)
         {
             WindowState = WindowState.Minimized;
             if (sender is MyToggleButton button) button.MyButton.IsChecked = false;
         }
-
+        private void AWBuilderButtonHandler(object sender, EventArgs e)
+        {
+            if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = SettingsPage;
+            else Viewer.Content = MainPage;
+        }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Settings.SaveSettings();

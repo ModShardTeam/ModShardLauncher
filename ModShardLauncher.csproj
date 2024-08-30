@@ -116,6 +116,7 @@
   <ItemGroup>
     <Resource Include="Resources\Sprites\icon_default.png" />
     <Resource Include="Resources\Sprites\server.png" />
+    <Resource Include="Resources\Sprites\__placeholder.png" />
     <Resource Include="Resources\Sprites\server_down.png" />
     <Resource Include="Resources\Sprites\server_over.png" />
     <Resource Include="Resources\Sprites\settings_button_over.png" />
