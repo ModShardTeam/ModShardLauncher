@@ -69,7 +69,7 @@ public class LocalizationBookTest
         Assert.Equal(output, res);
     }
     [Fact]
-    public void CreateInjectionItemsLocalization()
+    public void CreateInjectionBooksLocalization()
     {
         // Arrange
         string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""book_type;""
