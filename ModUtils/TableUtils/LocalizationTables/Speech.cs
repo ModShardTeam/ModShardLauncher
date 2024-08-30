@@ -46,7 +46,7 @@ public class LocalizationSpeech : ILocalizationElement
     /// </summary>
     /// <param name="id"></param>
     /// <param name="speech"></param>
-    public LocalizationSpeech(string id, string[] speeches)
+    public LocalizationSpeech(string id, params string[] speeches)
     {
         Id = id;
         Speeches = speeches.Select(x => Localization.SetDictionary(x)).ToList();
@@ -64,12 +64,12 @@ public class LocalizationSpeech : ILocalizationElement
     /// <returns></returns>
     public IEnumerable<string> CreateLine(string? _)
     {
-        yield return string.Concat(Enumerable.Repeat(@$"{Id};", Msl.ModLanguageSize));
+        yield return $"{Id};{string.Concat(Enumerable.Repeat(@$"{Id};", Msl.ModLanguageSize))}";
         foreach(Dictionary<ModLanguage, string> speech in Speeches)
         {
             yield return $";{string.Concat(speech.Values.Select(x => @$"{x};"))}";
         }
-        yield return string.Concat(Enumerable.Repeat(@$"{Id}_end;", Msl.ModLanguageSize));
+        yield return $"{Id}_end;{string.Concat(Enumerable.Repeat(@$"{Id}_end;", Msl.ModLanguageSize))}";
     }
 }
 public static partial class Msl
