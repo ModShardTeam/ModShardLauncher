@@ -13,6 +13,7 @@ using Serilog.Events;
 using System.Runtime.InteropServices;
 using ModShardLauncher.Mods;
 using System.Diagnostics;
+using UndertaleModLib.Models;
 
 namespace ModShardLauncher
 {
@@ -36,6 +37,7 @@ namespace ModShardLauncher
         public const int SW_SHOW = 5;
         public static IntPtr handle;
         public string mslVersion;
+        public string utmtlibVersion;
         public Main()
         {
             handle = GetConsoleWindow();
@@ -69,13 +71,14 @@ namespace ModShardLauncher
                 ProcessModule mainProcess = Msl.ThrowIfNull(Process.GetCurrentProcess().MainModule);
                 string mainProcessName = Msl.ThrowIfNull(mainProcess.FileName);
                 mslVersion = "v" + FileVersionInfo.GetVersionInfo(mainProcessName).FileVersion;
+                utmtlibVersion = "v" + FileVersionInfo.GetVersionInfo(typeof(UndertaleCode).Assembly.Location).FileVersion;
             }
             catch(FileNotFoundException ex)
             {
                 Log.Error(ex, "Cannot find the dll of ModShardLauncher");
                 throw;
             }
-            Log.Information("Launching msl {{{0}}}", mslVersion);
+            Log.Information("Launching msl {{{0}}} using UTMT {{{1}}}", mslVersion, utmtlibVersion);
 
             try
             {
