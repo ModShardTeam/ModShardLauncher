@@ -21,13 +21,33 @@ public class LocalizationItemTest
         // Assert
         Assert.Equal(output, res);
     }
-    [[Fact]
+    [Fact]
     public void TestName()
     {
-        // Given
-        string output = "greeting;any;theologist;any;any;any;Да?..;Yes?..;什么事儿?;Ja ...?;Yes?..;Oui...?;Sì...?;Sim..?;Tak?..;Yes?..;何か…？;뭔가...?;"
-        // When
-    
-        // Then
-    }]
+        // Arrange
+        string output = "greeting;any;any;any;any;any;Да?..;Yes?..;什么事儿?;Ja ...?;Yes?..;Oui...?;Sì...?;Sim..?;Tak?..;Yes?..;何か…？;뭔가...?;";
+        Dictionary<ModLanguage, string> input = new() 
+        {
+            {ModLanguage.Russian, "Да?.."}, 
+            {ModLanguage.English, "Yes?.."}, 
+            {ModLanguage.Chinese, "什么事儿?"}, 
+            {ModLanguage.German, "Ja ...?"}, 
+            {ModLanguage.Spanish, "Yes?.."}, 
+            {ModLanguage.French, "Oui...?"}, 
+            {ModLanguage.Italian, "Sì...?"}, 
+            {ModLanguage.Portuguese, "Sim..?"}, 
+            {ModLanguage.Polish, "testEn"}, 
+            {ModLanguage.Turkish, "testEn"}, 
+            {ModLanguage.Japanese, "testEn"}, 
+            {ModLanguage.Korean, "testEn"}
+        };
+
+        // Act
+        string res = new LocalizationItem("greeting", input, input, input)
+            .CreateLine("name")
+            .Collect();
+
+        // Assert
+        Assert.Equal(output, res);
+    }
 }
