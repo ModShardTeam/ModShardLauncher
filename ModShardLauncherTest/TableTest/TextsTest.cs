@@ -184,3 +184,88 @@ conv.s.v", 2);
         Assert.Equal(outputTable.Replace("\r\n", "\n"), res.Replace("\r\n", "\n"));
     }
 }
+public class LocalizationTextContextTest
+{
+    [Theory]
+    [InlineData(LocalizationUtilsData.oneLanguageString, "testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;")]
+    [InlineData(LocalizationUtilsData.multipleLanguagesString, "testRu;testEn;testCh;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;testEn;")]
+    [InlineData(LocalizationUtilsData.allLanguagesString, "testRu;testEn;testCh;testGe;testSp;testFr;testIt;testPr;testPl;testTu;testJp;testKr;")]
+    public void CreateLine(string input, string output)
+    {
+        // Arrange
+        output = $"testItem;{output}";
+
+        // Act
+        string res = new LocalizationTextContext("testItem", input)
+            .CreateLine(null)
+            .Collect();
+        
+        // Assert
+        Assert.Equal(output, res);
+    }
+    [Fact]
+    public void CreateLineFromExistingData()
+    {
+        // Arrange
+        string output = "1;Открыть;Open;打开;Öffnen;Abrir;Ouvrir;Apri;Abrir;Otwórz;Aç;開く;열기;";
+        Dictionary<ModLanguage, string> input = new() 
+        {
+            {ModLanguage.Russian, "Открыть"}, 
+            {ModLanguage.English, "Open"}, 
+            {ModLanguage.Chinese, "打开"}, 
+            {ModLanguage.German, "Öffnen"}, 
+            {ModLanguage.Spanish, "Abrir"}, 
+            {ModLanguage.French, "Ouvrir"}, 
+            {ModLanguage.Italian, "Apri"}, 
+            {ModLanguage.Portuguese, "Abrir"}, 
+            {ModLanguage.Polish, "Otwórz"}, 
+            {ModLanguage.Turkish, "Aç"}, 
+            {ModLanguage.Japanese, "開く"}, 
+            {ModLanguage.Korean, "열기"}
+        };
+
+        // Act
+        string res = new LocalizationTextContext("1", input)
+            .CreateLine(null)
+            .Collect();
+
+        // Assert
+        Assert.Equal(output, res);
+    }
+    [Fact]
+    public void CreateInjectionTextContextsLocalization()
+    {
+        // Arrange
+        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""context_menu;""
+conv.s.v", 1);
+
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""1;Открыть;Open;打开;Öffnen;Abrir;Ouvrir;Apri;Abrir;Otwórz;Aç;開く;열기;""
+conv.s.v
+push.s ""context_menu;""
+conv.s.v", 2);
+
+        Dictionary<ModLanguage, string> input = new() 
+        {
+            {ModLanguage.Russian, "Открыть"}, 
+            {ModLanguage.English, "Open"}, 
+            {ModLanguage.Chinese, "打开"}, 
+            {ModLanguage.German, "Öffnen"}, 
+            {ModLanguage.Spanish, "Abrir"}, 
+            {ModLanguage.French, "Ouvrir"}, 
+            {ModLanguage.Italian, "Apri"}, 
+            {ModLanguage.Portuguese, "Abrir"}, 
+            {ModLanguage.Polish, "Otwórz"}, 
+            {ModLanguage.Turkish, "Aç"}, 
+            {ModLanguage.Japanese, "開く"}, 
+            {ModLanguage.Korean, "열기"}
+        };
+
+        LocalizationTextContext[] Locs = new[] {new LocalizationTextContext("1", input)};
+
+        // Act
+        string res = Msl.CreateInjectionTextContextsLocalization(Locs)(inputTable.Split('\n')).Collect();
+       
+        // Assert
+        Assert.Equal(outputTable.Replace("\r\n", "\n"), res.Replace("\r\n", "\n"));
+    }
+}
