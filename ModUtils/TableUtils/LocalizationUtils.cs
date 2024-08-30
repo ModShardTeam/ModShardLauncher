@@ -117,7 +117,7 @@ static public class Localization
         }
         return dest;
     }
-    static public void InjectTable(string tableName, params (string anchor, IEnumerable<string> elements)[] datas)
+    static public Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTable(params (string anchor, IEnumerable<string> elements)[] datas)
     {
         IEnumerable<string> func(IEnumerable<string> input)
         {
@@ -143,8 +143,12 @@ static public class Localization
             }
         }
 
+        return func;
+    }
+    static public void InjectTable(string tableName, Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTable)
+    {
         Msl.LoadAssemblyAsString(tableName)
-            .Apply(func)
+            .Apply(CreateInjectionTable)
             .Save();
     }
 }
@@ -154,11 +158,9 @@ public interface ILocalizationElement
 }
 public class LocalizationBaseTable
 {
-    public string TableName;
     public List<(string anchor, string? selector)> Anchors = new();
-    public LocalizationBaseTable(string tableName, params (string, string?)[] anchors)
+    public LocalizationBaseTable(params (string, string?)[] anchors)
     {
-        TableName = tableName;
         foreach ((string, string?) anchor in anchors)
         {   
             Anchors.Add(anchor);
@@ -168,10 +170,9 @@ public class LocalizationBaseTable
     {
         return Locs.SelectMany(x => x.CreateLine(selector));
     }
-    public void InjectTable(List<ILocalizationElement> Locs)
+    public Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTable(List<ILocalizationElement> Locs)
     {
-        Localization.InjectTable(
-            TableName, 
+        return Localization.CreateInjectionTable( 
             Anchors.Select(x => (x.anchor, CreateLines(Locs, x.selector))).ToArray()
         );
     }

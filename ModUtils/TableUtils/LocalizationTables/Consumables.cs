@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ModShardLauncher.Mods;
@@ -111,11 +112,15 @@ public partial class Msl
     /// <param name="name"></param>
     /// <param name="effect"></param>
     /// <param name="description"></param>
-    public static void InjectTableItemsLocalization(params LocalizationItem[] items)
+    public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionItemsLocalization(params LocalizationItem[] items)
     {
-        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_consumables",
+        LocalizationBaseTable localizationBaseTable = new(
             ("consum_name;", "name"), ("consum_mid;", "effect"), ("consum_desc;", "description")
         );
-        localizationBaseTable.InjectTable(items.Select(x => x as ILocalizationElement).ToList());
+        return localizationBaseTable.CreateInjectionTable(items.Select(x => x as ILocalizationElement).ToList());
+    }
+    public static void InjectTableItemsLocalization(params LocalizationItem[] items)
+    {
+        Localization.InjectTable("gml_GlobalScript_table_consumables", CreateInjectionItemsLocalization(items));
     }
 }

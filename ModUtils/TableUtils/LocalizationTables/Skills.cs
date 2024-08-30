@@ -84,11 +84,15 @@ public static partial class Msl
     /// Wrapper for the LocalizationSkills class
     /// </summary>
     /// <param name="modifiers"></param>
-    public static void InjectTableSkillsLocalization(params LocalizationSkill[] skills)
+    public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionSkillsLocalization(params LocalizationSkill[] skills)
     {
-        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_skills",
+        LocalizationBaseTable localizationBaseTable = new(
             ("skill_name;", "name"), ("skill_desc;", "description")
         );
-        localizationBaseTable.InjectTable(skills.Select(x => x as ILocalizationElement).ToList());
+        return localizationBaseTable.CreateInjectionTable(skills.Select(x => x as ILocalizationElement).ToList());
+    }
+    public static void InjectTableSkillsLocalization(params LocalizationSkill[] skills)
+    {
+        Localization.InjectTable("gml_GlobalScript_table_skills", CreateInjectionSkillsLocalization(skills));
     }
 }

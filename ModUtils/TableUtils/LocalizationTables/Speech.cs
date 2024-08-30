@@ -78,11 +78,15 @@ public static partial class Msl
     /// Wrapper for the LocalizationSpeeches class
     /// </summary>
     /// <param name="speeches"></param>
-    public static void InjectTableSpeechesLocalization(params LocalizationSpeech[] speeches)
+    public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionSpeechesLocalization(params LocalizationSpeech[] speeches)
     {
-        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_speech",
+        LocalizationBaseTable localizationBaseTable = new(
             ("FORBIDDEN MAGIC;", null)
         );
-        localizationBaseTable.InjectTable(speeches.Select(x => x as ILocalizationElement).ToList());
+        return localizationBaseTable.CreateInjectionTable(speeches.Select(x => x as ILocalizationElement).ToList());
+    }
+    public static void InjectTableSpeechesLocalization(params LocalizationSpeech[] speeches)
+    {
+        Localization.InjectTable("gml_GlobalScript_table_speech", CreateInjectionSpeechesLocalization(speeches));
     }
 }

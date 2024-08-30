@@ -85,11 +85,15 @@ public static partial class Msl
     /// Wrapper for the LocalizationModifiers class
     /// </summary>
     /// <param name="modifiers"></param>
-    public static void InjectTableModifiersLocalization(params LocalizationModifier[] modifiers)
+    public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionModifiersLocalization(params LocalizationModifier[] modifiers)
     {
-        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_Modifiers",
+        LocalizationBaseTable localizationBaseTable = new(
             ("buff_name;", "name"), ("buff_desc;", "description")
         );
-        localizationBaseTable.InjectTable(modifiers.Select(x => x as ILocalizationElement).ToList());
+        return localizationBaseTable.CreateInjectionTable(modifiers.Select(x => x as ILocalizationElement).ToList());
+    }
+    public static void InjectTableModifiersLocalization(params LocalizationModifier[] modifiers)
+    {
+        Localization.InjectTable("gml_GlobalScript_table_Modifiers", CreateInjectionModifiersLocalization(modifiers));
     }
 }

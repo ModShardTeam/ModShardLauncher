@@ -7,12 +7,38 @@ public static class LocalizationUtilsData
     public const string oneLanguageString = "testEn";
     public const string multipleLanguagesString = "testRu;testEn;testCh";
     public const string allLanguagesString = "testRu;testEn;testCh;testGe;testSp;testFr;testIt;testPr;testPl;testTu;testJp;testKr";
+    public const string tableString = @":[0]
+b [3]
+
+> gml_Script_table_example (locals=0, argc=0)
+:[1]
+push.i 1
+setowner.e
+{0}
+call.i @@NewGMLArray@@(argc={1})
+ret.v
+
+:[2]
+exit.i
+
+:[3]
+push.i gml_Script_table_example
+conv.i.v
+pushi.e -1
+conv.i.v
+call.i method(argc=2)
+dup.v 0
+pushi.e -1
+pop.v.v [stacktop]self.table_example
+popz.v
+
+:[end]";
 }
 public class ToDictTest
 {
     [Theory]
-    [InlineData(LocalizationUtilsData.oneLanguageString, 0)]
-    [InlineData(LocalizationUtilsData.oneLanguageString, 1)]
+    [InlineData(LocalizationUtilsData.oneLanguageString, 0)] // First element aka English as default language
+    [InlineData(LocalizationUtilsData.oneLanguageString, 1)] // Second element, but there is none then first element aka English as default language
     public void ToDict_OneElement(string str, int index)
     {
         // Arrange
@@ -78,8 +104,8 @@ public class ToDictTest
         }
     }
     [Theory]
-    [InlineData(LocalizationUtilsData.multipleLanguagesString, 0)]
-    [InlineData(LocalizationUtilsData.multipleLanguagesString, 100)]
+    [InlineData(LocalizationUtilsData.multipleLanguagesString, 0)] // First element aka Russian as default language
+    [InlineData(LocalizationUtilsData.multipleLanguagesString, 100)] // 101st element, but there is none then first element aka Russian as default language
     public void ToDict_MultipleElementsDifferentDefault(string str, int index)
     {
         // Arrange

@@ -210,25 +210,37 @@ public static partial class Msl
     /// Wrapper for the LocalizationTextTrees class
     /// </summary>
     /// <param tier="modifiers"></param>
-    public static void InjectTableTextTreesLocalization(params LocalizationTextTree[] modifiers)
+    public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTextTreesLocalization(params LocalizationTextTree[] trees)
     {
-        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_text",
+        LocalizationBaseTable localizationBaseTable = new(
             ("Tier_name;", "tier"), ("skilltree_hover;", "hover")
         );
-        localizationBaseTable.InjectTable(modifiers.Select(x => x as ILocalizationElement).ToList());
+        return localizationBaseTable.CreateInjectionTable(trees.Select(x => x as ILocalizationElement).ToList());
     }
-    public static void InjectTableTextRaritysLocalization(params LocalizationTextRarity[] modifiers)
+    public static void InjectTableTextTreesLocalization(params LocalizationTextTree[] trees)
     {
-        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_text",
+        Localization.InjectTable("gml_GlobalScript_table_text", CreateInjectionTextTreesLocalization(trees));
+    }
+    public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTextRaritysLocalization(params LocalizationTextRarity[] rarity)
+    {
+        LocalizationBaseTable localizationBaseTable = new(
             ("rarity;", null)
         );
-        localizationBaseTable.InjectTable(modifiers.Select(x => x as ILocalizationElement).ToList());
+        return localizationBaseTable.CreateInjectionTable(rarity.Select(x => x as ILocalizationElement).ToList());
+    }
+    public static void InjectTableTextRaritysLocalization(params LocalizationTextRarity[] rarity)
+    {
+        Localization.InjectTable("gml_GlobalScript_table_text", CreateInjectionTextRaritysLocalization(rarity));
+    }
+    public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTextContextsLocalization(params LocalizationTextContext[] modifiers)
+    {
+        LocalizationBaseTable localizationBaseTable = new(
+            ("context_menu;", null)
+        );
+        return localizationBaseTable.CreateInjectionTable(modifiers.Select(x => x as ILocalizationElement).ToList());
     }
     public static void InjectTableTextContextsLocalization(params LocalizationTextContext[] modifiers)
     {
-        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_text",
-            ("context_menu;", null)
-        );
-        localizationBaseTable.InjectTable(modifiers.Select(x => x as ILocalizationElement).ToList());
+        Localization.InjectTable("gml_GlobalScript_table_text", CreateInjectionTextContextsLocalization(modifiers));
     }
 }

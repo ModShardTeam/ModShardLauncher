@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ModShardLauncher.Mods;
@@ -84,11 +85,15 @@ public static partial class Msl
     /// Wrapper for the LocalizationDialog class
     /// </summary>
     /// <param name="sentences"></param>
-    public static void InjectTableDialogLocalization(params LocalizationSentence[] sentences)
+    public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionDialogLocalization(params LocalizationSentence[] sentences)
     {
-        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_NPC_Lines",
+        LocalizationBaseTable localizationBaseTable = new(
             ("NPC - GREETINGS;", null)
         );
-        localizationBaseTable.InjectTable(sentences.Select(x => x as ILocalizationElement).ToList());
+        return localizationBaseTable.CreateInjectionTable(sentences.Select(x => x as ILocalizationElement).ToList());
+    }
+    public static void InjectTableDialogLocalization(params LocalizationSentence[] sentences)
+    {
+        Localization.InjectTable("gml_GlobalScript_table_NPC_Lines", CreateInjectionDialogLocalization(sentences));
     }
 }

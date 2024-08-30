@@ -84,11 +84,15 @@ public static partial class Msl
     /// Wrapper for the LocalizationWeaponTexts class
     /// </summary>
     /// <param name="modifiers"></param>
-    public static void InjectTableWeaponTextsLocalization(params LocalizationWeaponText[] weaponTexts)
+    public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionWeaponTextsLocalization(params LocalizationWeaponText[] weaponTexts)
     {
-        LocalizationBaseTable localizationBaseTable = new("gml_GlobalScript_table_weapons_text",
+        LocalizationBaseTable localizationBaseTable = new(
             ("weapon_name;", "name"), ("weapon_desc;weapon_desc;", "description")
         );
-        localizationBaseTable.InjectTable(weaponTexts.Select(x => x as ILocalizationElement).ToList());
+        return localizationBaseTable.CreateInjectionTable(weaponTexts.Select(x => x as ILocalizationElement).ToList());
+    }
+    public static void InjectTableWeaponTextsLocalization(params LocalizationWeaponText[] weaponTexts)
+    {
+        Localization.InjectTable("gml_GlobalScript_table_weapons_text", CreateInjectionWeaponTextsLocalization(weaponTexts));
     }
 }
