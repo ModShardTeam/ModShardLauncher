@@ -102,6 +102,12 @@ public class LocalizationItem : ILocalizationElement
             break;
         }
     }
+    // do not use
+    // it's for legacy purpose, TODO remove them for 1.0
+    public void InjectTable()
+    {
+        Localization.InjectTable("gml_GlobalScript_table_consumables", Msl.CreateInjectionItemsLocalization(this));
+    }
 }
 public partial class Msl
 {
@@ -122,5 +128,17 @@ public partial class Msl
     public static void InjectTableItemsLocalization(params LocalizationItem[] items)
     {
         Localization.InjectTable("gml_GlobalScript_table_consumables", CreateInjectionItemsLocalization(items));
+    }
+    // do not use for legacy usages only, TODO remove them for 1.0
+    public static void InjectTableItemLocalization(string id, Dictionary<ModLanguage, string> name, Dictionary<ModLanguage, string> effect, Dictionary<ModLanguage, string> description)
+    {
+        LocalizationItem item = new(id, name, effect, description);
+        Localization.InjectTable("gml_GlobalScript_table_consumables", CreateInjectionItemsLocalization(item));
+    }
+    // do not use for legacy usages only, TODO remove them for 1.0
+    public static void InjectTableItemLocalization(string id, string name, string effect, string description)
+    {
+        LocalizationItem item = new(id, name, effect, description);
+        Localization.InjectTable("gml_GlobalScript_table_consumables", CreateInjectionItemsLocalization(item));
     }
 }
