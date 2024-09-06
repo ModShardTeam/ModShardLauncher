@@ -57,9 +57,9 @@ public class LocalizationSentenceTest
         string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""NPC - GREETINGS;""
 conv.s.v", 1);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""greeting;any;any;any;any;any;Да?..;Yes?..;什么事儿?;Ja ...?;Yes?..;Oui...?;Sì...?;Sim..?;Tak?..;Yes?..;何か…？;뭔가...?;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""NPC - GREETINGS;""
 conv.s.v
-push.s ""NPC - GREETINGS;""
+push.s ""greeting;any;any;any;any;any;Да?..;Yes?..;什么事儿?;Ja ...?;Yes?..;Oui...?;Sì...?;Sim..?;Tak?..;Yes?..;何か…？;뭔가...?;""
 conv.s.v", 2);
 
         Dictionary<ModLanguage, string> input = new() 

@@ -60,18 +60,18 @@ public class LocalizationTextTreeTest
     public void CreateInjectionTextTreesLocalization()
     {
         // Arrange
-        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""skilltree_hover;""
+        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""skilltree_hover_end;""
 conv.s.v
-push.s ""Tier_name;""
+push.s ""Tier_name_end;""
 conv.s.v", 2);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""Swords;Мечи;Swords;单手刀剑;Schwerter;Espadas;Épées;Spade;Espadas;Miecze;Kılıçlar;剣;검;""
-conv.s.v
-push.s ""skilltree_hover;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""skilltree_hover_end;""
 conv.s.v
 push.s ""Swords;Мечи;Swords;单手刀剑;Schwerter;Espadas;Épées;Spade;Espadas;Miecze;Kılıçlar;剣;검;""
 conv.s.v
-push.s ""Tier_name;""
+push.s ""Tier_name_end;""
+conv.s.v
+push.s ""Swords;Мечи;Swords;单手刀剑;Schwerter;Espadas;Épées;Spade;Espadas;Miecze;Kılıçlar;剣;검;""
 conv.s.v", 4);
 
         Dictionary<ModLanguage, string> input = new() 
@@ -151,12 +151,12 @@ public class LocalizationTextRarityTest
     public void CreateInjectionTextRaritysLocalization()
     {
         // Arrange
-        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""rarity;""
+        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""rarity_end;""
 conv.s.v", 1);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""1;обычный / обычная / обычное / обычные;common;普通;gewöhnlicher / gewöhnliche / gewöhnliches / gewöhnliche;común / común / comunes / comunes;commun / commune / communs / communes;oggetto comune - ;comum;Zwyczajny / Zwyczajna / Zwyczajne / Zwyczajne;sıradan;コモン;평범한;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""rarity_end;""
 conv.s.v
-push.s ""rarity;""
+push.s ""1;обычный / обычная / обычное / обычные;common;普通;gewöhnlicher / gewöhnliche / gewöhnliches / gewöhnliche;común / común / comunes / comunes;commun / commune / communs / communes;oggetto comune - ;comum;Zwyczajny / Zwyczajna / Zwyczajne / Zwyczajne;sıradan;コモン;평범한;""
 conv.s.v", 2);
 
         Dictionary<ModLanguage, string> input = new() 
@@ -236,12 +236,12 @@ public class LocalizationTextContextTest
     public void CreateInjectionTextContextsLocalization()
     {
         // Arrange
-        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""context_menu;""
+        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""context_menu_end;""
 conv.s.v", 1);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""1;Открыть;Open;打开;Öffnen;Abrir;Ouvrir;Apri;Abrir;Otwórz;Aç;開く;열기;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""context_menu_end;""
 conv.s.v
-push.s ""context_menu;""
+push.s ""1;Открыть;Open;打开;Öffnen;Abrir;Ouvrir;Apri;Abrir;Otwórz;Aç;開く;열기;""
 conv.s.v", 2);
 
         Dictionary<ModLanguage, string> input = new() 

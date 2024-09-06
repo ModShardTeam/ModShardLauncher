@@ -60,18 +60,18 @@ public class LocalizationSkillTest
     public void CreateInjectionSkillsLocalization()
     {
         // Arrange
-        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""skill_desc;""
+        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""skill_desc_end;""
 conv.s.v
-push.s ""skill_name;""
+push.s ""skill_name_end;""
 conv.s.v", 2);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""Backwards_Dash;Отпрыгивание;Jump Away;后撤;Wegspringen;Salto;Bond en Arrière;Balzo;Pular Fora;Odskok;Uzaklaşma;飛びのき;뒤로 뛰기;""
-conv.s.v
-push.s ""skill_desc;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""skill_desc_end;""
 conv.s.v
 push.s ""Backwards_Dash;Отпрыгивание;Jump Away;后撤;Wegspringen;Salto;Bond en Arrière;Balzo;Pular Fora;Odskok;Uzaklaşma;飛びのき;뒤로 뛰기;""
 conv.s.v
-push.s ""skill_name;""
+push.s ""skill_name_end;""
+conv.s.v
+push.s ""Backwards_Dash;Отпрыгивание;Jump Away;后撤;Wegspringen;Salto;Bond en Arrière;Balzo;Pular Fora;Odskok;Uzaklaşma;飛びのき;뒤로 뛰기;""
 conv.s.v", 4);
 
         Dictionary<ModLanguage, string> input = new() 

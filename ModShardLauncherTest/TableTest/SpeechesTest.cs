@@ -64,15 +64,15 @@ public class LocalizationSpeechTest
         string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""FORBIDDEN MAGIC;""
 conv.s.v", 1);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""FORBIDDEN MAGIC;""
+conv.s.v
+push.s ""kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;kill_end;""
 conv.s.v
 push.s "";Ха!;Ha!;哈！;Ha!;¡Ja!;Ha !;Ha!;Rá!;Ha!;Hah!;はあっ！;흥!;""
 conv.s.v
 push.s "";Ха!;Ha!;哈！;Ha!;¡Ja!;Ha !;Ha!;Rá!;Ha!;Hah!;はあっ！;흥!;""
 conv.s.v
 push.s ""kill;kill;kill;kill;kill;kill;kill;kill;kill;kill;kill;kill;kill;""
-conv.s.v
-push.s ""FORBIDDEN MAGIC;""
 conv.s.v", 5);
 
         Dictionary<ModLanguage, string> input = new() 

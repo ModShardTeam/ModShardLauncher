@@ -124,13 +124,6 @@ static public class Localization
             int extraLines = 0;
             foreach (string item in input)
             {
-                foreach(string element in datas.Where(_ => item.Contains(_.anchor)).SelectMany(_ => _.elements).Reverse())
-                {
-                    extraLines++;
-                    yield return $"push.s \"{element}\"";
-                    yield return "conv.s.v";
-                }
-
                 if (item.Contains("NewGMLArray"))
                 {
                     int nLines = int.Parse(Regex.Match(item, @"argc=(\d+)").Groups[1].Value);
@@ -139,6 +132,13 @@ static public class Localization
                 else
                 {
                     yield return item;
+                }
+
+                foreach(string element in datas.Where(_ => item.Contains(_.anchor)).SelectMany(_ => _.elements).Reverse())
+                {
+                    extraLines++;
+                    yield return "conv.s.v";
+                    yield return $"push.s \"{element}\"";
                 }
             }
         }
