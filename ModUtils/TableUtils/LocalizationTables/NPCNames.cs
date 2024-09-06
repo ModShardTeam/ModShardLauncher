@@ -230,7 +230,7 @@ public partial class Msl
     public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionNamesLocalization(params LocalizationName[] names)
     {
         LocalizationBaseTable localizationBaseTable = new(
-            ("Names;", "name")
+            ("Names_end;", "name")
         );
         return localizationBaseTable.CreateInjectionTable(names.Select(x => x as ILocalizationElement).ToList());
     }
@@ -241,7 +241,7 @@ public partial class Msl
     public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionQuestNamesLocalization(params LocalizationQuestName[] questNames)
     {
         LocalizationBaseTable localizationBaseTable = new(
-            ("Constant_Name;", "name")
+            ("Constant_Name_end;", "name")
         );
         return localizationBaseTable.CreateInjectionTable(questNames.Select(x => x as ILocalizationElement).ToList());
     }
@@ -252,7 +252,7 @@ public partial class Msl
     public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionOccupationNamesLocalization(params LocalizationOccupationName[] occupationNames)
     {
         LocalizationBaseTable localizationBaseTable = new(
-            ("NPC_info;", "name")
+            ("NPC_info_end;", "name")
         );
         return localizationBaseTable.CreateInjectionTable(occupationNames.Select(x => x as ILocalizationElement).ToList());
     }

@@ -72,36 +72,36 @@ public class LocalizationBookTest
     public void CreateInjectionBooksLocalization()
     {
         // Arrange
-        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""book_type;""
+        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""book_type_end;""
 conv.s.v
-push.s ""book_desc;""
+push.s ""book_desc_end;""
 conv.s.v
-push.s ""book_mid_text;""
+push.s ""book_mid_text_end;""
 conv.s.v
-push.s ""book_content;""
+push.s ""book_content_end;""
 conv.s.v
-push.s ""book_name;""
+push.s ""book_name_end;""
 conv.s.v", 5);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""book;Монастырская книга;Monastic Book;《修院纪实》;Buch der Abtei;Libro monacal;Livre monastique;Libro Monastico;Livro Monástico;Klasztorna księga;Manastır Kitabı;修道士の本;수도원 일지;""
-conv.s.v
-push.s ""book_type;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""book_type_end;""
 conv.s.v
 push.s ""book;Монастырская книга;Monastic Book;《修院纪实》;Buch der Abtei;Libro monacal;Livre monastique;Libro Monastico;Livro Monástico;Klasztorna księga;Manastır Kitabı;修道士の本;수도원 일지;""
 conv.s.v
-push.s ""book_desc;""
+push.s ""book_desc_end;""
 conv.s.v
 push.s ""book;Монастырская книга;Monastic Book;《修院纪实》;Buch der Abtei;Libro monacal;Livre monastique;Libro Monastico;Livro Monástico;Klasztorna księga;Manastır Kitabı;修道士の本;수도원 일지;""
 conv.s.v
-push.s ""book_mid_text;""
+push.s ""book_mid_text_end;""
 conv.s.v
 push.s ""book;Монастырская книга;Monastic Book;《修院纪实》;Buch der Abtei;Libro monacal;Livre monastique;Libro Monastico;Livro Monástico;Klasztorna księga;Manastır Kitabı;修道士の本;수도원 일지;""
 conv.s.v
-push.s ""book_content;""
+push.s ""book_content_end;""
 conv.s.v
 push.s ""book;Монастырская книга;Monastic Book;《修院纪实》;Buch der Abtei;Libro monacal;Livre monastique;Libro Monastico;Livro Monástico;Klasztorna księga;Manastır Kitabı;修道士の本;수도원 일지;""
 conv.s.v
-push.s ""book_name;""
+push.s ""book_name_end;""
+conv.s.v
+push.s ""book;Монастырская книга;Monastic Book;《修院纪实》;Buch der Abtei;Libro monacal;Livre monastique;Libro Monastico;Livro Monástico;Klasztorna księga;Manastır Kitabı;修道士の本;수도원 일지;""
 conv.s.v", 10);
 
         Dictionary<ModLanguage, string> input = new() 

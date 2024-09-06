@@ -3,7 +3,6 @@ using UndertaleModLib.Models;
 using System.Threading.Tasks;
 using System.IO;
 using System;
-using System.Windows;
 using UndertaleModLib.Util;
 using System.Linq;
 using Microsoft.Win32;
@@ -23,6 +22,7 @@ namespace ModShardLauncher
         internal static string exportPath = "";
         public delegate void FileMessageEventHandler(string message);
         public static event FileMessageEventHandler FileMessageEvent;
+        public static int LastCountContext;
         public static void ShowWarning(string warning, string title)
         {
             Console.WriteLine(title + ":" + warning);
@@ -193,6 +193,7 @@ namespace ModShardLauncher
             ModLoader.Initalize();
             // cleaning loot table
             LootUtils.ResetLootTables();
+            LastCountContext = ContextMenuUtils.ReadLastContextIndex();
             ExportItems();
         }
         public static async Task<bool> DoSaveDialog()

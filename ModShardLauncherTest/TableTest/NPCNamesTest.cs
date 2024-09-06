@@ -54,12 +54,12 @@ public class LocalizationNameTest
     public void CreateInjectionNamesLocalization()
     {
         // Arrange
-        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""Names;""
+        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""Names_end;""
 conv.s.v", 1);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s "";Адал;Adal;阿达尔;Adal;Adal;Adal;Adal;Adal;Adal;Adal;アダル;에이들;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""Names_end;""
 conv.s.v
-push.s ""Names;""
+push.s "";Адал;Adal;阿达尔;Adal;Adal;Adal;Adal;Adal;Adal;Adal;アダル;에이들;""
 conv.s.v", 2);
 
         Dictionary<ModLanguage, string> input = new() 
@@ -139,12 +139,12 @@ public class LocalizationQuestNameTest
     public void CreateInjectionNamesLocalization()
     {
         // Arrange
-        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""Constant_Name;""
+        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""Constant_Name_end;""
 conv.s.v", 1);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""47;Арвон;Arvon;阿冯;Arvon;Arvon;Arvon;Arvon;Arvon;Arvon;Arvon;アルヴォン;아르본;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""Constant_Name_end;""
 conv.s.v
-push.s ""Constant_Name;""
+push.s ""47;Арвон;Arvon;阿冯;Arvon;Arvon;Arvon;Arvon;Arvon;Arvon;Arvon;アルヴォン;아르본;""
 conv.s.v", 2);
 
         Dictionary<ModLanguage, string> input = new() 
@@ -224,12 +224,12 @@ public class LocalizationOccupationNameTest
     public void CreateInjectionNamesLocalization()
     {
         // Arrange
-        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""NPC_info;""
+        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""NPC_info_end;""
 conv.s.v", 1);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""messenger;Гонец;Courier;急使;Kurier;;Messager;Corriere;Portador;Kurier;Courier;配達人;특사;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""NPC_info_end;""
 conv.s.v
-push.s ""NPC_info;""
+push.s ""messenger;Гонец;Courier;急使;Kurier;;Messager;Corriere;Portador;Kurier;Courier;配達人;특사;""
 conv.s.v", 2);
 
         Dictionary<ModLanguage, string> input = new() 

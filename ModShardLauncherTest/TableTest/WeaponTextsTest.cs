@@ -60,18 +60,18 @@ public class LocalizationWeaponTextTest
     public void CreateInjectionWeaponTextsLocalization()
     {
         // Arrange
-        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""weapon_desc;weapon_desc;""
+        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""weapon_desc_end;""
 conv.s.v
-push.s ""weapon_name;""
+push.s ""weapon_name_end;""
 conv.s.v", 2);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""Wooden Sword;Деревянный меч;Wooden Sword;木剑;Holzschwert;Espada de madera;Épée en Bois;Spada di Legno;Espada de Madeira;Drewniany miecz;Tahta Kılıç;木製の剣;목검;""
-conv.s.v
-push.s ""weapon_desc;weapon_desc;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""weapon_desc_end;""
 conv.s.v
 push.s ""Wooden Sword;Деревянный меч;Wooden Sword;木剑;Holzschwert;Espada de madera;Épée en Bois;Spada di Legno;Espada de Madeira;Drewniany miecz;Tahta Kılıç;木製の剣;목검;""
 conv.s.v
-push.s ""weapon_name;""
+push.s ""weapon_name_end;""
+conv.s.v
+push.s ""Wooden Sword;Деревянный меч;Wooden Sword;木剑;Holzschwert;Espada de madera;Épée en Bois;Spada di Legno;Espada de Madeira;Drewniany miecz;Tahta Kılıç;木製の剣;목검;""
 conv.s.v", 4);
 
         Dictionary<ModLanguage, string> input = new() 

@@ -60,18 +60,18 @@ public class LocalizationModifierTest
     public void CreateInjectionModifiersLocalization()
     {
         // Arrange
-        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""buff_desc;""
+        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""buff_desc_end;""
 conv.s.v
-push.s ""buff_name;""
+push.s ""buff_name_end;""
 conv.s.v", 2);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""o_db_blind;Слепота;Blindness;盲目;Blindheit;Ceguera;Cécité;Cecità;Cegueira;Oślepienie;Körlük;盲目;맹목;""
-conv.s.v
-push.s ""buff_desc;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""buff_desc_end;""
 conv.s.v
 push.s ""o_db_blind;Слепота;Blindness;盲目;Blindheit;Ceguera;Cécité;Cecità;Cegueira;Oślepienie;Körlük;盲目;맹목;""
 conv.s.v
-push.s ""buff_name;""
+push.s ""buff_name_end;""
+conv.s.v
+push.s ""o_db_blind;Слепота;Blindness;盲目;Blindheit;Ceguera;Cécité;Cecità;Cegueira;Oślepienie;Körlük;盲目;맹목;""
 conv.s.v", 4);
 
         Dictionary<ModLanguage, string> input = new() 

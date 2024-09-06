@@ -87,7 +87,7 @@ public static partial class Msl
     public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionWeaponTextsLocalization(params LocalizationWeaponText[] weaponTexts)
     {
         LocalizationBaseTable localizationBaseTable = new(
-            ("weapon_name;", "name"), ("weapon_desc;weapon_desc;", "description")
+            ("weapon_name_end;", "name"), ("weapon_desc_end;", "description")
         );
         return localizationBaseTable.CreateInjectionTable(weaponTexts.Select(x => x as ILocalizationElement).ToList());
     }

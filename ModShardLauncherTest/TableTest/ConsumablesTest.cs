@@ -64,24 +64,24 @@ public class LocalizationItemTest
     public void CreateInjectionItemsLocalization()
     {
         // Arrange
-        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""consum_desc;""
+        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""consum_desc_end;""
 conv.s.v
-push.s ""consum_mid;""
+push.s ""consum_mid_end;""
 conv.s.v
-push.s ""consum_name;""
+push.s ""consum_name_end;""
 conv.s.v", 3);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""bandage;Бинт;Bandage;绷带;Verband;Venda;Bandage;Benda;Atadura;Bandaż;Bandaj;包帯;붕대;//;""
-conv.s.v
-push.s ""consum_desc;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""consum_desc_end;""
 conv.s.v
 push.s ""bandage;Бинт;Bandage;绷带;Verband;Venda;Bandage;Benda;Atadura;Bandaż;Bandaj;包帯;붕대;//;""
 conv.s.v
-push.s ""consum_mid;""
+push.s ""consum_mid_end;""
 conv.s.v
 push.s ""bandage;Бинт;Bandage;绷带;Verband;Venda;Bandage;Benda;Atadura;Bandaż;Bandaj;包帯;붕대;//;""
 conv.s.v
-push.s ""consum_name;""
+push.s ""consum_name_end;""
+conv.s.v
+push.s ""bandage;Бинт;Bandage;绷带;Verband;Venda;Bandage;Benda;Atadura;Bandaż;Bandaj;包帯;붕대;//;""
 conv.s.v", 6);
 
         Dictionary<ModLanguage, string> input = new() 

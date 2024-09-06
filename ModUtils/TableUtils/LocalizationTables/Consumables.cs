@@ -121,7 +121,7 @@ public partial class Msl
     public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionItemsLocalization(params LocalizationItem[] items)
     {
         LocalizationBaseTable localizationBaseTable = new(
-            ("consum_name;", "name"), ("consum_mid;", "effect"), ("consum_desc;", "description")
+            ("consum_name_end;", "name"), ("consum_mid_end;", "effect"), ("consum_desc_end;", "description")
         );
         return localizationBaseTable.CreateInjectionTable(items.Select(x => x as ILocalizationElement).ToList());
     }

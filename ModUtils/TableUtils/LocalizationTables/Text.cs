@@ -213,7 +213,7 @@ public static partial class Msl
     public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTextTreesLocalization(params LocalizationTextTree[] trees)
     {
         LocalizationBaseTable localizationBaseTable = new(
-            ("Tier_name;", "tier"), ("skilltree_hover;", "hover")
+            ("Tier_name_end;", "tier"), ("skilltree_hover_end;", "hover")
         );
         return localizationBaseTable.CreateInjectionTable(trees.Select(x => x as ILocalizationElement).ToList());
     }
@@ -224,7 +224,7 @@ public static partial class Msl
     public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTextRaritysLocalization(params LocalizationTextRarity[] rarity)
     {
         LocalizationBaseTable localizationBaseTable = new(
-            ("rarity;", null)
+            ("rarity_end;", null)
         );
         return localizationBaseTable.CreateInjectionTable(rarity.Select(x => x as ILocalizationElement).ToList());
     }
@@ -235,12 +235,12 @@ public static partial class Msl
     public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTextContextsLocalization(params LocalizationTextContext[] modifiers)
     {
         LocalizationBaseTable localizationBaseTable = new(
-            ("context_menu;", null)
+            ("context_menu_end;", null)
         );
         return localizationBaseTable.CreateInjectionTable(modifiers.Select(x => x as ILocalizationElement).ToList());
     }
-    public static void InjectTableTextContextsLocalization(params LocalizationTextContext[] modifiers)
+    private static void InjectTableTextContextsLocalization(params LocalizationTextContext[] contexts)
     {
-        Localization.InjectTable("gml_GlobalScript_table_text", CreateInjectionTextContextsLocalization(modifiers));
+        Localization.InjectTable("gml_GlobalScript_table_text", CreateInjectionTextContextsLocalization(contexts));
     }
 }

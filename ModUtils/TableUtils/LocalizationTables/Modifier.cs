@@ -88,7 +88,7 @@ public static partial class Msl
     public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionModifiersLocalization(params LocalizationModifier[] modifiers)
     {
         LocalizationBaseTable localizationBaseTable = new(
-            ("buff_name;", "name"), ("buff_desc;", "description")
+            ("buff_name_end;", "name"), ("buff_desc_end;", "description")
         );
         return localizationBaseTable.CreateInjectionTable(modifiers.Select(x => x as ILocalizationElement).ToList());
     }
