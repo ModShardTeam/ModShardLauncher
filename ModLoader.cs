@@ -204,6 +204,10 @@ namespace ModShardLauncher
             Msl.AddDisclaimerRoom(Credits.Select(x => x.Item1).ToArray(), Credits.SelectMany(x => x.Item2).Distinct().ToArray());
             Msl.ChainDisclaimerRooms(Disclaimers);
             Msl.CreateMenu(Menus);
+            Msl.AddFunction(@"function msl_always_true() {
+    return true;
+}", "msl_always_true");
+
 
             watch.Stop();
             long elapsedMs = watch.ElapsedMilliseconds;
