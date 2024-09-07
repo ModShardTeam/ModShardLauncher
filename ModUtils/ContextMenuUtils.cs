@@ -13,16 +13,30 @@ namespace ModShardLauncher;
 public class ContextMenu
 {
     public string Name { get; set; }
+    public int Id;
     public Dictionary<ModLanguage, string> Localisation { get; set; }
-    public ContextMenu(string name, Dictionary<ModLanguage, string> localisation)
+    public UndertaleFunction  ScriptFunction { get; set; }
+    public UndertaleFunction? ConditionFunction { get; set; }
+    public ContextMenu(string name, Dictionary<ModLanguage, string> localisation, string scriptFunction, string? conditionFunction = null)
     {
         Name = name;
         Localisation = Localization.SetDictionary(localisation);
+        if (conditionFunction != null) ConditionFunction = DataLoader.data.Functions.ByName(conditionFunction);
+        ScriptFunction = DataLoader.data.Functions.First(x => x.Name.Content.Contains(scriptFunction));
     }
-    public ContextMenu(string name, string localisation)
+    public ContextMenu(string name, string localisation, string scriptFunction, string? conditionFunction = null)
     {
         Name = name;
         Localisation = Localization.SetDictionary(localisation);
+        try
+        {
+            if (conditionFunction != null) ConditionFunction = DataLoader.data.Functions.ByName(conditionFunction);
+            ScriptFunction = DataLoader.data.Functions.First(x => x.Name.Content.Contains(scriptFunction));
+        }
+        catch
+        {
+            throw;
+        }
     }
     public LocalizationTextContext ToLocalization(int id)
     {
@@ -55,7 +69,7 @@ internal static class ContextMenuUtils
         }
         return count;
     }
-    public static Func<IEnumerable<string>, IEnumerable<string>> CreateContextInjector(Dictionary<string, int> res)
+    public static Func<IEnumerable<string>, IEnumerable<string>> CreateContextInjector(params ContextMenu[] res)
     {
         IEnumerable<string> func(IEnumerable<string> input)
         {
@@ -65,22 +79,25 @@ internal static class ContextMenuUtils
             string jmp_fill = "";
             bool only_once = false;
 
-            int label = 1000;
+            int label = 998;
             string block1 = string.Join('\n', 
                 res.Select(x => @$"dup.v 0
-push.s ""{x.Key}""
+push.s ""{x.Name}""
 cmp.s.v EQ
-bt [{label++}]")
+bt [{label+=2}]")
             );
 
-            label = 1000;
+            label = 999;
             string block2 = string.Join('\n', 
-                res.Select(x => @$":[{label++}]
-pushi.e {x.Value}
+                res.Select(x => @$":[{++label}]
+call.i {x.ConditionFunction?.Name.Content ?? "gml_Script_msl_always_true"}(argc=0)
+conv.v.b
+bf [{++label}]
+pushi.e {x.Id}
 conv.i.v
 pushglb.v global.context_menu
 call.i ds_list_find_value(argc=2)
-push.s ""{x.Key}""
+push.s ""{x.Name}""
 conv.s.v
 push.v self.context_name
 call.i ds_list_add(argc=3)
@@ -92,6 +109,7 @@ conv.i.v
 push.v self.context_desc
 call.i ds_list_add(argc=3)
 popz.v
+:[{label}]
 b {{0}}")
             );
 
@@ -124,24 +142,83 @@ b {{0}}")
         }
         return func;
     }
+    public static Func<IEnumerable<string>, IEnumerable<string>> CreateMouseInjector(params ContextMenu[] res)
+    {
+        IEnumerable<string> func(IEnumerable<string> input)
+        {
+            bool fill_found = false;
+            bool fill_case_found = false;
+            bool jmptbl_injected = false;
+            string jmp_fill = "";
+            bool only_once = false;
+
+            int label = 1000;
+            string block1 = string.Join('\n', 
+                res.Select(x => @$"dup.v 0
+push.s ""{x.Name}""
+cmp.s.v EQ
+bt [{label++}]")
+            );
+
+            label = 1000;
+            string block2 = string.Join('\n', 
+                res.Select(x => @$":[{label++}]
+call.i {x.ScriptFunction.Name.Content}(argc=0)
+popz.v
+b {{0}}")
+            );
+
+            foreach(string item in input)
+            {
+                yield return item;
+
+                if (!fill_found && item.Contains("Eat"))
+                {
+                    fill_found = true;
+                }
+                else if (fill_found && !jmptbl_injected && item.Contains("bt"))
+                {
+                    jmptbl_injected = true;
+                    jmp_fill = new Regex(@"\[\d+\]").Match(item).Value;
+                    
+                    yield return block1;
+                }
+                else if (jmp_fill != "" && item.Contains(jmp_fill))
+                {
+                    fill_case_found = true;
+                }
+                else if (!only_once && fill_case_found && item.Contains("b ["))
+                {
+                    only_once = true;
+                    string jmp_end = new Regex(@"\[\d+\]").Match(item).Value;
+                    yield return string.Format(block2, jmp_end);
+                }
+            }
+        }
+        return func;
+    }
 }
 public static partial class Msl
 {   
-    public static Dictionary<string, int> AddNewContext(params ContextMenu[] menus)
+    public static ContextMenu[] AddNewContext(params ContextMenu[] menus)
     {
-        Dictionary<string, int> result = new();
         int id;
 
         InjectTableTextContextsLocalization(menus.Select(x => { 
             id = ++DataLoader.LastCountContext;
-            result.Add(x.Name, id); 
+            x.Id = id;
             return x.ToLocalization(id);
         }).ToArray());
 
         LoadAssemblyAsString("gml_GlobalScript_scr_create_context_menu")
-            .Apply(ContextMenuUtils.CreateContextInjector(result))
+            .Apply(ContextMenuUtils.CreateContextInjector(menus))
+            .Save();
+
+        LoadAssemblyAsString("gml_Object_o_context_button_Mouse_4")
+            .Apply(ContextMenuUtils.CreateMouseInjector(menus))
+            .Peek()
             .Save();
         
-        return result;
+        return menus;
     }
 }
