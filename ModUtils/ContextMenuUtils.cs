@@ -70,8 +70,7 @@ internal static class ContextMenuUtils
                 res.Select(x => @$"dup.v 0
 push.s ""{x.Key}""
 cmp.s.v EQ
-bt [{label++}]
-dup.v 0")
+bt [{label++}]")
             );
 
             label = 1000;
@@ -93,7 +92,7 @@ conv.i.v
 push.v self.context_desc
 call.i ds_list_add(argc=3)
 popz.v
-b {0}")
+b {{0}}")
             );
 
             foreach(string item in input)
@@ -134,14 +133,13 @@ public static partial class Msl
         int id;
 
         InjectTableTextContextsLocalization(menus.Select(x => { 
-            id = DataLoader.LastCountContext++;
+            id = ++DataLoader.LastCountContext;
             result.Add(x.Name, id); 
             return x.ToLocalization(id);
         }).ToArray());
 
         LoadAssemblyAsString("gml_GlobalScript_scr_create_context_menu")
             .Apply(ContextMenuUtils.CreateContextInjector(result))
-            .Peek()
             .Save();
         
         return result;
