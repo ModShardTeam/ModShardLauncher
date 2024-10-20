@@ -175,8 +175,7 @@ namespace ModShardLauncher
             Disclaimers = new();
             List<ModFile> mods = ModInfos.Instance.Mods;
             Menus = new();
-            
-            Stopwatch watch = Stopwatch.StartNew();
+
             foreach (ModFile mod in mods)
             {
                 if (!mod.isEnabled) continue;
@@ -209,9 +208,6 @@ namespace ModShardLauncher
 }", "msl_always_true");
 
 
-            watch.Stop();
-            long elapsedMs = watch.ElapsedMilliseconds;
-            Log.Information("Patching lasts {{{0}}} ms", elapsedMs);
         }
         public static void LoadWeapon(Type type)
         {
