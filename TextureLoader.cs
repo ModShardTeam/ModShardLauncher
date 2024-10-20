@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Collections;
 using System.Drawing.Imaging;
 using Serilog;
+using UndertaleModLib.Util;
 
 namespace ModShardLauncher
 {
@@ -76,11 +77,13 @@ namespace ModShardLauncher
                 {
                     Name = Data.Strings.MakeString(mod.Name)
                 };
-                ueTexture.TextureData.TextureBlob = new byte[memoryStream.Length];
 
-                // read the memory steam to populate the new embedded texture and add it in Data
-                memoryStream.Read(ueTexture.TextureData.TextureBlob);
+                // вместо TextureBlob используем GMImage
+                ueTexture.TextureData.Image = GMImage.FromPng(memoryStream.ToArray());
+
+                // добавляем новую текстуру в Data
                 Data.EmbeddedTextures.Add(ueTexture);
+
 
                 // convert the image as a bitmap to compute the collision mask
                 Bitmap atlasBitmap = new(image);

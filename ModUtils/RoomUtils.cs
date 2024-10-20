@@ -312,8 +312,9 @@ scr_draw_text_doublecolor((global.cameraWidth / 2), ((global.cameraHeight / 2) +
             
             UndertaleRoom room = AddRoom("r_msl_mod_disclaimer");
 
+            //room.AddLayerBackground("NewBackgroundLayer");
             UndertaleRoom.Layer layerInstance = room.AddLayerInstance("NewInstancesLayer");
-            room.AddLayerBackground("NewBackgroundLayer");
+            
             
             UndertaleRoom.GameObject overlay = room.AddGameObject(layerInstance, "o_init_overlay");
             room.AddGameObject(layerInstance, $"o_msl_mod_disclaimer");
