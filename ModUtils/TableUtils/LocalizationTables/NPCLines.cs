@@ -79,6 +79,71 @@ public class LocalizationSentence : ILocalizationElement
         yield return line;
     }
 }
+
+/// <summary>
+/// Abstraction for carrying a list of sentences.
+/// </summary>
+[Obsolete("This class is deprecated, please use Msl.InjectTableDialogLocalization instead.")]
+public class LocalizationDialog
+{
+    /// <summary>
+    /// List of <see cref="LocalizationSentence"/>
+    /// </summary>
+    public List<LocalizationSentence> Sentences { get; set; } = new();
+    /// <summary>
+    /// Return an instance of <see cref="LocalizationDialog"/> with an arbitrary number of <see cref="LocalizationSentence"/>.
+    /// <example>
+    /// For example:
+    /// <code>
+    /// LocalizationDialog(
+    ///     new LocalizationSentence("mySentenceId1"), 
+    ///     new LocalizationSentence("mySentenceId2"));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="sentences"></param>
+    public LocalizationDialog(params LocalizationSentence[] sentences)
+    {
+        foreach (LocalizationSentence sentence in sentences)
+        {   
+            Sentences.Add(sentence);
+        }
+        
+    }
+    /// <summary>
+    /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSentence"/>,
+    /// yield a new line constructed by the dictionary <see cref="Sentence"/>. 
+    /// </summary>
+    /// <param name="table"></param>
+    /// <returns></returns>
+    private IEnumerable<string> EditTable(IEnumerable<string> table)
+    {
+        foreach (string line in table)
+        {
+            yield return line;
+
+            if (line.Contains("NPC - GREETINGS;"))
+            {
+                foreach (LocalizationSentence sentence in Sentences) 
+                {
+                    yield return sentence.CreateLine(null).Collect();
+                }
+            }
+        }
+    }
+    /// <summary>
+    /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSentence"/>,
+    /// insert a new line constructed by the dictionary <see cref="Sentence"/> in the gml_GlobalScript_table_NPC_Lines table. 
+    /// </summary>
+    /// <param name="table"></param>
+    /// <returns></returns>
+    public void InjectTable()
+    {
+        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_NPC_Lines"));
+        ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_NPC_Lines");
+    }
+}
+
 public static partial class Msl
 {
     /// <summary>
