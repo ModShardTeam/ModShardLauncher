@@ -454,6 +454,10 @@ namespace ModShardLauncher
                 otherString = "return false";
             }
 
+            //TODO Delete (UI+ 2.0.0)
+            if (otherString == "        is_activate = _notEmpty")
+                otherString = "is_activate = _notEmpty";
+
             foreach (string element in ienumerable)
             {
                 if (m != Match.After && otherString != null && element.Contains(otherString))
