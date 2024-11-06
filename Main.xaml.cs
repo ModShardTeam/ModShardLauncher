@@ -38,6 +38,12 @@ namespace ModShardLauncher
         public static IntPtr handle;
         public string mslVersion;
         public string utmtlibVersion;
+        //
+        private const double DefaultWidth = 960;                  // Исходная ширина
+        private const double DefaultHeight = 800;                 // Исходная высота
+        private const double AspectRatio = DefaultWidth / DefaultHeight; // Соотношение сторон
+        private const double ScreenSizePercentage = 0.85;          // Процент от размера экрана
+
         public Main()
         {
             handle = GetConsoleWindow();
@@ -63,7 +69,7 @@ namespace ModShardLauncher
                 );
 
             Log.Logger = logger.CreateLogger();
-            
+
             // work around to find the FileVersion of ModShardLauncher.dll for single file publishing
             // see: https://github.com/dotnet/runtime/issues/13051
             try
@@ -73,7 +79,7 @@ namespace ModShardLauncher
                 mslVersion = "v" + FileVersionInfo.GetVersionInfo(mainProcessName).FileVersion;
                 utmtlibVersion = "v" + FileVersionInfo.GetVersionInfo(typeof(UndertaleCode).Assembly.Location).FileVersion;
             }
-            catch(FileNotFoundException ex)
+            catch (FileNotFoundException ex)
             {
                 Log.Error(ex, "Cannot find the dll of ModShardLauncher");
                 throw;
@@ -84,43 +90,74 @@ namespace ModShardLauncher
             {
                 ModLoader.LoadFiles();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(ex, "Something went wrong");
             }
-            
+
             SettingsPage = new Settings();
             InitializeComponent();
 
+            // Начальный размер окна
+            SetInitialSize();
+
             Viewer.Content = MainPage;
+
+
         }
+
+        private void SetInitialSize()
+        {
+            var screenWidth = SystemParameters.PrimaryScreenWidth;
+            var screenHeight = SystemParameters.PrimaryScreenHeight;
+
+            if (screenWidth < DefaultWidth || screenHeight < DefaultHeight)
+            {
+                if (screenWidth < screenHeight)
+                {
+                    Width = screenWidth * ScreenSizePercentage;
+                    Height = Width / AspectRatio; // Поддержка соотношения сторон
+                }
+                else
+                {
+                    Height = screenHeight * ScreenSizePercentage;
+                    Width = Height * AspectRatio; // Поддержка соотношения сторон
+                }
+            }
+            else
+            {
+                Width = DefaultWidth;
+                Height = DefaultHeight;
+            }
+        }
+
         public void LogModList()
         {
             foreach (ModFile modFile in ModPage.Mods.Where(x => x.isEnabled))
             {
                 string statusMessage = "";
-                switch(modFile.PatchStatus)
+                switch (modFile.PatchStatus)
                 {
                     case PatchStatus.Patching:
                         statusMessage = "Patching failed";
-                    break;
-                    
+                        break;
+
                     case PatchStatus.Success:
                         statusMessage = "Patching succeeded";
-                    break;
+                        break;
 
                     case PatchStatus.None:
                         statusMessage = "Waiting to be patched";
-                    break;
+                        break;
                 }
                 Log.Warning("Patching {{{2}}} for {{{0}}} {{{1}}}", modFile.Name, modFile.Version, statusMessage);
             }
         }
         private void MyToggleButton_Checked(object sender, EventArgs e)
         {
-            foreach(var i in stackPanel.Children)
+            foreach (var i in stackPanel.Children)
             {
-                if(i != sender && i is MyToggleButton button)
+                if (i != sender && i is MyToggleButton button)
                 {
                     button.MyButton.IsChecked = false;
                 }
@@ -137,7 +174,7 @@ namespace ModShardLauncher
             {
                 ModLoader.LoadFiles();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(ex, "Something went wrong");
             }
@@ -219,7 +256,7 @@ namespace ModShardLauncher
             else
             {
                 Main.ShowWindow(Main.handle, Main.SW_HIDE);
-                Main.lls.MinimumLevel = (LogEventLevel) 1 + (int) LogEventLevel.Fatal;
+                Main.lls.MinimumLevel = (LogEventLevel)1 + (int)LogEventLevel.Fatal;
             }
         }
         public static void ChangeLanguage(int index)

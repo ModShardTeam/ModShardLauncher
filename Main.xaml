@@ -1,50 +1,40 @@
 ﻿<Window x:Class="ModShardLauncher.Main"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ModShardLauncher.Controls"
-      xmlns:base="clr-namespace:ModShardLauncher"
-      xmlns:mod="clr-namespace:ModShardLauncher.Mods"
-      xmlns:undertale="clr-namespace:UndertaleModTool;assembly=UndertaleModTool" 
-      xmlns:pages="clr-namespace:ModShardLauncher.Controls"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:ModShardLauncher.Controls"
+        xmlns:base="clr-namespace:ModShardLauncher"
+        xmlns:mod="clr-namespace:ModShardLauncher.Mods"
+        xmlns:undertale="clr-namespace:UndertaleModTool;assembly=UndertaleModTool" 
+        xmlns:pages="clr-namespace:ModShardLauncher.Controls"
         mc:Ignorable="d" 
-      d:DesignHeight="800" d:DesignWidth="960"
-      WindowStyle="None"
-      MinHeight="800" MinWidth="960"  
-      MaxHeight="800" MaxWidth="960"
-      Title="Main"
-      ResizeMode="NoResize"
-      WindowStartupLocation="CenterScreen"
-      Closing="Window_Closing">
+        d:DesignHeight="800" d:DesignWidth="960"
+        WindowStyle="None"
+        Title="Main"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="1" CaptionHeight="30" CornerRadius="0"/>
     </WindowChrome.WindowChrome>
     <Window.Resources>
-        <ImageBrush x:Key="menu_mouse_over"
-                    ImageSource="Resources/Sprites/menu_over.png"/>
-        <ImageBrush x:Key="menu_mouse_down"
-                    ImageSource="Resources/Sprites/menu_down.png"/>
+        <ImageBrush x:Key="menu_mouse_over" ImageSource="Resources/Sprites/menu_over.png"/>
+        <ImageBrush x:Key="menu_mouse_down" ImageSource="Resources/Sprites/menu_down.png"/>
         <Style x:Key="menu_Style" TargetType="{x:Type ToggleButton}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
                         <Border x:Name="border" BorderThickness="{TemplateBinding BorderThickness}"
-                                Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-
-                        </Border>
+                                Background="{TemplateBinding Background}" SnapsToDevicePixels="True"/>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" TargetName="border"
-                                        Value="{StaticResource menu_mouse_over}"/>
-                                <Setter Property="BorderBrush" TargetName="border"
-                                        Value="{StaticResource menu_mouse_over}"/>
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource menu_mouse_over}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource menu_mouse_over}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" TargetName="border"
-                                        Value="{StaticResource menu_mouse_down}"/>
-                                <Setter Property="BorderBrush" TargetName="border"
-                                        Value="{StaticResource menu_mouse_down}"/>
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource menu_mouse_down}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource menu_mouse_down}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -53,110 +43,109 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
-        <Grid Background="#2C2D39" Grid.Row="1">
-            <ScrollViewer HorizontalAlignment="Right" Width="896" VerticalScrollBarVisibility="Auto">
-                <ContentControl Name="Viewer"/>
-            </ScrollViewer>
-            <Grid x:Name="LeftPanel" HorizontalAlignment="Left" Width="64">
-                <Grid.Background>
-                    <ImageBrush ImageSource="/Resources/Sprites/leftPanel.png"></ImageBrush>
-                </Grid.Background>
-                <StackPanel x:Name="stackPanel">
-                    <Grid Height="90">
-                        <TextBlock Grid.Row="1" Grid.Column="0" Margin="72,4,0,0" Text="{DynamicResource Menu}"
-                                   Foreground="White" FontSize="24" Background="Transparent"
-                                   HorizontalAlignment="Left" VerticalAlignment="Center"
-                                   Style="{StaticResource sFont}">
-                        </TextBlock>
-                        <ToggleButton x:Name="menuButton" Grid.Column="0" VerticalAlignment="Center"
-                                      HorizontalAlignment="Left" Margin="8,0,0,0"
-                                      Height="48" Width="48" BorderThickness="0"
-                                      RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                      Style="{StaticResource menu_Style}">
-                            <ToggleButton.Background>
-                                <ImageBrush ImageSource="/Resources/Sprites/menu.png"/>
-                            </ToggleButton.Background>
-                            <ToggleButton.Triggers>
-                                <EventTrigger RoutedEvent="ToggleButton.Unchecked">
-                                    <BeginStoryboard>
-                                        <Storyboard x:Name="HideStackPanel">
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="LeftPanel"
-                                                Storyboard.TargetProperty="Width"
-                                                BeginTime="0:0:0"
-                                                From="230" To="64"
-                                                Duration="0:0:0.2">
-
-                                            </DoubleAnimation>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                                <EventTrigger RoutedEvent="ToggleButton.Checked">
-                                    <BeginStoryboard>
-                                        <Storyboard x:Name="ShowStackPanel">
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="LeftPanel"
-                                                Storyboard.TargetProperty="Width"
-                                                BeginTime="0:0:0"
-                                                From="64" To="230"
-                                                Duration="0:0:0.2">
-
-                                            </DoubleAnimation>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </ToggleButton.Triggers>
-                        </ToggleButton>
-                    </Grid>
-                    <GridSplitter HorizontalAlignment="Stretch" Background="AliceBlue" Height="1"
-                                  IsEnabled="False"/>
-                    <Grid Height="40"/>
-                    <local:MyToggleButton ImageSource="/Resources/Sprites/mod.png" Text="{DynamicResource Mod}" 
-                                          Checked="MyToggleButton_Checked" ToolTip="Mod Page"
-                                          Click="MyToggleButton_Click_1">
-                        <local:MyToggleButton.Resources>
-                            <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/mod_down.png"/>
-                            <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/mod_over.png"/>
-                        </local:MyToggleButton.Resources>
-                    </local:MyToggleButton>
-                    <Grid Height="30"/>
-                    <local:MyToggleButton ImageSource="/Resources/Sprites/source.png" Text="{DynamicResource ModSource}" 
-                                          Checked="MyToggleButton_Checked" ToolTip="ModSource Page"
-                                          Click="MyToggleButton_Click_2">
-                        <local:MyToggleButton.Resources>
-                            <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/source_down.png"/>
-                            <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/source_over.png"/>
-                        </local:MyToggleButton.Resources>
-                    </local:MyToggleButton>
-                    <Grid Height="30"/>
-                    <local:MyToggleButton ImageSource="/Resources/Sprites/settings.png" Text="{DynamicResource Settings}" 
-                                          Checked="MyToggleButton_Checked"  ToolTip="Settings Page"
-                                          Click="MyToggleButton_Click_4">
-                        <local:MyToggleButton.Resources>
-                            <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/settings_down.png"/>
-                            <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/settings_over.png"/>
-                        </local:MyToggleButton.Resources>
-                    </local:MyToggleButton>
-                    <Grid Height="256"/>
-                    <local:MyToggleButton ImageSource="/Resources/Sprites/min.png" Text="{DynamicResource Minimize}" Click="MyToggleButton_Click_3">
-                        <local:MyToggleButton.Resources>
-                            <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/min_down.png"/>
-                            <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/min_over.png"/>
-                        </local:MyToggleButton.Resources>
-                    </local:MyToggleButton>
-                    <local:MyToggleButton ImageSource="/Resources/Sprites/close.png" Text="{DynamicResource Close}" Click="MyToggleButton_Click">
-                        <local:MyToggleButton.Resources>
-                            <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/close_down.png"/>
-                            <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/close_over.png"/>
-                        </local:MyToggleButton.Resources>
-                    </local:MyToggleButton>
-                </StackPanel>
-                <Border BorderBrush="#43424D" BorderThickness="4"/>
-                <Border BorderBrush="#2C2D39" BorderThickness="3"/>
-                <Border BorderBrush="#43424D" BorderThickness="2"/>
-                <Border BorderBrush="#1B1926" BorderThickness="1"/>
+    <Viewbox Stretch="Uniform">
+        <Grid Width="960" Height="800">
+            <Grid Background="#2C2D39" Grid.Row="1">
+                <ScrollViewer HorizontalAlignment="Right" Width="896" VerticalScrollBarVisibility="Auto">
+                    <ContentControl Name="Viewer"/>
+                </ScrollViewer>
+                <Grid x:Name="LeftPanel" HorizontalAlignment="Left" Width="64">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="/Resources/Sprites/leftPanel.png"/>
+                    </Grid.Background>
+                    <StackPanel x:Name="stackPanel">
+                        <Grid Height="90">
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="72,4,0,0" Text="{DynamicResource Menu}"
+                                       Foreground="White" FontSize="24" Background="Transparent"
+                                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                                       Style="{StaticResource sFont}"/>
+                            <ToggleButton x:Name="menuButton" Grid.Column="0" VerticalAlignment="Center"
+                                          HorizontalAlignment="Left" Margin="8,0,0,0"
+                                          Height="48" Width="48" BorderThickness="0"
+                                          RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                          Style="{StaticResource menu_Style}">
+                                <ToggleButton.Background>
+                                    <ImageBrush ImageSource="/Resources/Sprites/menu.png"/>
+                                </ToggleButton.Background>
+                                <ToggleButton.Triggers>
+                                    <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                                        <BeginStoryboard>
+                                            <Storyboard x:Name="HideStackPanel">
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="LeftPanel"
+                                                    Storyboard.TargetProperty="Width"
+                                                    BeginTime="0:0:0"
+                                                    From="230" To="64"
+                                                    Duration="0:0:0.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="ToggleButton.Checked">
+                                        <BeginStoryboard>
+                                            <Storyboard x:Name="ShowStackPanel">
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="LeftPanel"
+                                                    Storyboard.TargetProperty="Width"
+                                                    BeginTime="0:0:0"
+                                                    From="64" To="230"
+                                                    Duration="0:0:0.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </ToggleButton.Triggers>
+                            </ToggleButton>
+                        </Grid>
+                        <GridSplitter HorizontalAlignment="Stretch" Background="AliceBlue" Height="1"
+                                      IsEnabled="False"/>
+                        <Grid Height="40"/>
+                        <local:MyToggleButton ImageSource="/Resources/Sprites/mod.png" Text="{DynamicResource Mod}" 
+                                              Checked="MyToggleButton_Checked" ToolTip="Mod Page"
+                                              Click="MyToggleButton_Click_1">
+                            <local:MyToggleButton.Resources>
+                                <ImageBrush x:Key="DownSource" ImageSource="/Resources/Sprites/mod_down.png"/>
+                                <ImageBrush x:Key="OverSource" ImageSource="/Resources/Sprites/mod_over.png"/>
+                            </local:MyToggleButton.Resources>
+                        </local:MyToggleButton>
+                        <Grid Height="30"/>
+                        <local:MyToggleButton ImageSource="/Resources/Sprites/source.png" Text="{DynamicResource ModSource}" 
+                                              Checked="MyToggleButton_Checked" ToolTip="ModSource Page"
+                                              Click="MyToggleButton_Click_2">
+                            <local:MyToggleButton.Resources>
+                                <ImageBrush x:Key="DownSource" ImageSource="/Resources/Sprites/source_down.png"/>
+                                <ImageBrush x:Key="OverSource" ImageSource="/Resources/Sprites/source_over.png"/>
+                            </local:MyToggleButton.Resources>
+                        </local:MyToggleButton>
+                        <Grid Height="30"/>
+                        <local:MyToggleButton ImageSource="/Resources/Sprites/settings.png" Text="{DynamicResource Settings}" 
+                                              Checked="MyToggleButton_Checked" ToolTip="Settings Page"
+                                              Click="MyToggleButton_Click_4">
+                            <local:MyToggleButton.Resources>
+                                <ImageBrush x:Key="DownSource" ImageSource="/Resources/Sprites/settings_down.png"/>
+                                <ImageBrush x:Key="OverSource" ImageSource="/Resources/Sprites/settings_over.png"/>
+                            </local:MyToggleButton.Resources>
+                        </local:MyToggleButton>
+                        <Grid Height="256"/>
+                        <local:MyToggleButton ImageSource="/Resources/Sprites/min.png" Text="{DynamicResource Minimize}" 
+                                              Click="MyToggleButton_Click_3">
+                            <local:MyToggleButton.Resources>
+                                <ImageBrush x:Key="DownSource" ImageSource="/Resources/Sprites/min_down.png"/>
+                                <ImageBrush x:Key="OverSource" ImageSource="/Resources/Sprites/min_over.png"/>
+                            </local:MyToggleButton.Resources>
+                        </local:MyToggleButton>
+                        <local:MyToggleButton ImageSource="/Resources/Sprites/close.png" Text="{DynamicResource Close}" 
+                                              Click="MyToggleButton_Click">
+                            <local:MyToggleButton.Resources>
+                                <ImageBrush x:Key="DownSource" ImageSource="/Resources/Sprites/close_down.png"/>
+                                <ImageBrush x:Key="OverSource" ImageSource="/Resources/Sprites/close_over.png"/>
+                            </local:MyToggleButton.Resources>
+                        </local:MyToggleButton>
+                    </StackPanel>
+                    <Border BorderBrush="#43424D" BorderThickness="4"/>
+                    <Border BorderBrush="#2C2D39" BorderThickness="3"/>
+                    <Border BorderBrush="#43424D" BorderThickness="2"/>
+                    <Border BorderBrush="#1B1926" BorderThickness="1"/>
+                </Grid>
             </Grid>
         </Grid>
-    </Grid>
+    </Viewbox>
 </Window>
