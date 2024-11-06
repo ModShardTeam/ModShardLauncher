@@ -211,4 +211,11 @@
     <Copy SourceFiles="ModReference\netstandard.dll;ModReference\System.Collections.dll;ModReference\System.Runtime.dll;ModReference\System.Linq.dll;ModReference\System.ObjectModel.dll" DestinationFolder="$(OutDir)" />
   </Target>
 
+  <Target Name="CopyDevFiles" AfterTargets="Publish">
+    <Copy SourceFiles="Resources\ExportRoom.csx" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="Reference\UndertaleModLib.dll" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="Reference\UndertaleModTool.dll" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="$(OutputPath)ModShardLauncher.dll" DestinationFolder="$(PublishDir)" />
+  </Target>
+
 </Project>
