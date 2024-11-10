@@ -207,7 +207,7 @@ namespace ModShardLauncher
                     string objDefName = ReadString(ref reader);
 
                     uint ids = (uint)ReadNum(ref reader);
-                    newObj.InstanceID = ++ModLoader.Data.GeneralInfo.LastObj;
+                    newObj.InstanceID = ModLoader.Data.GeneralInfo.LastObj++;
 
                     string ccIdName = ReadString(ref reader);
 
@@ -391,7 +391,7 @@ namespace ModShardLauncher
                         string objDefName = ReadString(ref reader);
 
                         uint ids = (uint)ReadNum(ref reader);
-                        newObj.InstanceID = ++ModLoader.Data.GeneralInfo.LastObj;
+                        newObj.InstanceID = ModLoader.Data.GeneralInfo.LastObj++;
 
                         string ccIdName = ReadString(ref reader);
 
