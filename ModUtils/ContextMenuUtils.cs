@@ -14,20 +14,23 @@ public class ContextMenu
 {
     public string Name { get; set; }
     public int Id;
-    public Dictionary<ModLanguage, string> Localisation { get; set; }
+    public Dictionary<ModLanguage, string> LocName { get; set; }
+    public Dictionary<ModLanguage, string> LocDescription { get; set; }
     public UndertaleFunction  ScriptFunction { get; set; }
     public UndertaleFunction? ConditionFunction { get; set; }
-    public ContextMenu(string name, Dictionary<ModLanguage, string> localisation, string scriptFunction, string? conditionFunction = null)
+    public ContextMenu(string name, Dictionary<ModLanguage, string> localisation, Dictionary<ModLanguage, string> description, string scriptFunction, string? conditionFunction = null)
     {
         Name = name;
-        Localisation = Localization.SetDictionary(localisation);
+        LocName = Localization.SetDictionary(localisation);
+        LocDescription = Localization.SetDictionary(description);
         if (conditionFunction != null) ConditionFunction = DataLoader.data.Functions.ByName(conditionFunction);
         ScriptFunction = DataLoader.data.Functions.First(x => x.Name.Content.Contains(scriptFunction));
     }
-    public ContextMenu(string name, string localisation, string scriptFunction, string? conditionFunction = null)
+    public ContextMenu(string name, string localisation, string description, string scriptFunction, string? conditionFunction = null)
     {
         Name = name;
-        Localisation = Localization.SetDictionary(localisation);
+        LocName = Localization.SetDictionary(localisation);
+        LocDescription = Localization.SetDictionary(description);
         try
         {
             if (conditionFunction != null) ConditionFunction = DataLoader.data.Functions.ByName(conditionFunction);
@@ -38,9 +41,13 @@ public class ContextMenu
             throw;
         }
     }
-    public LocalizationTextContext ToLocalization(int id)
+    public LocalizationTextContext ToLocalizationName(int id)
     {
-        return new LocalizationTextContext(id.ToString(), Name);
+        return new LocalizationTextContext(id.ToString(), LocName);
+    }
+    public LocalizationTextContext ToLocalizationDescription(int id)
+    {
+        return new LocalizationTextContext(id.ToString(), LocName);
     }
 }
 internal static class ContextMenuUtils
@@ -207,7 +214,7 @@ public static partial class Msl
         InjectTableTextContextsLocalization(menus.Select(x => { 
             id = ++DataLoader.LastCountContext;
             x.Id = id;
-            return x.ToLocalization(id);
+            return x.ToLocalizationName(id);
         }).ToArray());
 
         LoadAssemblyAsString("gml_GlobalScript_scr_create_context_menu")
@@ -216,7 +223,6 @@ public static partial class Msl
 
         LoadAssemblyAsString("gml_Object_o_context_button_Mouse_4")
             .Apply(ContextMenuUtils.CreateMouseInjector(menus))
-            .Peek()
             .Save();
         
         return menus;
