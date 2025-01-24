@@ -9,7 +9,7 @@
     <ApplicationIcon>ico.ico</ApplicationIcon>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 	  <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
-    <FileVersion>0.11.3.0-dev</FileVersion>
+    <FileVersion>0.12.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup> <!-- Include the specific files to exclude the ones in the test folder -->
@@ -209,6 +209,13 @@
   
   <Target Name="CopyDLLs" AfterTargets="Build">
     <Copy SourceFiles="ModReference\netstandard.dll;ModReference\System.Collections.dll;ModReference\System.Runtime.dll;ModReference\System.Linq.dll;ModReference\System.ObjectModel.dll" DestinationFolder="$(OutDir)" />
+  </Target>
+
+  <Target Name="CopyDevFiles" AfterTargets="Publish">
+    <Copy SourceFiles="Resources\ExportRoom.csx" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="Reference\UndertaleModLib.dll" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="Reference\UndertaleModTool.dll" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="$(OutputPath)ModShardLauncher.dll" DestinationFolder="$(PublishDir)" />
   </Target>
 
 </Project>

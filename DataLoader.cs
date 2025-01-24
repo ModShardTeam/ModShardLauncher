@@ -152,7 +152,7 @@ namespace ModShardLauncher
                 );
             }
 
-            UndertaleEmbeddedTexture.TexData.ClearSharedStream();
+            //UndertaleEmbeddedTexture.TexData.ClearSharedStream();
             Log.Information(string.Format("Successfully load: {0}.", filename));
 
             return hadWarnings;
@@ -220,7 +220,7 @@ namespace ModShardLauncher
                 });
             }
 
-            UndertaleEmbeddedTexture.TexData.ClearSharedStream();
+            //UndertaleEmbeddedTexture.TexData.ClearSharedStream();
             QoiConverter.ClearSharedBuffer();
         }
         private static void HandleFailedSave(Exception exception)

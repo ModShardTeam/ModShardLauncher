@@ -39,7 +39,7 @@ if (global._msl_log != noone)
         
         if (global._msl_log.timer == noone || !instance_exists(global._msl_log.timer))
         {
-            var t = instance_create(0, 0, o_msl_timer);
+            var t = instance_create_depth(0, 0, -100, o_msl_timer);
             t.end_time = 5;
             t.func = gml_Script_scr_msl_log_save;
 
@@ -102,7 +102,7 @@ timer = -4
         Msl.AddFunction(mslLog, "scr_msl_log");
         Msl.LoadGML(Msl.EventName("o_gameLoader", EventType.Create, 0))
             .MatchAll()
-            .InsertBelow(@"global._msl_log = instance_create(0, 0, o_msl_log);")
+            .InsertBelow(@"global._msl_log = instance_create_depth(0, 0, -100, o_msl_log);")
             .Save();       
     }
 }
