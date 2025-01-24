@@ -36,7 +36,7 @@ namespace ModShardLauncher
         public static void Initalize()
         {
             Weapons = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons"));
-            WeaponDescriptions = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons_text"));
+            WeaponDescriptions = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_equipment"));
         }
         internal static void AddCredit(string modNameShort, string[] authors)
         {
@@ -232,8 +232,8 @@ namespace ModShardLauncher
         }
         internal static void PatchInnerFile()
         {
-            if (Data.Code.All(x => x.Name.Content != "print"))
-                Msl.AddInnerFunction("print");
+            if (Data.Code.All(x => x.Name.Content != "msl_print"))
+                Msl.AddInnerFunction("msl_print");
             if (Data.Code.All(x => x.Name.Content != "give"))
                 Msl.AddInnerFunction("give");
             if (Data.Code.All(x => x.Name.Content != "SendMsg"))
