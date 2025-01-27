@@ -122,9 +122,13 @@ namespace ModShardLauncher
         private static bool CompareChecksum(FileStream stream)
         {
             string hash = ComputeChecksum(stream);
-            const string hashGog = "6E37E076EDFDC25468195EC1FFA937A5";
-            const string hashSteam = "392EE0E8C6A09A16DED58C5737ECF1B5";
-            return hash ==  hashGog || hash == hashSteam;
+            string[] checksums =
+            {
+                "6E37E076EDFDC25468195EC1FFA937A5", // GOG 0.8.2.10
+                "392EE0E8C6A09A16DED58C5737ECF1B5", // Steam 0.8.2.10
+                "5F91989CA7E2A2B1234B2CD2A6AF9821" // Steam 0.9.1.16-vm
+            };
+            return checksums.Contains(hash);
         }
         private static bool LoadUmt(string filename)
         {
