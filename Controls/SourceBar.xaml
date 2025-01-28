@@ -17,10 +17,10 @@
                    RenderOptions.BitmapScalingMode="NearestNeighbor"
                    RenderOptions.ClearTypeHint="Enabled"/>
         </Border>
-        <Label Name="ModName" HorizontalAlignment="Left"
-               Margin="16,16,0,0" VerticalAlignment="Top"
-               Content="{Binding Name}" Foreground="White"
-               FontSize="15" Style="{StaticResource xFont}"/>
+        <TextBlock Name="ModName" HorizontalAlignment="Left"
+                   Margin="16,16,0,0" VerticalAlignment="Top"
+                   Text="{Binding Name}" Foreground="White"
+                   FontSize="15" Style="{StaticResource sFont}"/>
         <Button x:Name="CompileButton" Width="120" Height="39"
                 VerticalAlignment="Bottom" HorizontalAlignment="Right"
                 Margin="0,0,168,12" Padding="0" BorderBrush="Transparent"
