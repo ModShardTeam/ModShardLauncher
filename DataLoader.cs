@@ -122,11 +122,13 @@ namespace ModShardLauncher
         private static bool CompareChecksum(FileStream stream)
         {
             string hash = ComputeChecksum(stream);
+            // Log.Information(hash); // uncomment to log the checksum of new versions and add to the array
             string[] checksums =
             {
                 "6E37E076EDFDC25468195EC1FFA937A5", // GOG 0.8.2.10
                 "392EE0E8C6A09A16DED58C5737ECF1B5", // Steam 0.8.2.10
-                "5F91989CA7E2A2B1234B2CD2A6AF9821" // Steam 0.9.1.16-vm
+                "5F91989CA7E2A2B1234B2CD2A6AF9821", // Steam 0.9.1.16-vm
+                "2BD331F728428746FA337D6C7B67040A" // Steam 0.9.1.17-vm
             };
             return checksums.Contains(hash);
         }
@@ -137,7 +139,7 @@ namespace ModShardLauncher
             {
                 if(!CompareChecksum(stream))
                 {
-                    Log.Warning("Checksum inconsistency, {{{0}}} is not vanilla.", filename);
+                    Log.Warning("Checksum inconsistency, {{{0}}} may not be vanilla or is a new version.", filename);
                 }
                 data = UndertaleIO.Read(
                     stream, warning =>
