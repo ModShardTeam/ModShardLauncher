@@ -6,7 +6,7 @@ namespace ModShardLauncher;
 
 public partial class Msl
 {
-    public static void InjectTablePotion(string name, string effectScript, params string[] blockedEffects)
+    public static void InjectTablePotionsStats(string name, string effectScript, params string[] blockedEffects)
     {
         // Weird table. It has no header, and seems to work like this:
         // Name of the potion | script with actual effect | any number of incompatible effects that cannot coexist with the actual effect
@@ -17,9 +17,8 @@ public partial class Msl
         // This seems to be used when rolling potions in the game, to ensure that the potion doesn't have conflicting effects.
         // Needs more investigation to figure out how many blocked effects are allowed, max vanilla potion has 26.
         
-        
         // Table filename
-        const string tableName = "gml_GlobalScript_table_Potion";
+        const string tableName = "gml_GlobalScript_table_potions_stats";
         
         // Load table if it exists
         List<string> table = ThrowIfNull(ModLoader.GetTable(tableName));
