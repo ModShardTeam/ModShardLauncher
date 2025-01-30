@@ -73,6 +73,5 @@ public partial class Msl
             Log.Error($"Hook not found in {tableName}. {id} was not injected.");
             throw new Exception($"Hook not found in {tableName}. {id} was not injected.");
         }
-            
     }
 }
