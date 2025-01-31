@@ -19,7 +19,7 @@
     <Compile Include="ModUtils\TableUtils\ItemStats.cs" />
     <Compile Include="ModUtils\TableUtils\MobsStats.cs" />
     <Compile Include="ModUtils\TableUtils\PotionsStats.cs" />
-    <Compile Include="ModUtils\TableUtils\SkillsStat.cs" />
+    <Compile Include="ModUtils\TableUtils\SkillsStats.cs" />
     <Compile Include="ModUtils\TableUtils\TableArmor.cs" />
     <Compile Include="ModUtils\TableUtils\TableUtils.cs" />
     <Compile Include="ModUtils\TableUtils\LocalizationUtils.cs" />
