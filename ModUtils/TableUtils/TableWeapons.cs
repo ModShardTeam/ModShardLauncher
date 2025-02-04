@@ -11,48 +11,18 @@ namespace ModShardLauncher;
 [SuppressMessage("ReSharper", "IdentifierTypo")]
 public partial class Msl
 {
-    /// <summary>
-    /// <para>Enum used in Weapons table. </para>
-    /// Defines the group to insert the skill in.
-    /// </summary>
-    public enum WeaponsMetaGroup
+    public enum WeaponsTier
     {
-        [EnumMember(Value = "SWORDS - BLADES")]
-        BLADES,
-        [EnumMember(Value = "SWORDS - CLEAVERS")]
-        CLEAVERS,
-        [EnumMember(Value = "SWORDS - SABERS")]
-        SABERS,
-        [EnumMember(Value = "SWORDS - ORCISH")]
-        ORCISH,
-        [EnumMember(Value = "SWORDS - LEGENDARY")]
-        SWORDLEGENDARY,
-        HATCHETS,
-        AXES,
-        MACES,
-        HAMMERS,
-        FLAILS,
-        DAGGERS,
-        [EnumMember(Value = "2H SWORDS")]
-        TWOHANDEDSWORDS,
-        [EnumMember(Value = "BASTARDS")]
-        BASTARDSWORDS,
-        SPEARS,
-        HALBERDS,
-        FORKS,
-        POLEAXES,
-        GLAIVES,
-        LONGAXES,
-        POLEMACES,
-        [EnumMember(Value = "HAMMERS & CLUBS")]
-        HAMMERSANDCLUBS,
-        [EnumMember(Value = "2H FLAILS")]
-        TWOHANDEDFLAILS,
-        BOWS,
-        LONGBOWS,
-        CROSSBOWS,
-        STAVES,
-        TOOLS
+        [EnumMember(Value = "1")]
+        Tier1,
+        [EnumMember(Value = "2")]
+        Tier2,
+        [EnumMember(Value = "3")]
+        Tier3,
+        [EnumMember(Value = "4")]
+        Tier4,
+        [EnumMember(Value = "5")]
+        Tier5
     }
     
     /// <summary>
@@ -74,11 +44,11 @@ public partial class Msl
         twohandedmace,
         bow,
         crossbow,
+        sling,
         [EnumMember(Value = "2hStaff")]
         twohandedstaff,
         chain,
         lute
-        
     }
 
     /// <summary>
@@ -88,8 +58,8 @@ public partial class Msl
     public enum WeaponsRarity
     {
         Common,
-        Unique,
-        Legendary
+        Unique
+        // Legendary // Doesn't seem to be used post-RtR 
     }
 
     /// <summary>
@@ -99,7 +69,8 @@ public partial class Msl
     public enum WeaponsMaterial
     {
         wood,
-        metal
+        metal,
+        leather
     }
 
     /// <summary>
@@ -108,119 +79,104 @@ public partial class Msl
     /// </summary>
     public enum WeaponsTags
     {
+        // SPECIAL
+        unique,
+        magic,
         special,
         [EnumMember(Value = "special exc")]
         specialexc,
+        WIP,
+        
+        // ALDOR
+        aldor,
         [EnumMember(Value = "aldor common")]
         aldorcommon,
         [EnumMember(Value = "aldor uncommon")]
         aldoruncommon,
         [EnumMember(Value = "aldor rare")]
         aldorrare,
-        [EnumMember(Value = "brynn common")]
-        brynncommon,
-        [EnumMember(Value = "brynn uncommon")]
-        brynnuncommon,
-        [EnumMember(Value = "skadia common")]
-        skadiacommon,
-        [EnumMember(Value = "skadian common")]
-        skadiancommon,
-        [EnumMember(Value = "elven common")]
-        elvencommon,
-        [EnumMember(Value = "woodfolk common")]
-        woodfolkcommon,
-        [EnumMember(Value = "fjall common")]
-        fjallcommon,
-        [EnumMember(Value = "nistra common")]
-        nistracommon,
-        [EnumMember(Value = "orc common")]
-        orccommon,
-        [EnumMember(Value = "aldwynn uncommon")]
-        aldwynnuncommon,
-        [EnumMember(Value = "foreign uncommon")]
-        foreignuncommon,
-        [EnumMember(Value = "maen uncommon")]
-        maenuncommon,
         [EnumMember(Value = "aldor magic")]
-        aldormagic
+        aldormagic,
+        
+        // FOREIGN
+        fjall,
+        elven,
+        skadia,
+        nistra
     }
     
     public static void InjectTableWeapons(
-        WeaponsMetaGroup metaGroup,
+        // Would love to use a hook but devs fucked up the table's categories' names
         string name,
+        WeaponsTier Tier,
         string id,
         WeaponsSlot Slot,
         WeaponsRarity rarity,
         WeaponsMaterial Mat,
         WeaponsTags tags,
-        int MaxDuration,
-        int LVL,
-        int E,
-        int Price,
-        int Rng,
-        int Balance,
-        int? Weapon_Damage = null,
-        int? Armor_Damage = null,
-        int? Armor_Piercing = null,
-        int? Bodypart_Damage = null,
-        int? Slashing_Damage = null,
-        int? Piercing_Damage = null,
-        int? Blunt_Damage = null,
-        int? Rending_Damage = null,
-        int? Fire_Damage = null,
-        int? Shock_Damage = null,
-        int? Poison_Damage = null,
-        int? Caustic_Damage = null,
-        int? Frost_Damage = null,
-        int? Arcane_Damage = null,
-        int? Unholy_Damage = null,
-        int? Sacred_Damage = null,
-        int? Psionic_Damage = null,
-        int? Hit_Chance = null,
-        int? CRT = null,
-        int? CRTD = null,
-        int? PRR = null,
-        int? Block_Power = null,
-        int? CTA = null,
-        int? FMB = null,
-        int? EVS = null,
-        int? Bleeding_Chance = null,
-        int? Daze_Chance = null,
-        int? Stun_Chance = null,
-        int? Knockback_Chance = null,
-        int? Immob_Chance = null,
-        int? Stagger_Chance = null,
-        int? MP = null,
-        int? MP_Restoration = null,
-        int? Cooldown_Reduction = null,
-        int? Skills_Energy_Cost = null,
-        int? Spells_Energy_Cost = null,
-        int? Magic_Power = null,
-        int? Miscast_Chance = null,
-        int? Miracle_Chance = null,
-        int? Miracle_Power = null,
-        int? Backfire_Damage = null,
-        int? Pyromantic_Power = null,
-        int? Geomantic_Power = null,
-        int? Venomantic_Power = null,
-        int? Electroantic_Power = null,
-        int? Cryomantic_Power = null,
-        int? Arcanistic_Power = null,
-        int? Astromantic_Power = null,
-        int? Psimantic_Power = null,
-        int? Chronomantic_Power = null,
-        int? Health_Restoration = null,
-        int? Lifesteal = null,
-        int? Manasteal = null,
-        int? Bonus_Range = null,
-        int? Range_Modifier = null,
-        int? Damage_Received = null,
-        int? Damage_Returned = null,
-        int? Healing_Received = null,
-        int? STL = null,
-        int? Noise_Produced = null,
-        int? Offhand_Efficiency = null,
-        int? Slaying_Chance = null,
+        byte Rng = 1,
+        int? Price = null,
+        byte Markup = 1,
+        short? MaxDuration = null,
+        short? Armor_Piercing = null,
+        short? Armor_Damage = null,
+        short? Bodypart_Damage = null,
+        short? Slashing_Damage = null,
+        short? Piercing_Damage = null,
+        short? Blunt_Damage = null,
+        short? Rending_Damage = null,
+        short? Fire_Damage = null,
+        short? Shock_Damage = null,
+        short? Poison_Damage = null,
+        short? Caustic_Damage = null,
+        short? Frost_Damage = null,
+        short? Arcane_Damage = null,
+        short? Unholy_Damage = null,
+        short? Sacred_Damage = null,
+        short? Psionic_Damage = null,
+        short? FMB = null,
+        short? Hit_Chance = null,
+        short? CRT = null,
+        short? CRTD = null,
+        short? CTA = null,
+        short? PRR = null,
+        short? Block_Power = null,
+        short? Block_Recovery = null,
+        byte? Bleeding_Chance = null,
+        byte? Daze_Chance = null,
+        byte? Stun_Chance = null,
+        byte? Knockback_Chance = null,
+        byte? Immob_Chance = null,
+        byte? Stagger_Chance = null,
+        short? MP = null,
+        short? MP_Restoration = null,
+        short? Cooldown_Reduction = null,
+        short? Skills_Energy_Cost = null,
+        short? Spells_Energy_Cost = null,
+        short? Magic_Power = null,
+        short? Miscast_Chance = null,
+        short? Miracle_Chance = null,
+        short? Miracle_Power = null,
+        short? Bonus_Range = null,
+        short? max_hp = null,
+        short? Health_Restoration = null,
+        short? Healing_Received = null,
+        short? Crit_Avoid = null,
+        short? Fatigue_Gain = null,
+        short? Lifesteal = null,
+        short? Manasteal = null,
+        short? Damage_Received = null,
+        short? Pyromantic_Power = null,
+        short? Geomantic_Power = null,
+        short? Venomantic_Power = null,
+        short? Electroantic_Power = null,
+        short? Cryomantic_Power = null,
+        short? Arcanistic_Power = null,
+        short? Astromantic_Power = null,
+        short? Psimantic_Power = null,
+        short? Balance = null, // Could be byte ?
+        string? upgrade = null,
+        bool fireproof = false,
         bool NoDrop = false
         )
     {
@@ -231,23 +187,11 @@ public partial class Msl
         List<string> table = ThrowIfNull(ModLoader.GetTable(tableName));
         
         // Prepare line
-        string newline = $"{name};{id};{GetEnumMemberValue(Slot)};{GetEnumMemberValue(rarity)};{GetEnumMemberValue(Mat)};{MaxDuration};{LVL};{E};{Price};{Rng};{Weapon_Damage};{Armor_Damage};{Armor_Piercing};{Bodypart_Damage};{Slashing_Damage};{Piercing_Damage};{Blunt_Damage};{Rending_Damage};{Fire_Damage};{Shock_Damage};{Poison_Damage};{Caustic_Damage};{Frost_Damage};{Arcane_Damage};{Unholy_Damage};{Sacred_Damage};{Psionic_Damage};{Hit_Chance};{CRT};{CRTD};{PRR};{Block_Power};{CTA};{FMB};{EVS};{Bleeding_Chance};{Daze_Chance};{Stun_Chance};{Knockback_Chance};{Immob_Chance};{Stagger_Chance};{MP};{MP_Restoration};{Cooldown_Reduction};{Skills_Energy_Cost};{Spells_Energy_Cost};{Magic_Power};{Miscast_Chance};{Miracle_Chance};{Miracle_Power};{Backfire_Damage};{Pyromantic_Power};{Geomantic_Power};{Venomantic_Power};{Electroantic_Power};{Cryomantic_Power};{Arcanistic_Power};{Astromantic_Power};{Psimantic_Power};{Chronomantic_Power};{Health_Restoration};{Lifesteal};{Manasteal};{Bonus_Range};{Range_Modifier};{Damage_Received};{Damage_Returned};{Healing_Received};{STL};{Noise_Produced};{Balance};{Offhand_Efficiency};{Slaying_Chance};{GetEnumMemberValue(tags)};{(NoDrop ? "1" : "")};";
-        
-        // Find Meta Category in table
-        string metaGroupStr = GetEnumMemberValue(metaGroup);
-        (int ind, string? foundLine) = table.Enumerate().FirstOrDefault(x => x.Item2.Contains(metaGroupStr));
+        string newline = $"{name};{GetEnumMemberValue(Tier)};{id};{GetEnumMemberValue(Slot)};{rarity};{Mat};{Price};{Markup};{MaxDuration};{Rng};;{Armor_Piercing};{Armor_Damage};{Bodypart_Damage};;{Slashing_Damage};{Piercing_Damage};{Blunt_Damage};{Rending_Damage};{Fire_Damage};{Shock_Damage};{Poison_Damage};{Caustic_Damage};{Frost_Damage};{Arcane_Damage};{Unholy_Damage};{Sacred_Damage};{Psionic_Damage};;{FMB};{Hit_Chance};{CRT};{CRTD};{CTA};{PRR};{Block_Power};{Block_Recovery};;{Bleeding_Chance};{Daze_Chance};{Stun_Chance};{Knockback_Chance};{Immob_Chance};{Stagger_Chance};;{MP};{MP_Restoration};{Cooldown_Reduction};{Skills_Energy_Cost};{Spells_Energy_Cost};{Magic_Power};{Miscast_Chance};{Miracle_Chance};{Miracle_Power};{Bonus_Range};;{max_hp};{Health_Restoration};{Healing_Received};{Crit_Avoid};{Fatigue_Gain};{Lifesteal};{Manasteal};{Damage_Received};;{Pyromantic_Power};{Geomantic_Power};{Venomantic_Power};{Electroantic_Power};{Cryomantic_Power};{Arcanistic_Power};{Astromantic_Power};{Psimantic_Power};;{Balance};{GetEnumMemberValue(tags)};{upgrade};{(fireproof ? 1 : "")};{(NoDrop ? 1 : "")};";
         
         // Add line to table
-        if (foundLine != null)
-        {
-            table.Insert(ind + 1, newline);
-            ModLoader.SetTable(table, tableName);
-            Log.Information($"Injected Skill Stat {id} into Meta Group {metaGroup}");
-        }
-        else
-        {
-            Log.Error($"Cannot find Meta Group {metaGroup} in Skills Stat table");
-            throw new Exception("Meta Group not found in Skills Stat table");
-        }
+        table.Add(newline);
+        ModLoader.SetTable(table, tableName);
+        Log.Information($"Injected Weapon {id} into table {tableName}");
     }
 }
