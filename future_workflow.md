@@ -4,6 +4,5 @@
 - Move required dlls (everything in ModReference + Reference folders) in the folder
 - Archive to msl.zip
 - Test in sandbox environment (no need to install .NET, use latest Stoneshard + a mod you KNOW works)
-- Add to release
-- Add ModShard.dll to release (take yours / find in previous releases of MSL)
+- Add archive to release
 - Publish release
