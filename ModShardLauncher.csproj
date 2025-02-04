@@ -17,6 +17,7 @@
     <Compile Include="ModUtils\TableUtils\Backers.cs" />
     <Compile Include="ModUtils\TableUtils\ContractsStats.cs" />
     <Compile Include="ModUtils\TableUtils\Drops.cs" />
+    <Compile Include="ModUtils\TableUtils\DungeonsSpawn.cs" />
     <Compile Include="ModUtils\TableUtils\ItemStats.cs" />
     <Compile Include="ModUtils\TableUtils\MobsStats.cs" />
     <Compile Include="ModUtils\TableUtils\PotionsStats.cs" />
