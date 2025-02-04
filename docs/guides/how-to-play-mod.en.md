@@ -37,7 +37,7 @@ Let's take a quick tour of the UI to better know MSL. </br></br>
 The button on the top left of the window shows the button's name. </br></br>
 The `Anvil` button below that leads to the `Mods` menu. (***^^This is the only menu you will need^^***.) </br></br>
 The `C#` button leads to the `Mod Sources` menu. (*It's used by modders to create their mods*.) </br></br>
-The `Cog` button leads to the `Settings` menu. (*At some point you will be able to configure mod settings there*.) </br></br>
+The `Cog` button leads to the `Settings` menu. (*It's used for some settings you probably won't need*.) </br></br>
 </center>
 
 ---
@@ -46,6 +46,7 @@ The `Cog` button leads to the `Settings` menu. (*At some point you will be able 
 
 Now that we've got MSL running, let's install some mods. </br>
 Here's an [example video showing the installation](https://www.youtube.com/watch?v=_J0oJYGi38E&t=13s) of [NeoConsole](https://github.com/Nylux/Stoneshard-NeoConsole/releases). (*enable the subtitles !*) </br> </br>
+Note: It's a bit outdated, but the process is pretty much the same, a new video will be made at some point.
 
 - Close MSL.
 - Download your mod's `.sml` file.
