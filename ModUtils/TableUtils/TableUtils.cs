@@ -17,10 +17,9 @@ namespace ModShardLauncher
                 .GetCustomAttribute<EnumMemberAttribute>(false)?
                 .Value ?? value.ToString();
         }
-        public static void InjectTableAnimalsAI()
-        {
-            string table = "gml_GlobalScript_table_animals_ai";
-            throw new NotImplementedException();
-        }
+        
+        // Tables left to do :
+        // - ai
+        // - supply / demand if necessary ?
     }
 }
