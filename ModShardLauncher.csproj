@@ -21,6 +21,7 @@
     <Compile Include="ModUtils\TableUtils\MobsStats.cs" />
     <Compile Include="ModUtils\TableUtils\PotionsStats.cs" />
     <Compile Include="ModUtils\TableUtils\RecipesCook.cs" />
+    <Compile Include="ModUtils\TableUtils\RecipesCraft.cs" />
     <Compile Include="ModUtils\TableUtils\SkillsStats.cs" />
     <Compile Include="ModUtils\TableUtils\SurfaceSpawn.cs" />
     <Compile Include="ModUtils\TableUtils\TableArmor.cs" />
