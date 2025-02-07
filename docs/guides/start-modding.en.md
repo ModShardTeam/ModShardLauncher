@@ -104,7 +104,7 @@ namespace MyMod
 ```
 
 1. The `using` directives allow us to use code from ModShardLauncher to write our mod.
-2. This is the base class for your mod. </br> All of your code should be contained withing it.
+2. This is the base class for your mod. </br> All of your code should be contained within it.
 3. This variable contains the name of the author of this mod. </br> Feel free to replace it with yours ! </br> It's visible in MSL's Mod list.
 4. This variable contains your mod's name. </br> Feel free to change it ! </br> It's visible in MSL's Mod list.
 5. This variable contains your mod's description. </br> Feel free to change it ! </br> It's visible in MSL's Mod list.
@@ -262,7 +262,7 @@ Here's an example of that :
 ``` c# title="Chained Methods"
 Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit") // Loading a script from the game's files
 .MatchFrom("global.HP = -1") // Finding the line containing `global.HP = -1`
-.ReplaceBy("global.HP = 50") // Replacing it with `gobal.HP = 50`
+.ReplaceBy("global.HP = 50") // Replacing it with `global.HP = 50`
 .Save() // Saving the file
 ```
 

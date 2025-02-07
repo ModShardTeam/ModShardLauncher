@@ -36,7 +36,7 @@ namespace ModShardLauncher
         public static void Initalize()
         {
             Weapons = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons"));
-            WeaponDescriptions = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_weapons_text"));
+            WeaponDescriptions = Msl.ThrowIfNull(GetTable("gml_GlobalScript_table_equipment"));
         }
         internal static void AddCredit(string modNameShort, string[] authors)
         {
@@ -175,6 +175,8 @@ namespace ModShardLauncher
             Disclaimers = new();
             List<ModFile> mods = ModInfos.Instance.Mods;
             Menus = new();
+
+            Stopwatch watch = Stopwatch.StartNew();
             foreach (ModFile mod in mods)
             {
                 if (!mod.isEnabled) continue;
@@ -202,6 +204,10 @@ namespace ModShardLauncher
             Msl.AddDisclaimerRoom(Credits.Select(x => x.Item1).ToArray(), Credits.SelectMany(x => x.Item2).Distinct().ToArray());
             Msl.ChainDisclaimerRooms(Disclaimers);
             Msl.CreateMenu(Menus);
+
+            watch.Stop();
+            long elapsedMs = watch.ElapsedMilliseconds;
+            Log.Information("Patching lasts {{{0}}} ms", elapsedMs);
         }
         public static void LoadWeapon(Type type)
         {
@@ -226,8 +232,8 @@ namespace ModShardLauncher
         }
         internal static void PatchInnerFile()
         {
-            if (Data.Code.All(x => x.Name.Content != "print"))
-                Msl.AddInnerFunction("print");
+            if (Data.Code.All(x => x.Name.Content != "msl_print"))
+                Msl.AddInnerFunction("msl_print");
             if (Data.Code.All(x => x.Name.Content != "give"))
                 Msl.AddInnerFunction("give");
             if (Data.Code.All(x => x.Name.Content != "SendMsg"))

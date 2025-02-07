@@ -11,7 +11,21 @@ namespace ModShardLauncher;
 [SuppressMessage("ReSharper", "IdentifierTypo")]
 public partial class Msl
 {
-    public enum ArmorMetaGroup
+    public enum ArmorTier
+    {
+        [EnumMember(Value = "1")]
+        Tier1,
+        [EnumMember(Value = "2")]
+        Tier2,
+        [EnumMember(Value = "3")]
+        Tier3,
+        [EnumMember(Value = "4")]
+        Tier4,
+        [EnumMember(Value = "5")]
+        Tier5
+    }
+    
+    public enum ArmorHook
     {
         SHIELDS,
         HELMETS,
@@ -25,7 +39,7 @@ public partial class Msl
     }
     public enum ArmorSlot
     {
-        W,
+        shield,
         Head,
         Chest,
         Arms,
@@ -46,8 +60,8 @@ public partial class Msl
     public enum ArmorRarity
     {
         Common,
-        Unique,
-        Legendary
+        Unique
+        // Legendary // seemingly removed with RtR
     }
     
     public enum ArmorMaterial
@@ -55,141 +69,119 @@ public partial class Msl
         wood,
         leather,
         metal,
-        cloth
+        cloth,
+        silver,
+        gold,
+        gem
     }
     
     public enum ArmorTags
     {
-        [EnumMember(Value = "aldor common")]
-        aldorcommon,
-        [EnumMember(Value = "aldor uncommon")]
-        aldoruncommon,
-        [EnumMember(Value = "aldor rare")]
-        aldorrare,
-        [EnumMember(Value = "aldor magic")]
-        aldormagic,
-        [EnumMember(Value = "fjall common")]
-        fjallcommon,
-        [EnumMember(Value = "fjall uncommon")]
-        fjaluncommon,
-        [EnumMember(Value = "elven common")]
-        elvencommon,
-        [EnumMember(Value = "elven uncommon")]
-        elvenuncommon,
-        [EnumMember(Value = "elven rare")]
-        elvenrare,
-        [EnumMember(Value = "skadia common")]
-        skadiacommon,
-        [EnumMember(Value = "skadia uncommon")]
-        skadiauncommon,
-        [EnumMember(Value = "nistra common")]
-        nistracommon,
-        [EnumMember(Value = "foreign common")]
-        foreigncommon,
-        [EnumMember(Value = "brynn common")]
-        bryncommon,
-        [EnumMember(Value = "norse common")]
-        norsecommon,
-        [EnumMember(Value = "aldwynn uncommon")]
-        aldwynnuncommon,
-        [EnumMember(Value = "maen uncommon")]
-        maenuncommon,
+        aldor,
+        fjall,
+        elven,
         special,
+        unique,
+        skadia,
+        nistra,
+        WIP,
+        magic,
         [EnumMember(Value = "special exc")]
         specialexc
     }
     public static void InjectTableArmor(
-        ArmorMetaGroup metaGroup,
+        ArmorHook hook,
         string name,
-        int LVL,
+        ArmorTier Tier,
         string id,
         ArmorSlot Slot,
         ArmorClass Class,
         ArmorRarity rarity,
         ArmorMaterial Mat,
         ArmorTags tags,
+        ushort MaxDuration,
+        int Price, // could be nullable ? Only shackles have no price 
+        float Markup = 1.0f,
+        byte? DEF = null,
+        byte? PRR = null,
+        byte? Block_Power = null,
+        short? Block_Recovery = null,
+        short? EVS = null,
+        byte? Crit_Avoid = null,
+        short? FMB = null,
+        short? Hit_Chance = null,
+        short? Weapon_Damage = null,
+        short? Armor_Piercing = null,
+        short? Armor_Damage = null,
+        short? CRT = null,
+        short? CRTD = null,
+        short? CTA = null,
+        short? Damage_Received = null,
+        short? Fortitude = null,
+        short? MP = null,
+        short? MP_Restoration = null,
+        short? Skills_Energy_Cost = null,
+        short? Spells_Energy_Cost = null,
+        short? Magic_Power = null,
+        short? Miscast_Chance = null,
+        short? Miracle_Chance = null,
+        short? Miracle_Power = null,
+        short? Cooldown_Reduction = null,
+        short? VSN = null,
+        short? max_hp = null,
+        short? Health_Restoration = null,
+        short? Healing_Received = null,
+        short? Lifesteal = null,
+        short? Manasteal = null,
+        short? Bonus_Range = null,
+        short? Received_XP = null,
+        short? Damage_Returned = null,
+        short? Bleeding_Resistance = null,
+        short? Knockback_Resistance = null,
+        short? Stun_Resistance = null,
+        short? Pain_Resistance = null,
+        short? Fatigue_Gain = null,
+        short? Physical_Resistance = null,
+        short? Nature_Resistance = null,
+        short? Magic_Resistance = null,
+        short? Slashing_Resistance = null,
+        short? Piercing_Resistance = null,
+        short? Blunt_Resistance = null,
+        short? Rending_Resistance = null,
+        short? Fire_Resistance = null,
+        short? Shock_Resistance = null,
+        short? Poison_Resistance = null,
+        short? Caustic_Resistance = null,
+        short? Frost_Resistance = null,
+        short? Arcane_Resistance = null,
+        short? Unholy_Resistance = null,
+        short? Sacred_Resistance = null,
+        short? Psionic_Resistance = null,
+        short? Pyromantic_Power = null,
+        short? Geomantic_Power = null,
+        short? Venomantic_Power = null,
+        short? Electromantic_Power = null,
+        short? Cryomantic_Power = null,
+        short? Arcanistic_Power = null,
+        short? Astromantic_Power = null,
+        short? Psimantic_Power = null,
+        bool fireproof = false,
         bool IsOpen = false,
-        bool NoDrop = false,
-        int? Price = null,
-        int? MaxDuration = null,
-        int? DEF = null,
-        int? PRR = null,
-        int? Block_Power = null,
-        int? Block_Recovery = null,
-        int? EVS = null,
-        int? VSN = null,
-        int? FMB = null,
-        int? MP = null,
-        int? MP_Restoration = null,
-        int? Skills_Energy_Cost = null,
-        int? Spells_Energy_Cost = null,
-        int? Magic_Power = null,
-        int? Backfire_Damage = null,
-        int? Miscast_Chance = null,
-        int? Miracle_Chance = null,
-        int? Miracle_Power = null,
-        int? Damage_Received = null,
-        int? Cooldown_Reduction = null,
-        int? Hit_Chance = null,
-        int? CRT = null,
-        int? CRTD = null,
-        int? CTA = null,
-        int? max_hp = null,
-        int? Health_Restoration = null,
-        int? Healing_Received = null,
-        int? Lifesteal = null,
-        int? Manasteal = null,
-        int? STL = null,
-        int? Noise_Produced = null,
-        int? Fortitude = null,
-        int? Savvy = null,
-        int? Damage_Returned = null,
-        int? Received_XP = null,
-        int? Knockback_Resistance = null,
-        int? Bleeding_Resistance = null,
-        int? Stun_Resistance = null,
-        int? Pain_Resistance = null,
-        int? Fatigue_Gain = null,
-        int? Pyromantic_Power = null,
-        int? Geomantic_Power = null,
-        int? Venomantic_Power = null,
-        int? Electromantic_Power = null,
-        int? Cryomantic_Power = null,
-        int? Arcanistic_Power = null,
-        int? Astromantic_Power = null,
-        int? Psimantic_Power = null,
-        int? Chronomantic_Power = null,
-        int? Physical_Resistance = null,
-        int? Nature_Resistance = null,
-        int? Magic_Resistance = null,
-        int? Slashing_Resistance = null,
-        int? Piercing_Resistance = null,
-        int? Blunt_Resistance = null,
-        int? Rending_Resistance = null,
-        int? Fire_Resistance = null,
-        int? Shock_Resistance = null,
-        int? Poison_Resistance = null,
-        int? Caustic_Resistance = null,
-        int? Frost_Resistance = null,
-        int? Arcane_Resistance = null,
-        int? Unholy_Resistance = null,
-        int? Sacred_Resistance = null,
-        int? Psionic_Resistance = null,
-        int? Received_Experience = null,
-        int? fragment_cloth01 = null,
-        int? fragment_cloth02 = null,
-        int? fragment_cloth03 = null,
-        int? fragment_cloth04 = null,
-        int? fragment_leather01 = null,
-        int? fragment_leather02 = null,
-        int? fragment_leather03 = null,
-        int? fragment_leather04 = null,
-        int? fragment_metal01 = null,
-        int? fragment_metal02 = null,
-        int? fragment_metal03 = null,
-        int? fragment_metal04 = null,
-        int? fragment_gold = null,
-        int? dur_per_frag = null
+        bool NoDrop = false, // type unknown, assuming bool
+        byte? fragment_cloth01 = null,
+        byte? fragment_cloth02 = null,
+        byte? fragment_cloth03 = null,
+        byte? fragment_cloth04 = null,
+        byte? fragment_leather01 = null,
+        byte? fragment_leather02 = null,
+        byte? fragment_leather03 = null,
+        byte? fragment_leather04 = null,
+        byte? fragment_metal01 = null,
+        byte? fragment_metal02 = null,
+        byte? fragment_metal03 = null,
+        byte? fragment_metal04 = null,
+        byte? fragment_gold = null,
+        short? dur_per_frag = null
         )
     {
         // Table filename
@@ -199,24 +191,29 @@ public partial class Msl
         List<string> table = ThrowIfNull(ModLoader.GetTable(tableName));
         
         // Prepare line
-        string newline = $"{name};{LVL};{id};{GetEnumMemberValue(Slot)};{GetEnumMemberValue(Class)};{GetEnumMemberValue(rarity)};{GetEnumMemberValue(Mat)};{Price};{MaxDuration};{DEF};;{PRR};{Block_Power};{Block_Recovery};{EVS};{VSN};{FMB};{MP};{MP_Restoration};{Skills_Energy_Cost};{Spells_Energy_Cost};{Magic_Power};{Backfire_Damage};{Miscast_Chance};{Miracle_Chance};{Miracle_Power};{Damage_Received};{Cooldown_Reduction};{Hit_Chance};{CRT};{CRTD};{CTA};{max_hp};{Health_Restoration};{Healing_Received};{Lifesteal};{Manasteal};{STL};{Noise_Produced};{Fortitude};{Savvy};{Damage_Returned};{Received_XP};;{Knockback_Resistance};{Bleeding_Resistance};{Stun_Resistance};{Pain_Resistance};{Fatigue_Gain};;{Pyromantic_Power};{Geomantic_Power};{Venomantic_Power};{Electromantic_Power};{Cryomantic_Power};{Arcanistic_Power};{Astromantic_Power};{Psimantic_Power};{Chronomantic_Power};;{Physical_Resistance};{Nature_Resistance};{Magic_Resistance};{Slashing_Resistance};{Piercing_Resistance};{Blunt_Resistance};{Rending_Resistance};{Fire_Resistance};{Shock_Resistance};{Poison_Resistance};{Caustic_Resistance};{Frost_Resistance};{Arcane_Resistance};{Unholy_Resistance};{Sacred_Resistance};{Psionic_Resistance};{Received_Experience};{GetEnumMemberValue(tags)};{(IsOpen ? "1" : "")};{(NoDrop ? "1" : "")};{fragment_cloth01};{fragment_cloth02};{fragment_cloth03};{fragment_cloth04};{fragment_leather01};{fragment_leather02};{fragment_leather03};{fragment_leather04};{fragment_metal01};{fragment_metal02};{fragment_metal03};{fragment_metal04};{fragment_gold};{dur_per_frag};";
+        string newline = $"{name};{GetEnumMemberValue(Tier)};{id};{Slot};{Class};{rarity};{Mat};{Price};{Markup};{MaxDuration};{DEF};;{PRR};{Block_Power};{Block_Recovery};{EVS};{Crit_Avoid};{FMB};{Hit_Chance};{Weapon_Damage};{Armor_Piercing};{Armor_Damage};{CRT};{CRTD};{CTA};{Damage_Received};{Fortitude};;{MP};{MP_Restoration};{Skills_Energy_Cost};{Spells_Energy_Cost};{Magic_Power};{Miscast_Chance};{Miracle_Chance};{Miracle_Power};{Cooldown_Reduction};;{VSN};{max_hp};{Health_Restoration};{Healing_Received};{Lifesteal};{Manasteal};{Bonus_Range};{Received_XP};{Damage_Returned};;{Bleeding_Resistance};{Knockback_Resistance};{Stun_Resistance};{Pain_Resistance};{Fatigue_Gain};;{Physical_Resistance};{Nature_Resistance};{Magic_Resistance};;{Slashing_Resistance};{Piercing_Resistance};{Blunt_Resistance};{Rending_Resistance};{Fire_Resistance};{Shock_Resistance};{Poison_Resistance};{Caustic_Resistance};{Frost_Resistance};{Arcane_Resistance};{Unholy_Resistance};{Sacred_Resistance};{Psionic_Resistance};;{Pyromantic_Power};{Geomantic_Power};{Venomantic_Power};{Electromantic_Power};{Cryomantic_Power};{Arcanistic_Power};{Astromantic_Power};{Psimantic_Power};;{GetEnumMemberValue(tags)};{(fireproof ? "1" : "")};{(IsOpen ? "1" : "")};{(NoDrop ? "1" : "")};{fragment_cloth01};{fragment_cloth02};{fragment_cloth03};{fragment_cloth04};{fragment_leather01};{fragment_leather02};{fragment_leather03};{fragment_leather04};{fragment_metal01};{fragment_metal02};{fragment_metal03};{fragment_metal04};{fragment_gold};{dur_per_frag};";
         
         // Find Meta Category in table
-        string metaGroupStr = "// " + GetEnumMemberValue(metaGroup);
-        (int ind, string? foundLine) = table.Enumerate().FirstOrDefault(x => x.Item2.Contains(metaGroupStr));
+        string hookStr = "";
+        
+        if (hook == ArmorHook.CHESTPIECES)
+            hookStr = "// " + GetEnumMemberValue(hook); // Necessary workaround for chestpieces as the devs messed up
+        else
+            hookStr = "[ " + GetEnumMemberValue(hook) + " ]";
+        
+        (int ind, string? foundLine) = table.Enumerate().FirstOrDefault(x => x.Item2.Contains(hookStr));
         
         // Add line to table
         if (foundLine != null)
         {
             table.Insert(ind + 1, newline);
             ModLoader.SetTable(table, tableName);
-            Log.Information($"Injected Armor {id} into Meta Group {metaGroup}");
+            Log.Information($"Injected Armor {id} into table {tableName} under {hook}");
         }
         else
         {
-            Log.Error($"Cannot find Meta Group {metaGroup} in {tableName} table");
-            throw new Exception($"Cannot find Meta Group {metaGroup} in {tableName} table");
+            Log.Error($"Cannot find hook {hook} in table {tableName}");
+            throw new Exception($"Cannot find hook {hook} in table {tableName}");
         }
-        
     }
 }

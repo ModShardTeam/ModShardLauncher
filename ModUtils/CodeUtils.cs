@@ -444,20 +444,6 @@ namespace ModShardLauncher
             if (otherEnumerator.MoveNext())
                 otherString = otherEnumerator.Current;
 
-            //TODO Delete (Necromancy)
-            if (otherString == "var XP = math_round((")
-            {
-                otherString = "var XP = math_round(";
-            }
-            else if (otherString == "return 1")
-            {
-                otherString = "return false";
-            }
-
-            //TODO Delete (UI+ 2.0.0)
-            if (otherString == "        is_activate = _notEmpty")
-                otherString = "is_activate = _notEmpty";
-
             foreach (string element in ienumerable)
             {
                 if (m != Match.After && otherString != null && element.Contains(otherString))
@@ -471,16 +457,6 @@ namespace ModShardLauncher
                         m = Match.After;
                     }
 
-                    //TODO Delete (CraftableArrows)
-                    if(otherString == "            select = 1")
-                    {
-                        otherString = "            select = true";
-                    }
-                    else if(otherString == "            global.inv_select = 1")
-                    {
-                        otherString = "            global.inv_select = true";
-                    }
-                        
                 }
                 else
                 {
@@ -632,12 +608,6 @@ namespace ModShardLauncher
             IEnumerator<string> otherUntilEnumerator = otheruntil.GetEnumerator();
             if (otherUntilEnumerator.MoveNext())
                 otherUntilString = otherUntilEnumerator.Current;
-
-            //TODO Delete (ArtifactKnowledge)
-            if(otherUntilString == "                _create_exit = 1")
-            {
-                otherUntilString = "                _create_exit = true";
-            }
 
             foreach ((Match m, string element) in ienumerable.MatchFrom(otherfrom))
             {
@@ -973,141 +943,6 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<string> Apply(this FileEnumerable<string> fe, Func<IEnumerable<string>, IEnumerable<string>> iterator)
         {
-            //TODO Delete SpeedShard
-            #region SpeedShard
-            if (fe.header.fileName == "gml_GlobalScript_scr_loot_chestRemoteBastion")
-            {
-                var newEnumerable = new List<string>
-        {
-            "var _temp_local_var_2;",
-            "function scr_loot_chestRemoteBastion() //gml_Script_scr_loot_chestRemoteBastion",
-            "{",
-            "    var lvl = 1;",
-            "    var min_lvl = scr_globaltile_dungeon_get(\"mob_lvl_min\");",
-            "    var max_lvl = scr_globaltile_dungeon_get(\"mob_lvl_max\");",
-            "    var tier = floor(((max_lvl + min_lvl) / 2));",
-            "    lootScriptShowData(tier);",
-            "    var predicat = scr_loot_allweapon();",
-            "    with (o_player)",
-            "        lvl = (scr_atr(\"LVL\") + random_range(0, 4));",
-            "    var _temp_local_var_2 = tier;",
-            "    with (scr_inventory_add_item(o_inv_moneybag))",
-            "        ds_map_replace(data, \"Stack\", (300 + irandom_range(300, 600)));",
-            "    if scr_chance_value(50)",
-            "        scr_inventory_add_weapon(scr_find_weapon_params(15, 25, scr_loot_weapon()));",
-            "    else if scr_chance_value(50)",
-            "        scr_inventory_add_weapon(scr_find_weapon_params(15, 25, scr_loot_armor()));",
-            "    if scr_chance_value(75)",
-            "        scr_inventory_add_item(choose(3050, 3086));",
-            "    if scr_chance_value(100)",
-            "    {",
-            "        var gems = choose(3016, 3014, 3017, 3013);",
-            "        var precious = choose(2951, 2952, 2953);",
-            "        var goods = choose(2963, 2964, 2966, 2961);",
-            "        scr_inventory_add_item(choose(gems, precious, goods));",
-            "    }",
-            "    if scr_chance_value(50)",
-            "        scr_inventory_add_item(choose(3243, 4570, 340, 579, 2609), id, -4, 1, -4, 1, 1);",
-            "    else",
-            "    {",
-            "        with (scr_inventory_add_weapon(choose(\"Jarl Blade\", \"Royal Sword\", \"Relict Blade\", \"Guard Broadsword\", \"Decorated Saber\", \"Ancient Scimitar\", \"Gilded Axe\", \"Feudal Axe\", \"Decorated Flanged Mace\", \"Decorated Warhammer\", \"Ornate Greatsword\", \"Espadon\", \"Faceless Spear\", \"Decorated Voulge\", \"Ornate Longaxe\", \"Exquisite Grandmace\", \"Relict Polehammer\", \"Decorated Longbow\", \"Relic Bow\", \"Guard Crossbow\", \"Orient Staff\", \"Relict Staff\", \"Hermit Staff\", \"Guardian Shield\", \"Sun Shield\", \"Uroboros Shield\", \"Engraved Boots\", \"Decorated Barbute\", \"Joust Bascinet\", \"Joust Topfhelm\", \"Pigfaced Bascinet\", \"Decorated Sallet\", \"Mastercrafted Sallet\", \"Hermit Circlet\", \"Royal Ranger Gambeson\", \"Ceremonial Cuirass\", \"Vagabond Knight Armor\", \"Joust Armor\", \"Hermit Ring\"), (6 << 0)))",
-            "            scr_inv_atr_set(\"Duration\", irandom_range(35, 60));",
-            "    }",
-            "    scr_random_speech(\"containerRich\");",
-            "}"
-        };
-
-                return new FileEnumerable<string>(fe.header, iterator(newEnumerable));
-            }
-            else if (fe.header.fileName == "gml_GlobalScript_scr_loot_chestRemoteCrypt")
-            {
-                var newEnumerable = new List<string>
-        {
-            "var _temp_local_var_2;",
-            "function scr_loot_chestRemoteCrypt() //gml_Script_scr_loot_chestRemoteCrypt",
-            "{",
-            "    var lvl = 1;",
-            "    var min_lvl = scr_globaltile_dungeon_get(\"mob_lvl_min\");",
-            "    var max_lvl = scr_globaltile_dungeon_get(\"mob_lvl_max\");",
-            "    var tier = floor(((max_lvl + min_lvl) / 2));",
-            "    lootScriptShowData(tier);",
-            "    var predicat = scr_loot_allweapon();",
-            "    with (o_player)",
-            "        lvl = (scr_atr(\"LVL\") + random_range(0, 4));",
-            "    var _temp_local_var_2 = tier;",
-            "    with (scr_inventory_add_item(o_inv_moneybag))",
-            "        ds_map_replace(data, \"Stack\", (300 + irandom_range(300, 600)));",
-            "    if scr_chance_value(50)",
-            "        scr_inventory_add_weapon(scr_find_weapon_params(15, 25, scr_loot_weapon()));",
-            "    else if scr_chance_value(50)",
-            "        scr_inventory_add_weapon(scr_find_weapon_params(15, 25, scr_loot_armor()));",
-            "    if scr_chance_value(75)",
-            "        scr_inventory_add_item(choose(3050, 3086));",
-            "    if scr_chance_value(100)",
-            "    {",
-            "        var gems = choose(3016, 3014, 3017, 3013);",
-            "        var precious = choose(2951, 2952, 2953);",
-            "        var goods = choose(2963, 2964, 2966, 2961);",
-            "        scr_inventory_add_item(choose(gems, precious, goods));",
-            "    }",
-            "    if scr_chance_value(50)",
-            "        scr_inventory_add_item(choose(6365, 818, 1579, 104, 822, 2609), id, -4, 1, -4, 1, 1);",
-            "    else",
-            "    {",
-            "        with (scr_inventory_add_weapon(choose(\"Jarl Blade\", \"Royal Sword\", \"Relict Blade\", \"Guard Broadsword\", \"Decorated Saber\", \"Ancient Scimitar\", \"Gilded Axe\", \"Feudal Axe\", \"Decorated Flanged Mace\", \"Decorated Warhammer\", \"Ornate Greatsword\", \"Espadon\", \"Faceless Spear\", \"Decorated Voulge\", \"Ornate Longaxe\", \"Exquisite Grandmace\", \"Relict Polehammer\", \"Decorated Longbow\", \"Relic Bow\", \"Guard Crossbow\", \"Orient Staff\", \"Relict Staff\", \"Hermit Staff\", \"Guardian Shield\", \"Sun Shield\", \"Uroboros Shield\", \"Engraved Boots\", \"Decorated Barbute\", \"Joust Bascinet\", \"Joust Topfhelm\", \"Pigfaced Bascinet\", \"Decorated Sallet\", \"Mastercrafted Sallet\", \"Hermit Circlet\", \"Royal Ranger Gambeson\", \"Ceremonial Cuirass\", \"Vagabond Knight Armor\", \"Joust Armor\", \"Druid Robe\", \"Hermit Ring\"), (6 << 0)))",
-            "            scr_inv_atr_set(\"Duration\", irandom_range(35, 60));",
-            "    }",
-            "    scr_random_speech(\"containerRich\");",
-            "}"
-        };
-
-                return new FileEnumerable<string>(fe.header, iterator(newEnumerable));
-            }
-            else if (fe.header.fileName == "gml_GlobalScript_scr_loot_chestRemoteCatacombs")
-            {
-                var newEnumerable = new List<string>
-        {
-            "var _temp_local_var_2;",
-            "function scr_loot_chestRemoteCatacombs() //gml_Script_scr_loot_chestRemoteCatacombs",
-            "{",
-            "    var lvl = 1;",
-            "    var min_lvl = scr_globaltile_dungeon_get(\"mob_lvl_min\");",
-            "    var max_lvl = scr_globaltile_dungeon_get(\"mob_lvl_max\");",
-            "    var tier = floor(((max_lvl + min_lvl) / 2));",
-            "    lootScriptShowData(tier);",
-            "    var predicat = scr_loot_allweapon();",
-            "    with (o_player)",
-            "        lvl = (scr_atr(\"LVL\") + random_range(0, 4));",
-            "    var _temp_local_var_2 = tier;",
-            "    with (scr_inventory_add_item(o_inv_moneybag))",
-            "        ds_map_replace(data, \"Stack\", (300 + irandom_range(300, 600)));",
-            "    if scr_chance_value(25)",
-            "        scr_inventory_add_weapon(scr_find_weapon_params(15, 25, scr_loot_weapon()));",
-            "    else if scr_chance_value(25)",
-            "        scr_inventory_add_weapon(scr_find_weapon_params(15, 25, scr_loot_armor()));",
-            "    if scr_chance_value(50)",
-            "        scr_inventory_add_item(choose(3050, 3086));",
-            "    if scr_chance_value(100)",
-            "    {",
-            "        var gems = choose(3016, 3014, 3017, 3013);",
-            "        var precious = choose(2951, 2952, 2953);",
-            "        var goods = choose(2963, 2964, 2966, 2961);",
-            "        scr_inventory_add_item(choose(gems, precious, goods));",
-            "    }",
-            "    if scr_chance_value(50)",
-            "        scr_inventory_add_item(choose(818, 104, 6365, 579, 2609), id, -4, 1, -4, 1, 1);",
-            "    else",
-            "    {",
-            "        with (scr_inventory_add_weapon(choose(\"Jarl Blade\", \"Royal Sword\", \"Relict Blade\", \"Guard Broadsword\", \"Decorated Saber\", \"Ancient Scimitar\", \"Gilded Axe\", \"Feudal Axe\", \"Decorated Flanged Mace\", \"Decorated Warhammer\", \"Ornate Greatsword\", \"Espadon\", \"Faceless Spear\", \"Decorated Voulge\", \"Ornate Longaxe\", \"Exquisite Grandmace\", \"Relict Polehammer\", \"Decorated Longbow\", \"Relic Bow\", \"Guard Crossbow\", \"Orient Staff\", \"Relict Staff\", \"Guardian Shield\", \"Sun Shield\", \"Uroboros Shield\", \"Engraved Boots\", \"Decorated Barbute\", \"Joust Bascinet\", \"Joust Topfhelm\", \"Pigfaced Bascinet\", \"Decorated Sallet\", \"Mastercrafted Sallet\", \"Royal Ranger Gambeson\", \"Ceremonial Cuirass\", \"Vagabond Knight Armor\", \"Druid Robe\", \"Hermit Ring\"), (6 << 0)))",
-            "            scr_inv_atr_set(\"Duration\", irandom_range(35, 60));",
-            "    }",
-            "    scr_random_speech(\"containerRich\");",
-            "}"
-        };
-
-                return new FileEnumerable<string>(fe.header, iterator(newEnumerable));
-            }
-            #endregion
             return new(fe.header, fe.ienumerable.Apply(iterator));
         }
         /// <summary>

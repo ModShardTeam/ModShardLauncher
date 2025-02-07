@@ -9,17 +9,22 @@
     <ApplicationIcon>ico.ico</ApplicationIcon>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 	  <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
-    <FileVersion>0.12.1.0</FileVersion>
+    <FileVersion>0.13.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup> <!-- Include the specific files to exclude the ones in the test folder -->
     <Compile Include="*.cs" Exclude="bin\**;obj\**;ModShardLauncherTest\**.*cs" />
-    <Compile Include="ModUtils\TableUtils\ConsumParam.cs" />
-    <Compile Include="ModUtils\TableUtils\Contract.cs" />
-    <Compile Include="ModUtils\TableUtils\CreditsBackers.cs" />
-    <Compile Include="ModUtils\TableUtils\EnemyBalance.cs" />
-    <Compile Include="ModUtils\TableUtils\Potion.cs" />
-    <Compile Include="ModUtils\TableUtils\SkillsStat.cs" />
+    <Compile Include="ModUtils\TableUtils\Backers.cs" />
+    <Compile Include="ModUtils\TableUtils\ContractsStats.cs" />
+    <Compile Include="ModUtils\TableUtils\Drops.cs" />
+    <Compile Include="ModUtils\TableUtils\DungeonsSpawn.cs" />
+    <Compile Include="ModUtils\TableUtils\ItemStats.cs" />
+    <Compile Include="ModUtils\TableUtils\MobsStats.cs" />
+    <Compile Include="ModUtils\TableUtils\PotionsStats.cs" />
+    <Compile Include="ModUtils\TableUtils\RecipesCook.cs" />
+    <Compile Include="ModUtils\TableUtils\RecipesCraft.cs" />
+    <Compile Include="ModUtils\TableUtils\SkillsStats.cs" />
+    <Compile Include="ModUtils\TableUtils\SurfaceSpawn.cs" />
     <Compile Include="ModUtils\TableUtils\TableArmor.cs" />
     <Compile Include="ModUtils\TableUtils\TableUtils.cs" />
     <Compile Include="ModUtils\TableUtils\LocalizationUtils.cs" />
@@ -209,6 +214,13 @@
   
   <Target Name="CopyDLLs" AfterTargets="Build">
     <Copy SourceFiles="ModReference\netstandard.dll;ModReference\System.Collections.dll;ModReference\System.Runtime.dll;ModReference\System.Linq.dll;ModReference\System.ObjectModel.dll" DestinationFolder="$(OutDir)" />
+  </Target>
+
+  <Target Name="CopyDevFiles" AfterTargets="Publish">
+    <Copy SourceFiles="Resources\ExportRoom.csx" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="Reference\UndertaleModLib.dll" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="Reference\UndertaleModTool.dll" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="$(OutputPath)ModShardLauncher.dll" DestinationFolder="$(PublishDir)" />
   </Target>
 
 </Project>
