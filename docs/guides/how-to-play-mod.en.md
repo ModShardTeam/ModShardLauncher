@@ -21,6 +21,17 @@ If launching MSL opens a console and closes immediately, you may require the **.
 
 ## ModShardLauncher Setup
 
+???+ warning "IMPORTANT - Installing after RtR"
+    Make sure you are on the `modbranch` beta of Stoneshard on Steam before proceeding below. </br>
+    When launching the game, the version at the top right should say `X.X.X.X-vm`. </br>
+
+    Here's how to do it : </br>
+    - Right click on Stoneshard in your library on steam. </br>
+    - Click `Properties`. </br>
+    - Go in the `Betas` tab. </br>
+    - Select the `modbranch` beta. </br>
+    - Steam will now update your game files, when it's done, proceed below.
+
 - **Extract** `ModShardLauncher.zip` anywhere.
 - **Rename** `data.win` to `vanilla.win`  in your Stoneshard folder.
 - **Run** `ModShardLauncher.exe`.
@@ -46,7 +57,9 @@ The `Cog` button leads to the `Settings` menu. (*It's used for some settings you
 
 Now that we've got MSL running, let's install some mods. </br>
 Here's an [example video showing the installation](https://www.youtube.com/watch?v=_J0oJYGi38E&t=13s) of [NeoConsole](https://github.com/Nylux/Stoneshard-NeoConsole/releases). (*enable the subtitles !*) </br> </br>
-Note: It's a bit outdated, but the process is pretty much the same, a new video will be made at some point.
+Note: It's a bit outdated, but the process is pretty much the same, a new video will be made at some point. </br>
+
+???+ warning "MAKE SURE YOU ARE ON THE MODBRANCH BETA OF STONESHARD ON STEAM"
 
 - Close MSL.
 - Download your mod's `.sml` file.
