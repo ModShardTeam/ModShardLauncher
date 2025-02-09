@@ -20,6 +20,7 @@
     <Compile Include="ModUtils\TableUtils\DungeonsSpawn.cs" />
     <Compile Include="ModUtils\TableUtils\ItemStats.cs" />
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizableControls.cs" />
+    <Compile Include="ModUtils\TableUtils\Localizable\LocalizableHints.cs" />
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizableLog.cs" />
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizableSkills.cs" />
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizationUtils.cs" />
