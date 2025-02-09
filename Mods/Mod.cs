@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,19 +33,22 @@ namespace ModShardLauncher.Mods
 
         }
     }
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum ModLanguage
     {
         Russian,
         English,
         Chinese,
         German,
-        Spanish,
+        SpanishLATAM,
         French,
         Italian,
         Portuguese,
         Polish,
         Turkish,
         Japanese,
-        Korean
+        Korean,
+        Czech,
+        SpanishSpain
     }
 }
