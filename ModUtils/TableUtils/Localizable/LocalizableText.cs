@@ -83,11 +83,56 @@ public partial class Msl
             return key switch
             {
                 // TODO: Implement all keys. Can use the 'or' operator to chain multiple keys to the same case.
-                "charPanel" or "invent" => $"{id};{text.Russian};{text.English};{text.Chinese};{text.German};{text.SpanishLatam};{text.French};{text.Italian};{text.Portuguese};{text.Polish};{text.Turkish};{text.Japanese};{text.Korean};",
+                "charPanel" 
+                 or "invent"
+                 or "craftingCategory"
+                 or "skillMenu"
+                 or "journalMenu"
+                 or "tierName"
+                 or "rarity"
+                 or "prefix"
+                 or "weapParam"
+                 or "otherHover"
+                 or "attitudeName"
+                 or "attitudeDesc"
+                 or "charDesc"
+                 or "className"
+                 or "charName"
+                 or "countryDesc"
+                 or "raceName"
+                 or "countryName"
+                 or "sexDesc"
+                 or "sexName"
+                 or "psychicName"
+                 or "psychicMidText"
+                 or "psychicInfo"
+                 or "psychicDesc"
+                 or "contextMenu"
+                 or "buttonHover"
+                 or "controlButtons"
+                 or "tradeCategory"
+                 or "map"
+                 or "townDesc"
+                 or "repSourcesPos"
+                 or "repSourcesNeg"
+                 or "repHistory"
+                 or "repPerks"
+                 or "repPerksEffect"
+                 or "repPerksFlavor"
+                 or "situationName"
+                 or "situationEffect"
+                 or "situationDesc"
+                 or "repOther"
+                 or "tradeTooltip"
+                 or "skilltreeHover"
+                 or "rumorName"
+                 or "sight" 
+                    => $"{id};{text.Russian};{text.English};{text.Chinese};{text.German};{text.SpanishLatam};{text.French};{text.Italian};{text.Portuguese};{text.Polish};{text.Turkish};{text.Japanese};{text.Korean};",
                 _ => throw new KeyNotFoundException($"Key '{key}' not found.")
             };
         }
         
+        // API methods to set the localized strings
         #region SETTERS
         public LocalizableTextBuilder WithId(string id)
         {
@@ -140,7 +185,7 @@ public partial class Msl
         public LocalizableTextBuilder WithSight(LocalizedStrings sight) => Add("sight", sight);
         #endregion
 
-        // Method called to finish the builder and call the injector
+        // API method called to finish the builder and call the injector
         public void Inject()
         {
             if (_localizedStrings.Count > 0)
@@ -165,7 +210,7 @@ public partial class Msl
         // Load table if it exists
         List<string> table = ThrowIfNull(ModLoader.GetTable(tableName));
 
-        foreach (var (key, text) in localizedStrings)
+        foreach ((string key, LocalizedStrings text) in localizedStrings)
         {
             // Get hook for the key
             string hook = LocalizableTextBuilder.GetHookForKey(key);
