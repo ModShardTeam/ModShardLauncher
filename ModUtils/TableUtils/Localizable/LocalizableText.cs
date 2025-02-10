@@ -82,7 +82,6 @@ public partial class Msl
         {
             return key switch
             {
-                // TODO: Implement all keys. Can use the 'or' operator to chain multiple keys to the same case.
                 "charPanel" 
                  or "invent"
                  or "craftingCategory"
