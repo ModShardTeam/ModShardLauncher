@@ -26,6 +26,7 @@
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizableNames.cs" />
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizablePrologue.cs" />
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizableSkills.cs" />
+    <Compile Include="ModUtils\TableUtils\Localizable\LocalizableText.cs" />
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizationUtils.cs" />
     <Compile Include="ModUtils\TableUtils\MobsStats.cs" />
     <Compile Include="ModUtils\TableUtils\PotionsStats.cs" />
