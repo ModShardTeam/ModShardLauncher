@@ -19,6 +19,28 @@ If launching MSL opens a console and closes immediately, you may require the **.
 
 ---
 
+## Linux setup instructions
+
+### Pre-requisites
+
+- ***Bottles*** - https://usebottles.com/
+- ***Stoneshard*** - The Windows version of Stoneshard must be used as the native Linux version is bundled differently
+
+### Steps
+1. Create a Bottle environment for gaming
+
+![linux_bottle_1.png](../img/linux_bottle_1.png)
+2. Open the newly created bottle and click "Add Shortcut" and browse to then select the `ModShardLauncher.exe`
+3. Modify the newly added item by clicking the three dot menu and going to "Change Launch Options".
+The working directory must be updated to the directory that `ModShardLauncher.exe` resides in.
+4. The bottle settings need to be updated to support the .NET environment. This can be found below the "Add Shortcut"
+button, select "Settings" and then "Environment Variables". A new variable needs to be added to handle the
+extraction location `DOTNET_BUNDLE_EXTRACT_BASE_DIR=Z:\home\{user}\dotnet_bundle_extract`, update this to a path of your choosing.
+
+*If you run into file permission issues with Bottles this is due to it running in a flatpak.
+I suggest using [Flatseal](https://flathub.org/apps/com.github.tchx84.Flatseal) to give Bottles access to the required paths.*
+---
+
 ## ModShardLauncher Setup
 
 ???+ warning "IMPORTANT - Installing after RtR"
