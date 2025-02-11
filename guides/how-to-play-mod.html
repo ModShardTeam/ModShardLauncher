@@ -469,6 +469,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#linux-setup-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linux setup instructions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linux setup instructions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-requisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-requisites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Steps
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#modshardlauncher-setup" class="md-nav__link">
     <span class="md-ellipsis">
       ModShardLauncher Setup
@@ -650,6 +683,26 @@ Alternatively, you can build ModShardLauncher from source, but it's out of this 
 <p>If launching MSL opens a console and closes immediately, you may require the <strong>.NET Desktop Runtime 6.0</strong></p>
 <p><a class="md-button md-button--primary" href="https://dotnet.microsoft.com/en-us/download/dotnet/6.0">.NET Desktop Runtime 6.0 <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2m6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.75.75 0 0 1-1.042-.018.75.75 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1"/></svg></span></a>&emsp;</p>
 <hr />
+<h2 id="linux-setup-instructions">Linux setup instructions</h2>
+<h3 id="pre-requisites">Pre-requisites</h3>
+<ul>
+<li><strong><em>Bottles</em></strong> - https://usebottles.com/</li>
+<li><strong><em>Stoneshard</em></strong> - The Windows version of Stoneshard must be used as the native Linux version is bundled differently</li>
+</ul>
+<h3 id="steps">Steps</h3>
+<ol>
+<li>Create a Bottle environment for gaming</li>
+</ol>
+<p><a class="glightbox" href="../img/linux_bottle_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="linux_bottle_1.png" src="../img/linux_bottle_1.png" /></a>
+2. Open the newly created bottle and click "Add Shortcut" and browse to then select the <code>ModShardLauncher.exe</code>
+3. Modify the newly added item by clicking the three dot menu and going to "Change Launch Options".
+The working directory must be updated to the directory that <code>ModShardLauncher.exe</code> resides in.
+4. The bottle settings need to be updated to support the .NET environment. This can be found below the "Add Shortcut"
+button, select "Settings" and then "Environment Variables". A new variable needs to be added to handle the
+extraction location <code>DOTNET_BUNDLE_EXTRACT_BASE_DIR=Z:\home\{user}\dotnet_bundle_extract</code>, update this to a path of your choosing.</p>
+<p><em>If you run into file permission issues with Bottles this is due to it running in a flatpak.
+I suggest using <a href="https://flathub.org/apps/com.github.tchx84.Flatseal">Flatseal</a> to give Bottles access to the required paths.</em></p>
+<hr />
 <h2 id="modshardlauncher-setup">ModShardLauncher Setup</h2>
 <details class="warning" open="open">
 <summary>IMPORTANT - Installing after RtR</summary>
@@ -720,7 +773,7 @@ Note: It's a bit outdated, but the process is pretty much the same, a new video 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    2025-02-08
+    2025-02-11
   </span>
 
     
@@ -738,7 +791,8 @@ Note: It's a bit outdated, but the process is pretty much the same, a new video 
       
         <a href="mailto:2294632065@qq.com">2294632065</a>, 
         <a href="mailto:33198989+nylux@users.noreply.github.com">Matthieu Duclos</a>, 
-        <a href="mailto:nylux42@gmail.com">Nylux</a>
+        <a href="mailto:nylux42@gmail.com">Nylux</a>, 
+        <a href="mailto:patrick@oconnell.id.au">Patrick O'Connell</a>
     </nav>
   </span>
 
