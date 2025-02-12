@@ -54,7 +54,7 @@ public partial class Msl
         public void Inject()
         {
             if (_localizedStrings.Count > 0)
-                DoInjectLocalizableLocations(_id, _localizedStrings);
+                DoInjectTableLocalizableLocations(_id, _localizedStrings);
             else
             {
                 Log.Error("Failed to inject localizable location: Nothing to inject.");
@@ -67,7 +67,7 @@ public partial class Msl
     public static LocalizableLocationsBuilder InjectTableLocalizableLocations() => new();
     
     // Method actually responsible for the injection
-    private static void DoInjectLocalizableLocations(string id, Dictionary<string, LocalizedStrings> localizedStrings)
+    private static void DoInjectTableLocalizableLocations(string id, Dictionary<string, LocalizedStrings> localizedStrings)
     {
         // Table filename
         const string tableName = "gml_GlobalScript_table_locations";

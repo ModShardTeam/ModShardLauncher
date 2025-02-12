@@ -188,7 +188,7 @@ public partial class Msl
         public void Inject()
         {
             if (_localizedStrings.Count > 0)
-                DoInjectLocalizableTableText(_id, _localizedStrings);
+                DoInjectTableLocalizableText(_id, _localizedStrings);
             else
             {
                 Log.Error("Failed to inject localizable text: Nothing to inject.");
@@ -201,7 +201,7 @@ public partial class Msl
     public static LocalizableTextBuilder InjectTableLocalizableText() => new();
 
     // Method actually responsible for the injection
-    private static void DoInjectLocalizableTableText(string id, Dictionary<string, LocalizedStrings> localizedStrings)
+    private static void DoInjectTableLocalizableText(string id, Dictionary<string, LocalizedStrings> localizedStrings)
     {
         // Table filename
         const string tableName = "gml_GlobalScript_table_text";

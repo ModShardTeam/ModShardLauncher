@@ -979,7 +979,7 @@ public partial class Msl
         public void Inject()
         {
             if (_localizedStrings.Count > 0)
-                DoInjectLocalizableSpeech(_id, _localizedStrings);
+                DoInjectTableLocalizableSpeech(_id, _localizedStrings);
             else
             {
                 Log.Error("Failed to inject localizable effect: Nothing to inject.");
@@ -992,7 +992,7 @@ public partial class Msl
     public static LocalizableSpeechBuilder InjectTableLocalizableSpeech() => new();
     
     // Method actually responsible for the injection
-    private static void DoInjectLocalizableSpeech(string id, Dictionary<string, LocalizedStrings> localizedStrings)
+    private static void DoInjectTableLocalizableSpeech(string id, Dictionary<string, LocalizedStrings> localizedStrings)
     {
         // Table filename
         const string tableName = "gml_GlobalScript_table_speech";

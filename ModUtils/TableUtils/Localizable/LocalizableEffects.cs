@@ -55,7 +55,7 @@ public partial class Msl
         public void Inject()
         {
             if (_localizedStrings.Count > 0)
-                DoInjectLocalizableEffects(_id, _localizedStrings);
+                DoInjectTableLocalizableEffects(_id, _localizedStrings);
             else
             {
                 Log.Error("Failed to inject localizable effect: Nothing to inject.");
@@ -68,7 +68,7 @@ public partial class Msl
     public static LocalizableEffectsBuilder InjectTableLocalizableEffects() => new();
     
     // Method actually responsible for the injection
-    private static void DoInjectLocalizableEffects(string id, Dictionary<string, LocalizedStrings> localizedStrings)
+    private static void DoInjectTableLocalizableEffects(string id, Dictionary<string, LocalizedStrings> localizedStrings)
     {
         // Table filename
         const string tableName = "gml_GlobalScript_table_effects";
