@@ -24,6 +24,7 @@
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizableControls.cs" />
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizableDungeons.cs" />
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizableEffects.cs" />
+    <Compile Include="ModUtils\TableUtils\Localizable\LocalizableEquipment.cs" />
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizableHints.cs" />
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizableLocations.cs" />
     <Compile Include="ModUtils\TableUtils\Localizable\LocalizableLog.cs" />
