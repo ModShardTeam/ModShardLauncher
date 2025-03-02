@@ -256,7 +256,7 @@ public class LocalizationItem
     }
 }
 /// <summary>
-/// Abstraction for the localization of sentences found in gml_GlobalScript_table_NPC_Lines.
+/// Abstraction for the localization of sentences found in gml_GlobalScript_table_lines.
 /// </summary>
 public class LocalizationSentence
 {
@@ -387,7 +387,7 @@ public class LocalizationDialog
         {
             yield return line;
 
-            if (line.Contains("NPC - GREETINGS;"))
+            if (line.Contains("[NPC] GREETINGS;"))
             {
                 foreach (LocalizationSentence sentence in Sentences) 
                 {
@@ -398,14 +398,14 @@ public class LocalizationDialog
     }
     /// <summary>
     /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSentence"/>,
-    /// insert a new line constructed by the dictionary <see cref="Sentence"/> in the gml_GlobalScript_table_NPC_Lines table. 
+    /// insert a new line constructed by the dictionary <see cref="Sentence"/> in the gml_GlobalScript_table_lines table. 
     /// </summary>
     /// <param name="table"></param>
     /// <returns></returns>
     public void InjectTable()
     {
-        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_NPC_Lines"));
-        ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_NPC_Lines");
+        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_lines"));
+        ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_lines");
     }
 }
 
