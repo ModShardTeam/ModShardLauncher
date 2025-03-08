@@ -259,20 +259,14 @@ state = 25";
         [InlineData(StringDataForTest.randomBlock)]
         public void MatchFrom_EmptyString_WithNonEmptyString(string input)
         {
-            // Reference
-            List<(Match, string)> matchStringListReference = new()
-            {
-                (Match.Before, "")
-            };
-
             // Arrange
             IEnumerable<string> stringList = "".Split('\n');
 
             // Act
-            IEnumerable<(Match, string)> stringList_matchFrom = stringList.MatchFrom(input);
+            Exception ex = Assert.Throws<Exception>(() => stringList.MatchFrom(input).ToList());
 
             // Assert
-            Assert.Equal(matchStringListReference, stringList_matchFrom);
+            Assert.Contains("MatchFrom: No matching lines found", ex.Message);
         }
         
         [Theory]
@@ -329,21 +323,15 @@ state = 25";
         [InlineData(StringDataForTest.randomBlock, "aaaaaaaaaaaaaaaaaaaaaa")]
         public void MatchFrom_NonEmptyString_NoMatch(string input, string stringToMatch)
         {
-            // Reference
-            List<(Match, string)> matchStringListReference = new();
-            foreach(string s in input.Split('\n'))
-            {
-                matchStringListReference.Add((Match.Before, s));
-            }
-
             // Arrange
             IEnumerable<string> stringList = input.Split('\n');
 
             // Act
-            IEnumerable<(Match, string)> stringList_matchFrom = stringList.MatchFrom(stringToMatch);
+             Exception ex = Assert.Throws<Exception>(() => stringList.MatchFrom(stringToMatch).ToList());
 
             // Assert
-            Assert.Equal(matchStringListReference, stringList_matchFrom);
+            Assert.Contains("MatchFrom: No matching lines found", ex.Message);
+            Assert.Contains(stringToMatch, ex.Message);
         }
 
         [Theory]
@@ -430,21 +418,14 @@ state = 25";
         [InlineData(StringDataForTest.randomBlock)]
         public void MatchBelow_EmptyString_WithNonEmptyString(string input)
         {
-            // Reference
-            
-            List<(Match, string)> matchStringListReference = new()
-            {
-                (Match.Before, "")
-            };
-
             // Arrange
             IEnumerable<string> stringList = "".Split('\n');
 
             // Act
-            IEnumerable<(Match, string)> stringList_matchBelow = stringList.MatchBelow(input, 0);
+            Exception ex = Assert.Throws<Exception>(() => stringList.MatchBelow(input, 0).ToList());
 
             // Assert
-            Assert.Equal(matchStringListReference, stringList_matchBelow);
+            Assert.Contains("MatchBelow: No matching lines found", ex.Message);
         }
         
         [Theory]
@@ -517,21 +498,15 @@ state = 25";
         [InlineData(StringDataForTest.randomBlock, "aaaaaaaaaaaaaaaaaaaaaa", 5)]
         public void MatchBelow_NonEmptyString_NoMatch(string input, string stringToMatch, int len)
         {
-            // Reference
-            List<(Match, string)> matchStringListReference = new();
-            foreach(string s in input.Split('\n'))
-            {
-                matchStringListReference.Add((Match.Before, s));
-            }
-
             // Arrange
             IEnumerable<string> stringList = input.Split('\n');
 
             // Act
-            IEnumerable<(Match, string)> stringList_matchBelow = stringList.MatchBelow(stringToMatch, len);
+            Exception ex = Assert.Throws<Exception>(() => stringList.MatchBelow(stringToMatch, len).ToList());
 
             // Assert
-            Assert.Equal(matchStringListReference, stringList_matchBelow);
+            Assert.Contains("MatchBelow: No matching lines found", ex.Message);
+            Assert.Contains(stringToMatch, ex.Message);
         }
 
         [Theory]
@@ -617,21 +592,14 @@ state = 25";
         [InlineData(StringDataForTest.randomBlock)]
         public void MatchFromUntil_EmptyString_FromNonEmptyStringUntilEmptyString(string input)
         {
-            // Reference
-            
-            List<(Match, string)> matchStringListReference = new()
-            {
-                (Match.Before, "")
-            };
-
             // Arrange
             IEnumerable<string> stringList = "".Split('\n');
 
             // Act
-            IEnumerable<(Match, string)> stringList_matchFromUntil = stringList.MatchFromUntil(input, "");
+            Exception ex = Assert.Throws<Exception>(() => stringList.MatchFromUntil(input, "").ToList());
 
             // Assert
-            Assert.Equal(matchStringListReference, stringList_matchFromUntil);
+            Assert.Contains("MatchFrom: No matching lines found", ex.Message);
         }
         
         [Theory]
@@ -651,10 +619,11 @@ state = 25";
             IEnumerable<string> stringList = input.Split('\n');
 
             // Act
-            IEnumerable<(Match, string)> stringList_matchFromUntil = stringList.MatchFromUntil(from, "");
+            Exception ex = Assert.Throws<Exception>(() => stringList.MatchFromUntil(from, "").ToList());
 
             // Assert
-            Assert.Equal(matchStringListReference, stringList_matchFromUntil);
+            Assert.Contains("MatchFrom: No matching lines found", ex.Message);
+            Assert.Contains(from, ex.Message);
         }
 
         [Theory]

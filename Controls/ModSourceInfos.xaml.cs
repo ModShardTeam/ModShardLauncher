@@ -45,7 +45,7 @@ namespace ModShardLauncher.Controls
                 Main.Instance.LogModList();
                 Log.Error(ex, "Something went wrong");
                 Log.Information("Failed patching vanilla");
-                MessageBox.Show(Application.Current.FindResource("SaveDataWarning").ToString());
+                MessageBox.Show(ex.ToString(), Application.Current.FindResource("SaveDataWarning").ToString());
             }
 
             if (patchSucess) await DataLoader.DoSaveDialog();
