@@ -113,7 +113,7 @@ static public class Localization
     }
 }
 /// <summary>
-/// Abstraction the localization of items found in gml_GlobalScript_table_consumables.
+/// Abstraction the localization of items found in gml_GlobalScript_table_items.
 /// </summary>
 public class LocalizationItem
 {
@@ -217,7 +217,7 @@ public class LocalizationItem
             line += ";";
             line += kp.Value;
         }
-        return line + ";//;";
+        return line + ";";
     }
     /// <summary>
     /// Browse a table with an iterator, and at special lines, yield a new line constructed by the dictionaries <see cref="ConsumableName"/>, <see cref="ConsumableID"/> and <see cref="ConsumableDescription"/>.
@@ -251,8 +251,8 @@ public class LocalizationItem
     /// <returns></returns>
     public void InjectTable()
     {
-        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_consumables"));
-        ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_consumables");
+        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_items"));
+        ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_items");
     }
 }
 /// <summary>
