@@ -653,13 +653,6 @@ namespace ModShardLauncher
                     yield return (Match.After, element);
                 }
             }
-
-            /*
-            if (!foundUntil)
-            {
-                throw new Exception("MatchFromUntil: No matching lines found. Items to match: " + string.Join(", ", otheruntil));
-            }
-            */
         }
         /// <summary>
         /// Same behaviour as <see cref="MatchFromUntil"/> but using <paramref name="otherfrom"/>.Split('\n') and <paramref name="otheruntil"/>.Split('\n') for the comparison. 
