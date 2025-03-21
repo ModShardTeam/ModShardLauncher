@@ -438,6 +438,7 @@ namespace ModShardLauncher
         /// </summary>
         public static IEnumerable<(Match, string)> MatchFrom(this IEnumerable<string> ienumerable, IEnumerable<string> other)
         {
+            bool foundMatch = false;
             Match m = Match.Before;
             string? otherString = null;
             IEnumerator<string> otherEnumerator = other.GetEnumerator();
@@ -449,6 +450,7 @@ namespace ModShardLauncher
                 if (m != Match.After && otherString != null && element.Contains(otherString))
                 {
                     m = Match.Matching;
+                    foundMatch = true;
                     yield return (m, element);
                     if (otherEnumerator.MoveNext())
                         otherString = otherEnumerator.Current;
@@ -464,6 +466,11 @@ namespace ModShardLauncher
                         m = Match.After;
                     yield return (m, element);
                 }
+            }
+
+            if (!foundMatch)
+            {
+                throw new Exception("MatchFrom: No matching lines found. Items to match: " + string.Join(", ", other));
             }
         }
 
@@ -538,6 +545,11 @@ namespace ModShardLauncher
                 {
                     yield return (Match.After, element);
                 }
+            }
+
+            if (!encounteredTheBlock)
+            {
+                throw new Exception("MatchBelow: No matching lines found. Items to match: " + string.Join("\r\n", other));
             }
         }
         /// <summary>
@@ -641,6 +653,13 @@ namespace ModShardLauncher
                     yield return (Match.After, element);
                 }
             }
+
+            /*
+            if (!foundUntil)
+            {
+                throw new Exception("MatchFromUntil: No matching lines found. Items to match: " + string.Join(", ", otheruntil));
+            }
+            */
         }
         /// <summary>
         /// Same behaviour as <see cref="MatchFromUntil"/> but using <paramref name="otherfrom"/>.Split('\n') and <paramref name="otheruntil"/>.Split('\n') for the comparison. 

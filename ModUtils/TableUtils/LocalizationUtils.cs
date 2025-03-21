@@ -113,7 +113,7 @@ static public class Localization
     }
 }
 /// <summary>
-/// Abstraction the localization of items found in gml_GlobalScript_table_consumables.
+/// Abstraction the localization of items found in gml_GlobalScript_table_items.
 /// </summary>
 public class LocalizationItem
 {
@@ -203,7 +203,7 @@ public class LocalizationItem
     /// CreateLine("testItem", new Dictionary &lt; ModLanguage, string &gt; () {{Russian, "testRu"}, {English, "testEn"}, {Chinese, "testCh"}, {German, "testGe"}, {Spanish, "testSp"}, 
     /// {French, "testFr"}, {Italian, "testIt"}, {Portuguese, "testPr"}, {Polish, "testPl"}, {Turkish, "testTu"}, {Japanese, "testJp"}, {Korean, "testKr"}} );
     /// </code>
-    /// returns the string "testItem;testRu;testEn;testCh;testGe;testSp;testFr;testIt;testPr;testPl;testTu;testJp;testKr;//;".
+    /// returns the string "testItem;testRu;testEn;testCh;testGe;testSp;testFr;testIt;testPr;testPl;testTu;testJp;testKr;".
     /// </example>
     /// </summary>
     /// <param name="oName"></param>
@@ -217,7 +217,7 @@ public class LocalizationItem
             line += ";";
             line += kp.Value;
         }
-        return line + ";//;";
+        return line + ";";
     }
     /// <summary>
     /// Browse a table with an iterator, and at special lines, yield a new line constructed by the dictionaries <see cref="ConsumableName"/>, <see cref="ConsumableID"/> and <see cref="ConsumableDescription"/>.
@@ -251,12 +251,12 @@ public class LocalizationItem
     /// <returns></returns>
     public void InjectTable()
     {
-        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_consumables"));
-        ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_consumables");
+        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_items"));
+        ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_items");
     }
 }
 /// <summary>
-/// Abstraction for the localization of sentences found in gml_GlobalScript_table_NPC_Lines.
+/// Abstraction for the localization of sentences found in gml_GlobalScript_table_lines.
 /// </summary>
 public class LocalizationSentence
 {
@@ -387,7 +387,7 @@ public class LocalizationDialog
         {
             yield return line;
 
-            if (line.Contains("NPC - GREETINGS;"))
+            if (line.Contains("[NPC] GREETINGS;"))
             {
                 foreach (LocalizationSentence sentence in Sentences) 
                 {
@@ -398,14 +398,14 @@ public class LocalizationDialog
     }
     /// <summary>
     /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSentence"/>,
-    /// insert a new line constructed by the dictionary <see cref="Sentence"/> in the gml_GlobalScript_table_NPC_Lines table. 
+    /// insert a new line constructed by the dictionary <see cref="Sentence"/> in the gml_GlobalScript_table_lines table. 
     /// </summary>
     /// <param name="table"></param>
     /// <returns></returns>
     public void InjectTable()
     {
-        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_NPC_Lines"));
-        ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_NPC_Lines");
+        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_lines"));
+        ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_lines");
     }
 }
 
