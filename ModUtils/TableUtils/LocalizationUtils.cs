@@ -1,8 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using ModShardLauncher.Mods;
+using Serilog;
+using UndertaleModLib;
+using UndertaleModLib.Decompiler;
+using UndertaleModLib.Models;
 
 namespace ModShardLauncher;
 
@@ -111,337 +117,90 @@ static public class Localization
         }
         return dest;
     }
-}
-/// <summary>
-/// Abstraction the localization of items found in gml_GlobalScript_table_items.
-/// </summary>
-public class LocalizationItem
-{
-    /// <summary>
-    /// Name of the object in the localization table.
-    /// </summary>
-    public string OName { get; set; }
-    /// <summary>
-    /// Dictionary that contains a translation of the item name as displayed in-game for each available languages.
-    /// </summary>
-    public Dictionary<ModLanguage, string> ConsumableName { get; set; } = new();
-    /// <summary>
-    /// Dictionary that contains a translation of the item effect as displayed in-game for each available languages.
-    /// </summary>
-    public Dictionary<ModLanguage, string> ConsumableID { get; set; } = new();
-    /// <summary>
-    /// Dictionary that contains a translation of the item description as displayed in-game for each available languages.
-    /// </summary>
-    public Dictionary<ModLanguage, string> ConsumableDescription { get; set; } = new();
-    /// <summary>
-    /// Return an instance of <see cref="LocalizationItem"/> with empty <see cref="ConsumableName"/>, <see cref="ConsumableID"/> and <see cref="ConsumableDescription"/>.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationItem("myTestItem");
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="oName"></param>
-    public LocalizationItem(string oName)
+    static public Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTable(params (string anchor, IEnumerable<string> elements)[] datas)
     {
-        OName = oName;
-    }
-    /// <summary>
-    /// Return an instance of <see cref="LocalizationItem"/> with <see cref="ConsumableName"/>, <see cref="ConsumableID"/> and <see cref="ConsumableDescription"/> filled by input dictionaries.
-    /// It is expected to have at least an English key for each dictionary. It does not need to follow the convention order of the localization table.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationItem("myTestItem", 
-    ///     new Dictionary &lt; ModLanguage, string &gt; () { {Russian, "testRu"}, {English, "testEn"}, {Italian, "testIt"} },
-    ///     new Dictionary &lt; ModLanguage, string &gt; () { {Russian, "effectRu"}, {English, "effectEn"}, {Italian, "effectIt"} },
-    ///     new Dictionary &lt; ModLanguage, string &gt; () { {Russian, "descRu"}, {English, "descEn"}, {Italian, "descIt"} } );
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="oName"></param>
-    /// <param name="dictName"></param>
-    /// <param name="dictID"></param>
-    /// <param name="dictDescription"></param>
-    public LocalizationItem(string oName, Dictionary<ModLanguage, string> dictName, Dictionary<ModLanguage, string> dictID, Dictionary<ModLanguage, string> dictDescription)
-    {
-        OName = oName;
-        ConsumableName = Localization.SetDictionary(dictName);
-        ConsumableID = Localization.SetDictionary(dictID);
-        ConsumableDescription = Localization.SetDictionary(dictDescription);
-    }
-    /// <summary>
-    /// Return an instance of <see cref="LocalizationItem"/> with <see cref="ConsumableName"/>, <see cref="ConsumableID"/> and <see cref="ConsumableDescription"/> filled by input strings delimited by semi-colon.
-    /// It is expected to follow the convention order of the localization table.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationItem("myTestItem", 
-    ///     "testRu;testEn;testCh",
-    ///     "effectRu;effectEn;effectCh",
-    ///     "descRu;descEn;descIt");
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="oName"></param>
-    /// <param name="valuesName"></param>
-    /// <param name="valuesID"></param>
-    /// <param name="valuesDescription"></param>
-    public LocalizationItem(string oName, string valuesName, string valuesID, string valuesDescription)
-    {
-        OName = oName;
-        ConsumableName = Localization.SetDictionary(valuesName);
-        ConsumableID = Localization.SetDictionary(valuesID);
-        ConsumableDescription = Localization.SetDictionary(valuesDescription);
-    }
-    /// <summary>
-    /// Create a string delimited by semi-colon that follows the in-game convention order for localization of items.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// CreateLine("testItem", new Dictionary &lt; ModLanguage, string &gt; () {{Russian, "testRu"}, {English, "testEn"}, {Chinese, "testCh"}, {German, "testGe"}, {Spanish, "testSp"}, 
-    /// {French, "testFr"}, {Italian, "testIt"}, {Portuguese, "testPr"}, {Polish, "testPl"}, {Turkish, "testTu"}, {Japanese, "testJp"}, {Korean, "testKr"}} );
-    /// </code>
-    /// returns the string "testItem;testRu;testEn;testCh;testGe;testSp;testFr;testIt;testPr;testPl;testTu;testJp;testKr;".
-    /// </example>
-    /// </summary>
-    /// <param name="oName"></param>
-    /// <param name="dict"></param>
-    /// <returns></returns>
-    static private string CreateLine(string oName, Dictionary<ModLanguage, string> dict)
-    {
-        string line = oName;
-        foreach (KeyValuePair<ModLanguage, string> kp in dict)
+        IEnumerable<string> func(IEnumerable<string> input)
         {
-            line += ";";
-            line += kp.Value;
-        }
-        return line + ";";
-    }
-    /// <summary>
-    /// Browse a table with an iterator, and at special lines, yield a new line constructed by the dictionaries <see cref="ConsumableName"/>, <see cref="ConsumableID"/> and <see cref="ConsumableDescription"/>.
-    /// </summary>
-    /// <param name="table"></param>
-    /// <returns></returns>
-    private IEnumerable<string> EditTable(IEnumerable<string> table)
-    {
-        foreach (string line in table)
-        {
-            if (line.Contains("consum_name_end"))
+            int extraLines = 0;
+            foreach (string item in input)
             {
-                yield return CreateLine(OName, ConsumableName);
-            }
-            else if (line.Contains("consum_mid_end"))
-            {
-                yield return CreateLine(OName, ConsumableID);
-            }
-            else if (line.Contains("consum_desc_end"))
-            {
-                yield return CreateLine(OName, ConsumableDescription);
-            }
-            yield return line;
-        }
-    }
-    /// <summary>
-    /// Browse a table with an iterator, and at special lines, 
-    /// insert a new line constructed by the dictionaries <see cref="ConsumableName"/>, <see cref="ConsumableID"/> and <see cref="ConsumableDescription"/> in the gml_GlobalScript_table_consumables table.
-    /// </summary>
-    /// <param name="table"></param>
-    /// <returns></returns>
-    public void InjectTable()
-    {
-        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_items"));
-        ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_items");
-    }
-}
-/// <summary>
-/// Abstraction for the localization of sentences found in gml_GlobalScript_table_lines.
-/// </summary>
-public class LocalizationSentence
-{
-    /// <summary>
-    /// Id of the sentence
-    /// </summary>
-    public string Id { get; set; }
-    public string Tags { get; set; } = "any";
-    public string Role { get; set; } = "any";
-    public string Type { get; set; } = "any";
-    public string Faction { get; set; } = "any";
-    public string Settlement { get; set; } = "any";
-    /// <summary>
-    /// Dictionary that contains a translation of the sentence as displayed in dialog for each available languages.
-    /// </summary>
-    public Dictionary<ModLanguage, string> Sentence { get; set; } = new();
-    /// <summary>
-    /// Return an instance of <see cref="LocalizationSentence"/> with an empty <see cref="Sentence"/>.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationSentence("mySentenceId");
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="id"></param>
-    public LocalizationSentence(string id)
-    {
-        Id = id;
-    }
-    /// <summary>
-    /// Return an instance of <see cref="LocalizationSentence"/> with <see cref="Sentence"/> filled by an input dictionary.
-    /// It is expected to have at least an English key. It does not need to follow the convention order of the localization table.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationItem("mySentenceId", 
-    ///     new Dictionary &lt; ModLanguage, string &gt; () { {Russian, "sentenceRu"}, {English, "sentenceEn"}, {Italian, "sentenceIt"} });
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="sentence"></param>
-    public LocalizationSentence(string id, Dictionary<ModLanguage, string> sentence)
-    {
-        Id = id;
-        Sentence = Localization.SetDictionary(sentence);
-        
-    }
-    /// <summary>
-    /// Return an instance of <see cref="LocalizationSentence"/> with <see cref="Sentence"/> filled by an input string delimited by semi-colon.
-    /// It is expected to follow the convention order of the localization table.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationItem("mySentenceId", 
-    ///     "sentenceRu;sentenceEn;sentenceCh");
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="sentence"></param>
-    public LocalizationSentence(string id, string sentence)
-    {
-        Id = id;
-        Sentence = Localization.SetDictionary(sentence);
-    }
-    /// <summary>
-    /// Create a string delimited by semi-colon that follows the in-game convention order for localization of sentences.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationItem("mySentenceId", "sentenceRu;sentenceEn;sentenceCh").CreateLine();
-    /// </code>
-    /// returns the string "mySentenceId;any;any;any;any;any;sentenceRu;sentenceEn;sentenceCh;sentenceEn;sentenceEn;sentenceEn;sentenceEn;sentenceEn;sentenceEn;sentenceEn;sentenceEn;sentenceEn;".
-    /// </example>
-    /// </summary>
-    /// <returns></returns>
-    public string CreateLine()
-    {
-        string line = string.Format("{0};{1};{2};{3};{4};{5}", Id, Tags, Role, Type, Faction, Settlement);
-        foreach (KeyValuePair<ModLanguage, string> kp in Sentence)
-        {
-            line += ";";
-            line += kp.Value;
-        }
-        return line + ";";
-    }
-}
-/// <summary>
-/// Abstraction for carrying a list of sentences.
-/// </summary>
-public class LocalizationDialog
-{
-    /// <summary>
-    /// List of <see cref="LocalizationSentence"/>
-    /// </summary>
-    public List<LocalizationSentence> Sentences { get; set; } = new();
-    /// <summary>
-    /// Return an instance of <see cref="LocalizationDialog"/> with an arbitrary number of <see cref="LocalizationSentence"/>.
-    /// <example>
-    /// For example:
-    /// <code>
-    /// LocalizationDialog(
-    ///     new LocalizationSentence("mySentenceId1"), 
-    ///     new LocalizationSentence("mySentenceId2"));
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="sentences"></param>
-    public LocalizationDialog(params LocalizationSentence[] sentences)
-    {
-        foreach (LocalizationSentence sentence in sentences)
-        {   
-            Sentences.Add(sentence);
-        }
-        
-    }
-    /// <summary>
-    /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSentence"/>,
-    /// yield a new line constructed by the dictionary <see cref="Sentence"/>. 
-    /// </summary>
-    /// <param name="table"></param>
-    /// <returns></returns>
-    private IEnumerable<string> EditTable(IEnumerable<string> table)
-    {
-        foreach (string line in table)
-        {
-            yield return line;
-
-            if (line.Contains("[NPC] GREETINGS;"))
-            {
-                foreach (LocalizationSentence sentence in Sentences) 
+                if (item.Contains("NewGMLArray"))
                 {
-                    yield return sentence.CreateLine();
+                    int nLines = int.Parse(Regex.Match(item, @"argc=(\d+)").Groups[1].Value);
+                    yield return $"call.i @@NewGMLArray@@(argc={nLines + extraLines})";
+                }
+                else
+                {
+                    yield return item;
+                }
+
+                foreach(string element in datas.Where(_ => item.Contains(_.anchor)).SelectMany(_ => _.elements).Reverse())
+                {
+                    extraLines++;
+                    yield return "conv.s.v";
+                    yield return $"push.s \"{element}\"";
                 }
             }
         }
+
+        return func;
     }
-    /// <summary>
-    /// Browse a table with an iterator, and at a special line, for each <see cref="LocalizationSentence"/>,
-    /// insert a new line constructed by the dictionary <see cref="Sentence"/> in the gml_GlobalScript_table_lines table. 
-    /// </summary>
-    /// <param name="table"></param>
-    /// <returns></returns>
-    public void InjectTable()
+    static public void InjectTable(string tableName, Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTable)
     {
-        List<string> table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_lines"));
-        ModLoader.SetTable(EditTable(table).ToList(), "gml_GlobalScript_table_lines");
+        Msl.LoadAssemblyAsString(tableName)
+            .Apply(CreateInjectionTable)
+            .Save();
     }
 }
-
-public static partial class Msl
+public interface ILocalizationElement
 {
-    /// <summary>
-    /// Wrapper for the LocalizationItem class using dictionnaries
-    /// </summary>
-    /// <param name="oName"></param>
-    /// <param name="dictName"></param>
-    /// <param name="dictID"></param>
-    /// <param name="dictDescription"></param>
-    public static void InjectTableItemLocalization(string oName, Dictionary<ModLanguage, string> dictName, Dictionary<ModLanguage, string> dictID, Dictionary<ModLanguage, string> dictDescription)
+    IEnumerable<string> CreateLine(string? selector);
+}
+public class LocalizationBaseTable
+{
+    public List<(string anchor, string? selector)> Anchors = new();
+    public LocalizationBaseTable(params (string, string?)[] anchors)
     {
-        LocalizationItem localizationItem = new(oName, dictName, dictID, dictDescription);
-        localizationItem.InjectTable();
+        foreach ((string, string?) anchor in anchors)
+        {   
+            Anchors.Add(anchor);
+        }
     }
-    /// <summary>
-    /// Wrapper for the LocalizationItem class using strings
-    /// </summary>
-    /// <param name="oName"></param>
-    /// <param name="valuesName"></param>
-    /// <param name="valuesID"></param>
-    /// <param name="valuesDescription"></param>
-    public static void InjectTableItemLocalization(string oName, string valuesName, string valuesID, string valuesDescription)
+    public static IEnumerable<string> CreateLines(List<ILocalizationElement> Locs, string? selector)
     {
-        LocalizationItem localizationItem = new(oName, valuesName, valuesID, valuesDescription);
-        localizationItem.InjectTable();
+        return Locs.SelectMany(x => x.CreateLine(selector));
     }
-    /// <summary>
-    /// Wrapper for the LocalizationDialog class
-    /// </summary>
-    /// <param name="sentences"></param>
-    public static void InjectTableDialogLocalization(params LocalizationSentence[] sentences)
+    public Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTable(List<ILocalizationElement> Locs)
     {
-        LocalizationDialog localizationDialog = new(sentences);
-        localizationDialog.InjectTable();
+        return Localization.CreateInjectionTable( 
+            Anchors.Select(x => (x.anchor, CreateLines(Locs, x.selector))).ToArray()
+        );
+    }
+}
+public partial class Msl
+{  
+    static public void ExportTable(string tableName, string outputName)
+    {
+        DirectoryInfo dir = new (DataLoader.exportPath);
+        if (!dir.Exists) dir.Create();
+
+        try
+        {
+            UndertaleCode code = GetUMTCodeFromFile(tableName); // can fail InvalidOperationException
+
+            string table = code.Disassemble(ModLoader.Data.Variables, ModLoader.Data.CodeLocals.For(code));
+            IEnumerable<System.Text.RegularExpressions.Match> matches = Regex.Matches(table, @"push.s ""(.+)""@\d+").Reverse();
+
+            using var stream = File.OpenWrite(Path.Join(dir.FullName, outputName));
+            using StreamWriter writer = new(stream);
+            foreach(System.Text.RegularExpressions.Match match in matches)
+            {
+                writer.WriteLine(match.Groups[1].Value);
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            Log.Warning($"{tableName} is not a valid table.");
+        }
     }
 }

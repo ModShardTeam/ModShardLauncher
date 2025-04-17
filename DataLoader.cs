@@ -3,7 +3,6 @@ using UndertaleModLib.Models;
 using System.Threading.Tasks;
 using System.IO;
 using System;
-using System.Windows;
 using UndertaleModLib.Util;
 using System.Linq;
 using Microsoft.Win32;
@@ -20,8 +19,10 @@ namespace ModShardLauncher
         public static UndertaleData data = new();
         internal static string dataPath = "";
         internal static string savedDataPath = "";
+        internal static string exportPath = "";
         public delegate void FileMessageEventHandler(string message);
         public static event FileMessageEventHandler FileMessageEvent;
+        public static int LastCountContext;
         public static void ShowWarning(string warning, string title)
         {
             Console.WriteLine(title + ":" + warning);
@@ -54,17 +55,17 @@ namespace ModShardLauncher
             File.WriteAllText("json_dump_code.json", JsonConvert.SerializeObject(data.Code.Select(t => t.Name.Content)));
             File.WriteAllText("json_dump_variables.json", JsonConvert.SerializeObject(data.Variables.Select(t => t.Name.Content)));
             File.WriteAllText("json_dump_rooms.json", JsonConvert.SerializeObject(data.Rooms.Select(t => t.Name.Content)));
-            Msl.GenerateNRandomLinesFromCode(data.Code, new GlobalDecompileContext(data, false), 100, 1, 0);
+            RandomUtils.GenerateNRandomLinesFromCode(data.Code, new GlobalDecompileContext(data, false), 100, 1, 0);
         }
         /// <summary>
         /// Export all items, weapons and armors in csv files.
         /// </summary>
-        private static void ExportItems()
+        private static void ExportItems(bool deleteBeforeExport = false)
         {
             try
             {
-                DirectoryInfo dir = new("export");
-                if (dir.Exists) dir.Delete(true);
+                DirectoryInfo dir = new(exportPath);
+                if (deleteBeforeExport && dir.Exists) dir.Delete(true);
                 dir.Create();
 
                 List<string>? weapons = ModLoader.GetTable("gml_GlobalScript_table_weapons");
@@ -168,6 +169,8 @@ namespace ModShardLauncher
         {
             // save the filename for later
             dataPath = filename;
+            // save export folder
+            exportPath = Path.Join(Directory.GetCurrentDirectory(), Path.DirectorySeparatorChar.ToString(), "export");
             // create a new dialog box
             LoadingDialog dialog = new()
             {
@@ -197,6 +200,7 @@ namespace ModShardLauncher
             ModLoader.Initalize();
             // cleaning loot table
             LootUtils.ResetLootTables();
+            LastCountContext = ContextMenuUtils.ReadLastContextIndex();
             ExportItems();
         }
         public static async Task<bool> DoSaveDialog()
