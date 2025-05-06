@@ -203,6 +203,25 @@ public class LocalizationTextContext : ILocalizationElement
         yield return $"{Id};{string.Concat(Name.Values.Select(x => @$"{x};"))}";
     }
 }
+public class LocalizationCraftingCategory : ILocalizationElement
+{
+    public string Id { get; set; }
+    public Dictionary<ModLanguage, string> Name { get; set; } = new();
+    public LocalizationCraftingCategory(string id, Dictionary<ModLanguage, string> name)
+    {
+        Id = id;
+        Name = Localization.SetDictionary(name);
+    }
+    public LocalizationCraftingCategory(string id, string name)
+    {
+        Id = id;
+        Name = Localization.SetDictionary(name);
+    }
+    public IEnumerable<string> CreateLine(string? selector)
+    {
+        yield return $"{Id};{string.Concat(Name.Values.Select(x => @$"{x};"))}";
+    }
+}
 // TODO : psychic injection
 public static partial class Msl
 {
@@ -221,6 +240,7 @@ public static partial class Msl
     {
         Localization.InjectTable("gml_GlobalScript_table_text", CreateInjectionTextTreesLocalization(trees));
     }
+
     public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTextRaritysLocalization(params LocalizationTextRarity[] rarity)
     {
         LocalizationBaseTable localizationBaseTable = new(
@@ -232,6 +252,7 @@ public static partial class Msl
     {
         Localization.InjectTable("gml_GlobalScript_table_text", CreateInjectionTextRaritysLocalization(rarity));
     }
+
     public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTextContextsLocalization(params LocalizationTextContext[] modifiers)
     {
         LocalizationBaseTable localizationBaseTable = new(
@@ -239,8 +260,20 @@ public static partial class Msl
         );
         return localizationBaseTable.CreateInjectionTable(modifiers.Select(x => x as ILocalizationElement).ToList());
     }
-    private static void InjectTableTextContextsLocalization(params LocalizationTextContext[] contexts)
+    public static void InjectTableTextContextsLocalization(params LocalizationTextContext[] contexts)
     {
         Localization.InjectTable("gml_GlobalScript_table_text", CreateInjectionTextContextsLocalization(contexts));
+    }
+
+    public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionTextCraftingCategoryLocalization(params LocalizationCraftingCategory[] categories)
+    {
+        LocalizationBaseTable localizationBaseTable = new(
+            ("crafting_category_end;", null)
+        );
+        return localizationBaseTable.CreateInjectionTable(categories.Select(x => x as ILocalizationElement).ToList());
+    }
+    public static void InjectTableTextCraftingCategoryLocalization(params LocalizationCraftingCategory[] categories)
+    {
+        Localization.InjectTable("gml_GlobalScript_table_text", CreateInjectionTextCraftingCategoryLocalization(categories));
     }
 }
