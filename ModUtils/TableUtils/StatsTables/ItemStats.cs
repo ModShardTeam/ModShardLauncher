@@ -234,7 +234,6 @@ public partial class Msl
         short? Unholy_Resistance = null,
         short? Sacred_Resistance = null,
         short? Psionic_Resistance = null,
-        short? Bleeding_Resistance_2 = null,
         short? Nausea_Chance = null, // Could be ushort ?
         short? Poisoning_Chance = null, // Could be ushort ?
         short? Poisoning_Duration = null,
@@ -255,7 +254,7 @@ public partial class Msl
         List<string> table = ThrowIfNull(ModLoader.GetTable(tableName));
         
         // Prepare line
-        string newline = $"{id};;{Price};{EffPrice};{GetEnumMemberValue(tier)};{GetEnumMemberValue(Cat)};{GetEnumMemberValue(Subcat)};{GetEnumMemberValue(Material)};{GetEnumMemberValue(Weight)};;{Fresh};{Duration};{Stacks};;{Hunger};{Hunger_Change};{Hunger_Resistance};;{Thirsty};{Thirst_Change};;{Immunity};{Immunity_Change};;{Intoxication};{Toxicity_Change};{Toxicity_Resistance};;{Pain};{Pain_Change};{Pain_Resistance};{Pain_Limit};;{Morale};{Morale_Change};{Sanity};{Sanity_Change};;{Condition};{max_hp};{max_hp_res};{Health_Restoration};{Healing_Received};;{max_mp};{max_mp_res};{MP_Restoration};{MP_turn};;{Fatigue};{Fatigue_Change};{Fatigue_Gain};;{Received_XP};{Cooldown_Reduction};{Weapon_Damage};{Hit_Chance};{FMB};{CRTD};{Fortitude};{VSN};;{Bleeding_Resistance};{Knockback_Resistance};{Stun_Resistance};;{Physical_Resistance};{Nature_Resistance};{Magic_Resistance};{Slashing_Resistance};{Piercing_Resistance};{Blunt_Resistance};{Rending_Resistance};{Fire_Resistance};{Shock_Resistance};{Poison_Resistance};{Caustic_Resistance};{Frost_Resistance};{Arcane_Resistance};{Unholy_Resistance};{Sacred_Resistance};{Psionic_Resistance};{Bleeding_Resistance_2};;{Nausea_Chance};{Poisoning_Chance};{Poisoning_Duration};;{(purse ? "1" : "")};{(bottle ? "1" : "")};{upgrade};{fodder};{stack};{(fireproof ? "1" : "")};{(dropsOnce ? "1" : "")};{GetEnumMemberValue(tags)};";
+        string newline = $"{id};;{Price};{EffPrice};{GetEnumMemberValue(tier)};{GetEnumMemberValue(Cat)};{GetEnumMemberValue(Subcat)};{GetEnumMemberValue(Material)};{GetEnumMemberValue(Weight)};;{Fresh};{Duration};{Stacks};;{Hunger};{Hunger_Change};{Hunger_Resistance};;{Thirsty};{Thirst_Change};;{Immunity};{Immunity_Change};;{Intoxication};{Toxicity_Change};{Toxicity_Resistance};;{Pain};{Pain_Change};{Pain_Resistance};{Pain_Limit};;{Morale};{Morale_Change};{Sanity};{Sanity_Change};;{Condition};{max_hp};{max_hp_res};{Health_Restoration};{Healing_Received};;{max_mp};{max_mp_res};{MP_Restoration};{MP_turn};;{Fatigue};{Fatigue_Change};{Fatigue_Gain};;{Received_XP};{Cooldown_Reduction};{Weapon_Damage};{Hit_Chance};{FMB};{CRTD};{Fortitude};{VSN};;{Bleeding_Resistance};{Knockback_Resistance};{Stun_Resistance};;{Physical_Resistance};{Nature_Resistance};{Magic_Resistance};{Slashing_Resistance};{Piercing_Resistance};{Blunt_Resistance};{Rending_Resistance};{Fire_Resistance};{Shock_Resistance};{Poison_Resistance};{Caustic_Resistance};{Frost_Resistance};{Arcane_Resistance};{Unholy_Resistance};{Sacred_Resistance};{Psionic_Resistance};;{Nausea_Chance};{Poisoning_Chance};{Poisoning_Duration};;{(purse ? "1" : "")};{(bottle ? "1" : "")};{upgrade};{fodder};{stack};{(fireproof ? "1" : "")};{(dropsOnce ? "1" : "")};{GetEnumMemberValue(tags)};";
         
         // Add line to table
         table.Add(newline);
