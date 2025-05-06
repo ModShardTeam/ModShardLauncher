@@ -94,6 +94,6 @@ public static partial class Msl
     }
     public static void InjectTableModifiersLocalization(params LocalizationModifier[] modifiers)
     {
-        Localization.InjectTable("gml_GlobalScript_table_Modifiers", CreateInjectionModifiersLocalization(modifiers));
+        Localization.InjectTable("gml_GlobalScript_table_effects", CreateInjectionModifiersLocalization(modifiers));
     }
 }

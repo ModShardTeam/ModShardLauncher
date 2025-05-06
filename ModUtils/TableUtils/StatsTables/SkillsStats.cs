@@ -129,34 +129,34 @@ public partial class Msl
     }
     
     public static void InjectTableSkillsStats(
-    SkillsStatsHook hook,
-    string id,
-    string? Object = null,
-    SkillsStatsTarget Target = SkillsStatsTarget.NoTarget,
-    string Range = "0",
-    ushort KD = 0,
-    ushort MP = 0,
-    ushort Reserv = 0,
-    ushort Duration = 0,
-    byte AOE_Lenght = 0,
-    byte AOE_Width = 0,
-    bool is_movement = false,
-    SkillsStatsPattern Pattern = SkillsStatsPattern.normal,
-    SkillsStatsValidator Validators = SkillsStatsValidator.none,
-    SkillsStatsClass Class = SkillsStatsClass.skill,
-    bool Bonus_Range = false, // could be byte ? Not sure as only values are 0 and 1
-    string? Starcast = null,
-    SkillsStatsBranch Branch = SkillsStatsBranch.none,
-    bool is_knockback = false,
-    bool Crime = false,
-    SkillsStatsMetacategory metacategory = SkillsStatsMetacategory.none,
-    short FMB = 0,
-    string AP = "x",
-    bool Attack = false,
-    bool Stance = false,
-    bool Charge = false,
-    bool Maneuver = false,
-    bool Spell = false
+        SkillsStatsHook hook,
+        string id,
+        string? Object = null,
+        SkillsStatsTarget Target = SkillsStatsTarget.NoTarget,
+        string Range = "0",
+        ushort KD = 0,
+        ushort MP = 0,
+        ushort Reserv = 0,
+        ushort Duration = 0,
+        byte AOE_Lenght = 0,
+        byte AOE_Width = 0,
+        bool is_movement = false,
+        SkillsStatsPattern Pattern = SkillsStatsPattern.normal,
+        SkillsStatsValidator Validators = SkillsStatsValidator.none,
+        SkillsStatsClass Class = SkillsStatsClass.skill,
+        bool Bonus_Range = false, // could be byte ? Not sure as only values are 0 and 1
+        string? Starcast = null,
+        string Branch = "none",
+        bool is_knockback = false,
+        bool Crime = false,
+        SkillsStatsMetacategory metacategory = SkillsStatsMetacategory.none,
+        short FMB = 0,
+        string AP = "x",
+        bool Attack = false,
+        bool Stance = false,
+        bool Charge = false,
+        bool Maneuver = false,
+        bool Spell = false
         )
     {
         // Table filename
@@ -166,7 +166,7 @@ public partial class Msl
         List<string> table = ThrowIfNull(ModLoader.GetTable(tableName));
         
         // Prepare line
-        string newline = $"{id};{Object};{GetEnumMemberValue(Target)};{Range};{KD};{MP};{Reserv};{Duration};{AOE_Lenght};{AOE_Width};{(is_movement ? "1" : "0")};{Pattern};{GetEnumMemberValue(Validators)};{Class};{(Bonus_Range ? "1" : "0")};{Starcast};{GetEnumMemberValue(Branch)};{(is_knockback ? "1" : "0")};{(Crime ? "1" : "")};{GetEnumMemberValue(metacategory)};{FMB};{AP};{(Attack ? "1" : "")};{(Stance ? "1" : "")};{(Charge ? "1" : "")};{(Maneuver ? "1" : "")};{(Spell ? "1" : "")};";
+        string newline = $"{id};{Object};{GetEnumMemberValue(Target)};{Range};{KD};{MP};{Reserv};{Duration};{AOE_Lenght};{AOE_Width};{(is_movement ? "1" : "0")};{Pattern};{GetEnumMemberValue(Validators)};{Class};{(Bonus_Range ? "1" : "0")};{Starcast};{Branch};{(is_knockback ? "1" : "0")};{(Crime ? "1" : "")};{GetEnumMemberValue(metacategory)};{FMB};{AP};{(Attack ? "1" : "")};{(Stance ? "1" : "")};{(Charge ? "1" : "")};{(Maneuver ? "1" : "")};{(Spell ? "1" : "")};";
         
         // Find Hook
         string hookStr = "// " + GetEnumMemberValue(hook);
