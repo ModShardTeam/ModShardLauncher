@@ -54,10 +54,10 @@ public class LocalizationSentenceTest
     public void CreateInjectionSentenceLocalization()
     {
         // Arrange
-        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""NPC - GREETINGS;""
+        string inputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""[NPC] GREETINGS;""
 conv.s.v", 1);
 
-        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""NPC - GREETINGS;""
+        string outputTable = string.Format(LocalizationUtilsData.tableString, @"push.s ""[NPC] GREETINGS;""
 conv.s.v
 push.s ""greeting;any;any;any;any;any;Да?..;Yes?..;什么事儿?;Ja ...?;Yes?..;Oui...?;Sì...?;Sim..?;Tak?..;Yes?..;何か…？;뭔가...?;""
 conv.s.v", 2);

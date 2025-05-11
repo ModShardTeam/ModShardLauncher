@@ -88,12 +88,12 @@ public static partial class Msl
     public static Func<IEnumerable<string>, IEnumerable<string>> CreateInjectionDialogLocalization(params LocalizationSentence[] sentences)
     {
         LocalizationBaseTable localizationBaseTable = new(
-            ("NPC - GREETINGS;", null)
+            ("[NPC] GREETINGS;", null)
         );
         return localizationBaseTable.CreateInjectionTable(sentences.Select(x => x as ILocalizationElement).ToList());
     }
     public static void InjectTableDialogLocalization(params LocalizationSentence[] sentences)
     {
-        Localization.InjectTable("gml_GlobalScript_table_NPC_Lines", CreateInjectionDialogLocalization(sentences));
+        Localization.InjectTable("gml_GlobalScript_table_lines", CreateInjectionDialogLocalization(sentences));
     }
 }
