@@ -125,6 +125,6 @@ public static partial class Msl
     }
     public static void InjectTableBooksLocalization(params LocalizationBook[] books)
     {
-        Localization.InjectTable("gml_GlobalScript_table_Books", CreateInjectionBooksLocalization(books));
+        Localization.InjectTable("gml_GlobalScript_table_books", CreateInjectionBooksLocalization(books));
     }
 }
