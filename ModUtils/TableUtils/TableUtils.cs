@@ -17,9 +17,5 @@ namespace ModShardLauncher
                 .GetCustomAttribute<EnumMemberAttribute>(false)?
                 .Value ?? value.ToString();
         }
-        
-        // Tables left to do :
-        // - ai
-        // - supply / demand if necessary ?
     }
 }

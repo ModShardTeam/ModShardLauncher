@@ -14,26 +14,11 @@
 
   <ItemGroup> <!-- Include the specific files to exclude the ones in the test folder -->
     <Compile Include="*.cs" Exclude="bin\**;obj\**;ModShardLauncherTest\**.*cs" />
-    <Compile Include="ModUtils\TableUtils\Backers.cs" />
-    <Compile Include="ModUtils\TableUtils\ContractsStats.cs" />
-    <Compile Include="ModUtils\TableUtils\Drops.cs" />
-    <Compile Include="ModUtils\TableUtils\DungeonsSpawn.cs" />
-    <Compile Include="ModUtils\TableUtils\ItemStats.cs" />
-    <Compile Include="ModUtils\TableUtils\MobsStats.cs" />
-    <Compile Include="ModUtils\TableUtils\PotionsStats.cs" />
-    <Compile Include="ModUtils\TableUtils\RecipesCook.cs" />
-    <Compile Include="ModUtils\TableUtils\RecipesCraft.cs" />
-    <Compile Include="ModUtils\TableUtils\SkillsStats.cs" />
-    <Compile Include="ModUtils\TableUtils\SurfaceSpawn.cs" />
-    <Compile Include="ModUtils\TableUtils\TableArmor.cs" />
-    <Compile Include="ModUtils\TableUtils\TableUtils.cs" />
-    <Compile Include="ModUtils\TableUtils\LocalizationUtils.cs" />
-    <Compile Include="ModUtils\TableUtils\TableWeapons.cs" />
     <Compile Include="Pages/*.cs" />
     <Compile Include="Extensions/*.cs" />
     <Compile Include="Mods/*.cs" />
     <Compile Include="Controls/*.cs" />
-    <Compile Include="ModUtils/*.cs" />
+    <Compile Include="ModUtils\**\*.*cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -218,9 +203,9 @@
 
   <Target Name="CopyDevFiles" AfterTargets="Publish">
     <Copy SourceFiles="Resources\ExportRoom.csx" DestinationFolder="$(PublishDir)" />
-    <Copy SourceFiles="Reference\UndertaleModLib.dll" DestinationFolder="$(PublishDir)" />
-    <Copy SourceFiles="Reference\UndertaleModTool.dll" DestinationFolder="$(PublishDir)" />
     <Copy SourceFiles="$(OutputPath)ModShardLauncher.dll" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="Reference\UndertaleModLib.dll;Reference\UndertaleModTool.dll" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="ModReference\netstandard.dll;ModReference\System.Collections.dll;ModReference\System.Runtime.dll;ModReference\System.Linq.dll;ModReference\System.ObjectModel.dll" DestinationFolder="$(PublishDir)" />
   </Target>
 
 </Project>
