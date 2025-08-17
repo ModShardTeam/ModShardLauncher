@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using Serilog;
 using UndertaleModLib;
 using UndertaleModLib.Decompiler;
@@ -10,6 +12,38 @@ namespace ModShardLauncher
 {
     public static partial class Msl
     {
+        /// <summary>
+        /// Check pop variables for intructions as string and create them if needed.
+        /// </summary>
+        /// <param name="instructions"></param>
+        public static void CheckInstructionsVariables(UndertaleCode originalCode, string instructions)
+        {
+            Regex variableRegex = new (@"\bpop\.v\.\w\s(?<var>\w+)\.(?<name>\w+)");
+            foreach (string instruction in instructions.Split('\n').Where(x => x.Contains("pop.v")))
+            {
+                System.Text.RegularExpressions.Match matches = variableRegex.Match(instruction);
+                if (matches.Success) 
+                {
+                    string instanceValue = matches.Groups["var"].Value;
+                    if(instanceValue == "self")
+                    {
+                        AssemblyWrapper.CheckRefVariableOrCreate(matches.Groups["name"].Value, UndertaleInstruction.InstanceType.Self);
+                    }
+                    else if(instanceValue == "global")
+                    {
+                        AssemblyWrapper.CheckRefVariableOrCreate(matches.Groups["name"].Value, UndertaleInstruction.InstanceType.Global);
+                    }
+                    else if(instanceValue == "local")
+                    {
+                        AssemblyWrapper.CheckRefLocalVariableOrCreate(originalCode, matches.Groups["name"].Value);
+                    }
+                    else
+                    {
+                        Log.Warning($"Cannot infer the instance type of {instruction}. There is a risk it will lead to an undefined variable.");
+                    }
+                }
+            }
+        }
         public static string GetAssemblyString(string fileName)
         {
             try 
@@ -46,7 +80,7 @@ namespace ModShardLauncher
                 originalCode.Insert(position, codeAsString);
                 SetAssemblyString(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with InsertDisassemblyCode: {0}", fileName.ToString()));
+                Log.Information(string.Format("Patched function with InsertAssemblyString: {0}", fileName.ToString()));
             }
             catch(Exception ex) 
             {
@@ -64,7 +98,7 @@ namespace ModShardLauncher
                 originalCode[position] = codeAsString;
                 SetAssemblyString(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with ReplaceDisassemblyCode: {0}", fileName.ToString()));
+                Log.Information(string.Format("Patched function with ReplaceAssemblyString: {0}", fileName.ToString()));
             }
             catch(Exception ex) 
             {
@@ -86,7 +120,7 @@ namespace ModShardLauncher
 
                 SetAssemblyString(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with ReplaceDisassemblyCode: {0}", fileName.ToString()));
+                Log.Information(string.Format("Patched function with ReplaceAssemblyString: {0}", fileName.ToString()));
             }
             catch(Exception ex) 
             {
@@ -98,12 +132,12 @@ namespace ModShardLauncher
         {
             try 
             {
-                Log.Information(string.Format("Trying patch assembly in: {0}", name.ToString()));
+                Log.Information(string.Format("Trying inject assembly in: {0}", name.ToString()));
 
                 UndertaleCode originalCode = GetUMTCodeFromFile(name);
                 originalCode.Replace(patch(originalCode.Instructions).ToList());
 
-                Log.Information(string.Format("Patched function with PatchDisassemblyCode: {0}", name.ToString()));
+                Log.Information(string.Format("Patched function with InjectAssemblyInstruction: {0}", name.ToString()));
             }
             catch(Exception ex) 
             {
@@ -165,9 +199,77 @@ namespace ModShardLauncher
                 NameStringID = id
             };
             ModLoader.Data.Variables.Add(variable);
-            Log.Information(string.Format("Created variable: {0}", variable.ToString()));
+            Log.Information($"Created {variable.InstanceType} variable: {variable.Name.Content} {variable.VarID}");
 
             return new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
+        }
+        public static void CheckRefLocalVariableOrCreate(UndertaleCode code, string name)
+        {
+            UndertaleCodeLocals locals = ModLoader.Data.CodeLocals.For(code);
+            UndertaleCodeLocals.LocalVar? localvar = locals.Locals.FirstOrDefault(t => t.Name?.Content == name);
+
+            if (localvar == null)
+            {
+                UndertaleInstruction.Reference<UndertaleVariable> refVariable = CreateRefVariable(name, UndertaleInstruction.InstanceType.Local);
+                localvar = new() { 
+                    Index = (uint)refVariable.Target.VarID, 
+                    Name = refVariable.Target.Name 
+                };
+                locals.Locals.Add(localvar);
+            }
+            else
+            {
+                Log.Information($"Found local variable: {localvar.Name.Content}");
+            }
+        }
+        public static void CheckRefVariableOrCreate(string name, UndertaleInstruction.InstanceType instanceType)
+        {
+            try
+            {
+                UndertaleVariable? variable = null;
+                if (instanceType == UndertaleInstruction.InstanceType.Local)
+                {
+                    throw new ArgumentException("Wrong method used for checking Local Variables");
+                }
+                else
+                {
+                    variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name && t.InstanceType == instanceType);
+                }
+
+                if (variable == null)
+                {
+                    CreateRefVariable(name, instanceType);
+                }
+                else
+                {
+                    Log.Information($"Found variable: {variable.Name.Content} of type {variable.InstanceType}");
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public static UndertaleInstruction.Reference<UndertaleVariable> GetRefVariableOrCreate(string name, UndertaleInstruction.InstanceType instanceType)
+        {
+            try 
+            {
+                UndertaleInstruction.Reference<UndertaleVariable> refVariable;
+                UndertaleVariable? variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name);
+                
+                if (variable == null) 
+                    refVariable = CreateRefVariable(name, instanceType);
+                else
+                    refVariable = new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
+
+                Log.Information(string.Format("Found variable: {0}", refVariable.ToString()));
+
+                return refVariable;
+            }
+            catch
+            {
+                throw;
+            }
         }
         public static UndertaleInstruction.Reference<UndertaleVariable>? GetRefVariable(string name)
         {
@@ -187,27 +289,27 @@ namespace ModShardLauncher
                 throw;
             }
         }
-        public static UndertaleInstruction.Reference<UndertaleVariable> GetRefVariableOrCreate(string name, UndertaleInstruction.InstanceType instanceType)
+        public static string CreateLocalVarAssemblyAsString(UndertaleCode code)
         {
-            try 
-            {
-                UndertaleInstruction.Reference<UndertaleVariable> refVariable;
-                UndertaleVariable? variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name);
-                
-                if (variable == null) 
-                    refVariable = CreateRefVariable(name, instanceType);
-                else
-                    refVariable = new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
+            IEnumerable<string> originalLocalVarsName = code.FindReferencedLocalVars().Select(x => x.Name.Content);
+            IEnumerable<UndertaleCodeLocals.LocalVar> newLocalVars = ModLoader.Data.CodeLocals.For(code).Locals;
+            StringBuilder sb = new();
 
-                Log.Information(string.Format("Find variable: {0}", refVariable.ToString()));
-
-                return refVariable;
-            }
-            catch(Exception ex) 
+            foreach (UndertaleCodeLocals.LocalVar newLocalVar in newLocalVars)
             {
-                Log.Error(ex, "Something went wrong");
-                throw;
+                if (originalLocalVarsName.Contains(newLocalVar.Name.Content)) continue;
+                UndertaleVariable? refVar = ModLoader.Data.Variables.FirstOrDefault(x => x.Name.Content == newLocalVar.Name.Content && x.VarID == newLocalVar.Index);
+                sb.Append($".localvar {newLocalVar.Index} {newLocalVar.Name.Content}");
+
+                if (refVar != null) sb.Append($" {ModLoader.Data.Variables.IndexOf(refVar)}\n");
+                else sb.Append('\n');
             }
+            if (sb.Length != 0)
+            {
+                Log.Information("New local var to inject.");
+            }
+
+            return sb.ToString();
         }
         public static UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> CreateString(string name) 
         {

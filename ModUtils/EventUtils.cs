@@ -14,7 +14,7 @@ namespace ModShardLauncher
         /// <summary>
         /// File where the code of the event is stored.
         /// </summary>
-        public string CodeName { get; set; }
+        public string Code { get; set; }
         /// <summary>
         /// The <see cref="EventType"/> of the event.
         /// </summary>
@@ -24,14 +24,14 @@ namespace ModShardLauncher
         /// </summary>
         public uint Subtype { get; set; }
         /// <summary>
-        /// Return an complete wrapped event with the name of the file containing its source code.
+        /// Return an abtraction for a UTMT event containing the Event code and its subtype. It also contains either the name of the file containing its source code or the source code itself.
         /// </summary>
-        /// <param name="codeName"></param>
+        /// <param name="code"></param>
         /// <param name="eventType"></param>
         /// <param name="subtype"></param>
-        public MslEvent(string codeName, EventType eventType, uint subtype)
+        public MslEvent(string code, EventType eventType, uint subtype)
         {
-            CodeName = codeName;
+            Code = code;
             EventType = eventType;
             Subtype = subtype;
         }
@@ -42,7 +42,14 @@ namespace ModShardLauncher
         /// <param name="modFile"></param>
         public void Apply(string objectName, ModFile modFile)
         {
-            Msl.AddNewEvent(objectName, modFile.GetCode(CodeName), EventType, Subtype);
+            try
+            {
+                Msl.AddNewEvent(objectName, modFile.GetCode(Code), EventType, Subtype);
+            }
+            catch
+            {
+                throw;
+            }
         }
         /// <summary>
         /// Given a <paramref name="gameObject"/>, load the source code of the event and add it in the data.win through the <see cref="AddNewEvent"/> function.
@@ -51,7 +58,46 @@ namespace ModShardLauncher
         /// <param name="modFile"></param>
         public void Apply(UndertaleGameObject gameObject, ModFile modFile)
         {
-            Msl.AddNewEvent(gameObject, modFile.GetCode(CodeName), EventType, Subtype);
+            try
+            {
+                Msl.AddNewEvent(gameObject, modFile.GetCode(Code), EventType, Subtype);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// Given an <see cref="UndertaleGameObject"/> named <paramref name="objectName"/>, load the source code of the event and add it in the data.win through the <see cref="AddNewEvent"/> function.
+        /// </summary>
+        /// <param name="objectName"></param>
+        /// <param name="modFile"></param>
+        public void Apply(string objectName)
+        {
+            try
+            {
+                Msl.AddNewEvent(objectName, Code, EventType, Subtype);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// Given a <paramref name="gameObject"/>, load the source code of the event and add it in the data.win through the <see cref="AddNewEvent"/> function.
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <param name="modFile"></param>
+        public void Apply(UndertaleGameObject objectName)
+        {
+            try
+            {
+                Msl.AddNewEvent(objectName, Code, EventType, Subtype);
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
     public static partial class Msl
@@ -69,14 +115,27 @@ namespace ModShardLauncher
             return "gml_Object_" + objectName + "_" + eventType + "_" + subtype;
         }
         /// <summary>
-        /// Add a new event (<paramref name="eventType"/>, <paramref name="subtype"/>) associated to an <see cref="UndertaleGameObject"/> named <paramref name="objectName"/>
-        /// to the data.win.
+        /// Add a new event (<paramref name="eventType"/>, <paramref name="subtype"/>) associated to an <see cref="UndertaleGameObject"/> named <paramref name="objectName"/>. 
+        /// The code of the event <paramref name="eventCode"/> is expected to be written in GML.
         /// </summary>
         /// <param name="objectName"></param>
         /// <param name="eventCode"></param>
         /// <param name="eventType"></param>
         /// <param name="subtype"></param>
         public static void AddNewEvent(string objectName, string eventCode, EventType eventType, uint subtype)
+        {
+            AddNewEvent(objectName, eventCode, eventType, subtype, false);
+        }
+        /// <summary>
+        /// Add a new event (<paramref name="eventType"/>, <paramref name="subtype"/>) associated to an <see cref="UndertaleGameObject"/> named <paramref name="objectName"/>. 
+        /// The code of the event <paramref name="eventCode"/> can be written in GML or in ASM abstraction. For the later, <see cref="asAsm"/> has to be True.
+        /// </summary>
+        /// <param name="objectName"></param>
+        /// <param name="eventCode"></param>
+        /// <param name="eventType"></param>
+        /// <param name="subtype"></param>
+        /// <param name="asAsm"></param>
+        public static void AddNewEvent(string objectName, string eventCode, EventType eventType, uint subtype, bool asAsm = false)
         {
             try
             {
@@ -92,7 +151,14 @@ namespace ModShardLauncher
 
                 // create a new code
                 string newEventName = EventName(objectName, eventType, subtype);
-                AddCode(eventCode, newEventName);
+                if (asAsm)
+                {
+                    AddCodeAsm(eventCode, newEventName);
+                }
+                else
+                {
+                    AddCode(eventCode, newEventName);
+                }
                 // add the previous code to the event
                 Event newEvent = new() { EventSubtype = subtype };
                 newEvent.Actions.Add(new EventAction()
@@ -110,14 +176,33 @@ namespace ModShardLauncher
             }
         }
         /// <summary>
-        /// Add a new event (<paramref name="eventType"/>, <paramref name="subtype"/>) associated to an <paramref name="gameObject"/>
-        /// to the data.win.
+        /// Add a new event (<paramref name="eventType"/>, <paramref name="subtype"/>) associated to a <paramref name="gameObject"/>. 
+        /// The code of the event <paramref name="eventCode"/> is expected to be written in GML.
+        /// </summary>
+        /// <param name="objectName"></param>
+        /// <param name="eventCode"></param>
+        /// <param name="eventType"></param>
+        /// <param name="subtype"></param>
+        public static void AddNewEvent(UndertaleGameObject objectName, string eventCode, EventType eventType, uint subtype)
+        {
+            try
+            {
+                AddNewEvent(objectName, eventCode, eventType, subtype, false);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// Add a new event (<paramref name="eventType"/>, <paramref name="subtype"/>) associated to a <paramref name="gameObject"/>. 
+        /// The code of the event <paramref name="eventCode"/> can be written in GML or in ASM abstraction. For the later, <see cref="asAsm"/> has to be True.
         /// </summary>
         /// <param name="gameObject"></param>
         /// <param name="eventCode"></param>
         /// <param name="eventType"></param>
         /// <param name="subtype"></param>
-        public static void AddNewEvent(UndertaleGameObject gameObject, string eventCode, EventType eventType, uint subtype)
+        public static void AddNewEvent(UndertaleGameObject gameObject, string eventCode, EventType eventType, uint subtype, bool asAsm = false)
         {
             try
             {
@@ -131,7 +216,15 @@ namespace ModShardLauncher
 
                 // create a new code
                 string newEventName = EventName(gameObject.Name.Content, eventType, subtype);
-                AddCode(eventCode, newEventName);
+
+                if (asAsm)
+                {
+                    AddCodeAsm(eventCode, newEventName);
+                }
+                else
+                {
+                    AddCode(eventCode, newEventName);
+                }
                 // add the previous code to the event
                 Event newEvent = new() { EventSubtype = subtype };
                 newEvent.Actions.Add(new EventAction()
@@ -165,6 +258,7 @@ namespace ModShardLauncher
         { 
             switch(eventType)
             {
+                case EventType.PreCreate:
                 case EventType.Create:
                 case EventType.Destroy:
                 case EventType.Trigger:

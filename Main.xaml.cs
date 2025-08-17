@@ -1,5 +1,4 @@
 ﻿using ModShardLauncher.Controls;
-using ModShardLauncher.Controls;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,9 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using System.Runtime.InteropServices;
+using ModShardLauncher.Mods;
+using System.Diagnostics;
+using UndertaleModLib.Models;
 
 namespace ModShardLauncher
 {
@@ -34,6 +36,13 @@ namespace ModShardLauncher
         public const int SW_HIDE = 0;
         public const int SW_SHOW = 5;
         public static IntPtr handle;
+        public string mslVersion;
+        public string utmtlibVersion;
+        //
+        private const double DefaultWidth = 960;                  // Исходная ширина
+        private const double DefaultHeight = 800;                 // Исходная высота
+        private const double AspectRatio = DefaultWidth / DefaultHeight; // Соотношение сторон
+        private const double ScreenSizePercentage = 0.85;          // Процент от размера экрана
 
         public Main()
         {
@@ -61,26 +70,94 @@ namespace ModShardLauncher
 
             Log.Logger = logger.CreateLogger();
 
+            // work around to find the FileVersion of ModShardLauncher.dll for single file publishing
+            // see: https://github.com/dotnet/runtime/issues/13051
+            try
+            {
+                ProcessModule mainProcess = Msl.ThrowIfNull(Process.GetCurrentProcess().MainModule);
+                string mainProcessName = Msl.ThrowIfNull(mainProcess.FileName);
+                mslVersion = "v" + FileVersionInfo.GetVersionInfo(mainProcessName).FileVersion;
+                utmtlibVersion = "v" + FileVersionInfo.GetVersionInfo(typeof(UndertaleCode).Assembly.Location).FileVersion;
+            }
+            catch (FileNotFoundException ex)
+            {
+                Log.Error(ex, "Cannot find the dll of ModShardLauncher");
+                throw;
+            }
+            Log.Information("Launching msl {{{0}}} using UTMT {{{1}}}", mslVersion, utmtlibVersion);
+
             try
             {
                 ModLoader.LoadFiles();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(ex, "Something went wrong");
             }
-            
+
             SettingsPage = new Settings();
             InitializeComponent();
 
+            // Начальный размер окна
+            SetInitialSize();
+
             Viewer.Content = MainPage;
+
+
         }
 
+        private void SetInitialSize()
+        {
+            var screenWidth = SystemParameters.PrimaryScreenWidth;
+            var screenHeight = SystemParameters.PrimaryScreenHeight;
+
+            if (screenWidth < DefaultWidth || screenHeight < DefaultHeight)
+            {
+                if (screenWidth < screenHeight)
+                {
+                    Width = screenWidth * ScreenSizePercentage;
+                    Height = Width / AspectRatio; // Поддержка соотношения сторон
+                }
+                else
+                {
+                    Height = screenHeight * ScreenSizePercentage;
+                    Width = Height * AspectRatio; // Поддержка соотношения сторон
+                }
+            }
+            else
+            {
+                Width = DefaultWidth;
+                Height = DefaultHeight;
+            }
+        }
+
+        public void LogModList()
+        {
+            foreach (ModFile modFile in ModPage.Mods.Where(x => x.isEnabled))
+            {
+                string statusMessage = "";
+                switch (modFile.PatchStatus)
+                {
+                    case PatchStatus.Patching:
+                        statusMessage = "Patching failed";
+                        break;
+
+                    case PatchStatus.Success:
+                        statusMessage = "Patching succeeded";
+                        break;
+
+                    case PatchStatus.None:
+                        statusMessage = "Waiting to be patched";
+                        break;
+                }
+                Log.Warning("Patching {{{2}}} for {{{0}}} {{{1}}}", modFile.Name, modFile.Version, statusMessage);
+            }
+        }
         private void MyToggleButton_Checked(object sender, EventArgs e)
         {
-            foreach(var i in stackPanel.Children)
+            foreach (var i in stackPanel.Children)
             {
-                if(i != sender && i is MyToggleButton button)
+                if (i != sender && i is MyToggleButton button)
                 {
                     button.MyButton.IsChecked = false;
                 }
@@ -97,7 +174,7 @@ namespace ModShardLauncher
             {
                 ModLoader.LoadFiles();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(ex, "Something went wrong");
             }
@@ -106,13 +183,11 @@ namespace ModShardLauncher
             else if (Viewer.Content is Settings) Viewer.Content = SettingsPage;
             else Viewer.Content = MainPage;
         }
-
         private void MyToggleButton_Click(object sender, EventArgs e)
         {
-            Log.CloseAndFlushAsync();
+            _ = Log.CloseAndFlushAsync();
             Close();
         }
-
         private void MyToggleButton_Click_1(object sender, EventArgs e)
         {
             if (sender is MyToggleButton button && Msl.ThrowIfNull(button.MyButton.IsChecked)) Viewer.Content = ModPage;
@@ -144,8 +219,6 @@ namespace ModShardLauncher
     {
         public string Language = "English";
         public bool EnableLogger = true;
-        public string SavePos = "";
-        public string LoadPos = "";
         public List<string> EnableMods = new();
         public static void LoadSettings()
         {
@@ -158,10 +231,6 @@ namespace ModShardLauncher
             Main.Settings = Msl.ThrowIfNull(JsonConvert.DeserializeObject<UserSettings>(settings));
 
             CheckLog(Main.Settings.EnableLogger);
-
-            // auto load if loadpos not empty
-            if (Main.Settings.LoadPos != "")
-                Main.Instance.Dispatcher.Invoke(async () => await DataLoader.LoadFile(Main.Settings.LoadPos));
 
             // auto check active mods
             if (Main.Settings.EnableMods.Count > 0)
@@ -187,7 +256,7 @@ namespace ModShardLauncher
             else
             {
                 Main.ShowWindow(Main.handle, Main.SW_HIDE);
-                Main.lls.MinimumLevel = (LogEventLevel) 1 + (int) LogEventLevel.Fatal;
+                Main.lls.MinimumLevel = (LogEventLevel)1 + (int)LogEventLevel.Fatal;
             }
         }
         public static void ChangeLanguage(int index)

@@ -35,6 +35,7 @@ namespace ModShardLauncher.Controls
         private void Window_Closed(object sender, EventArgs e)
         {
             ModInterfaceServer.Server.Close();
+            ModInterfaceServer.Server = null;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using ModShardLauncher.Mods;
@@ -39,15 +41,28 @@ namespace ModShardLauncher.Controls
                 ModLoader.PatchFile();
                 Log.Information("Successfully patch vanilla");
                 patchSucess = true;
+                Main.Instance.LogModList();
             }
             catch(Exception ex)
             {
+                Main.Instance.LogModList();
                 Log.Error(ex, "Something went wrong");
                 Log.Information("Failed patching vanilla");
-                MessageBox.Show(Application.Current.FindResource("SaveDataWarning").ToString());
+                MessageBox.Show(ex.ToString(), Application.Current.FindResource("SaveDataWarning").ToString());
             }
 
-            if (patchSucess) await DataLoader.DoSaveDialog();
+            // attempt to save the patched data
+            if (patchSucess) 
+            {
+                Task<bool> save = DataLoader.DoSaveDialog();
+                await save;
+                if (!save.Result) Log.Information("Saved cancelled.");
+                // copy the dataloot.json in the stoneshard directory
+                LootUtils.SaveLootTables(Msl.ThrowIfNull(Path.GetDirectoryName(DataLoader.savedDataPath)));
+            }
+
+            // reload the data
+            await DataLoader.LoadFile(DataLoader.dataPath, true);
             Main.Instance.Refresh();
         }
 

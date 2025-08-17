@@ -30,6 +30,12 @@ namespace ModShardLauncher
             return Name;
         }
     }
+    public enum PatchStatus
+    {
+        None,
+        Patching,
+        Success,
+    }
     public class ModFile
     {
         public string Name;
@@ -41,6 +47,7 @@ namespace ModShardLauncher
         public string Path;
         public Mod instance { get; set; }
         public bool isEnabled { get; set; }
+        public PatchStatus PatchStatus { get; set; } = PatchStatus.None;
         public bool isExisted => File.Exists(Path);
         public byte[] Icon { get; set; } = Array.Empty<byte>();
         public override string ToString()
@@ -58,7 +65,7 @@ namespace ModShardLauncher
 
             // https://sonarsource.github.io/rspec/#/rspec/S6602/csharp
             // for list, Find should be used instead of FirstOrDefault
-            FileChunk? file = Files.Find(t => t.name == fileName) ?? Files.Find(t => t.name.Split("\\")[^1] == fileName);
+            FileChunk? file = Files.Find(t => System.IO.Path.GetFileName(t.name) == System.IO.Path.GetFileName(fileName));
             if (file != null)
             {
                 if(!Stream.CanRead) Stream = new FileStream(Path, FileMode.Open);
@@ -75,7 +82,11 @@ namespace ModShardLauncher
             try
             {
                 byte[] data = GetFile(fileName);
-
+                if (data.Length == 0) 
+                {
+                    Log.Warning($"{fileName} is empty.");
+                    return "";
+                }
                 // if a BOM is found aka: 0xEF 0xBB 0xBF at the beginning of the file, remove it since UTMT will not understand these characters.
                 // BOM are produced if a script is made through Visual Studio
                 if (data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF) data = data.Skip(3).ToArray();
@@ -154,7 +165,7 @@ namespace ModShardLauncher
             byte[] versionbytes = Read(fs, size);
 
             file.Version = reg.Replace(Encoding.UTF8.GetString(versionbytes), "$1");
-            Log.Information(string.Format("Reading {{{0}}} built with version {1}", nameMod, file.Version));
+            Log.Information(string.Format("Reading {{{0}}} built with version {{{1}}}", nameMod, file.Version));
 
             // read textures
             int count = BitConverter.ToInt32(Read(fs, 4), 0);
