@@ -41,13 +41,14 @@ namespace ModShardLauncher.Controls
                 ModLoader.PatchFile();
                 Log.Information("Successfully patch vanilla");
                 patchSucess = true;
+                Main.Instance.LogModList();
             }
             catch(Exception ex)
             {
                 Main.Instance.LogModList();
                 Log.Error(ex, "Something went wrong");
                 Log.Information("Failed patching vanilla");
-                MessageBox.Show(Application.Current.FindResource("SaveDataWarning").ToString());
+                MessageBox.Show(ex.ToString(), Application.Current.FindResource("SaveDataWarning").ToString());
             }
 
             // attempt to save the patched data

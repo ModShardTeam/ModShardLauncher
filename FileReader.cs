@@ -165,7 +165,7 @@ namespace ModShardLauncher
             byte[] versionbytes = Read(fs, size);
 
             file.Version = reg.Replace(Encoding.UTF8.GetString(versionbytes), "$1");
-            Log.Information(string.Format("Reading {{{0}}} built with version {1}", nameMod, file.Version));
+            Log.Information(string.Format("Reading {{{0}}} built with version {{{1}}}", nameMod, file.Version));
 
             // read textures
             int count = BitConverter.ToInt32(Read(fs, 4), 0);

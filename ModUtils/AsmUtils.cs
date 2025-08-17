@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Serilog;
 using UndertaleModLib;
 using UndertaleModLib.Decompiler;
@@ -11,6 +12,38 @@ namespace ModShardLauncher
 {
     public static partial class Msl
     {
+        /// <summary>
+        /// Check pop variables for intructions as string and create them if needed.
+        /// </summary>
+        /// <param name="instructions"></param>
+        public static void CheckInstructionsVariables(UndertaleCode originalCode, string instructions)
+        {
+            Regex variableRegex = new (@"\bpop\.v\.\w\s(?<var>\w+)\.(?<name>\w+)");
+            foreach (string instruction in instructions.Split('\n').Where(x => x.Contains("pop.v")))
+            {
+                System.Text.RegularExpressions.Match matches = variableRegex.Match(instruction);
+                if (matches.Success) 
+                {
+                    string instanceValue = matches.Groups["var"].Value;
+                    if(instanceValue == "self")
+                    {
+                        AssemblyWrapper.CheckRefVariableOrCreate(matches.Groups["name"].Value, UndertaleInstruction.InstanceType.Self);
+                    }
+                    else if(instanceValue == "global")
+                    {
+                        AssemblyWrapper.CheckRefVariableOrCreate(matches.Groups["name"].Value, UndertaleInstruction.InstanceType.Global);
+                    }
+                    else if(instanceValue == "local")
+                    {
+                        AssemblyWrapper.CheckRefLocalVariableOrCreate(originalCode, matches.Groups["name"].Value);
+                    }
+                    else
+                    {
+                        Log.Warning($"Cannot infer the instance type of {instruction}. There is a risk it will lead to an undefined variable.");
+                    }
+                }
+            }
+        }
         public static string GetAssemblyString(string fileName)
         {
             try 
@@ -250,6 +283,7 @@ namespace ModShardLauncher
                 sb.Append($".localvar {newLocalVar.Index} {newLocalVar.Name.Content}");
 
                 if (refVar != null) sb.Append($" {ModLoader.Data.Variables.IndexOf(refVar)}\n");
+                else sb.Append('\n');
             }
             if (sb.Length != 0)
             {

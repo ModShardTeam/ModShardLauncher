@@ -83,9 +83,9 @@ namespace ModShardLauncher.Resources.Codes {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
-        internal static byte[] print {
+        internal static byte[] msl_print {
             get {
-                object obj = ResourceManager.GetObject("print", resourceCulture);
+                object obj = ResourceManager.GetObject("msl_print", resourceCulture);
                 return ((byte[])(obj));
             }
         }

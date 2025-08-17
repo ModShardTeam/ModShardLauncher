@@ -45,7 +45,7 @@ Here are some **resources** to get you started on that :
     You can download the official template for MSL Mods to avoid having to write boilerplate code. </br>
     The easiest way to install it is to open a terminal and run the following command :
 
-    `dotnet new install ModShardLauncher.Templates`
+    `dotnet new --install ModShardLauncher.Templates`
 
 ## Getting Started
 
@@ -104,7 +104,7 @@ namespace MyMod
 ```
 
 1. The `using` directives allow us to use code from ModShardLauncher to write our mod.
-2. This is the base class for your mod. </br> All of your code should be contained withing it.
+2. This is the base class for your mod. </br> All of your code should be contained within it.
 3. This variable contains the name of the author of this mod. </br> Feel free to replace it with yours ! </br> It's visible in MSL's Mod list.
 4. This variable contains your mod's name. </br> Feel free to change it ! </br> It's visible in MSL's Mod list.
 5. This variable contains your mod's description. </br> Feel free to change it ! </br> It's visible in MSL's Mod list.
@@ -162,7 +162,7 @@ namespace MyMod
 
         public override void PatchMod()
         {
-            ModLoader.InsertGMLString("scr_smoothSaveAuto()", "gml_Object_o_player_KeyPress_116", 0);  // (1)!
+            Msl.InsertGMLString("scr_smoothSaveAuto()", "gml_Object_o_player_KeyPress_116", 0);  // (1)!
         }
     }
 }
@@ -201,7 +201,7 @@ namespace MyMod
 
         public override void PatchMod()
         {
-            ModLoader.InsertGMLString(ModFiles.GetCode("myCode.gml"), "gml_Object_o_player_KeyPress_116", 0);  
+            Msl.InsertGMLString(ModFiles.GetCode("myCode.gml"), "gml_Object_o_player_KeyPress_116", 0);  
             // (1)!
         }
     }
@@ -229,7 +229,7 @@ namespace MyMod
 
         public override void PatchMod()
         {
-            ModLoader.InsertAssemblyString(":[0]\ncall.i gml_Script_scr_smoothSaveAuto(argc=0)\npopz.v", "gml_Object_o_player_KeyPress_116", 1 );
+            Msl.InsertAssemblyString(":[0]\ncall.i gml_Script_scr_smoothSaveAuto(argc=0)\npopz.v", "gml_Object_o_player_KeyPress_116", 1 );
             // (1)!
         }
     }
@@ -260,9 +260,9 @@ They are divided in 4 different stages, namely :
 Here's an example of that :
 
 ``` c# title="Chained Methods"
-ModLoader.LoadGML("gml_GlobalScript_scr_sessionDataInit") // Loading a script from the game's files
+Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit") // Loading a script from the game's files
 .MatchFrom("global.HP = -1") // Finding the line containing `global.HP = -1`
-.ReplaceBy("global.HP = 50") // Replacing it with `gobal.HP = 50`
+.ReplaceBy("global.HP = 50") // Replacing it with `global.HP = 50`
 .Save() // Saving the file
 ```
 

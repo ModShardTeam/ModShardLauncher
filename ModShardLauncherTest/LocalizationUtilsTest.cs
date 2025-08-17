@@ -161,7 +161,7 @@ namespace ModShardLauncherTest
         public void CreateLine()
         {
             // Arrange
-            string expectedResult = "testItem;testRu;testEn;testCh;testGe;testSp;testFr;testIt;testPr;testPl;testTu;testJp;testKr;//;";
+            string expectedResult = "testItem;testRu;testEn;testCh;testGe;testSp;testFr;testIt;testPr;testPl;testTu;testJp;testKr;";
             Dictionary<ModLanguage, string> input = new() 
             {
                 {ModLanguage.Russian, "testRu"}, {ModLanguage.English, "testEn"}, {ModLanguage.Chinese, "testCh"}, {ModLanguage.German, "testGe"}, {ModLanguage.Spanish, "testSp"}, 

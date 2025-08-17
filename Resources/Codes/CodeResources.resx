@@ -124,8 +124,8 @@
   <data name="give" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>give.gml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="print" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>print.gml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="msl_print" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>msl_print.gml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="ScriptEngine_create" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>ScriptEngine_create.gml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

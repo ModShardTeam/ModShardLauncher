@@ -9,7 +9,7 @@ namespace ModShardLauncher
     public static class GameObjectUtils
     {
         /// <summary>
-        /// Extension method to apply several <see cref="MslEvent"/> to a <see cref="gameObject"/> simultaneously.
+        /// Extension method to apply several <see cref="MslEvent"/> to a <see cref="gameObject"/> simultaneously. It is expected that all MslEvent.Code contain the path of their code.
         /// <example>For example:
         /// <code>
         /// gameObject.ApplyEvent(ModFiles, 
@@ -30,9 +30,37 @@ namespace ModShardLauncher
                 mslEvent.Apply(gameObject, modFile);
             }
         }
+        /// <summary>
+        /// Extension method to apply several <see cref="MslEvent"/> to a <see cref="gameObject"/> simultaneously. It is expected that all MslEvent.Code contain their code directly.
+        /// <example>For example:
+        /// <code>
+        /// gameObject.ApplyEvent(
+        ///     new MslEvent(code0, EventType.Create, 0),
+        ///     new MslEvent(code1, EventType.Other, 10),
+        ///     new MslEvent(code2, EventType.Other, 11)
+        /// );
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <param name="mslEvents"></param>
+        static public void ApplyEvent(this UndertaleGameObject gameObject, params MslEvent[] mslEvents)
+        {
+            foreach (MslEvent mslEvent in mslEvents)
+            {
+                mslEvent.Apply(gameObject);
+            }
+        }
     }
     public static partial class Msl
     {
+        /// <summary>
+        /// Add and return a new <see cref="UndertaleGameObject"/> named <paramref name="name"/> to the data.win if this name is not used already.
+        /// Else return the existing <see cref="UndertaleGameObject"/>.
+        /// This methods does not allow any parametrization when creating this <see cref="UndertaleGameObject"/>.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static UndertaleGameObject AddObject(string name)
         {
             return AddObject(

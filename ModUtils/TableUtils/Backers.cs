@@ -5,10 +5,10 @@ namespace ModShardLauncher;
 
 public partial class Msl
 {
-    public static void InjectTableCreditsBackers(string? name = null, string? nickname = null)
+    public static void InjectTableBackers(string? name = null, string? nickname = null)
     {
         // Table filename
-        const string tableName = "gml_GlobalScript_table_credits_backers";
+        const string tableName = "gml_GlobalScript_table_backers";
         
         // Load table if it exists
         List<string> table = ThrowIfNull(ModLoader.GetTable(tableName));
@@ -16,7 +16,7 @@ public partial class Msl
         // Prepare line
         string newline = $"{name};{nickname};";
         
-        // Add line to end of table
+        // Add line to table
         table.Add(newline);
         ModLoader.SetTable(table, tableName);
         Log.Information($"Injected {name}:{nickname} into {tableName} table.");

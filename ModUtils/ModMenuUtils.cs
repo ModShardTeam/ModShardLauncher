@@ -133,26 +133,27 @@ if ((optionIndex == -1))
     }
     private static void AddSlider(string associatedGlobal, (int, int) sliderValues, int defaultValue, string sectionName, int index)
     {
-        UndertaleGameObject slider = Msl.AddObject($"o_msl_component_{index}", "s_music_slide", "o_music_slider", isVisible:true, isAwake:true);
+        UndertaleGameObject slider = Msl.AddObject($"o_msl_component_{index}", "s_music_slide", "o_slider", isVisible:true, isAwake:true);
         Msl.AddNewEvent(
             slider, 
             @$"ini_open(""msl_menu_mod.ini"");
 global.{associatedGlobal} = math_round(ini_read_real(""{sectionName}"", ""{associatedGlobal}"", {defaultValue}))
 ini_close();
 
-target =  scr_convertToNewRange(global.{associatedGlobal}, 0, 1, {sliderValues.Item1}, {sliderValues.Item2})
 event_inherited()
+positionPercent =  scr_convertToNewRange(global.{associatedGlobal}, 0, 1, {sliderValues.Item1}, {sliderValues.Item2})
 valueMin = {sliderValues.Item1}
 valueMax = {sliderValues.Item2}
 scr_guiInteractiveStateUpdate(id, 14, 25)
-scr_guiPositionOffsetUpdate(id, scr_convertToNewRange(target, positionMin, positionMax, 0, 1))
+scr_guiPositionOffsetUpdate(id, scr_convertToNewRange(positionPercent, positionMin, positionMax, 0, 1))
 scr_guiLayoutOffsetUpdate(id, 0, -2)", 
             EventType.Create, 0
         );
-        Msl.AddNewEvent(slider, $"global.{associatedGlobal} = math_round(scr_convertToNewRange(target, valueMin, valueMax, 0, 1))", EventType.Other, 10);
-        Msl.AddNewEvent(slider, @"with (guiParent)
+        Msl.AddNewEvent(slider, $"global.{associatedGlobal} = math_round(scr_convertToNewRange(positionPercent, valueMin, valueMax, 0, 1))", EventType.Other, 10);
+        Msl.AddNewEvent(slider, @"event_inherited()
+with (guiParent)
 {
-valueLeft = math_round(scr_convertToNewRange(other.target, other.valueMin, other.valueMax, 0, 1)) 
+    valueLeft = math_round(scr_convertToNewRange(other.positionPercent, other.valueMin, other.valueMax, 0, 1)) 
 }",
             EventType.Other, 11);
         
@@ -226,7 +227,7 @@ with (scr_guiCreateContainer(_container, o_music_bar, (depth - 1), 118, 2))
 {{
     slider = scr_guiCreateInteractive(id, o_msl_component_{index}, (depth - 1))
     valueRight = {component.SliderValues.Item2}
-    valueLeft = scr_convertToNewRange(slider.target, {component.SliderValues.Item1}, {component.SliderValues.Item2}, 0, 1)
+    valueLeft = scr_convertToNewRange(slider.positionPercent, {component.SliderValues.Item1}, {component.SliderValues.Item2}, 0, 1)
 }}";  
                         injectedOther12 += $"\nini_write_real(\"{m.Name}\", \"{component.AssociatedGlobal}\", global.{component.AssociatedGlobal})";
                         injectedOther13 += $"\nglobal.{component.AssociatedGlobal} = math_round(ini_read_real(\"{m.Name}\", \"{component.AssociatedGlobal}\", {component.DefaultValue}))";
@@ -282,7 +283,7 @@ with (o_combobox)
 {{
     event_user(1)
 }}
-with (o_music_slider)
+with (o_slider)
 {{
     event_user(0)
 }}

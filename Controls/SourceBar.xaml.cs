@@ -31,7 +31,7 @@ namespace ModShardLauncher.Controls
         {
             try
             {
-                FilePacker.Pack(Msl.ThrowIfNull(DataContext as ModSource).Path);
+                UtilsPacker.Pack(Msl.ThrowIfNull(DataContext as ModSource).Path);
             }
             catch(Exception ex)
             {
