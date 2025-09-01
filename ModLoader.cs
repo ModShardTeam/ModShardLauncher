@@ -55,13 +55,11 @@ namespace ModShardLauncher
             try
             {
                 UndertaleCode table = Data.Code.First(t => t.Name.Content == name);
-                GlobalDecompileContext context = new(Data, false);
-                string text = Decompiler.Decompile(table, context);
-                string matchedText = Regex.Match(text, "return (\\[.*\\])").Groups[1].Value;
-                List<string>? tableAsList = JsonConvert.DeserializeObject<List<string>>(matchedText);
-
-                Log.Information(string.Format("Get table: {0}", name.ToString()));
-                return tableAsList;
+                return table.Instructions
+                    .Where(i => AssemblyWrapper.IsPushString(i))
+                    .Select(i => (i.Value as UndertaleResourceById<UndertaleString, UndertaleChunkSTRG>)!.Resource.Content)
+                    .Reverse()
+                    .ToList();
             }
             catch(Exception ex) 
             {
