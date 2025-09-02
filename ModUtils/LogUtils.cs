@@ -21,9 +21,11 @@ if (global._msl_log != noone)
         var string_log = ""["" + time + ""]: "" + argument0 + ""\n"";
         var len_log = string_byte_length(string_log);
 
-        if (len_log > global._msl_log.size)
+        if (len_log > global._msl_log.size - 1)
         {
-            string_log = string_copy(string_log, 1, global._msl_log.size - 1) + ""\n"";
+            var msg_space = global._msl_log.size - string_byte_length(""["" + time + ""]: \n"") - 1;
+            argument0 = string_copy(argument0, 1, msg_space);
+            string_log = ""["" + time + ""]: "" + argument0 + ""\n"";
             len_log = string_byte_length(string_log);
         }
 
@@ -59,8 +61,13 @@ else
 
         string mslLogSave = @"function scr_msl_log_save()
 {
+    if (global._msl_log.save_in_progress) return;
+
+    global._msl_log.save_in_progress = true;
     var nfile_name = global._msl_log.name + ""_"" + string(global._msl_log.nfile) + "".txt"";
     buffer_save_async(global._msl_log.buf, nfile_name, 0, global._msl_log.cur_size);
+
+    global._msl_log.save_in_progress = false;
     instance_destroy(global._msl_log.timer);
 }";
 
@@ -89,6 +96,7 @@ size = 1000000
 buf = buffer_create(size, buffer_wrap, 1);
 cur_size = 0
 nfile = 0
+save_in_progress = false
 
 var curr_time = date_current_datetime();
 var format_time = string_format(date_get_year(curr_time), 2, 0) + string_format(date_get_month(curr_time), 2, 0) + string_format(date_get_day(curr_time), 2, 0) + ""_"" + string_format(date_get_hour(curr_time), 2, 0) + string_format(date_get_minute(curr_time), 2, 0);
@@ -102,7 +110,9 @@ timer = -4
         Msl.AddFunction(mslLog, "scr_msl_log");
         Msl.LoadGML(Msl.EventName("o_gameLoader", EventType.Create, 0))
             .MatchAll()
-            .InsertBelow(@"global._msl_log = instance_create_depth(0, 0, -100, o_msl_log);")
+            .InsertBelow(@"
+global._msl_log = instance_create_depth(0, 0, -100, o_msl_log);
+")
             .Save();       
     }
 }
