@@ -306,8 +306,7 @@ namespace ModShardLauncher
             while(m < nn)
             {
                 // they implement the xoshiro256** but only for non-negative int64
-                // what some fucking donkeys
-                // so I've written a proper xoshiro256** return a UINT64
+                // so I've written a proper xoshiro256** that returns a UINT64
                 x = NextUINT64();
                 // conversion to a [0, 1] uniform double
                 // see https://prng.di.unimi.it/
