@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using ModShardLauncher.Resources.Codes;
 using Serilog;
 using UndertaleModLib;
 using UndertaleModLib.Decompiler;
@@ -174,13 +171,7 @@ namespace ModShardLauncher
         /// <returns></returns>
         internal static string GetCodeRes(string name)
         {
-            var data = CodeResources.ResourceManager.GetObject(name, CodeResources.Culture) as byte[];
-            if (data == null)
-            {
-                Log.Information($"Code resource not found :{name}");
-                return "";
-            }
-            return Encoding.UTF8.GetString(data);
+            return CodeResources.GetGML(name);
         }
         /// <summary>
         /// Add a new code from the code in this tool.
