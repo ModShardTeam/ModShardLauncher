@@ -131,27 +131,31 @@ namespace ModShardLauncher
             }
         }
 
-        public void LogModList()
+        public void LogModListStatus()
         {
-            foreach (ModFile modFile in ModPage.Mods.Where(x => x.isEnabled))
+            foreach (ModFile modFile in ModPage.Mods.Where(x => x.Enabled))
             {
-                string statusMessage = "";
-                switch (modFile.PatchStatus)
-                {
-                    case PatchStatus.Patching:
-                        statusMessage = "Patching failed";
-                        break;
-
-                    case PatchStatus.Success:
-                        statusMessage = "Patching succeeded";
-                        break;
-
-                    case PatchStatus.None:
-                        statusMessage = "Waiting to be patched";
-                        break;
-                }
-                Log.Warning("Patching {{{2}}} for {{{0}}} {{{1}}}", modFile.Name, modFile.Version, statusMessage);
+                LogModStatus(modFile);
             }
+        }
+        public static void LogModStatus(ModFile modFile)
+        {
+            string statusMessage = "";
+            switch (modFile.PatchStatus)
+            {
+                case PatchStatus.Patching:
+                    statusMessage = "Patching failed";
+                    break;
+
+                case PatchStatus.Success:
+                    statusMessage = "Patching succeeded";
+                    break;
+
+                case PatchStatus.None:
+                    statusMessage = "Waiting to be patched";
+                    break;
+            }
+            Log.Warning("Patching {{{2}}} for {{{0}}} {{{1}}}", modFile.Name, modFile.Version, statusMessage);
         }
         private void MyToggleButton_Checked(object sender, EventArgs e)
         {
@@ -219,7 +223,7 @@ namespace ModShardLauncher
     {
         public string Language = "English";
         public bool EnableLogger = true;
-        public List<string> EnableMods = new();
+        public List<string> EnabledMods = new();
         public static void LoadSettings()
         {
             // if no settings file, early stop
@@ -233,16 +237,14 @@ namespace ModShardLauncher
             CheckLog(Main.Settings.EnableLogger);
 
             // auto check active mods
-            if (Main.Settings.EnableMods.Count > 0)
+            if (Main.Settings.EnabledMods.Count > 0)
             {
                 List<ModFile> listModFile = ModInfos.Instance.Mods;
-                foreach (string i in Main.Settings.EnableMods)
+                foreach (string i in Main.Settings.EnabledMods)
                 {
                     (int indexMod, ModFile? modFile) = listModFile.Enumerate().FirstOrDefault(t => t.Item2.Name == i);
-                    if (modFile != null)
-                        listModFile[indexMod].isEnabled = true;
-                    else
-                        Log.Warning($"Mod {i} not found");
+                    if (modFile != null) listModFile[indexMod].Enabled = true;
+                    else Log.Warning($"Mod {i} not found");
                 }
             }
         }

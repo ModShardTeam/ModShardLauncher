@@ -18,22 +18,22 @@ namespace ModShardLauncher
         /// <param name="instructions"></param>
         public static void CheckInstructionsVariables(UndertaleCode originalCode, string instructions)
         {
-            Regex variableRegex = new (@"\bpop\.v\.\w\s(?<var>\w+)\.(?<name>\w+)");
+            Regex variableRegex = new(@"\bpop\.v\.\w\s(?<var>\w+)\.(?<name>\w+)");
             foreach (string instruction in instructions.Split('\n').Where(x => x.Contains("pop.v")))
             {
                 System.Text.RegularExpressions.Match matches = variableRegex.Match(instruction);
-                if (matches.Success) 
+                if (matches.Success)
                 {
                     string instanceValue = matches.Groups["var"].Value;
-                    if(instanceValue == "self")
+                    if (instanceValue == "self")
                     {
                         AssemblyWrapper.CheckRefVariableOrCreate(matches.Groups["name"].Value, UndertaleInstruction.InstanceType.Self);
                     }
-                    else if(instanceValue == "global")
+                    else if (instanceValue == "global")
                     {
                         AssemblyWrapper.CheckRefVariableOrCreate(matches.Groups["name"].Value, UndertaleInstruction.InstanceType.Global);
                     }
-                    else if(instanceValue == "local")
+                    else if (instanceValue == "local")
                     {
                         AssemblyWrapper.CheckRefLocalVariableOrCreate(originalCode, matches.Groups["name"].Value);
                     }
@@ -46,12 +46,12 @@ namespace ModShardLauncher
         }
         public static string GetAssemblyString(string fileName)
         {
-            try 
+            try
             {
                 UndertaleCode originalCode = GetUMTCodeFromFile(fileName);
                 return originalCode.Disassemble(ModLoader.Data.Variables, ModLoader.Data.CodeLocals.For(originalCode));
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 Log.Error(ex, "Something went wrong");
                 throw;
@@ -59,12 +59,12 @@ namespace ModShardLauncher
         }
         public static void SetAssemblyString(string codeAsString, string fileName)
         {
-            try 
+            try
             {
                 UndertaleCode originalCode = GetUMTCodeFromFile(fileName);
                 originalCode.Replace(Assembler.Assemble(codeAsString, ModLoader.Data));
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 Log.Error(ex, "Something went wrong");
                 throw;
@@ -72,7 +72,7 @@ namespace ModShardLauncher
         }
         public static void InsertAssemblyString(string codeAsString, string fileName, int position)
         {
-            try 
+            try
             {
                 Log.Information(string.Format("Trying insert assembly in: {0}", fileName.ToString()));
 
@@ -82,7 +82,7 @@ namespace ModShardLauncher
 
                 Log.Information(string.Format("Patched function with InsertAssemblyString: {0}", fileName.ToString()));
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 Log.Error(ex, "Something went wrong");
                 throw;
@@ -90,7 +90,7 @@ namespace ModShardLauncher
         }
         public static void ReplaceAssemblyString(string codeAsString, string fileName, int position)
         {
-            try 
+            try
             {
                 Log.Information(string.Format("Trying replace assembly in: {0}", fileName.ToString()));
 
@@ -100,7 +100,7 @@ namespace ModShardLauncher
 
                 Log.Information(string.Format("Patched function with ReplaceAssemblyString: {0}", fileName.ToString()));
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 Log.Error(ex, "Something went wrong");
                 throw;
@@ -108,13 +108,14 @@ namespace ModShardLauncher
         }
         public static void ReplaceAssemblyString(string codeAsString, string fileName, int start, int len)
         {
-            try 
+            try
             {
                 Log.Information(string.Format("Trying replace assembly in: {0}", fileName.ToString()));
 
                 List<string>? originalCode = GetAssemblyString(fileName).Split("\n").ToList();
                 originalCode[start] = codeAsString;
-                for (int i = 1; i < Math.Min(len, originalCode.Count - start); i++) {
+                for (int i = 1; i < Math.Min(len, originalCode.Count - start); i++)
+                {
                     originalCode[start + i] = "";
                 }
 
@@ -122,7 +123,7 @@ namespace ModShardLauncher
 
                 Log.Information(string.Format("Patched function with ReplaceAssemblyString: {0}", fileName.ToString()));
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 Log.Error(ex, "Something went wrong");
                 throw;
@@ -130,7 +131,7 @@ namespace ModShardLauncher
         }
         public static void InjectAssemblyInstruction(string name, Func<IEnumerable<UndertaleInstruction>, IEnumerable<UndertaleInstruction>> patch)
         {
-            try 
+            try
             {
                 Log.Information(string.Format("Trying inject assembly in: {0}", name.ToString()));
 
@@ -139,18 +140,50 @@ namespace ModShardLauncher
 
                 Log.Information(string.Format("Patched function with InjectAssemblyInstruction: {0}", name.ToString()));
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
+        public static IEnumerable<UndertaleInstruction> ReplaceTable(this IEnumerable<UndertaleInstruction> original, IEnumerable<UndertaleInstruction> injected)
+        {
+            bool pushFound = false;
+            bool callFound = false;
+            foreach ((int index, UndertaleInstruction instruction) in original.Enumerate())
+            {
+                if (!pushFound && AssemblyWrapper.IsPushString(instruction))
+                {
+                    pushFound = true;
+                    foreach (UndertaleInstruction replacement in injected) yield return replacement;
+                }
+                else if (pushFound
+                    && instruction.Kind == UndertaleInstruction.Opcode.Call
+                    && instruction.Type1 == UndertaleInstruction.DataType.Int32
+                )
+                {
+                    callFound = true;
+                    yield return instruction;
+                }
+                else if (!pushFound || callFound)
+                {
+                    Log.Information(string.Format("yield line {0}: {1}", index, instruction));
+                    yield return instruction;
+                }
+            }
+
+            if (!pushFound)
+                throw new InvalidOperationException("Didnt find any string in that file, is that a legitimate table ?");
+            if (!callFound)
+                throw new InvalidOperationException("Didnt find any final call in that file, the function is maybe ill-formed.");
+        }
     }
     public static class AssemblyWrapper
     {
-        public static UndertaleInstruction.Reference<UndertaleVariable> CreateRefVariable(string name, UndertaleInstruction.InstanceType instanceType) 
+        public static UndertaleInstruction.Reference<UndertaleVariable> CreateRefVariable(string name, UndertaleInstruction.InstanceType instanceType)
         {
-            if (ModLoader.Data == null) {
+            if (ModLoader.Data == null)
+            {
                 throw new NullReferenceException("Data is null");
             }
 
@@ -159,7 +192,7 @@ namespace ModShardLauncher
             uint oldId = ModLoader.Data.VarCount1;
 
             if (bytecode14)
-			    instanceType = UndertaleInstruction.InstanceType.Undefined;
+                instanceType = UndertaleInstruction.InstanceType.Undefined;
 
             if (!bytecode14)
             {
@@ -210,9 +243,10 @@ namespace ModShardLauncher
             if (localvar == null)
             {
                 UndertaleInstruction.Reference<UndertaleVariable> refVariable = CreateRefVariable(name, UndertaleInstruction.InstanceType.Local);
-                localvar = new() { 
-                    Index = (uint)refVariable.Target.VarID, 
-                    Name = refVariable.Target.Name 
+                localvar = new()
+                {
+                    Index = (uint)refVariable.Target.VarID,
+                    Name = refVariable.Target.Name
                 };
                 locals.Locals.Add(localvar);
             }
@@ -251,12 +285,12 @@ namespace ModShardLauncher
         }
         public static UndertaleInstruction.Reference<UndertaleVariable> GetRefVariableOrCreate(string name, UndertaleInstruction.InstanceType instanceType)
         {
-            try 
+            try
             {
                 UndertaleInstruction.Reference<UndertaleVariable> refVariable;
                 UndertaleVariable? variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name);
-                
-                if (variable == null) 
+
+                if (variable == null)
                     refVariable = CreateRefVariable(name, instanceType);
                 else
                     refVariable = new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
@@ -276,7 +310,7 @@ namespace ModShardLauncher
             IEnumerable<UndertaleCodeLocals.LocalVar> newLocalVars = ModLoader.Data.CodeLocals.For(code).Locals;
             StringBuilder sb = new();
 
-            foreach(UndertaleCodeLocals.LocalVar newLocalVar in newLocalVars)
+            foreach (UndertaleCodeLocals.LocalVar newLocalVar in newLocalVars)
             {
                 if (originalLocalVarsName.Contains(newLocalVar.Name.Content)) continue;
                 UndertaleVariable? refVar = ModLoader.Data.Variables.FirstOrDefault(x => x.Name.Content == newLocalVar.Name.Content && x.VarID == newLocalVar.Index);
@@ -292,7 +326,7 @@ namespace ModShardLauncher
 
             return sb.ToString();
         }
-        public static UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> CreateString(string name) 
+        public static UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> CreateString(string name)
         {
             UndertaleString str = ModLoader.Data.Strings.MakeString(name, out int ind);
             Log.Information(string.Format("Created string: {0}", str.ToString()));
@@ -300,54 +334,61 @@ namespace ModShardLauncher
         }
         public static UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> GetStringOrCreate(string name)
         {
-            try {
+            try
+            {
                 UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> stringById;
                 (int ind, UndertaleString str) = ModLoader.Data.Strings.Enumerate().FirstOrDefault(x => x.Item2.Content == name);
-                
+
                 if (str == null)
+                {
                     stringById = CreateString(name);
+                    Log.Information(string.Format("Created string: {0}", stringById.ToString()));
+                }
                 else
                     stringById = new UndertaleResourceById<UndertaleString, UndertaleChunkSTRG>(str, ind);
 
-                Log.Information(string.Format("Find string: {0}", stringById.ToString()));
-
                 return stringById;
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 Log.Error(ex, "Something went wrong");
                 throw;
             }
         }
         public static UndertaleInstruction PushShort(short val)
         {
-            return new() {
+            return new()
+            {
                 Kind = UndertaleInstruction.Opcode.PushI,
                 Value = val,
                 Type1 = UndertaleInstruction.DataType.Int16,
             };
         }
-        
+
         public static UndertaleInstruction PushInt(int val)
         {
-            return new() {
+            return new()
+            {
                 Kind = UndertaleInstruction.Opcode.Push,
                 Value = val,
                 Type1 = UndertaleInstruction.DataType.Int32,
             };
         }
 
-        public static UndertaleInstruction PushString(string val) 
+        public static UndertaleInstruction PushString(string val)
         {
-            return new() {
+            return new()
+            {
                 Kind = UndertaleInstruction.Opcode.Push,
                 Value = GetStringOrCreate(val),
                 Type1 = UndertaleInstruction.DataType.String,
             };
         }
 
-        public static UndertaleInstruction PushGlb(string val) 
+        public static UndertaleInstruction PushGlb(string val)
         {
-            return new() {
+            return new()
+            {
                 Kind = UndertaleInstruction.Opcode.PushGlb,
                 Value = GetRefVariableOrCreate(val, UndertaleInstruction.InstanceType.Global),
                 Type1 = UndertaleInstruction.DataType.Variable,
@@ -357,7 +398,8 @@ namespace ModShardLauncher
 
         public static UndertaleInstruction PopIntGlb(string val)
         {
-            return new() {
+            return new()
+            {
                 Kind = UndertaleInstruction.Opcode.Pop,
                 Destination = GetRefVariableOrCreate(val, UndertaleInstruction.InstanceType.Global),
                 Type1 = UndertaleInstruction.DataType.Variable,
@@ -367,7 +409,8 @@ namespace ModShardLauncher
         }
         public static UndertaleInstruction PopIntLcl(string val)
         {
-            return new() {
+            return new()
+            {
                 Kind = UndertaleInstruction.Opcode.Pop,
                 Destination = GetRefVariableOrCreate(val, UndertaleInstruction.InstanceType.Local),
                 Type1 = UndertaleInstruction.DataType.Variable,
@@ -375,16 +418,35 @@ namespace ModShardLauncher
                 TypeInst = UndertaleInstruction.InstanceType.Local,
             };
         }
-        
+
         public static UndertaleInstruction PopIntSelf(string val)
         {
-            return new() {
+            return new()
+            {
                 Kind = UndertaleInstruction.Opcode.Pop,
                 Destination = GetRefVariableOrCreate(val, UndertaleInstruction.InstanceType.Self),
                 Type1 = UndertaleInstruction.DataType.Variable,
                 Type2 = UndertaleInstruction.DataType.Int32,
                 TypeInst = UndertaleInstruction.InstanceType.Self,
             };
+        }
+        public static UndertaleInstruction ConvString()
+        {
+            return new()
+            {
+                Kind = UndertaleInstruction.Opcode.Conv,
+                Type1 = UndertaleInstruction.DataType.String,
+                Type2 = UndertaleInstruction.DataType.Variable,
+            };
+        }
+        public static IEnumerable<UndertaleInstruction> CreateStringLine(string s)
+        {
+            yield return PushString(s);
+            yield return ConvString();
+        }
+        public static bool IsPushString(UndertaleInstruction instruction)
+        {
+            return instruction.Kind == UndertaleInstruction.Opcode.Push && instruction.Value is UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> stringRef;
         }
     }
 }

@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using ModShardLauncher.Resources.Codes;
 using Serilog;
 using UndertaleModLib;
 using UndertaleModLib.Decompiler;
@@ -174,13 +171,7 @@ namespace ModShardLauncher
         /// <returns></returns>
         internal static string GetCodeRes(string name)
         {
-            var data = CodeResources.ResourceManager.GetObject(name, CodeResources.Culture) as byte[];
-            if (data == null)
-            {
-                Log.Information($"Code resource not found :{name}");
-                return "";
-            }
-            return Encoding.UTF8.GetString(data);
+            return CodeResources.GetGML(name);
         }
         /// <summary>
         /// Add a new code from the code in this tool.
@@ -510,8 +501,8 @@ namespace ModShardLauncher
         public static IEnumerable<(Match, string)> MatchBelow(this IEnumerable<string> ienumerable, IEnumerable<string> other, int len)
         {
             int i = 0; // used for keeping tracked about how many lines after the block we pass by
-            bool encounteredTheBlock = false; // bool to track if we already encountered the block, disabling the 2nd case of the if/else
-            bool passedTheBlock = false; // bool to track if we already passed the block, disabling the 1st case of the if/else
+            bool encounteredBlock = false; // bool to track if we already encountered the block, disabling the 2nd case of the if/else
+            bool passedBlock = false; // bool to track if we already passed the block, disabling the 1st case of the if/else
             string? otherString = null;
             IEnumerator<string> otherEnumerator = other.GetEnumerator();
             if (otherEnumerator.MoveNext())
@@ -519,25 +510,25 @@ namespace ModShardLauncher
 
             foreach (string element in ienumerable)
             {
-                if (!passedTheBlock && otherString != null && element.Contains(otherString)) // can only test the other iter if in Before
+                if (!passedBlock && otherString != null && element.Contains(otherString)) // can only test the other iter if in Before
                 {
-                    encounteredTheBlock = true;
+                    encounteredBlock = true;
                     yield return (Match.Before, element);
                     if (otherEnumerator.MoveNext())
                         otherString = otherEnumerator.Current;
                     else
                     {
                         // consumed the iter, time go to in matching
-                        passedTheBlock = true;
+                        passedBlock = true;
                     }
                 }
-                else if (!encounteredTheBlock) // here when you still havent encountered the other iter
+                else if (!encounteredBlock) // here when you still havent encountered the other iter
                 {
                     yield return (Match.Before, element);
                 }
                 else if (i < len) // here when either the iter was consumed, either it was not matching anymore
                 {
-                    passedTheBlock = true;
+                    passedBlock = true;
                     yield return (Match.Matching, element);
                     i++; // can stay only len in matching
                 }
@@ -547,7 +538,7 @@ namespace ModShardLauncher
                 }
             }
 
-            if (!encounteredTheBlock)
+            if (!encounteredBlock)
             {
                 throw new Exception("MatchBelow: No matching lines found. Items to match: " + string.Join("\r\n", other));
             }

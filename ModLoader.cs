@@ -11,10 +11,8 @@ using System;
 using System.IO;
 using System.Reflection;
 using UndertaleModLib.Models;
-using ModShardLauncher.Extensions;
 using ModShardLauncher.Controls;
 using Serilog;
-using Xunit.Sdk;
 
 namespace ModShardLauncher
 {
@@ -55,13 +53,11 @@ namespace ModShardLauncher
             try
             {
                 UndertaleCode table = Data.Code.First(t => t.Name.Content == name);
-                GlobalDecompileContext context = new(Data, false);
-                string text = Decompiler.Decompile(table, context);
-                string matchedText = Regex.Match(text, "return (\\[.*\\])").Groups[1].Value;
-                List<string>? tableAsList = JsonConvert.DeserializeObject<List<string>>(matchedText);
-
-                Log.Information(string.Format("Get table: {0}", name.ToString()));
-                return tableAsList;
+                return table.Instructions
+                    .Where(i => AssemblyWrapper.IsPushString(i))
+                    .Select(i => (i.Value as UndertaleResourceById<UndertaleString, UndertaleChunkSTRG>)!.Resource.Content)
+                    .Reverse()
+                    .ToList();
             }
             catch(Exception ex) 
             {
@@ -154,7 +150,7 @@ namespace ModShardLauncher
                         f.instance = mod;
 
                         ModFile? old = mods.Find(t => t.Name == f.Name);
-                        if (old != null) f.isEnabled = old.isEnabled;
+                        if (old != null) f.Enabled = old.Enabled;
 
                         modCaches.Add(f);
                     }
@@ -176,16 +172,16 @@ namespace ModShardLauncher
             List<ModFile> mods = ModInfos.Instance.Mods;
             Menus = new();
 
-            Stopwatch watch = Stopwatch.StartNew();
             foreach (ModFile mod in mods)
             {
-                if (!mod.isEnabled) continue;
-                if (!mod.isExisted)
+                if (!mod.Enabled) continue;
+                if (!mod.Existed)
                 {
                     MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + mod.Name);
                     continue;
                 }
-                Main.Settings.EnableMods.Add(mod.Name);
+
+                Main.Settings.EnabledMods.Add(mod.Name);
                 mod.PatchStatus = PatchStatus.Patching;
 
                 if (mod.Version != Main.Instance.mslVersion)
@@ -194,98 +190,20 @@ namespace ModShardLauncher
                 }
                 TextureLoader.LoadTextures(mod);
                 mod.instance.PatchMod();
-                foreach (Type type in Array.FindAll(mod.Assembly.GetTypes(), t => !t.IsAbstract))
-                {
-                    if (type.IsSubclassOf(typeof(Weapon))) 
-                        LoadWeapon(type);
-                }
                 mod.PatchStatus = PatchStatus.Success;
+                Main.LogModStatus(mod);
             }
             Msl.AddDisclaimerRoom(Credits.Select(x => x.Item1).ToArray(), Credits.SelectMany(x => x.Item2).Distinct().ToArray());
             Msl.ChainDisclaimerRooms(Disclaimers);
             Msl.CreateMenu(Menus);
-
-            watch.Stop();
-            long elapsedMs = watch.ElapsedMilliseconds;
-            Log.Information("Patching lasts {{{0}}} ms", elapsedMs);
-        }
-        public static void LoadWeapon(Type type)
-        {
-            if (Activator.CreateInstance(type) is not Weapon weapon) return;
-            weapon.SetDefaults();
-            (string, string, string) strs = weapon.AsString();
-            Weapons.Insert(Weapons.IndexOf("SWORDS - BLADES;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;") + 1, strs.Item1);
-            WeaponDescriptions.Insert(WeaponDescriptions.IndexOf(";;SWORDS;;;;;;SWORDS;SWORDS;;;;") + 1, weapon.Name + ";" + string.Join(";", weapon.NameList.Values));
-            WeaponDescriptions.Insert(WeaponDescriptions.IndexOf(";weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;weapon_desc;") + 1,
-                weapon.Name + ";" + string.Join(";", weapon.WeaponDescriptions.Values));
-            WeaponDescriptions.Insert(WeaponDescriptions.IndexOf(";weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;") + 1,
-                weapon.Name + ";He;;;It;She;She;She;She;He;;;;");
         }
         public static void PatchFile()
         {
             // add new msl log function
             LogUtils.InjectLog();
-            PatchInnerFile();
             PatchMods();
             // add the new loot related functions if there is any
             LootUtils.InjectLootScripts();
-        }
-        internal static void PatchInnerFile()
-        {
-            if (Data.Code.All(x => x.Name.Content != "msl_print"))
-                Msl.AddInnerFunction("msl_print");
-            if (Data.Code.All(x => x.Name.Content != "give"))
-                Msl.AddInnerFunction("give");
-            if (Data.Code.All(x => x.Name.Content != "SendMsg"))
-                Msl.AddInnerFunction("SendMsg");
-            if (Data.Code.All(x => x.Name.Content != "createHookObj"))
-                Msl.AddInnerFunction("createHookObj");
-            
-            // Find the display_mouse_lock extension
-            var displayMouseLockExtension = Data.Extensions.FirstOrDefault(x => x.Name.Content == "display_mouse_lock");
-            // Check if the display_mouse_lock extension exists and if ModShard.dll is not present among its files
-            if (displayMouseLockExtension != null && displayMouseLockExtension.Files.All(x => x.Filename.Content != "ModShard.dll"))
-            {
-                // Add ModShard extension
-                AddExtension(new ModShard());
-            }
-            
-            if (Data.GameObjects.All(x => x.Name.Content != "o_ScriptEngine"))
-            {
-                UndertaleGameObject engine = Msl.AddObject("o_ScriptEngine");
-                engine.Persistent = true;
-                UndertaleGameObject.Event ev = new()
-                {
-                    EventSubtypeOther = EventSubtypeOther.AsyncNetworking
-                };
-                ev.Actions.Add(new UndertaleGameObject.EventAction()
-                {
-                    CodeId = Msl.AddInnerCode("ScriptEngine_server")
-                });
-                engine.Events[7].Add(ev);
-                UndertaleGameObject.Event create = new();
-                create.Actions.Add(new UndertaleGameObject.EventAction()
-                {
-                    CodeId = Msl.AddInnerCode("ScriptEngine_create")
-                });
-                engine.Events[0].Add(create);
-                UndertaleRoom start = Data.Rooms.First(t => t.Name.Content == "START");
-                UndertaleRoom.GameObject newObj = new()
-                {
-                    ObjectDefinition = engine,
-                    InstanceID = Data.GeneralInfo.LastObj++
-                };
-
-                start.GameObjects.Add(newObj);
-            }
-            else
-                // Should probably be replaced with a dialog box as it's not very visible as it is 
-                Log.Warning("You are patching a non-vanilla .win file. This may cause some issues and is not recommended.");
-        }
-        public static void AddExtension(UndertaleExtensionFile file)
-        {
-            UndertaleExtension ext = Data.Extensions.First(t => t.Name.Content == "display_mouse_lock");
-            ext.Files.Add(file);
         }
     }
 }

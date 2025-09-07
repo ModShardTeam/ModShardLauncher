@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,23 +38,26 @@ namespace ModShardLauncher.Controls
 
             bool patchSucess = false;
 
-            try 
+            Stopwatch watch = Stopwatch.StartNew();
+            try
             {
                 ModLoader.PatchFile();
+                long elapsedMs = watch.ElapsedMilliseconds;
+                Main.Instance.LogModListStatus();
+                Log.Information("Patching lasts {{{0}}} ms", elapsedMs);
                 Log.Information("Successfully patch vanilla");
                 patchSucess = true;
-                Main.Instance.LogModList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Main.Instance.LogModList();
+                Main.Instance.LogModListStatus();
                 Log.Error(ex, "Something went wrong");
                 Log.Information("Failed patching vanilla");
                 MessageBox.Show(ex.ToString(), Application.Current.FindResource("SaveDataWarning").ToString());
             }
 
             // attempt to save the patched data
-            if (patchSucess) 
+            if (patchSucess)
             {
                 Task<bool> save = DataLoader.DoSaveDialog();
                 await save;

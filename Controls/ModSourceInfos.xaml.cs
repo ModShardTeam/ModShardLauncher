@@ -23,33 +23,5 @@ namespace ModShardLauncher.Controls
             await DataLoader.DoOpenDialog();
             Main.Instance.Refresh();
         }
-        private async void Save_Click(object sender, EventArgs e)
-        {
-            if (DataLoader.data.FORM == null)
-            {
-                MessageBox.Show(Application.Current.FindResource("LoadDataWarning").ToString());
-                return;
-            }
-
-            bool patchSucess = false;
-
-            try 
-            {
-                ModLoader.PatchFile();
-                Log.Information("Successfully patch vanilla");
-                patchSucess = true;
-                Main.Instance.LogModList();
-            }
-            catch(Exception ex)
-            {
-                Main.Instance.LogModList();
-                Log.Error(ex, "Something went wrong");
-                Log.Information("Failed patching vanilla");
-                MessageBox.Show(ex.ToString(), Application.Current.FindResource("SaveDataWarning").ToString());
-            }
-
-            if (patchSucess) await DataLoader.DoSaveDialog();
-            Main.Instance.Refresh();
-        }
     }
 }
