@@ -39,7 +39,10 @@ namespace ModShardLauncher
                     }
                     else
                     {
-                        Log.Warning($"Cannot infer the instance type of {instruction}. There is a risk it will lead to an undefined variable.");
+                        Log.Warning(
+                            "Cannot infer the instance type of {0}. There is a risk it will lead to an undefined variable.",
+                            instruction
+                        );
                     }
                 }
             }
@@ -74,13 +77,13 @@ namespace ModShardLauncher
         {
             try 
             {
-                Log.Information(string.Format("Trying insert assembly in: {0}", fileName.ToString()));
+                Log.Information("Trying insert assembly in: {0}", fileName);
 
                 List<string>? originalCode = GetAssemblyString(fileName).Split("\n").ToList();
                 originalCode.Insert(position, codeAsString);
                 SetAssemblyString(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with InsertAssemblyString: {0}", fileName.ToString()));
+                Log.Information("Patched function with InsertAssemblyString: {0}", fileName);
             }
             catch(Exception ex) 
             {
@@ -92,13 +95,13 @@ namespace ModShardLauncher
         {
             try 
             {
-                Log.Information(string.Format("Trying replace assembly in: {0}", fileName.ToString()));
+                Log.Information("Trying replace assembly in: {0}", fileName);
 
                 List<string>? originalCode = GetAssemblyString(fileName).Split("\n").ToList();
                 originalCode[position] = codeAsString;
                 SetAssemblyString(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with ReplaceAssemblyString: {0}", fileName.ToString()));
+                Log.Information("Patched function with ReplaceAssemblyString: {0}", fileName);
             }
             catch(Exception ex) 
             {
@@ -110,7 +113,7 @@ namespace ModShardLauncher
         {
             try 
             {
-                Log.Information(string.Format("Trying replace assembly in: {0}", fileName.ToString()));
+                Log.Information("Trying replace assembly in: {0}", fileName);
 
                 List<string>? originalCode = GetAssemblyString(fileName).Split("\n").ToList();
                 originalCode[start] = codeAsString;
@@ -120,7 +123,7 @@ namespace ModShardLauncher
 
                 SetAssemblyString(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with ReplaceAssemblyString: {0}", fileName.ToString()));
+                Log.Information("Patched function with ReplaceAssemblyString: {0}", fileName);
             }
             catch(Exception ex) 
             {
@@ -132,12 +135,12 @@ namespace ModShardLauncher
         {
             try 
             {
-                Log.Information(string.Format("Trying inject assembly in: {0}", name.ToString()));
+                Log.Information("Trying inject assembly in: {0}", name);
 
                 UndertaleCode originalCode = GetUMTCodeFromFile(name);
                 originalCode.Replace(patch(originalCode.Instructions).ToList());
 
-                Log.Information(string.Format("Patched function with InjectAssemblyInstruction: {0}", name.ToString()));
+                Log.Information("Patched function with InjectAssemblyInstruction: {0}", name);
             }
             catch(Exception ex) 
             {
@@ -198,7 +201,7 @@ namespace ModShardLauncher
                 NameStringID = id
             };
             ModLoader.Data.Variables.Add(variable);
-            Log.Information($"Created {variable.InstanceType} variable: {variable.Name.Content} {variable.VarID}");
+            Log.Information("Created {0} variable: {1} {2}", variable.InstanceType, variable.Name.Content, variable.VarID);
 
             return new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
         }
@@ -218,7 +221,7 @@ namespace ModShardLauncher
             }
             else
             {
-                Log.Information($"Found local variable: {localvar.Name.Content}");
+                Log.Information("Found local variable: {0}", localvar.Name.Content);
             }
         }
         public static void CheckRefVariableOrCreate(string name, UndertaleInstruction.InstanceType instanceType)
@@ -241,7 +244,7 @@ namespace ModShardLauncher
                 }
                 else
                 {
-                    Log.Information($"Found variable: {variable.Name.Content} of type {variable.InstanceType}");
+                    Log.Information("Found variable: {0} of type {1}", variable.Name.Content, variable.InstanceType);
                 }
             }
             catch
@@ -261,7 +264,7 @@ namespace ModShardLauncher
                 else
                     refVariable = new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
 
-                Log.Information(string.Format("Found variable: {0}", refVariable.ToString()));
+                Log.Information("Found variable: {0}", refVariable);
 
                 return refVariable;
             }
@@ -295,7 +298,7 @@ namespace ModShardLauncher
         public static UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> CreateString(string name) 
         {
             UndertaleString str = ModLoader.Data.Strings.MakeString(name, out int ind);
-            Log.Information(string.Format("Created string: {0}", str.ToString()));
+            Log.Information("Created string: {0}", str);
             return new UndertaleResourceById<UndertaleString, UndertaleChunkSTRG>(str, ind);
         }
         public static UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> GetStringOrCreate(string name)
@@ -309,7 +312,7 @@ namespace ModShardLauncher
                 else
                     stringById = new UndertaleResourceById<UndertaleString, UndertaleChunkSTRG>(str, ind);
 
-                Log.Information(string.Format("Find string: {0}", stringById.ToString()));
+                Log.Information("Find string: {0}", stringById);
 
                 return stringById;
             }

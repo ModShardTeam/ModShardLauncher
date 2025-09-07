@@ -84,7 +84,7 @@ namespace ModShardLauncher
                 byte[] data = GetFile(fileName);
                 if (data.Length == 0) 
                 {
-                    Log.Warning($"{fileName} is empty.");
+                    Log.Warning("{0} is empty.", fileName);
                     return "";
                 }
                 // if a BOM is found aka: 0xEF 0xBB 0xBF at the beginning of the file, remove it since UTMT will not understand these characters.
@@ -165,7 +165,7 @@ namespace ModShardLauncher
             byte[] versionbytes = Read(fs, size);
 
             file.Version = reg.Replace(Encoding.UTF8.GetString(versionbytes), "$1");
-            Log.Information(string.Format("Reading {{{0}}} built with version {{{1}}}", nameMod, file.Version));
+            Log.Information("Reading {{{0}}} built with version {{{1}}}", nameMod, file.Version);
 
             // read textures
             int count = BitConverter.ToInt32(Read(fs, 4), 0);
@@ -250,7 +250,7 @@ namespace ModShardLauncher
             }
             catch
             {
-                Log.Information(string.Format("Cannot find the icon.png associated to {0}", fs.Name.Split("\\")[^1]));
+                Log.Information("Cannot find the icon.png associated to {0}", fs.Name.Split("\\")[^1]);
             }
 
             fs.Close();
@@ -263,7 +263,7 @@ namespace ModShardLauncher
             if(fs.Length - fs.Position < length)
             {
                 fs.Close();
-                throw new Exception(string.Format("In FileReader.Read cannot read {0} bytes in the mod {1} ",  length, fs.Name.Split("\\")[^1]));
+                throw new Exception($"In FileReader.Read cannot read {length} bytes in the mod {fs.Name.Split("\\")[^1]}");
             }
             fs.Read(bytes, 0, length);
             return bytes;

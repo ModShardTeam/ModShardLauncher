@@ -96,7 +96,7 @@ namespace ModShardLauncher
                 ));
             }
 
-            Log.Information(string.Format("Successfully load: {0}.", filename));
+            Log.Information("Successfully load: {0}.", filename);
 
             ModLoader.Initalize();
             // cleaning loot table

@@ -34,7 +34,7 @@ public class UIComponent
         {
             case UIComponentType.ComboBox:
             case UIComponentType.Slider:
-                Log.Error($"Incorrect use of UIComponent, you cannot define a {compomentType} using these parameters.");
+                Log.Error("Incorrect use of UIComponent, you cannot define a {0} using these parameters.", compomentType);
                 throw new ValueUnavailableException();
 
             default:
@@ -52,7 +52,7 @@ public class UIComponent
         {
             case UIComponentType.CheckBox:
             case UIComponentType.Slider:
-                Log.Error($"Incorrect use of UIComponent, you cannot define a {compomentType} using these parameters.");
+                Log.Error("Incorrect use of UIComponent, you cannot define a {0} using these parameters.", compomentType);
                 throw new ValueUnavailableException();
 
             default:
@@ -71,7 +71,7 @@ public class UIComponent
         {
             case UIComponentType.CheckBox:
             case UIComponentType.ComboBox:
-                Log.Error($"Incorrect use of UIComponent, you cannot define a {compomentType} using these parameters.");
+                Log.Error("Incorrect use of UIComponent, you cannot define a {0} using these parameters.", compomentType);
                 throw new ValueUnavailableException();
 
             default:

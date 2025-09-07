@@ -12,7 +12,7 @@ namespace ModShardLauncher
             try 
             {
                 UndertaleVariable variable = ModLoader.Data.Variables.First(t => t.Name?.Content == name);
-                Log.Information(string.Format("Found variable: {0}", variable.ToString()));
+                Log.Information("Found variable: {0}", variable);
 
                 return variable;
             }
@@ -26,7 +26,7 @@ namespace ModShardLauncher
             try 
             {
                 UndertaleString variable = ModLoader.Data.Strings.First(t => t.Content == name);
-                Log.Information(string.Format("Found string: {0}", variable.ToString()));
+                Log.Information("Found string: {0}", variable);
 
                 return variable;
             }

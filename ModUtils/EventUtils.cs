@@ -167,7 +167,7 @@ namespace ModShardLauncher
                 });
                 
                 gameObject.Events[(int)eventType].Add(newEvent);
-                Log.Information(string.Format("Successfully added event {{{0}_{1}}} in object {{{2}}}", eventType, subtype, objectName));
+                Log.Information("Successfully added event {{{0}_{1}}} in object {{{2}}}", eventType, subtype, objectName);
             }
             catch(Exception ex)
             {
@@ -233,7 +233,7 @@ namespace ModShardLauncher
                 });
                 
                 gameObject.Events[(int)eventType].Add(newEvent);
-                Log.Information(string.Format("Successfully added event {{{0}_{1}}} in object {{{2}}}", eventType, subtype, gameObject.Name.Content));
+                Log.Information("Successfully added event {{{0}_{1}}} in object {{{2}}}", eventType, subtype, gameObject.Name.Content);
             }
             catch(Exception ex)
             {

@@ -29,7 +29,7 @@ namespace ModShardLauncher
                 weaponDescription.Remove("");
                 weaponDescription.RemoveAt(0);
 
-                Log.Information(string.Format("Found weapon: {0}", weaponsName.ToString()));
+                Log.Information("Found weapon: {0}", weaponsName);
                 return new(weaponsName, weaponDescription, localizationNames);
             }
             catch(Exception ex) 
@@ -61,7 +61,7 @@ namespace ModShardLauncher
                 ModLoader.WeaponDescriptions[indexDescription] = w2s.Item2;
                 ModLoader.WeaponDescriptions[indexLocalizationName] = w2s.Item3;
 
-                Log.Information(string.Format("Successfully set weapon: {0}", targetName.ToString()));
+                Log.Information("Successfully set weapon: {0}", targetName);
             }
             catch(Exception ex) 
             {

@@ -20,7 +20,7 @@ namespace ModShardLauncher
         {
             try
             {
-                Log.Information(string.Format("Trying add hook in: {0}", functionName));
+                Log.Information("Trying add hook in: {0}", functionName);
 
                 List<string>? originalCode = GetStringGMLFromFile(functionName).Split("\n").ToList();
                 originalCode.Append($"var {hookName} = createHookObj({paramNames.Length}, {string.Join(", ", paramNames)})");

@@ -60,7 +60,7 @@ namespace ModShardLauncher
                 string matchedText = Regex.Match(text, "return (\\[.*\\])").Groups[1].Value;
                 List<string>? tableAsList = JsonConvert.DeserializeObject<List<string>>(matchedText);
 
-                Log.Information(string.Format("Get table: {0}", name.ToString()));
+                Log.Information("Get table: {0}", name.ToString());
                 return tableAsList;
             }
             catch(Exception ex) 
@@ -80,7 +80,7 @@ namespace ModShardLauncher
                 text = Regex.Replace(text, "\\[.*\\]", ret);
                 target.ReplaceGML(text, Data);
 
-                Log.Information(string.Format("Successfully set table: {0}", name.ToString()));
+                Log.Information("Successfully set table: {0}", name);
             }
             catch(Exception ex) 
             {
@@ -131,7 +131,7 @@ namespace ModShardLauncher
                 }
                 catch(Exception ex)
                 {
-                    Log.Information(ex, string.Format("Cannot read the mod {0}", file));
+                    Log.Information(ex, "Cannot read the mod {0}", file);
                 }
                 if (f == null) continue;
                 try

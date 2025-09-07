@@ -106,10 +106,10 @@ namespace ModShardLauncher
         public static void LogInstruction(UndertaleInstruction instruction) 
         {
             try {
-                Log.Information(string.Format(@"{{{0}}}:
-                (   
-                    .Address = {10}, 
-                    .JumpOffset = {11}, 
+                Log.Information(@"{{{0}}}:
+                (
+                    .Address = {10},
+                    .JumpOffset = {11},
                     .Kind = {1},
                     .ComparisonKind = {8},
                     .Type1 = {2},
@@ -121,12 +121,12 @@ namespace ModShardLauncher
                     .ArgumentsCount = {9},
                 )
                 ",
-                instruction.ToString(),
-                instruction.Kind.ToString(),
-                instruction.Type1.ToString(),
-                instruction.Type2.ToString(),
-                instruction.TypeInst.ToString(),
-                (instruction.Destination != null) ? 
+                instruction,
+                instruction.Kind,
+                instruction.Type1,
+                instruction.Type2,
+                instruction.TypeInst,
+                (instruction.Destination != null) ?
                     string.Format(@"(
                             .Type = {0},
                             .Target = ( .Name = {1}, .InstanceType = {2}, ),
@@ -135,7 +135,7 @@ namespace ModShardLauncher
                         instruction.Destination?.Target.Name.ToString(),
                         instruction.Destination?.Target.InstanceType.ToString()) : 
                     "<null>",
-                (instruction.Value is UndertaleInstruction.Reference<UndertaleVariable>) ? 
+                (instruction.Value is UndertaleInstruction.Reference<UndertaleVariable>) ?
                     string.Format(@"(
                             .Type = {0},
                             .Target = ( .Name = {1}, .InstanceType = {2}, ),
@@ -144,8 +144,7 @@ namespace ModShardLauncher
                         (instruction.Value as UndertaleInstruction.Reference<UndertaleVariable>)?.Target.Name.ToString(),
                         (instruction.Value as UndertaleInstruction.Reference<UndertaleVariable>)?.Target.InstanceType.ToString()) : 
                     instruction.Value?.ToString() ?? "<null>",
-
-                (instruction.Function != null) ? 
+                (instruction.Function != null) ?
                     string.Format(@"(
                             .Type = {0},
                             .Target = ( .Name = {1}, .Classification = {2}, ),
@@ -154,14 +153,14 @@ namespace ModShardLauncher
                         instruction.Function?.Target.Name.ToString(),
                         instruction.Function?.Target.Classification.ToString()) : 
                     "<null>",
-                instruction.ComparisonKind.ToString(),
-                instruction.ArgumentsCount.ToString(),
-                instruction.Address.ToString(),
-                instruction.JumpOffset.ToString()
-                ));
+                instruction.ComparisonKind,
+                instruction.ArgumentsCount,
+                instruction.Address,
+                instruction.JumpOffset
+                );
             }
             catch(Exception ex) {
-                Log.Error(ex, string.Format("Cannot log {0}", instruction.ToString()));
+                Log.Error(ex, "Cannot log {0}", instruction);
                 throw;
             }
             
@@ -175,7 +174,7 @@ namespace ModShardLauncher
         {
             if (argument is null)
             {
-                Log.Error(string.Format("{0} is null.", argument));
+                Log.Error("{0} is null.", argument);
                 throw new ArgumentNullException(paramName, message);
             }
             else
@@ -191,7 +190,7 @@ namespace ModShardLauncher
         {
             if (argument is null)
             {
-                Log.Error(string.Format("{0} is null.", argument));
+                Log.Error("{0} is null.", argument);
                 throw new ArgumentNullException(paramName, message);
             }
             else
@@ -215,20 +214,20 @@ namespace ModShardLauncher
                 {
                     try
                     {
-                        Log.Information(invalid.ToString());
+                        Log.Information("{0}", invalid);
                         // we encounter an error since we can't decompile a nested function
                         // the error message indicates where to look instead
                         // but you need to parse the message to retrieve the needed code
                         // "This code block represents a function nested inside " + code.ParentEntry.Name + " - decompile that instead"
                         string name = invalid.Message.Split('\"')[1];
-                        Log.Information(string.Format("Looking for {{{0}}} instead", name));
+                        Log.Information("Looking for {{{0}}} instead", name);
                         s.AddRange(Decompiler.Decompile(code.First(x => x.Name.Content == name), context).Split('\n').SelectionSamplingTechnique(numberLinesByCode));
                     }
                     // not all code can be decompiled sadly
                     catch
                     {
                         string name = invalid.Message.Split('\"')[1];
-                        Log.Information(string.Format("Cannot decompile {{{0}}}, skipping that file", name));
+                        Log.Information("Cannot decompile {{{0}}}, skipping that file", name);
                         continue;
                     }
                     

@@ -33,6 +33,6 @@ public partial class Msl
         // Add line to end of table
         table.Add(newline);
         ModLoader.SetTable(table, tableName);
-        Log.Information($"Injected {name} into {tableName} table.");
+        Log.Information("Injected {0} into {1} table.", name, tableName);
     }
 }

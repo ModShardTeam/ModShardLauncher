@@ -208,11 +208,11 @@ public partial class Msl
         {
             table.Insert(ind + 1, newline);
             ModLoader.SetTable(table, tableName);
-            Log.Information($"Injected Armor {id} into table {tableName} under {hook}");
+            Log.Information("Injected Armor {0} into table {1} under {2}", id, tableName, hook);
         }
         else
         {
-            Log.Error($"Cannot find hook {hook} in table {tableName}");
+            Log.Error("Cannot find hook {0} in table {1}", hook, tableName);
             throw new Exception($"Cannot find hook {hook} in table {tableName}");
         }
     }

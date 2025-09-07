@@ -92,7 +92,7 @@ namespace ModShardLauncher
             try
             {
                 UndertaleCode code = ModLoader.Data.Code.First(t => t.Name?.Content == fileName);
-                Log.Information(string.Format("Found function: {0}", code.ToString()));
+                Log.Information("Found function: {0}", code);
 
                 return code;
             }
@@ -177,7 +177,7 @@ namespace ModShardLauncher
             var data = CodeResources.ResourceManager.GetObject(name, CodeResources.Culture) as byte[];
             if (data == null)
             {
-                Log.Information($"Code resource not found :{name}");
+                Log.Information("Code resource not found :{0}", name);
                 return "";
             }
             return Encoding.UTF8.GetString(data);
@@ -198,13 +198,13 @@ namespace ModShardLauncher
         {
             try
             {
-                Log.Information(string.Format("Trying to add the function : {0}", name.ToString()));
+                Log.Information("Trying to add the function : {0}", name);
 
                 UndertaleCode scriptCode = AddCode(codeAsString, name);
                 ModLoader.Data.Code.Add(ModLoader.Data.Code[0]);
                 ModLoader.Data.Code.RemoveAt(0);
 
-                Log.Information(string.Format("Successfully added the function : {0}", name.ToString()));
+                Log.Information("Successfully added the function : {0}", name);
                 return scriptCode;
             }
             catch
@@ -270,13 +270,13 @@ namespace ModShardLauncher
         {
             try
             {
-                Log.Information(string.Format("Trying insert code in: {0}", fileName.ToString()));
+                Log.Information("Trying insert code in: {0}", fileName);
 
                 List<string>? originalCode = GetStringGMLFromFile(fileName).Split("\n").ToList();
                 originalCode.Insert(position, codeAsString);
                 SetStringGMLInFile(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with InsertGMLString: {0}", fileName.ToString()));
+                Log.Information("Patched function with InsertGMLString: {0}", fileName);
             }
             catch (Exception ex)
             {
@@ -302,13 +302,13 @@ namespace ModShardLauncher
         {
             try
             {
-                Log.Information(string.Format("Trying replace code in: {0}", fileName.ToString()));
+                Log.Information("Trying replace code in: {0}", fileName);
 
                 List<string>? originalCode = GetStringGMLFromFile(fileName).Split("\n").ToList();
                 originalCode[position] = codeAsString;
                 SetStringGMLInFile(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with ReplaceGMLString: {0}", fileName.ToString()));
+                Log.Information("Patched function with ReplaceGMLString: {0}", fileName);
             }
             catch (Exception ex)
             {
@@ -336,7 +336,7 @@ namespace ModShardLauncher
         {
             try
             {
-                Log.Information(string.Format("Trying replace code in: {0}", fileName.ToString()));
+                Log.Information("Trying replace code in: {0}", fileName);
 
                 List<string>? originalCode = GetStringGMLFromFile(fileName).Split("\n").ToList();
                 originalCode[start] = codeAsString;
@@ -347,7 +347,7 @@ namespace ModShardLauncher
 
                 SetStringGMLInFile(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with ReplaceGMLString: {0}", fileName.ToString()));
+                Log.Information("Patched function with ReplaceGMLString: {0}", fileName);
             }
             catch (Exception ex)
             {
@@ -999,7 +999,7 @@ namespace ModShardLauncher
                     default:
                         break;
                 }
-                Log.Information("Successfully patched function {{{0}}} with {{{1}}}", fe.header.fileName, fe.header.patchingWay.ToString());
+                Log.Information("Successfully patched function {{{0}}} with {{{1}}}", fe.header.fileName, fe.header.patchingWay);
                 return new(
                     fe.header.fileName,
                     newCode,
@@ -1009,7 +1009,7 @@ namespace ModShardLauncher
             catch (Exception ex)
             {
                 ex.Data.Add("fileName", fe.header.fileName);
-                ex.Data.Add("patchingWay", fe.header.patchingWay.ToString());
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
                 throw;
             }
         }

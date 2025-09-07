@@ -104,7 +104,7 @@ namespace ModShardLauncher
             try
             {
                 UndertaleSprite sprite = ModLoader.Data.Sprites.First(t => t.Name.Content == name);
-                Log.Information(string.Format("Found sprite: {0}", name.ToString()));
+                Log.Information("Found sprite: {0}", name);
                 return sprite;
             }
             catch(Exception ex) 
@@ -118,7 +118,7 @@ namespace ModShardLauncher
             try
             {
                 UndertaleEmbeddedTexture embeddedTexture = ModLoader.Data.EmbeddedTextures.First(t => t.Name.Content == name);
-                Log.Information(string.Format("Found embedded texture: {0}", name.ToString()));
+                Log.Information("Found embedded texture: {0}", name);
                 return embeddedTexture;
             }
             catch(Exception ex) 
@@ -132,7 +132,7 @@ namespace ModShardLauncher
             try
             {
                 UndertaleTexturePageItem texturePageItem = ModLoader.Data.TexturePageItems.First(t => t.Name.Content == name);
-                Log.Information(string.Format("Found texture page item: {0}", name.ToString()));
+                Log.Information("Found texture page item: {0}", name);
                 return texturePageItem;
             }
             catch(Exception ex) 
@@ -154,7 +154,7 @@ namespace ModShardLauncher
                     bounding
                 );
                 ModLoader.Data.TexturePageItems.Add(texturePageItem);
-                Log.Information(string.Format("Successfully added a new texture from: {0}", embeddedTextureName.ToString()));
+                Log.Information("Successfully added a new texture from: {0}", embeddedTextureName);
                 return texturePageItem.Name.Content;
 
             }
@@ -186,7 +186,7 @@ namespace ModShardLauncher
                 
                 ModLoader.Data.Sprites.Add(newSprite);
 
-                Log.Information(string.Format("Successfully added new sprite: {0}", newSprite.Name.Content));
+                Log.Information("Successfully added new sprite: {0}", newSprite.Name.Content);
                 return newSprite.Name.Content;
 
             }

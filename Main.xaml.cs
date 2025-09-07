@@ -241,7 +241,7 @@ namespace ModShardLauncher
                     if (modFile != null)
                         listModFile[indexMod].isEnabled = true;
                     else
-                        Log.Warning($"Mod {i} not found");
+                        Log.Warning("Mod {0} not found", i);
                 }
             }
         }

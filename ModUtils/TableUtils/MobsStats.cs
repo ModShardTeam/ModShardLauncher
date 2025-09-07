@@ -251,6 +251,6 @@ public partial class Msl
         // Add line to table
         table.Add(newline);
         ModLoader.SetTable(table, tableName);
-        Log.Information($"Injected Mob Stat {name} into table");
+        Log.Information("Injected Mob Stat {0} into table", name);
     }
 }

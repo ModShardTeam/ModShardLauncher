@@ -83,11 +83,11 @@ public partial class Msl
         {
             table.Insert(ind + 1, newline);
             ModLoader.SetTable(table, tableName);
-            Log.Information($"Injected Dungeon Spawn {id} into {tableName} under {hook}");
+            Log.Information("Injected Dungeon Spawn {0} into {1} under {2}", id, tableName, hook);
         }
         else
         {
-            Log.Error($"Cannot find Hook {hook} in table {tableName}");
+            Log.Error("Cannot find Hook {0} in table {1}", hook, tableName);
             throw new Exception($"Hook {hook} not found in table {tableName}");
         }
     }
