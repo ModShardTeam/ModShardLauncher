@@ -34,39 +34,27 @@ namespace ModShardLauncher.Controls
                 return;
             }
 
-            bool patchSucess = false;
-            bool saveSucess = false;
-
-            try
+            if (ModLoader.PatchFile())
             {
-                ModLoader.PatchFile();
+                Main.Instance.LogModList();
                 Log.Information("Successfully patch vanilla");
-                patchSucess = true;
-                Main.Instance.LogModList();
-            }
-            catch (Exception ex)
-            {
-                Main.Instance.LogModList();
-                Log.Error(ex, "Something went wrong");
-                Log.Information("Failed patching vanilla");
-                MessageBox.Show(ex.ToString(), Application.Current.FindResource("SaveDataWarning").ToString());
-            }
 
-            // attempt to save the patched data
-            if (patchSucess)
-            {
                 Task<bool> save = DataLoader.DoSaveDialog();
                 await save;
-                saveSucess = save.Result;
-            }
-
-            if (saveSucess)
-            {
-                LootUtils.SaveLootTables(Msl.ThrowIfNull(Path.GetDirectoryName(DataLoader.savedDataPath)));
+                if (save.Result)
+                {
+                    LootUtils.SaveLootTables(Msl.ThrowIfNull(Path.GetDirectoryName(DataLoader.savedDataPath)));
+                }
+                else
+                {
+                    Log.Information("Saved cancelled.");
+                }
             }
             else
             {
-                Log.Information("Saved cancelled.");
+                Main.Instance.LogModList();
+                Log.Information("Failed patching vanilla");
+                MessageBox.Show("Patching failed, more information can be found in the logs.", Application.Current.FindResource("SaveDataWarning").ToString());
             }
 
             // reload the data

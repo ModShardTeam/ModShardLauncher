@@ -199,14 +199,37 @@ namespace ModShardLauncher
             WeaponDescriptions.Insert(WeaponDescriptions.IndexOf(";weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;weapon_pronoun;") + 1,
                 weapon.Name + ";He;;;It;She;She;She;She;He;;;;");
         }
-        public static void PatchFile()
+        public static bool PatchFile()
         {
-            // add new msl log function
-            LogUtils.InjectLog();
-            PatchInnerFile();
-            PatchMods();
-            // add the new loot related functions if there is any
-            LootUtils.InjectLootScripts();
+            try
+            {
+                // add new msl log function
+                LogUtils.InjectLog();
+                PatchInnerFile();
+                PatchMods();
+                // add the new loot related functions if there is any
+                LootUtils.InjectLootScripts();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                string extraInformation = "";
+                object? fileName = null;
+                object? patchingWay = null;
+                if (ex.Data.Contains("fileName"))
+                {
+                    fileName = ex.Data["fileName"];
+                    extraInformation += " in file {{{0}}}";
+                }
+                if (ex.Data.Contains("patchingWay"))
+                {
+                    patchingWay = ex.Data["patchingWay"];
+                    extraInformation += " while patching by {{{1}}}";
+                }
+
+                Log.Error(ex, "Something went wrong" + extraInformation, fileName, patchingWay);
+                return false;
+            }
         }
         internal static void PatchInnerFile()
         {

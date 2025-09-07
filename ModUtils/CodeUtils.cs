@@ -427,7 +427,16 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<(Match, string)> MatchFrom(this FileEnumerable<string> fe, ModFile modFile, string fileName)
         {
-            return new(fe.header, fe.ienumerable.MatchFrom(modFile.GetCode(fileName).Split("\n")));
+            try
+            {
+                return new(fe.header, fe.ienumerable.MatchFrom(modFile.GetCode(fileName).Split("\n")));
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
+                throw;
+            }
         }
         /// <summary>
         /// A selector that tags the <paramref name="len"/>-th lines of code below a given list of string.
@@ -508,7 +517,16 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<(Match, string)> MatchBelow(this FileEnumerable<string> fe, ModFile modFile, string fileName, int len)
         {
-            return new(fe.header, fe.ienumerable.MatchBelow(modFile.GetCode(fileName).Split("\n"), len));
+            try
+            {
+                return new(fe.header, fe.ienumerable.MatchBelow(modFile.GetCode(fileName).Split("\n"), len));
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
+                throw;
+            }
         }
         /// <summary>
         /// A selector that tags the all lines of the input.
@@ -619,7 +637,16 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<(Match, string)> MatchFromUntil(this FileEnumerable<string> fe, ModFile modFile, string filenameOther, string filenameUntil)
         {
-            return new(fe.header, fe.ienumerable.MatchFromUntil(modFile.GetCode(filenameOther).Split("\n"), modFile.GetCode(filenameUntil).Split("\n")));
+            try
+            {
+                return new(fe.header, fe.ienumerable.MatchFromUntil(modFile.GetCode(filenameOther).Split("\n"), modFile.GetCode(filenameUntil).Split("\n")));
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
+                throw;
+            }
         }
         /// <summary>
         /// An action on an IEnumerable that prints each line on the log console but does not alter the data flow.
@@ -782,7 +809,16 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<string> InsertBelow(this FileEnumerable<(Match, string)> fe, ModFile modFile, string fileName)
         {
-            return new(fe.header, fe.ienumerable.InsertBelow(modFile.GetCode(fileName).Split("\n")));
+            try
+            {
+                return new(fe.header, fe.ienumerable.InsertBelow(modFile.GetCode(fileName).Split("\n")));
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
+                throw;
+            }
         }
         /// <summary>
         /// An action on an IEnumerable that inserts lines of code above the Matching block. 
@@ -830,7 +866,16 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<string> InsertAbove(this FileEnumerable<(Match, string)> fe, ModFile modFile, string fileName)
         {
-            return new(fe.header, fe.ienumerable.InsertAbove(modFile.GetCode(fileName).Split("\n")));
+            try
+            {
+                return new(fe.header, fe.ienumerable.InsertAbove(modFile.GetCode(fileName).Split("\n")));
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
+                throw;
+            }
         }
         /// <summary>
         /// An action on an IEnumerable that replace the Matching block with the lines given. 
@@ -884,7 +929,16 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, ModFile modFile, string fileName)
         {
-            return new(fe.header, fe.ienumerable.ReplaceBy(modFile.GetCode(fileName).Split("\n")));
+            try
+            {
+                return new(fe.header, fe.ienumerable.ReplaceBy(modFile.GetCode(fileName).Split("\n")));
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
+                throw;
+            }
         }
         /// <summary>
         /// Apply an <paramref name="iterator"/> to an <see cref="IEnumerable"/>.
