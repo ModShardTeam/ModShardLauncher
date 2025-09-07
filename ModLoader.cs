@@ -172,7 +172,6 @@ namespace ModShardLauncher
             List<ModFile> mods = ModInfos.Instance.Mods;
             Menus = new();
 
-            Stopwatch watch = Stopwatch.StartNew();
             foreach (ModFile mod in mods)
             {
                 if (!mod.Enabled) continue;
@@ -192,14 +191,11 @@ namespace ModShardLauncher
                 TextureLoader.LoadTextures(mod);
                 mod.instance.PatchMod();
                 mod.PatchStatus = PatchStatus.Success;
+                Main.LogModStatus(mod);
             }
             Msl.AddDisclaimerRoom(Credits.Select(x => x.Item1).ToArray(), Credits.SelectMany(x => x.Item2).Distinct().ToArray());
             Msl.ChainDisclaimerRooms(Disclaimers);
             Msl.CreateMenu(Menus);
-
-            watch.Stop();
-            long elapsedMs = watch.ElapsedMilliseconds;
-            Log.Information("Patching lasts {{{0}}} ms", elapsedMs);
         }
         public static void PatchFile()
         {

@@ -131,27 +131,31 @@ namespace ModShardLauncher
             }
         }
 
-        public void LogModList()
+        public void LogModListStatus()
         {
             foreach (ModFile modFile in ModPage.Mods.Where(x => x.Enabled))
             {
-                string statusMessage = "";
-                switch (modFile.PatchStatus)
-                {
-                    case PatchStatus.Patching:
-                        statusMessage = "Patching failed";
-                        break;
-
-                    case PatchStatus.Success:
-                        statusMessage = "Patching succeeded";
-                        break;
-
-                    case PatchStatus.None:
-                        statusMessage = "Waiting to be patched";
-                        break;
-                }
-                Log.Warning("Patching {{{2}}} for {{{0}}} {{{1}}}", modFile.Name, modFile.Version, statusMessage);
+                LogModStatus(modFile);
             }
+        }
+        public static void LogModStatus(ModFile modFile)
+        {
+            string statusMessage = "";
+            switch (modFile.PatchStatus)
+            {
+                case PatchStatus.Patching:
+                    statusMessage = "Patching failed";
+                    break;
+
+                case PatchStatus.Success:
+                    statusMessage = "Patching succeeded";
+                    break;
+
+                case PatchStatus.None:
+                    statusMessage = "Waiting to be patched";
+                    break;
+            }
+            Log.Warning("Patching {{{2}}} for {{{0}}} {{{1}}}", modFile.Name, modFile.Version, statusMessage);
         }
         private void MyToggleButton_Checked(object sender, EventArgs e)
         {
