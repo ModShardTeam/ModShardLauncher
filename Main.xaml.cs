@@ -38,7 +38,6 @@ namespace ModShardLauncher
         public static IntPtr handle;
         public string mslVersion;
         public string utmtlibVersion;
-        //
         private const double DefaultWidth = 960;                  // Исходная ширина
         private const double DefaultHeight = 800;                 // Исходная высота
         private const double AspectRatio = DefaultWidth / DefaultHeight; // Соотношение сторон

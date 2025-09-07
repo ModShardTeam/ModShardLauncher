@@ -62,7 +62,7 @@ namespace ModShardLauncher.Controls
             }
 
             // reload the data
-            await DataLoader.LoadFile(DataLoader.dataPath, true);
+            await DataLoader.LoadFile(DataLoader.dataPath);
             Main.Instance.Refresh();
         }
 
