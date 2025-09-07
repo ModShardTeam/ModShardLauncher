@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,7 +38,7 @@ namespace ModShardLauncher.Controls
 
             if (ModLoader.PatchFile())
             {
-                Main.Instance.LogModList();
+                Main.Instance.LogModListStatus();
                 Log.Information("Successfully patch vanilla");
 
                 Task<bool> save = DataLoader.DoSaveDialog();
@@ -52,7 +54,7 @@ namespace ModShardLauncher.Controls
             }
             else
             {
-                Main.Instance.LogModList();
+                Main.Instance.LogModListStatus();
                 Log.Information("Failed patching vanilla");
                 MessageBox.Show("Patching failed, more information can be found in the logs.", Application.Current.FindResource("SaveDataWarning").ToString());
             }

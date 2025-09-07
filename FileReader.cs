@@ -24,7 +24,7 @@ namespace ModShardLauncher
     {
         public string Name { get; set; }
         public string Path { get; set; }
-        public bool isExisted => File.Exists(Path);
+        public bool Existed => File.Exists(Path);
         public override string ToString()
         {
             return Name;
@@ -46,9 +46,9 @@ namespace ModShardLauncher
         public FileStream Stream;
         public string Path;
         public Mod instance { get; set; }
-        public bool isEnabled { get; set; }
+        public bool Enabled { get; set; }
         public PatchStatus PatchStatus { get; set; } = PatchStatus.None;
-        public bool isExisted => File.Exists(Path);
+        public bool Existed => File.Exists(Path);
         public byte[] Icon { get; set; } = Array.Empty<byte>();
         public override string ToString()
         {
@@ -56,7 +56,7 @@ namespace ModShardLauncher
         }
         public byte[] GetFile(string fileName)
         {
-            if(!isExisted)
+            if(!Existed)
             {
                 Log.Error("The mod {0} which was located at {1} does not exist anymore.", Name, Path);
                 ModLoader.LoadFiles();

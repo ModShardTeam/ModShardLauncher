@@ -104,330 +104,12 @@ namespace ModShardLauncher
         {
             if (LootTables.Count == 0 && ReferenceTables.Count == 0)  return;
 
-            string mslItemsFunction = @"function scr_msl_resolve_items(argument0, argument1, argument2, argument3, argument4)
-{
-    if (argument1 == -1)
-    {
-        var objectName = argument0;
-        var obj = """";
-        if (argument3 == 0)
-        {
-            obj = asset_get_index(""o_inv_"" + objectName)
-            if (obj > -1)
-            {
-                scr_inventory_add_item(obj);
-            }
-            else
-            {
-                scr_msl_log(""invalid object "" + string(objectName));
-            }
-        }
-        else
-        {
-            obj = asset_get_index(""o_loot_"" + objectName)
-            if (obj > -1)
-            {
-                scr_loot_drop(argument4.x, argument4.y, obj)
-            }
-            else
-            {
-                scr_msl_log(""invalid object "" + string(objectName));
-            }
-        }
-    }
-    else
-    {
-        if (argument3 == 0)
-        {
-            with (scr_inventory_add_weapon(argument0, argument1))
-            {
-                scr_inv_atr_set(""Duration"", argument2);
-            }
-        }
-        else
-        {
-            with (scr_weapon_loot(argument0, argument4.x, argument4.y, 100, argument1))
-            {
-                scr_inv_atr_set(""Duration"", argument2)
-            }
-        }
-    }
-}";
+            Msl.AddInnerFunction("scr_msl_resolve_items");
+            Msl.AddInnerFunction("scr_msl_resolve_refence_table");
+            Msl.AddInnerFunction("scr_msl_resolve_guaranteed_items");
+            Msl.AddInnerFunction("scr_msl_resolve_random_items");
+            Msl.AddInnerFunction("scr_msl_resolve_loot_table");
 
-            string mslRefFunction = @"function scr_msl_resolve_refence_table(argument0)
-{
-    var objectName = object_get_name(argument0.object_index);
-    var refFile = file_text_open_read(""reference_table.json""); 
-    var refJson = file_text_read_string(refFile);
-    var refData = json_parse(refJson);
-
-    var min_lvl = scr_globaltile_dungeon_get(""mob_lvl_min"");
-    var max_lvl = scr_globaltile_dungeon_get(""mob_lvl_max"");
-    var tier = floor(((max_lvl + min_lvl) / 2));
-    scr_msl_log(""current tier: "" + string(tier));
-
-    if (!variable_struct_exists(refData, objectName))
-    {
-        scr_msl_log(""cant find object "" + objectName);
-        file_text_close(refFile);
-        return -4;
-    }
-    var refStruct = variable_struct_get(refData, objectName);
-    var referenceLootTableIndex = -1;
-
-    if (!variable_struct_exists(refStruct, ""DefaultTable""))
-    {
-        scr_msl_log(""cant find DefaultTable"");
-        file_text_close(refFile);
-        return -4;
-    }
-    var defaultTable = variable_struct_get(refStruct, ""DefaultTable"");
-    
-    if (!variable_struct_exists(refStruct, ""Ids""))
-    {
-        scr_msl_log(""cant find Ids"");
-        file_text_close(refFile);
-        return -4;
-    }
-    var idsStruct = variable_struct_get(refStruct, ""Ids"");
-
-    var _ids = variable_struct_get_names(idsStruct);
-    for (var i = 0; i < array_length(_ids); i++;)
-    {
-        if (real(_ids[i]) == argument0.id)
-        {
-            var referenceLootTable = variable_struct_get(idsStruct, _ids[i]);
-            scr_msl_log(""ref with id: "" + referenceLootTable);
-            file_text_close(refFile);
-            return referenceLootTable;
-        }
-    }
-
-    if (!variable_struct_exists(refStruct, ""Tiers""))
-    {
-        scr_msl_log(""cant find Tiers"");
-        file_text_close(refFile);
-        return -4;
-    }
-    var tiersStruct = variable_struct_get(refStruct, ""Tiers"");
-    var tiers = variable_struct_get_names(tiersStruct);
-    var indexTier = -1;
-
-    for (var i = 0; i < array_length(tiers); i++;)
-    {
-        if (tier < real(tiers[i]))
-        {
-            indexTier = i - 1;
-            break;
-        }
-        else
-        {
-            indexTier = i;
-        }
-    }
-
-    if (indexTier == -1)
-    {
-        var referenceLootTable = defaultTable;
-        scr_msl_log(""ref with default: "" + referenceLootTable);
-    }
-    else
-    {
-        var referenceLootTable = variable_struct_get(tiersStruct, tiers[indexTier]);
-        scr_msl_log(""ref with tier: "" + referenceLootTable);
-    }
-    
-    file_text_close(refFile);
-    return referenceLootTable;
-}";
-
-            string mslLootGuaranteedItemsFunction = @"function scr_msl_resolve_guaranteed_items(argument0, argument1, argument2)
-{
-    if (!variable_struct_exists(argument0, ""ListItems"") 
-        || !variable_struct_exists(argument0, ""ListRarity"")
-        || !variable_struct_exists(argument0, ""ListDurability""))
-    {
-        scr_msl_log(""no ItemsTable data"");
-        return 0;
-    }
-
-    var items = variable_struct_get(argument0, ""ListItems"");
-    var rarity = variable_struct_get(argument0, ""ListRarity"");
-    var durability = variable_struct_get(argument0, ""ListDurability"");
-
-    var size_array = array_length(items);
-
-    if (size_array != array_length(rarity) ||
-        size_array != array_length(durability))
-    {
-        scr_msl_log(""List with incorrect size"");
-        return 0;
-    }
-
-    for(var _i = 0; _i < size_array; _i++)
-    {
-        scr_msl_resolve_items(items[_i], rarity[_i], durability[_i], argument1, argument2);
-    }
-
-    return 1;
-}
-";
-            string mslLootRandomItemsFunction = @"function scr_msl_resolve_random_items(argument0, argument1, argument2, argument3, argument4)
-{
-    if (!variable_struct_exists(argument0, ""ItemsTable"") 
-        || !variable_struct_exists(argument0, ""ListWeight""))
-    {
-        scr_msl_log(""no randomLoot data"");
-        return 0;
-    }
-
-    var itemsTable = variable_struct_get(argument0, ""ItemsTable"");
-    var weight = variable_struct_get(argument0, ""ListWeight"");
-
-    if (!variable_struct_exists(itemsTable, ""ListItems"")
-        || !variable_struct_exists(itemsTable, ""ListRarity"")
-        || !variable_struct_exists(itemsTable, ""ListDurability""))
-    {
-        scr_msl_log(""no randomLoot data"");
-        return 0;
-    }
-
-    var items = variable_struct_get(itemsTable, ""ListItems"");
-    var rarity = variable_struct_get(itemsTable, ""ListRarity"");
-    var durability = variable_struct_get(itemsTable, ""ListDurability"");
-
-    var sizeItems = array_length(items);
-    var tableItemsSpecialLootAlready = array_create(sizeItems, 0);
-
-    for (var _j = 0; _j < argument3; _j++)
-    {
-        var totalWeight = argument4;
-        for (var _i = 0; _i < sizeItems; _i++)
-        {
-            if (ds_list_find_index(scr_atr(""specialItemsPool""), items[_i]) != -1)
-            {
-                tableItemsSpecialLootAlready[_i] = 1;
-            }
-            else
-            {
-                totalWeight += weight[_i];
-            }
-        }
-        scr_msl_log(""totalWeight "" + string(totalWeight));
-
-        var randomWeight = irandom(totalWeight - 1);
-        scr_msl_log(""randomWeight "" + string(randomWeight));
-        var cumulativeWeight = 0;
-        var index = -1;
-
-        for (var _i = 0; _i < sizeItems; _i++)
-        {
-            if (tableItemsSpecialLootAlready[_i] == 1)
-            {
-                continue;
-            }
-            cumulativeWeight += weight[_i]
-            if (randomWeight < cumulativeWeight) 
-            {
-                index = _i;
-                break;
-            }
-        }
-
-        if (index != -1)
-        {
-            scr_msl_log(""found "" + string(index));
-            scr_msl_resolve_items(items[index], rarity[index], durability[index], argument1, argument2);
-        }
-        else 
-        {
-            scr_msl_log(""found empty"");
-        }
-    }
-
-    return 1;
-}";
-
-            string mslLootFunction = @"function scr_msl_resolve_loot_table(argument0, argument1)
-{
-    var objectName = object_get_name(argument0.object_index);
-    scr_msl_log(""instance: "" + string(argument0.id) + "" of "" + objectName);
-
-    var referenceLootTable = scr_msl_resolve_refence_table(argument0);
-    if (referenceLootTable == noone)
-    {
-        scr_msl_log(""Reference Table resolution failed"");
-        return 0;
-    }
-
-    var file = file_text_open_read(""loot_table.json""); 
-    var json = file_text_read_string(file);
-    var data = json_parse(json);
-
-    if (!variable_struct_exists(data, referenceLootTable))
-    {
-        scr_msl_log(""cant find ref "" + referenceLootTable);
-        file_text_close(file);
-        return 0;
-    }
-    var lootStruct = variable_struct_get(data, referenceLootTable);
-
-    if (!variable_struct_exists(lootStruct, ""GuaranteedItems""))
-    {
-        scr_msl_log(""no guaranteedItems"");
-        file_text_close(""loot_table.json"");
-        return 0;
-    }
-    var guaranteedItems = variable_struct_get(lootStruct, ""GuaranteedItems"");
-
-    if (!scr_msl_resolve_guaranteed_items(guaranteedItems, argument1, argument0))
-    {
-        scr_msl_log(""Guaranteed Items resolution failed"");
-        file_text_close(""loot_table.json"");
-        return 0;
-    }
-
-    if (!variable_struct_exists(lootStruct, ""RandomLootMin"") || !variable_struct_exists(lootStruct, ""RandomLootMax"") || !variable_struct_exists(lootStruct, ""EmptyWeight""))
-    {
-        scr_msl_log(""no int"");
-        file_text_close(""loot_table.json"");
-        return 0;
-    }
-
-    var randomLootMin = variable_struct_get(lootStruct, ""RandomLootMin"");
-    var randomLootMax = variable_struct_get(lootStruct, ""RandomLootMax"");
-    var emptyWeight = variable_struct_get(lootStruct, ""EmptyWeight"");
-
-    var iteration = randomLootMin + irandom(randomLootMax - randomLootMin);
-    scr_msl_log(""iteration "" + string(iteration));
-
-    if (!variable_struct_exists(lootStruct, ""RandomItemsTable""))
-    {
-        scr_msl_log(""no RandomItemsTable"");
-        file_text_close(""loot_table.json"");
-        return 0;
-    }
-
-    var randomItemsTable = variable_struct_get(lootStruct, ""RandomItemsTable"");
-
-    scr_msl_resolve_random_items(randomItemsTable, argument1, argument0, iteration, emptyWeight);
-
-    file_text_close(file);
-
-    return 1;
-}";
-
-            Msl.AddFunction(mslItemsFunction, "scr_msl_resolve_items");
-            Msl.AddFunction(mslRefFunction, "scr_msl_resolve_refence_table");
-            Msl.AddFunction(mslLootGuaranteedItemsFunction, "scr_msl_resolve_guaranteed_items");
-            Msl.AddFunction(mslLootRandomItemsFunction, "scr_msl_resolve_random_items");
-            Msl.AddFunction(mslLootFunction, "scr_msl_resolve_loot_table");
-
-            Msl.LoadGML("gml_Object_o_chest_p_Alarm_1")
-                .MatchFrom("script_execute")
-                .InsertBelow("scr_msl_resolve_loot_table(other, 0)")
-                .Save();
-                
             Msl.LoadGML("gml_Object_c_container_Other_10")
                 .MatchFrom("script_execute")
                 .InsertBelow("scr_msl_resolve_loot_table(other, 0)")
@@ -445,20 +127,23 @@ namespace ModShardLauncher
         {
             LootTable lootTable = new(guaranteedItems, randomLootMin, randomLootMax, emptyWeight, randomItemsTable);
             LootUtils.LootTables.Add(lootTableID, lootTable);
+            Log.Information("Adding LootTable {0}", lootTableID);
         }
         public static void AddReferenceTable(string nameObject, string table)
         {
             LootUtils.ReferenceTables.Add(nameObject, new ReferenceTable(table, new Dictionary<int, string>(), new Dictionary<int, string>()));
+            Log.Information("Adding ReferenceTable {0} for {1}", table, nameObject);
         }
         public static void AddReferenceTable(string nameObject, string table, Dictionary<int, string>? ids, Dictionary<int, string>? tiers)
         {
             LootUtils.ReferenceTables.Add(nameObject, new ReferenceTable(table, ids ?? new Dictionary<int, string>(), tiers ?? new Dictionary<int, string>()));
+            Log.Information("Adding ReferenceTable {0} for {1}", table, nameObject);
         }
         public static void AddReferenceTableForMultipleObjects(string table, params string[] nameObjects)
         {
             foreach(string nameObject in nameObjects)
             {
-                LootUtils.ReferenceTables.Add(nameObject, new ReferenceTable(table, new Dictionary<int, string>(), new Dictionary<int, string>()));
+                Msl.AddReferenceTable(nameObject, table);
             }
         }
     }
