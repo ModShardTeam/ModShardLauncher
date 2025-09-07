@@ -35,15 +35,16 @@ namespace ModShardLauncher.Controls
             }
 
             bool patchSucess = false;
+            bool saveSucess = false;
 
-            try 
+            try
             {
                 ModLoader.PatchFile();
                 Log.Information("Successfully patch vanilla");
                 patchSucess = true;
                 Main.Instance.LogModList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Main.Instance.LogModList();
                 Log.Error(ex, "Something went wrong");
@@ -52,13 +53,20 @@ namespace ModShardLauncher.Controls
             }
 
             // attempt to save the patched data
-            if (patchSucess) 
+            if (patchSucess)
             {
                 Task<bool> save = DataLoader.DoSaveDialog();
                 await save;
-                if (!save.Result) Log.Information("Saved cancelled.");
-                // copy the dataloot.json in the stoneshard directory
+                saveSucess = save.Result;
+            }
+
+            if (saveSucess)
+            {
                 LootUtils.SaveLootTables(Msl.ThrowIfNull(Path.GetDirectoryName(DataLoader.savedDataPath)));
+            }
+            else
+            {
+                Log.Information("Saved cancelled.");
             }
 
             // reload the data

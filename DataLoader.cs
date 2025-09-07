@@ -44,6 +44,8 @@ namespace ModShardLauncher
             {
                 try
                 {
+                    // save the filename for later
+                    dataPath = dlg.FileName;
                     await LoadFile(dlg.FileName);
                     return true;
                 }
@@ -68,8 +70,6 @@ namespace ModShardLauncher
         }
         public static async Task LoadFile(string filename)
         {
-            // save the filename for later
-            dataPath = filename;
             // create a new dialog box
             LoadingDialog dialog = new()
             {
@@ -115,8 +115,23 @@ namespace ModShardLauncher
             if (dlg.ShowDialog() == true)
             {
                 savedDataPath = dlg.FileName;
-                await SaveFile(dlg.FileName);
-                return true;
+                try
+                {
+                    await SaveFile(dlg.FileName);
+                    return true;
+                }
+                catch (AggregateException exs)
+                {
+                    Log.Error("Multiple exceptions occurred during save operation for {{{0}}:", dlg.FileName);
+                    foreach (Exception ex in exs.InnerExceptions)
+                    {
+                        Log.Error(ex, "Exception: {Message}", ex.Message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "An exception occurred during save operation for {{{0}}:", dlg.FileName);
+                }
             }
 
             return false;
@@ -131,23 +146,14 @@ namespace ModShardLauncher
             //UndertaleEmbeddedTexture.TexData.ClearSharedStream();
             QoiConverter.ClearSharedBuffer();
         }
-        private static void HandleFailedSave(Exception exception)
+        private static void HandleFailedSave()
         {
             if (!UndertaleIO.IsDictionaryCleared)
             {
-                try
-                {
-                    IEnumerable<IUndertaleListChunk> enumerableChunks = data.FORM.Chunks.Values.Where(x => x is not null).Select(x => (IUndertaleListChunk)x);
-                    Parallel.ForEach(enumerableChunks, (chunk) => chunk.ClearIndexDict());
-                    UndertaleIO.IsDictionaryCleared = true;
-                }
-                catch { }
+                IEnumerable<IUndertaleListChunk> enumerableChunks = data.FORM.Chunks.Values.Where(x => x is not null).Select(x => (IUndertaleListChunk)x);
+                Parallel.ForEach(enumerableChunks, (chunk) => chunk.ClearIndexDict());
+                UndertaleIO.IsDictionaryCleared = true;
             }
-
-            Main.Instance.Dispatcher.Invoke(() =>
-            {
-                Log.Error("An error occured while trying to save:\n" + exception.Message, "Save error");
-            });
         }
         public static async Task SaveFile(string filename)
         {
@@ -157,21 +163,30 @@ namespace ModShardLauncher
                 Owner = Main.Instance
             };
 
-            Task t = Task.Run(() =>
+            Task taskSaveDataWinWithUmt = Task.Run(() =>
             {
+                List<Exception> exceptions = new();
                 bool SaveSucceeded = true;
                 // try temp save first
                 try
                 {
                     SaveTempWithUmt(filename);
                 }
-                catch (Exception e)
+                catch (Exception savedException)
                 {
-                    HandleFailedSave(e);
+                    exceptions.Add(savedException);
+                    try
+                    {
+                        HandleFailedSave();
+                    }
+                    catch (Exception handledException)
+                    {
+                        exceptions.Add(handledException);
+                    }
                     SaveSucceeded = false;
                 }
 
-                // move save
+                // clean after saving
                 try
                 {
                     if (SaveSucceeded)
@@ -184,13 +199,9 @@ namespace ModShardLauncher
                         if (File.Exists(filename + "temp")) File.Delete(filename + "temp");
                     }
                 }
-                catch (Exception exc)
+                catch (Exception cleanUpException)
                 {
-                    Main.Instance.Dispatcher.Invoke(() =>
-                    {
-                        Log.Error("An error occured while trying to save:\n" + exc.Message, "Save error");
-                    });
-
+                    exceptions.Add(cleanUpException);
                     SaveSucceeded = false;
                 }
 
@@ -198,11 +209,13 @@ namespace ModShardLauncher
                 {
                     dialog.Hide();
                 });
+
+                if (!SaveSucceeded) throw new AggregateException(exceptions);
             });
 
             //run
             dialog.ShowDialog();
-            await t;
+            await taskSaveDataWinWithUmt;
         }
     }
 }
