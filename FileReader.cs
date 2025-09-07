@@ -14,9 +14,9 @@ using System.Windows;
 
 namespace ModShardLauncher
 {
-    public class FileChunk 
+    public class FileChunk
     {
-        public string name;
+        public string name = string.Empty;
         public int offset;
         public int length;
     }
@@ -58,7 +58,7 @@ namespace ModShardLauncher
         {
             if(!isExisted)
             {
-                MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + Name);
+                Log.Error("The mod {0} which was located at {1} does not exist anymore.", Name, Path);
                 ModLoader.LoadFiles();
                 return Array.Empty<byte>();
             }
@@ -92,7 +92,7 @@ namespace ModShardLauncher
             string text = Encoding.UTF8.GetString(data);
             if(text.Length == 0)
             {
-                MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + fileName);
+                Log.Error("The mod {0} which was located at {1} does not exist anymore.", Name, Path);
                 throw new ArgumentException("String cannot be of length zero");
             }
             return text;

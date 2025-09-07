@@ -160,7 +160,7 @@ namespace ModShardLauncher
                 if (!mod.isEnabled) continue;
                 if (!mod.isExisted)
                 {
-                    MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + mod.Name);
+                    Log.Warning("The mod {0} which was located at {1} does not exist anymore.", mod.Name, mod.Path);
                     continue;
                 }
                 Main.Settings.EnableMods.Add(mod.Name);
