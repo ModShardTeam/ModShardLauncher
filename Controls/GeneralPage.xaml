@@ -292,7 +292,7 @@
         </ComboBox>
         <Label Content="{DynamicResource SettingHeader_Log}" VerticalAlignment="Top" Margin="32,100,0,0"
                Style="{StaticResource xFont}" FontSize="12" Foreground="#95796A"/>
-        <CheckBox HorizontalAlignment="Left" Margin="160,102,0,0" VerticalAlignment="Top" IsChecked="{Binding isEnabled, Mode=TwoWay}" Name="Logger" 
+        <CheckBox HorizontalAlignment="Left" Margin="160,102,0,0" VerticalAlignment="Top" IsChecked="{Binding Enabled, Mode=TwoWay}" Name="Logger" 
                   Checked="Logger_Checked" Unchecked="Logger_Checked">
             <CheckBox.Style>
                 <Style TargetType="CheckBox">
