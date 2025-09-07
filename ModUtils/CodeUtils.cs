@@ -576,6 +576,7 @@ namespace ModShardLauncher
             if (otherUntilEnumerator.MoveNext())
                 otherUntilString = otherUntilEnumerator.Current;
 
+            
             foreach ((Match m, string element) in ienumerable.MatchFrom(otherfrom))
             {
                 if (m == Match.Before || m == Match.Matching)
@@ -607,15 +608,6 @@ namespace ModShardLauncher
                     exitMatching = true;
                     yield return (Match.After, element);
                 }
-            }
-
-            if (!foundUntil)
-            {
-                throw new InvalidOperationException(
-                    string.Format("MatchFromUntil: No matching lines found. Items to match:\nFrom\n{0}\nTo\n{1}",
-                    string.Join("\n", otherfrom),
-                    string.Join("\n", otheruntil))
-                );
             }
         }
         /// <summary>
