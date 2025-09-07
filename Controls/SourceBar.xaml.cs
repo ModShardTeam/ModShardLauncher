@@ -38,7 +38,7 @@ namespace ModShardLauncher.Controls
                 Log.Error(ex, "Something went wrong");
             }
             
-            Msl.ThrowIfNull(Main.Instance.Viewer.Content as UserControl).UpdateLayout();
+            Msl.ThrowIfNull((UserControl)Main.Instance.Viewer.Content).UpdateLayout();
             Main.Instance.Refresh();
         }
 

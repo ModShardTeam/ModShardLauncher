@@ -18,20 +18,12 @@ namespace ModShardLauncher
         /// <param name="paramNames">All the things you want to get.</param>
         public static void HookFunction(string functionName, string hookName, params string[] paramNames)
         {
-            try
-            {
-                Log.Information("Trying add hook in: {0}", functionName);
+            Log.Information("Trying add hook in: {0}", functionName);
 
-                List<string>? originalCode = GetStringGMLFromFile(functionName).Split("\n").ToList();
-                originalCode.Append($"var {hookName} = createHookObj({paramNames.Length}, {string.Join(", ", paramNames)})");
-                originalCode.Append($"SendMsg(\"HOK\", \"{hookName}<EXTRAMSG>\" + {hookName}, false)");
-                SetStringGMLInFile(string.Join("\n", originalCode), functionName);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            List<string>? originalCode = GetStringGMLFromFile(functionName).Split("\n").ToList();
+            originalCode.Append($"var {hookName} = createHookObj({paramNames.Length}, {string.Join(", ", paramNames)})");
+            originalCode.Append($"SendMsg(\"HOK\", \"{hookName}<EXTRAMSG>\" + {hookName}, false)");
+            SetStringGMLInFile(string.Join("\n", originalCode), functionName);
         }
     }
 }

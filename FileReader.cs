@@ -79,41 +79,27 @@ namespace ModShardLauncher
         }
         public string GetCode(string fileName)
         {
-            try
+            byte[] data = GetFile(fileName);
+            if (data.Length == 0) 
             {
-                byte[] data = GetFile(fileName);
-                if (data.Length == 0) 
-                {
-                    Log.Warning("{0} is empty.", fileName);
-                    return "";
-                }
-                // if a BOM is found aka: 0xEF 0xBB 0xBF at the beginning of the file, remove it since UTMT will not understand these characters.
-                // BOM are produced if a script is made through Visual Studio
-                if (data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF) data = data.Skip(3).ToArray();
+                Log.Warning("{0} is empty.", fileName);
+                return "";
+            }
+            // if a BOM is found aka: 0xEF 0xBB 0xBF at the beginning of the file, remove it since UTMT will not understand these characters.
+            // BOM are produced if a script is made through Visual Studio
+            if (data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF) data = data.Skip(3).ToArray();
 
-                string text = Encoding.UTF8.GetString(data);
-                if(text.Length == 0)
-                {
-                    MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + fileName);
-                    throw new ArgumentException("String cannot be of length zero");
-                }
-                return text;
-            }
-            catch
+            string text = Encoding.UTF8.GetString(data);
+            if(text.Length == 0)
             {
-                throw;
+                MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + fileName);
+                throw new ArgumentException("String cannot be of length zero");
             }
+            return text;
         }
         public bool FileExist(string fileName)
         {
-            try
-            {
-                return GetFile(fileName).Length > 0;
-            }
-            catch
-            {
-                throw;
-            }
+            return GetFile(fileName).Length > 0;
         }
     }
     public static class FileReader

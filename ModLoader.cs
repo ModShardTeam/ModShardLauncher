@@ -52,41 +52,25 @@ namespace ModShardLauncher
         }
         public static List<string>? GetTable(string name)
         {
-            try
-            {
-                UndertaleCode table = Data.Code.First(t => t.Name.Content == name);
-                GlobalDecompileContext context = new(Data, false);
-                string text = Decompiler.Decompile(table, context);
-                string matchedText = Regex.Match(text, "return (\\[.*\\])").Groups[1].Value;
-                List<string>? tableAsList = JsonConvert.DeserializeObject<List<string>>(matchedText);
+            UndertaleCode table = Data.Code.First(t => t.Name.Content == name);
+            GlobalDecompileContext context = new(Data, false);
+            string text = Decompiler.Decompile(table, context);
+            string matchedText = Regex.Match(text, "return (\\[.*\\])").Groups[1].Value;
+            List<string>? tableAsList = JsonConvert.DeserializeObject<List<string>>(matchedText);
 
-                Log.Information("Get table: {0}", name.ToString());
-                return tableAsList;
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            Log.Information("Get table: {0}", name.ToString());
+            return tableAsList;
         }
         public static void SetTable(List<string> table, string name)
         {
-            try
-            {
-                string ret = JsonConvert.SerializeObject(table).Replace("\n", "");
-                UndertaleCode target = Data.Code.First(t => t.Name.Content == name);
-                GlobalDecompileContext context = new(Data, false);
-                string text = Decompiler.Decompile(target, context);
-                text = Regex.Replace(text, "\\[.*\\]", ret);
-                target.ReplaceGML(text, Data);
+            string ret = JsonConvert.SerializeObject(table).Replace("\n", "");
+            UndertaleCode target = Data.Code.First(t => t.Name.Content == name);
+            GlobalDecompileContext context = new(Data, false);
+            string text = Decompiler.Decompile(target, context);
+            text = Regex.Replace(text, "\\[.*\\]", ret);
+            target.ReplaceGML(text, Data);
 
-                Log.Information("Successfully set table: {0}", name);
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            Log.Information("Successfully set table: {0}", name);
         }
         public static void LoadFiles()
         {
@@ -134,34 +118,28 @@ namespace ModShardLauncher
                     Log.Information(ex, "Cannot read the mod {0}", file);
                 }
                 if (f == null) continue;
-                try
+
+                Assembly assembly = f.Assembly;
+                // for array or list, use the available search method instead of Linq one
+                // use the Linq ones for IEnumerable
+                Type? modType = Array.Find(assembly.GetTypes(), t => t.IsSubclassOf(typeof(Mod)));
+
+                if (modType == null)
                 {
-                    Assembly assembly = f.Assembly;
-                    // for array or list, use the available search method instead of Linq one
-                    // use the Linq ones for IEnumerable
-                    Type? modType = Array.Find(assembly.GetTypes(), t => t.IsSubclassOf(typeof(Mod)));
-
-                    if (modType == null)
-                    {
-                        MessageBox.Show("加载错误: " + assembly.GetName().Name + " 此Mod需要一个Mod类");
-                        continue;
-                    }
-                    else
-                    {
-                        if (Activator.CreateInstance(modType) is not Mod mod) continue;
-                        mod.LoadAssembly();
-                        mod.ModFiles = f;
-                        f.instance = mod;
-
-                        ModFile? old = mods.Find(t => t.Name == f.Name);
-                        if (old != null) f.isEnabled = old.isEnabled;
-
-                        modCaches.Add(f);
-                    }
+                    MessageBox.Show("加载错误: " + assembly.GetName().Name + " 此Mod需要一个Mod类");
+                    continue;
                 }
-                catch
+                else
                 {
-                    throw;
+                    if (Activator.CreateInstance(modType) is not Mod mod) continue;
+                    mod.LoadAssembly();
+                    mod.ModFiles = f;
+                    f.instance = mod;
+
+                    ModFile? old = mods.Find(t => t.Name == f.Name);
+                    if (old != null) f.isEnabled = old.isEnabled;
+
+                    modCaches.Add(f);
                 }
             }
             mods.Clear();

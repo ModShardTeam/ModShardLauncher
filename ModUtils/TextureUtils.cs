@@ -101,100 +101,58 @@ namespace ModShardLauncher
         }
         public static UndertaleSprite GetSprite(string name)
         {
-            try
-            {
-                UndertaleSprite sprite = ModLoader.Data.Sprites.First(t => t.Name.Content == name);
-                Log.Information("Found sprite: {0}", name);
-                return sprite;
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            UndertaleSprite sprite = ModLoader.Data.Sprites.First(t => t.Name.Content == name);
+            Log.Information("Found sprite: {0}", name);
+            return sprite;
         }
         public static UndertaleEmbeddedTexture GetEmbeddedTexture(string name)
         {
-            try
-            {
-                UndertaleEmbeddedTexture embeddedTexture = ModLoader.Data.EmbeddedTextures.First(t => t.Name.Content == name);
-                Log.Information("Found embedded texture: {0}", name);
-                return embeddedTexture;
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            UndertaleEmbeddedTexture embeddedTexture = ModLoader.Data.EmbeddedTextures.First(t => t.Name.Content == name);
+            Log.Information("Found embedded texture: {0}", name);
+            return embeddedTexture;
         }
         public static UndertaleTexturePageItem GetTexturePageItem(string name)
         {
-            try
-            {
-                UndertaleTexturePageItem texturePageItem = ModLoader.Data.TexturePageItems.First(t => t.Name.Content == name);
-                Log.Information("Found texture page item: {0}", name);
-                return texturePageItem;
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            UndertaleTexturePageItem texturePageItem = ModLoader.Data.TexturePageItems.First(t => t.Name.Content == name);
+            Log.Information("Found texture page item: {0}", name);
+            return texturePageItem;
         }
         public static string AddNewTexturePageItem(string embeddedTextureName, RectTexture source, RectTexture target, BoundingData<ushort> bounding)
         {
-            try
-            {
-                UndertaleEmbeddedTexture embeddedTexture = GetEmbeddedTexture(embeddedTextureName);
+            UndertaleEmbeddedTexture embeddedTexture = GetEmbeddedTexture(embeddedTextureName);
 
-                UndertaleTexturePageItem texturePageItem = CreateTexureItem(
-                    embeddedTexture, 
-                    source, 
-                    target, 
-                    bounding
-                );
-                ModLoader.Data.TexturePageItems.Add(texturePageItem);
-                Log.Information("Successfully added a new texture from: {0}", embeddedTextureName);
-                return texturePageItem.Name.Content;
-
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            UndertaleTexturePageItem texturePageItem = CreateTexureItem(
+                embeddedTexture, 
+                source, 
+                target, 
+                bounding
+            );
+            ModLoader.Data.TexturePageItems.Add(texturePageItem);
+            Log.Information("Successfully added a new texture from: {0}", embeddedTextureName);
+            return texturePageItem.Name.Content;
         }
         public static string AddNewSprite(string spriteName, List<string> texturePageItemNames, MarginData margin, OriginData origin, BoundingData<uint> bounding)
         {
-            try
+            UndertaleSprite newSprite = CreateSpriteNoCollisionMasks(
+                spriteName,
+                margin,
+                origin,
+                bounding
+            );
+
+            IEnumerable<UndertaleSprite.TextureEntry> texturePageItems = texturePageItemNames
+                .Select(x => GetTexturePageItem(x))
+                .Select(x => new UndertaleSprite.TextureEntry(){ Texture = x });
+
+            foreach(UndertaleSprite.TextureEntry texturePageItem in texturePageItems)
             {
-                UndertaleSprite newSprite = CreateSpriteNoCollisionMasks(
-                    spriteName,
-                    margin,
-                    origin,
-                    bounding
-                );
-
-                IEnumerable<UndertaleSprite.TextureEntry> texturePageItems = texturePageItemNames
-                    .Select(x => GetTexturePageItem(x))
-                    .Select(x => new UndertaleSprite.TextureEntry(){ Texture = x });
-
-                foreach(UndertaleSprite.TextureEntry texturePageItem in texturePageItems)
-                {
-                    newSprite.Textures.Add(texturePageItem);
-                }
-                
-                ModLoader.Data.Sprites.Add(newSprite);
-
-                Log.Information("Successfully added new sprite: {0}", newSprite.Name.Content);
-                return newSprite.Name.Content;
-
+                newSprite.Textures.Add(texturePageItem);
             }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            
+            ModLoader.Data.Sprites.Add(newSprite);
+
+            Log.Information("Successfully added new sprite: {0}", newSprite.Name.Content);
+            return newSprite.Name.Content;
         }
     }
 }

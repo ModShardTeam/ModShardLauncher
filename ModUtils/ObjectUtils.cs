@@ -138,16 +138,9 @@ namespace ModShardLauncher
         /// <returns></returns>
         public static UndertaleGameObject GetObject(string name)
         {
-            try
-            {
-                UndertaleGameObject gameObject = ModLoader.Data.GameObjects.First(t => t.Name.Content == name);
-                Log.Information("Found gameObject: {0}", name);
-                return gameObject;
-            }
-            catch
-            {
-                throw;
-            }
+            UndertaleGameObject gameObject = ModLoader.Data.GameObjects.First(t => t.Name.Content == name);
+            Log.Information("Found gameObject: {0}", name);
+            return gameObject;
         }
         /// <summary>
         /// Replace the <see cref="UndertaleGameObject"/> named <paramref name="name"/> by <paramref name="o"/>. 
@@ -157,17 +150,9 @@ namespace ModShardLauncher
         /// <returns></returns>
         public static void SetObject(string name, UndertaleGameObject o)
         {
-            try
-            {
-                (int indexObj, _) = ModLoader.Data.GameObjects.Enumerate().First(t => t.Item2.Name.Content == name);
-                ModLoader.Data.GameObjects[indexObj] = o;
-                Log.Information("Successfully replaced gameObject: {0}", name);
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            (int indexObj, _) = ModLoader.Data.GameObjects.Enumerate().First(t => t.Item2.Name.Content == name);
+            ModLoader.Data.GameObjects[indexObj] = o;
+            Log.Information("Successfully replaced gameObject: {0}", name);
         }
     }
 }

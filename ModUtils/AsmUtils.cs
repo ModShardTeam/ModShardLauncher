@@ -49,104 +49,55 @@ namespace ModShardLauncher
         }
         public static string GetAssemblyString(string fileName)
         {
-            try 
-            {
-                UndertaleCode originalCode = GetUMTCodeFromFile(fileName);
-                return originalCode.Disassemble(ModLoader.Data.Variables, ModLoader.Data.CodeLocals.For(originalCode));
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            UndertaleCode originalCode = GetUMTCodeFromFile(fileName);
+            return originalCode.Disassemble(ModLoader.Data.Variables, ModLoader.Data.CodeLocals.For(originalCode));
         }
         public static void SetAssemblyString(string codeAsString, string fileName)
         {
-            try 
-            {
-                UndertaleCode originalCode = GetUMTCodeFromFile(fileName);
-                originalCode.Replace(Assembler.Assemble(codeAsString, ModLoader.Data));
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            UndertaleCode originalCode = GetUMTCodeFromFile(fileName);
+            originalCode.Replace(Assembler.Assemble(codeAsString, ModLoader.Data));
         }
         public static void InsertAssemblyString(string codeAsString, string fileName, int position)
         {
-            try 
-            {
-                Log.Information("Trying insert assembly in: {0}", fileName);
+            Log.Information("Trying insert assembly in: {0}", fileName);
 
-                List<string>? originalCode = GetAssemblyString(fileName).Split("\n").ToList();
-                originalCode.Insert(position, codeAsString);
-                SetAssemblyString(string.Join("\n", originalCode), fileName);
+            List<string>? originalCode = GetAssemblyString(fileName).Split("\n").ToList();
+            originalCode.Insert(position, codeAsString);
+            SetAssemblyString(string.Join("\n", originalCode), fileName);
 
-                Log.Information("Patched function with InsertAssemblyString: {0}", fileName);
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            Log.Information("Patched function with InsertAssemblyString: {0}", fileName);
         }
         public static void ReplaceAssemblyString(string codeAsString, string fileName, int position)
         {
-            try 
-            {
-                Log.Information("Trying replace assembly in: {0}", fileName);
+            Log.Information("Trying replace assembly in: {0}", fileName);
 
-                List<string>? originalCode = GetAssemblyString(fileName).Split("\n").ToList();
-                originalCode[position] = codeAsString;
-                SetAssemblyString(string.Join("\n", originalCode), fileName);
+            List<string>? originalCode = GetAssemblyString(fileName).Split("\n").ToList();
+            originalCode[position] = codeAsString;
+            SetAssemblyString(string.Join("\n", originalCode), fileName);
 
-                Log.Information("Patched function with ReplaceAssemblyString: {0}", fileName);
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            Log.Information("Patched function with ReplaceAssemblyString: {0}", fileName);
         }
         public static void ReplaceAssemblyString(string codeAsString, string fileName, int start, int len)
         {
-            try 
-            {
-                Log.Information("Trying replace assembly in: {0}", fileName);
+            Log.Information("Trying replace assembly in: {0}", fileName);
 
-                List<string>? originalCode = GetAssemblyString(fileName).Split("\n").ToList();
-                originalCode[start] = codeAsString;
-                for (int i = 1; i < Math.Min(len, originalCode.Count - start); i++) {
-                    originalCode[start + i] = "";
-                }
-
-                SetAssemblyString(string.Join("\n", originalCode), fileName);
-
-                Log.Information("Patched function with ReplaceAssemblyString: {0}", fileName);
+            List<string>? originalCode = GetAssemblyString(fileName).Split("\n").ToList();
+            originalCode[start] = codeAsString;
+            for (int i = 1; i < Math.Min(len, originalCode.Count - start); i++) {
+                originalCode[start + i] = "";
             }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            SetAssemblyString(string.Join("\n", originalCode), fileName);
+
+            Log.Information("Patched function with ReplaceAssemblyString: {0}", fileName);
         }
         public static void InjectAssemblyInstruction(string name, Func<IEnumerable<UndertaleInstruction>, IEnumerable<UndertaleInstruction>> patch)
         {
-            try 
-            {
-                Log.Information("Trying inject assembly in: {0}", name);
+            Log.Information("Trying inject assembly in: {0}", name);
 
-                UndertaleCode originalCode = GetUMTCodeFromFile(name);
-                originalCode.Replace(patch(originalCode.Instructions).ToList());
+            UndertaleCode originalCode = GetUMTCodeFromFile(name);
+            originalCode.Replace(patch(originalCode.Instructions).ToList());
 
-                Log.Information("Patched function with InjectAssemblyInstruction: {0}", name);
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            Log.Information("Patched function with InjectAssemblyInstruction: {0}", name);
         }
     }
     public static class AssemblyWrapper
@@ -226,52 +177,38 @@ namespace ModShardLauncher
         }
         public static void CheckRefVariableOrCreate(string name, UndertaleInstruction.InstanceType instanceType)
         {
-            try
+            UndertaleVariable? variable = null;
+            if (instanceType == UndertaleInstruction.InstanceType.Local)
             {
-                UndertaleVariable? variable = null;
-                if (instanceType == UndertaleInstruction.InstanceType.Local)
-                {
-                    throw new ArgumentException("Wrong method used for checking Local Variables");
-                }
-                else
-                {
-                    variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name && t.InstanceType == instanceType);
-                }
-
-                if (variable == null)
-                {
-                    CreateRefVariable(name, instanceType);
-                }
-                else
-                {
-                    Log.Information("Found variable: {0} of type {1}", variable.Name.Content, variable.InstanceType);
-                }
+                throw new ArgumentException("Wrong method used for checking Local Variables");
             }
-            catch
+            else
             {
-                throw;
+                variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name && t.InstanceType == instanceType);
+            }
+
+            if (variable == null)
+            {
+                CreateRefVariable(name, instanceType);
+            }
+            else
+            {
+                Log.Information("Found variable: {0} of type {1}", variable.Name.Content, variable.InstanceType);
             }
         }
         public static UndertaleInstruction.Reference<UndertaleVariable> GetRefVariableOrCreate(string name, UndertaleInstruction.InstanceType instanceType)
         {
-            try 
-            {
-                UndertaleInstruction.Reference<UndertaleVariable> refVariable;
-                UndertaleVariable? variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name);
-                
-                if (variable == null) 
-                    refVariable = CreateRefVariable(name, instanceType);
-                else
-                    refVariable = new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
+            UndertaleInstruction.Reference<UndertaleVariable> refVariable;
+            UndertaleVariable? variable = ModLoader.Data.Variables.FirstOrDefault(t => t.Name?.Content == name);
+            
+            if (variable == null)
+                refVariable = CreateRefVariable(name, instanceType);
+            else
+                refVariable = new UndertaleInstruction.Reference<UndertaleVariable>(variable, UndertaleInstruction.VariableType.Normal);
 
-                Log.Information("Found variable: {0}", refVariable);
+            Log.Information("Found variable: {0}", refVariable);
 
-                return refVariable;
-            }
-            catch
-            {
-                throw;
-            }
+            return refVariable;
         }
         public static string CreateLocalVarAssemblyAsString(UndertaleCode code)
         {
@@ -303,23 +240,17 @@ namespace ModShardLauncher
         }
         public static UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> GetStringOrCreate(string name)
         {
-            try {
-                UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> stringById;
-                (int ind, UndertaleString str) = ModLoader.Data.Strings.Enumerate().FirstOrDefault(x => x.Item2.Content == name);
-                
-                if (str == null)
-                    stringById = CreateString(name);
-                else
-                    stringById = new UndertaleResourceById<UndertaleString, UndertaleChunkSTRG>(str, ind);
+            UndertaleResourceById<UndertaleString, UndertaleChunkSTRG> stringById;
+            (int ind, UndertaleString str) = ModLoader.Data.Strings.Enumerate().FirstOrDefault(x => x.Item2.Content == name);
+            
+            if (str == null)
+                stringById = CreateString(name);
+            else
+                stringById = new UndertaleResourceById<UndertaleString, UndertaleChunkSTRG>(str, ind);
 
-                Log.Information("Find string: {0}", stringById);
+            Log.Information("Find string: {0}", stringById);
 
-                return stringById;
-            }
-            catch(Exception ex) {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            return stringById;
         }
         public static UndertaleInstruction PushShort(short val)
         {

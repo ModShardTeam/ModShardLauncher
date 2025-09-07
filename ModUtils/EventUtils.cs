@@ -42,14 +42,7 @@ namespace ModShardLauncher
         /// <param name="modFile"></param>
         public void Apply(string objectName, ModFile modFile)
         {
-            try
-            {
-                Msl.AddNewEvent(objectName, modFile.GetCode(Code), EventType, Subtype);
-            }
-            catch
-            {
-                throw;
-            }
+            Msl.AddNewEvent(objectName, modFile.GetCode(Code), EventType, Subtype);
         }
         /// <summary>
         /// Given a <paramref name="gameObject"/>, load the source code of the event and add it in the data.win through the <see cref="AddNewEvent"/> function.
@@ -58,14 +51,7 @@ namespace ModShardLauncher
         /// <param name="modFile"></param>
         public void Apply(UndertaleGameObject gameObject, ModFile modFile)
         {
-            try
-            {
-                Msl.AddNewEvent(gameObject, modFile.GetCode(Code), EventType, Subtype);
-            }
-            catch
-            {
-                throw;
-            }
+            Msl.AddNewEvent(gameObject, modFile.GetCode(Code), EventType, Subtype);
         }
         /// <summary>
         /// Given an <see cref="UndertaleGameObject"/> named <paramref name="objectName"/>, load the source code of the event and add it in the data.win through the <see cref="AddNewEvent"/> function.
@@ -74,14 +60,7 @@ namespace ModShardLauncher
         /// <param name="modFile"></param>
         public void Apply(string objectName)
         {
-            try
-            {
-                Msl.AddNewEvent(objectName, Code, EventType, Subtype);
-            }
-            catch
-            {
-                throw;
-            }
+            Msl.AddNewEvent(objectName, Code, EventType, Subtype);
         }
         /// <summary>
         /// Given a <paramref name="gameObject"/>, load the source code of the event and add it in the data.win through the <see cref="AddNewEvent"/> function.
@@ -90,14 +69,7 @@ namespace ModShardLauncher
         /// <param name="modFile"></param>
         public void Apply(UndertaleGameObject objectName)
         {
-            try
-            {
-                Msl.AddNewEvent(objectName, Code, EventType, Subtype);
-            }
-            catch
-            {
-                throw;
-            }
+            Msl.AddNewEvent(objectName, Code, EventType, Subtype);
         }
     }
     public static partial class Msl
@@ -137,43 +109,35 @@ namespace ModShardLauncher
         /// <param name="asAsm"></param>
         public static void AddNewEvent(string objectName, string eventCode, EventType eventType, uint subtype, bool asAsm = false)
         {
-            try
+            CheckSubEvent(eventType, subtype);
+            // find the object
+            UndertaleGameObject gameObject = GetObject(objectName);
+            // check if the subEvent already exists
+            Event? subtypeObj = gameObject.Events[(int)eventType].FirstOrDefault(x => x.EventSubtype == subtype);
+            if (subtypeObj != null)
             {
-                CheckSubEvent(eventType, subtype);
-                // find the object
-                UndertaleGameObject gameObject = GetObject(objectName);
-                // check if the subEvent already exists
-                Event? subtypeObj = gameObject.Events[(int)eventType].FirstOrDefault(x => x.EventSubtype == subtype);
-                if (subtypeObj != null)
-                {
-                    throw new ArgumentException(string.Format("Cannot add the event {0}_{1} in {2} since it already exists", eventType, subtype, objectName));
-                }
+                throw new ArgumentException(string.Format("Cannot add the event {0}_{1} in {2} since it already exists", eventType, subtype, objectName));
+            }
 
-                // create a new code
-                string newEventName = EventName(objectName, eventType, subtype);
-                if (asAsm)
-                {
-                    AddCodeAsm(eventCode, newEventName);
-                }
-                else
-                {
-                    AddCode(eventCode, newEventName);
-                }
-                // add the previous code to the event
-                Event newEvent = new() { EventSubtype = subtype };
-                newEvent.Actions.Add(new EventAction()
-                {
-                    CodeId = GetUMTCodeFromFile(newEventName),
-                });
-                
-                gameObject.Events[(int)eventType].Add(newEvent);
-                Log.Information("Successfully added event {{{0}_{1}}} in object {{{2}}}", eventType, subtype, objectName);
-            }
-            catch(Exception ex)
+            // create a new code
+            string newEventName = EventName(objectName, eventType, subtype);
+            if (asAsm)
             {
-                Log.Error(ex, "Something went wrong");
-                throw;
+                AddCodeAsm(eventCode, newEventName);
             }
+            else
+            {
+                AddCode(eventCode, newEventName);
+            }
+            // add the previous code to the event
+            Event newEvent = new() { EventSubtype = subtype };
+            newEvent.Actions.Add(new EventAction()
+            {
+                CodeId = GetUMTCodeFromFile(newEventName),
+            });
+            
+            gameObject.Events[(int)eventType].Add(newEvent);
+            Log.Information("Successfully added event {{{0}_{1}}} in object {{{2}}}", eventType, subtype, objectName);
         }
         /// <summary>
         /// Add a new event (<paramref name="eventType"/>, <paramref name="subtype"/>) associated to a <paramref name="gameObject"/>. 
@@ -185,14 +149,7 @@ namespace ModShardLauncher
         /// <param name="subtype"></param>
         public static void AddNewEvent(UndertaleGameObject objectName, string eventCode, EventType eventType, uint subtype)
         {
-            try
-            {
-                AddNewEvent(objectName, eventCode, eventType, subtype, false);
-            }
-            catch
-            {
-                throw;
-            }
+            AddNewEvent(objectName, eventCode, eventType, subtype, false);
         }
         /// <summary>
         /// Add a new event (<paramref name="eventType"/>, <paramref name="subtype"/>) associated to a <paramref name="gameObject"/>. 
@@ -204,42 +161,34 @@ namespace ModShardLauncher
         /// <param name="subtype"></param>
         public static void AddNewEvent(UndertaleGameObject gameObject, string eventCode, EventType eventType, uint subtype, bool asAsm = false)
         {
-            try
+            CheckSubEvent(eventType, subtype);
+            // check if the subEvent already exists
+            Event? subtypeObj = gameObject.Events[(int)eventType].FirstOrDefault(x => x.EventSubtype == subtype);
+            if (subtypeObj != null)
             {
-                CheckSubEvent(eventType, subtype);
-                // check if the subEvent already exists
-                Event? subtypeObj = gameObject.Events[(int)eventType].FirstOrDefault(x => x.EventSubtype == subtype);
-                if (subtypeObj != null)
-                {
-                    throw new ArgumentException(string.Format("Cannot add the event {0}_{1} in {2} since it already exists", eventType, subtype, gameObject.Name.Content));
-                }
-
-                // create a new code
-                string newEventName = EventName(gameObject.Name.Content, eventType, subtype);
-
-                if (asAsm)
-                {
-                    AddCodeAsm(eventCode, newEventName);
-                }
-                else
-                {
-                    AddCode(eventCode, newEventName);
-                }
-                // add the previous code to the event
-                Event newEvent = new() { EventSubtype = subtype };
-                newEvent.Actions.Add(new EventAction()
-                {
-                    CodeId = GetUMTCodeFromFile(newEventName),
-                });
-                
-                gameObject.Events[(int)eventType].Add(newEvent);
-                Log.Information("Successfully added event {{{0}_{1}}} in object {{{2}}}", eventType, subtype, gameObject.Name.Content);
+                throw new ArgumentException(string.Format("Cannot add the event {0}_{1} in {2} since it already exists", eventType, subtype, gameObject.Name.Content));
             }
-            catch(Exception ex)
+
+            // create a new code
+            string newEventName = EventName(gameObject.Name.Content, eventType, subtype);
+
+            if (asAsm)
             {
-                Log.Error(ex, "Something went wrong");
-                throw;
+                AddCodeAsm(eventCode, newEventName);
             }
+            else
+            {
+                AddCode(eventCode, newEventName);
+            }
+            // add the previous code to the event
+            Event newEvent = new() { EventSubtype = subtype };
+            newEvent.Actions.Add(new EventAction()
+            {
+                CodeId = GetUMTCodeFromFile(newEventName),
+            });
+            
+            gameObject.Events[(int)eventType].Add(newEvent);
+            Log.Information("Successfully added event {{{0}_{1}}} in object {{{2}}}", eventType, subtype, gameObject.Name.Content);
         }
         /// <summary>
         /// Check if the combination <paramref name="eventType"/> and <paramref name="subtype"/> are correct. Raise an exception if not.
