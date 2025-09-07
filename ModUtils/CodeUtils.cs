@@ -470,7 +470,10 @@ namespace ModShardLauncher
 
             if (!foundMatch)
             {
-                throw new Exception("MatchFrom: No matching lines found. Items to match: " + string.Join(", ", other));
+                throw new InvalidOperationException(string.Format(
+                    "MatchFrom: No matching lines found. Items to match:\n{0}",
+                    string.Join("\n", other))
+                );
             }
         }
 
@@ -549,7 +552,10 @@ namespace ModShardLauncher
 
             if (!encounteredTheBlock)
             {
-                throw new Exception("MatchBelow: No matching lines found. Items to match: " + string.Join("\r\n", other));
+                throw new InvalidOperationException(
+                    string.Format("MatchBelow: No matching lines found. Items to match:\n{0}",
+                    string.Join("\n", other))
+                );
             }
         }
         /// <summary>
@@ -652,6 +658,15 @@ namespace ModShardLauncher
                     exitMatching = true;
                     yield return (Match.After, element);
                 }
+            }
+
+            if (!foundUntil)
+            {
+                throw new InvalidOperationException(
+                    string.Format("MatchFromUntil: No matching lines found. Items to match:\nFrom\n{0}\nTo\n{1}",
+                    string.Join("\n", otherfrom),
+                    string.Join("\n", otheruntil))
+                );
             }
         }
         /// <summary>
@@ -991,8 +1006,10 @@ namespace ModShardLauncher
                     fe.header.patchingWay
                 );
             }
-            catch
+            catch (Exception ex)
             {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay.ToString());
                 throw;
             }
         }
