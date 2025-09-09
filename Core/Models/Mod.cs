@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ModShardLauncher.Mods
+﻿namespace ModShardLauncher.Core.Models
 {
     public class Mod
     {
@@ -20,31 +12,23 @@ namespace ModShardLauncher.Mods
         public virtual string ShortDesc { get => "未知"; }
         public virtual string Version { get => "v0.0.0.0"; }
         public virtual string TargetVersion { get => "v0.0.0.0"; }
-        public List<Weapon> ModWeapons = new();
         public ModFile ModFiles = new();
         public Mod() { }
-        public virtual void LoadAssembly()
-        {
-
-        }
         public virtual void PatchMod()
         {
 
         }
-    }
-    public enum ModLanguage
-    {
-        Russian,
-        English,
-        Chinese,
-        German,
-        Spanish,
-        French,
-        Italian,
-        Portuguese,
-        Polish,
-        Turkish,
-        Japanese,
-        Korean
+        public byte[] GetFile(string fileName)
+        {
+            return ModFiles.GetFile(fileName);
+        }
+        public string GetCode(string fileName)
+        {
+            return ModFiles.GetCode(fileName);
+        }
+        public bool FileExist(string fileName)
+        {
+            return GetFile(fileName).Length > 0;
+        }
     }
 }

@@ -5,15 +5,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Threading;
-using UndertaleModLib;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using System.Runtime.InteropServices;
-using ModShardLauncher.Mods;
 using System.Diagnostics;
 using UndertaleModLib.Models;
+using ModShardLauncher.Core.Models;
 
 namespace ModShardLauncher
 {

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Controls;
-using Serilog;
+using ModShardLauncher.Core.Models;
 
 namespace ModShardLauncher.Controls
 {

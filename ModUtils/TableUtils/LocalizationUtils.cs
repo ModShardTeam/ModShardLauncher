@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using ModShardLauncher.Mods;
+using ModShardLauncher.Core.Models;
 
 namespace ModShardLauncher;
 

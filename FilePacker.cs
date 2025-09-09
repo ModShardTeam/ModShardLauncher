@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using Serilog;
-using System.Diagnostics;
 using ModShardPackerReference;
+using ModShardLauncher.Core.Models;
 
 namespace ModShardLauncher
 {
@@ -25,7 +25,7 @@ namespace ModShardLauncher
                     ModLoader.ModPath, 
                     path, 
                     Main.Instance.mslVersion, 
-                    new Type[2] {typeof(ModShardLauncher.Mods.Mod), typeof(UndertaleModLib.Models.UndertaleCode)}
+                    new Type[2] {typeof(Mod), typeof(UndertaleModLib.Models.UndertaleCode)}
                 );
             }
             catch(Exception ex)

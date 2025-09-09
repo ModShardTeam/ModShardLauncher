@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ModShardLauncher.Mods;
 using System.Linq;
 using System.Windows;
 using UndertaleModLib;
@@ -13,6 +12,7 @@ using System.Reflection;
 using UndertaleModLib.Models;
 using ModShardLauncher.Controls;
 using Serilog;
+using ModShardLauncher.Core.Models;
 
 namespace ModShardLauncher
 {
@@ -130,9 +130,7 @@ namespace ModShardLauncher
                     Log.Information(ex, string.Format("Cannot read the mod {0}", file));
                 }
                 if (f == null) continue;
-                try
-                {
-                    Assembly assembly = f.Assembly;
+                Assembly assembly = f.Assembly;
                     // for array or list, use the available search method instead of Linq one
                     // use the Linq ones for IEnumerable
                     Type? modType = Array.Find(assembly.GetTypes(), t => t.IsSubclassOf(typeof(Mod)));
@@ -145,20 +143,14 @@ namespace ModShardLauncher
                     else
                     {
                         if (Activator.CreateInstance(modType) is not Mod mod) continue;
-                        mod.LoadAssembly();
                         mod.ModFiles = f;
-                        f.instance = mod;
+                        f.Instance = mod;
 
                         ModFile? old = mods.Find(t => t.Name == f.Name);
                         if (old != null) f.Enabled = old.Enabled;
 
                         modCaches.Add(f);
                     }
-                }
-                catch
-                {
-                    throw;
-                }
             }
             mods.Clear();
             modCaches.ForEach(i => {
@@ -189,7 +181,7 @@ namespace ModShardLauncher
                     Log.Warning("Mod {{{0}}} was built with msl {{{1}}} which is different from the current msl {{{2}}}", mod.Name, mod.Version, Main.Instance.mslVersion);
                 }
                 TextureLoader.LoadTextures(mod);
-                mod.instance.PatchMod();
+                mod.Instance.PatchMod();
                 mod.PatchStatus = PatchStatus.Success;
                 Main.LogModStatus(mod);
             }

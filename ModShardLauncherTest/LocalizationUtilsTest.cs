@@ -1,4 +1,4 @@
-using ModShardLauncher.Mods;
+using ModShardLauncher.Core.Models;
 using System.Reflection;
 
 namespace ModShardLauncherTest
@@ -26,7 +26,7 @@ namespace ModShardLauncherTest
             };
 
             // Act
-            MethodInfo? methodInfo = typeof(ModShardLauncher.Localization).GetMethod("ToDict", BindingFlags.NonPublic | BindingFlags.Static);
+            MethodInfo? methodInfo = typeof(Localization).GetMethod("ToDict", BindingFlags.NonPublic | BindingFlags.Static);
             if (methodInfo == null)
             {
                 Assert.Fail("Cannot find the tested method ToDict");
