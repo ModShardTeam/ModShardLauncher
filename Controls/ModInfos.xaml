@@ -26,13 +26,35 @@
                         <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/save_over.png"/>
                     </controls:MyToggleButton.Resources>
                 </controls:MyToggleButton>
-                <controls:MyToggleButton ImageSource="/Resources/Sprites/server.png" Click="Server_Click" ToolTip="Open Mod Server"
-                         Margin="128,0,0,0">
-                    <controls:MyToggleButton.Resources>
-                        <ImageBrush x:Key="DownSource"  ImageSource="/Resources/Sprites/server_down.png"/>
-                        <ImageBrush x:Key="OverSource"  ImageSource="/Resources/Sprites/server_over.png"/>
-                    </controls:MyToggleButton.Resources>
-                </controls:MyToggleButton>
+                <CheckBox ToolTip="Select All Mods" Margin="128,0,0,0" IsChecked="{Binding SelectAll, Mode=TwoWay}">
+                    <CheckBox.Style>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="IsChecked" Value="False"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="CheckBox">
+                                        <DockPanel Background="{TemplateBinding Background}"
+                                                LastChildFill="False" Width="{TemplateBinding Width}"
+                                                RenderOptions.BitmapScalingMode="NearestNeighbor">
+                                            <Image Height="32" Width="32"
+                                                x:Name="_img" Stretch="Fill" Source="/Resources/Sprites/checkbox_0.png"/>
+                                        </DockPanel>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsChecked" Value="True">
+                                                <Setter TargetName="_img" Property="Source" Value="/Resources/Sprites/checkbox_1.png"/>
+                                            </Trigger>
+                                            <Trigger Property="IsChecked" Value="{x:Null}">
+                                                <Setter TargetName="_img" Property="Source" Value="/Resources/Sprites/checkbox_2.png"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </CheckBox.Style>
+                </CheckBox>
                 <Border BorderBrush="#43424D" BorderThickness="2"/>
             </Grid>
             <controls:MyItemsControl MaxHeight="672" Height="672" x:Name="ModList"

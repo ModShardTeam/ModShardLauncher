@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -14,13 +15,29 @@ namespace ModShardLauncher.Controls
     /// <summary>
     /// ModInfos.xaml 的交互逻辑
     /// </summary>
-    public partial class ModInfos : UserControl
+    public partial class ModInfos : UserControl, INotifyPropertyChanged
     {
         public static ModInfos Instance;
         public List<ModFile> Mods { get; set; } = new();
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private bool _selectAll;
+        public bool SelectAll
+        {
+            get { return _selectAll; }
+            set
+            {
+                if (_selectAll != value)
+                {
+                    _selectAll = value;
+                    OnPropertyRaised(nameof(SelectAll));
+                    SelectAllMods();
+                }
+            }
+        }
         public ModInfos()
         {
             InitializeComponent();
+            this.DataContext = this;
             Instance = this;
         }
         private async void Open_Click(object sender, EventArgs e)
@@ -70,11 +87,16 @@ namespace ModShardLauncher.Controls
             await DataLoader.LoadFile(DataLoader.dataPath, true);
             Main.Instance.Refresh();
         }
-
-        private void Server_Click(object sender, EventArgs e)
+        private void OnPropertyRaised(string propertyname)
         {
-            ModInterfaceServer.StartServer(1333);
-            Main.Instance.Refresh();
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyname));
+        }
+        private void SelectAllMods()
+        {
+            foreach (ModFile mod in Mods)
+            {
+                mod.Enabled = true;
+            }
         }
     }
 }
