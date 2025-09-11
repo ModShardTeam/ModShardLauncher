@@ -21,7 +21,7 @@
     <Compile Include="Mods/*.cs" />
     <Compile Include="Controls/*.cs" />
     <Compile Include="ModUtils/*.cs" />
-    <Compile Include="Core/TopologicalOrdering/*.cs" />
+    <Compile Include="Core/**/*.cs" />
   </ItemGroup>
 
   <ItemGroup>

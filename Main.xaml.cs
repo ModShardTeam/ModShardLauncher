@@ -156,6 +156,10 @@ namespace ModShardLauncher
             }
             Log.Warning("Patching {{{2}}} for {{{0}}} {{{1}}}", modFile.Name, modFile.Version, statusMessage);
         }
+        public ModFile GetFailingMod()
+        {
+            return ModPage.Mods.Where(x => x.Enabled).First(x => x.PatchStatus == PatchStatus.Patching); ;
+        }
         private void MyToggleButton_Checked(object sender, EventArgs e)
         {
             foreach (var i in stackPanel.Children)

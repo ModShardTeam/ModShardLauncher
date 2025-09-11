@@ -13,6 +13,7 @@ using System.Reflection;
 using UndertaleModLib.Models;
 using ModShardLauncher.Controls;
 using Serilog;
+using ModShardLauncher.Core.Errors;
 
 namespace ModShardLauncher
 {
@@ -183,7 +184,7 @@ namespace ModShardLauncher
             Msl.ChainDisclaimerRooms(Disclaimers);
             Msl.CreateMenu(Menus);
         }
-        public static bool PatchFile()
+        public static MSLDiagnostic? PatchFile()
         {
             try
             {
@@ -192,26 +193,13 @@ namespace ModShardLauncher
                 PatchMods();
                 // add the new loot related functions if there is any
                 LootUtils.InjectLootScripts();
-                return true;
+                return null;
             }
             catch (Exception ex)
             {
-                string extraInformation = "";
-                object? fileName = null;
-                object? patchingWay = null;
-                if (ex.Data.Contains("fileName"))
-                {
-                    fileName = ex.Data["fileName"];
-                    extraInformation += " in file {{{0}}}";
-                }
-                if (ex.Data.Contains("patchingWay"))
-                {
-                    patchingWay = ex.Data["patchingWay"];
-                    extraInformation += " while patching by {{{1}}}";
-                }
-
-                Log.Error(ex, "Something went wrong" + extraInformation, fileName, patchingWay);
-                return false;
+                MSLDiagnostic diag = new(ex, Main.Instance.GetFailingMod());
+                diag.ToLog();
+                return diag;
             }
         }
     }

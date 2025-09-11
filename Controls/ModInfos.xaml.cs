@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using ModShardLauncher.Core.Errors;
 using ModShardLauncher.Mods;
 using Serilog;
 
@@ -36,7 +37,9 @@ namespace ModShardLauncher.Controls
                 return;
             }
 
-            if (ModLoader.PatchFile())
+            MSLDiagnostic? diag = ModLoader.PatchFile();
+
+            if (diag is null)
             {
                 Main.Instance.LogModListStatus();
                 Log.Information("Successfully patch vanilla");
@@ -56,7 +59,9 @@ namespace ModShardLauncher.Controls
             {
                 Main.Instance.LogModListStatus();
                 Log.Information("Failed patching vanilla");
-                MessageBox.Show("Patching failed, more information can be found in the logs.", Application.Current.FindResource("SaveDataWarning").ToString());
+                string messageBoxText = "Do you want to save changes?";
+                string caption = diag.Title();
+                MessageBox.Show(messageBoxText, caption);
             }
 
             // reload the data
