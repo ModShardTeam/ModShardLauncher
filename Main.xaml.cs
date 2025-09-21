@@ -38,6 +38,7 @@ namespace ModShardLauncher
         public static IntPtr handle;
         public string mslVersion;
         public string utmtlibVersion;
+        public readonly string logPath = "logs";
         private const double DefaultWidth = 960;                  // Исходная ширина
         private const double DefaultHeight = 800;                 // Исходная высота
         private const double AspectRatio = DefaultWidth / DefaultHeight; // Соотношение сторон
@@ -61,7 +62,7 @@ namespace ModShardLauncher
             // create File and Console (controlledby a switch) sinks
             LoggerConfiguration logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.File(string.Format("logs/log_{0}.txt", DateTime.Now.ToString("yyyyMMdd_HHmm")))
+                .WriteTo.File(string.Format("{0}/log_{1}.txt", logPath, DateTime.Now.ToString("yyyyMMdd_HHmm")))
                 .WriteTo.Logger(log => log
                     .MinimumLevel.ControlledBy(lls)
                     .WriteTo.Console()

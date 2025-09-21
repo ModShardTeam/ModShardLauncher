@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using ModShardLauncher.Core.Errors;
+using ModShardLauncher.Core.UI;
 using ModShardLauncher.Mods;
 using Serilog;
 
@@ -59,9 +60,7 @@ namespace ModShardLauncher.Controls
             {
                 Main.Instance.LogModListStatus();
                 Log.Information("Failed patching vanilla");
-                string messageBoxText = "Do you want to save changes?";
-                string caption = diag.Title();
-                MessageBox.Show(messageBoxText, caption);
+                ErrorMessageDialog.Show(diag.Title(), diag.MessageDialog(), Main.Instance.logPath);
             }
 
             // reload the data
