@@ -131,6 +131,7 @@ namespace ModShardLauncher
 
                 if (modType == null)
                 {
+                    // MessageBox.Show("Loading error: " + assembly.GetName().Name + " This Mod need a Mod class");
                     MessageBox.Show("加载错误: " + assembly.GetName().Name + " 此Mod需要一个Mod类");
                     continue;
                 }
