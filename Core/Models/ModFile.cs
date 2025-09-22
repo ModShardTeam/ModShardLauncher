@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows;
+using ModShardLauncher.Mods;
 using Serilog;
 
 namespace ModShardLauncher.Core.Models

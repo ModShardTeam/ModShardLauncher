@@ -14,6 +14,7 @@ using ModShardLauncher.Controls;
 using Serilog;
 using ModShardLauncher.Core.Errors;
 using ModShardLauncher.Core.Models;
+using ModShardLauncher.Mods;
 
 namespace ModShardLauncher
 {
@@ -77,14 +78,9 @@ namespace ModShardLauncher
 
             Log.Information("Successfully set table: {0}", name);
         }
-        public static void LoadFiles()
+        private static void LoadSourceFiles()
         {
-            List<ModFile> mods = Main.Instance.ModPage.Mods;
             List<ModSource> modSources = Main.Instance.ModSourcePage.ModSources;
-            foreach(ModFile i in mods)
-                i.Stream?.Close();
-            
-            List<ModFile> modCaches = new();
             modSources.Clear();
 
             // List all folders being a C# project
@@ -96,11 +92,11 @@ namespace ModShardLauncher
                 .Where(
                     x => Directory
                         .EnumerateFiles(x, "*.csproj", SearchOption.TopDirectoryOnly)
-                        .FirstOrDefault() 
+                        .FirstOrDefault()
                         != null
             );
 
-            foreach(string source in sources)
+            foreach (string source in sources)
             {
                 ModSource info = new()
                 {
@@ -109,48 +105,106 @@ namespace ModShardLauncher
                 };
                 modSources.Add(info);
             }
+        }
+        private static bool GetConcreteType(Type typeToGet, Type t)
+        {
+            // expect a non interface, non abstract typeToGet and with a constructor without any parameter
+            return typeToGet.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract && t.GetConstructor(Type.EmptyTypes) != null;
+        }
+        private static ModFile? LoadModFile(string file)
+        {
+            ModFile? f = null;
+
+            // read the file
+            try
+            {
+                f = FileReader.Read(file);
+            }
+            catch (Exception ex)
+            {
+                Log.Information(ex, "Cannot read the mod {0}", file);
+            }
+            if (f == null) return null;
+
+            Assembly assembly = f.Assembly;
+            Type[] types;
+
+            // load all types in the assembly
+            try
+            {
+                types = assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                Log.Error("Failed to load types from assembly {0}: {1}", assembly.GetName().Name, ex.Message);
+                foreach (Exception? loaderEx in ex.LoaderExceptions.Where(e => e != null))
+                {
+                    Log.Warning("Loader exception: {LoaderError}", loaderEx!.Message);
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Unexpected error loading types from {0}: {1}", assembly.GetName().Name, ex.Message);
+                return null;
+            }
+
+            // capture the Mod type if it exists
+            Type? modType = Array.Find(types, t => GetConcreteType(typeof(Mod), t));
+
+            // check if Mod was correctly found
+            if (modType == null)
+            {
+                Log.Warning(
+                    "No valid Mod class found in assembly {0}. Expected a non-abstract class inheriting from Mod with parameterless constructor.",
+                    assembly.GetName().Name
+                );
+                return null;
+            }
+
+            try
+            {
+                if (Activator.CreateInstance(modType) is not Mod mod)
+                {
+                    Log.Error("Created instance of {0} is not assignable to Mod (this should not happen)", modType.Name);
+                    return null;
+                }
+                mod.ModFiles = f;
+                f.Instance = mod;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to create instance of mod type {0}: {1}", modType.Name, ex.Message);
+                return null;
+            }
+
+            return f;
+        }
+        private static void LoadModFiles()
+        {
+            List<ModFile> mods = Main.Instance.ModPage.Mods;
+            foreach (ModFile mod in mods) mod.Stream?.Close();
+            List<ModFile> modCaches = new();
 
             string[] files = Directory.GetFiles(ModPath, "*.sml");
+
             foreach (string file in files)
             {
-                ModFile? f = null;
-                try
-                {
-                    f = FileReader.Read(file);
-                }
-                catch(Exception ex)
-                {
-                    Log.Information(ex, "Cannot read the mod {0}", file);
-                }
+                ModFile? f = LoadModFile(file);
                 if (f == null) continue;
+                ModFile? old = mods.Find(t => t.Name == f.Name);
+                if (old != null) f.Enabled = old.Enabled;
 
-                Assembly assembly = f.Assembly;
-                // for array or list, use the available search method instead of Linq one
-                // use the Linq ones for IEnumerable
-                Type? modType = Array.Find(assembly.GetTypes(), t => t.IsSubclassOf(typeof(Mod)));
-
-                if (modType == null)
-                {
-                    // MessageBox.Show("Loading error: " + assembly.GetName().Name + " This Mod need a Mod class");
-                    MessageBox.Show("加载错误: " + assembly.GetName().Name + " 此Mod需要一个Mod类");
-                    continue;
-                }
-                else
-                {
-                    if (Activator.CreateInstance(modType) is not Mod mod) continue;
-                    mod.ModFiles = f;
-                    f.Instance = mod;
-
-                        ModFile? old = mods.Find(t => t.Name == f.Name);
-                        if (old != null) f.Enabled = old.Enabled;
-
-                    modCaches.Add(f);
-                }
+                modCaches.Add(f);
             }
+
             mods.Clear();
-            modCaches.ForEach(i => {
-                mods.Add(i);
-            });
+            mods.AddRange(modCaches);
+        }
+        public static void LoadFiles()
+        {
+            LoadSourceFiles();
+            LoadModFiles();
         }
         public static void PatchMods()
         {

@@ -37,17 +37,17 @@
             </Border>
             <Label Name="ModName" HorizontalAlignment="Left"
                    Margin="16,14,0,0" VerticalAlignment="Top"
-                   Content="{Binding instance.Name}" Foreground="White"
+                   Content="{Binding Instance.Name}" Foreground="White"
                    FontSize="15" Style="{StaticResource xFont}"/>
             <Label Name="ModAuthor" HorizontalAlignment="Right"
                    Margin="0,14,16,0" VerticalAlignment="Top"
-                   Content="{Binding instance.Author}" Foreground="White"
+                   Content="{Binding Instance.Author}" Foreground="White"
                    FontSize="15" Style="{StaticResource xFont}"/>
             <TextBlock x:Name="ModDescription" HorizontalAlignment="Left"
                        Margin="32,56,0,0" VerticalAlignment="Top"
                        Foreground="#9D9A9A" FontSize="10" Style="{StaticResource sFont}"
                        Width="320" MaxHeight="36"
-                       TextWrapping="Wrap" Text="{Binding instance.Description}"/>
+                       TextWrapping="Wrap" Text="{Binding Instance.Description}"/>
             <GridSplitter Width="2" Height="48" HorizontalAlignment="Center" VerticalAlignment="Bottom"
                           Margin="12" Background="#33323F"/>
             <CheckBox HorizontalAlignment="Right" Margin="0,32,128,0" Content="{DynamicResource Enable}"
@@ -89,7 +89,7 @@
                 <TextBlock Style="{StaticResource sFont}">
                     <Run Text="{DynamicResource ModVersion}"/>
                     <Run Text=":"/>
-                    <Run Text="{Binding instance.Version, Mode=OneWay}"/>
+                    <Run Text="{Binding Instance.Version, Mode=OneWay}"/>
                 </TextBlock>
             </Label>
             <Label Name="GameVersion" HorizontalAlignment="Right"

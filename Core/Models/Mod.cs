@@ -1,4 +1,6 @@
-﻿namespace ModShardLauncher.Core.Models
+﻿using ModShardLauncher.Core.Models;
+
+namespace ModShardLauncher.Mods
 {
     public class Mod
     {
@@ -14,10 +16,7 @@
         public virtual string TargetVersion { get => "v0.0.0.0"; }
         public ModFile ModFiles = new();
         public Mod() { }
-        public virtual void PatchMod()
-        {
-
-        }
+        public virtual void PatchMod() { }
         public byte[] GetFile(string fileName)
         {
             return ModFiles.GetFile(fileName);

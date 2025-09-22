@@ -2,7 +2,7 @@
 using System.IO;
 using Serilog;
 using ModShardPackerReference;
-using ModShardLauncher.Core.Models;
+using ModShardLauncher.Mods;
 
 namespace ModShardLauncher
 {
