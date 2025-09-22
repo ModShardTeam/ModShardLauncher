@@ -82,15 +82,22 @@ namespace ModShardLauncher
         }
         public static void SaveLootTables(string DirPath)
         {
-            if (LootTables.Count > 0)
+            try
             {
-                File.WriteAllText(Path.Combine(DirPath, "loot_table.json"), JsonConvert.SerializeObject(LootTables));
-                Log.Information("Successfully saving the loot table json.");
+                if (LootTables.Count > 0)
+                {
+                    File.WriteAllText(Path.Combine(DirPath, "loot_table.json"), JsonConvert.SerializeObject(LootTables));
+                    Log.Information("Successfully saving the loot table json.");
+                }
+                if (ReferenceTables.Count > 0)
+                {
+                    File.WriteAllText(Path.Combine(DirPath, "reference_table.json"), JsonConvert.SerializeObject(ReferenceTables));
+                    Log.Information("Successfully saving the reference table json.");
+                }
             }
-            if (ReferenceTables.Count > 0)
+            catch (Exception ex)
             {
-                File.WriteAllText(Path.Combine(DirPath, "reference_table.json"), JsonConvert.SerializeObject(ReferenceTables));
-                Log.Information("Successfully saving the reference table json.");
+                Log.Error(ex, "Saving Loot table failed for {0}", DirPath);
             }
         }
         public static void InjectLootScripts()

@@ -12,6 +12,7 @@ using System.Reflection;
 using UndertaleModLib.Models;
 using ModShardLauncher.Controls;
 using Serilog;
+using ModShardLauncher.Core.Errors;
 using ModShardLauncher.Core.Models;
 
 namespace ModShardLauncher
@@ -67,22 +68,14 @@ namespace ModShardLauncher
         }
         public static void SetTable(List<string> table, string name)
         {
-            try
-            {
-                string ret = JsonConvert.SerializeObject(table).Replace("\n", "");
-                UndertaleCode target = Data.Code.First(t => t.Name.Content == name);
-                GlobalDecompileContext context = new(Data, false);
-                string text = Decompiler.Decompile(target, context);
-                text = Regex.Replace(text, "\\[.*\\]", ret);
-                target.ReplaceGML(text, Data);
+            string ret = JsonConvert.SerializeObject(table).Replace("\n", "");
+            UndertaleCode target = Data.Code.First(t => t.Name.Content == name);
+            GlobalDecompileContext context = new(Data, false);
+            string text = Decompiler.Decompile(target, context);
+            text = Regex.Replace(text, "\\[.*\\]", ret);
+            target.ReplaceGML(text, Data);
 
-                Log.Information(string.Format("Successfully set table: {0}", name.ToString()));
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            Log.Information("Successfully set table: {0}", name);
         }
         public static void LoadFiles()
         {
@@ -127,30 +120,32 @@ namespace ModShardLauncher
                 }
                 catch(Exception ex)
                 {
-                    Log.Information(ex, string.Format("Cannot read the mod {0}", file));
+                    Log.Information(ex, "Cannot read the mod {0}", file);
                 }
                 if (f == null) continue;
-                Assembly assembly = f.Assembly;
-                    // for array or list, use the available search method instead of Linq one
-                    // use the Linq ones for IEnumerable
-                    Type? modType = Array.Find(assembly.GetTypes(), t => t.IsSubclassOf(typeof(Mod)));
 
-                    if (modType == null)
-                    {
-                        MessageBox.Show("加载错误: " + assembly.GetName().Name + " 此Mod需要一个Mod类");
-                        continue;
-                    }
-                    else
-                    {
-                        if (Activator.CreateInstance(modType) is not Mod mod) continue;
-                        mod.ModFiles = f;
-                        f.Instance = mod;
+                Assembly assembly = f.Assembly;
+                // for array or list, use the available search method instead of Linq one
+                // use the Linq ones for IEnumerable
+                Type? modType = Array.Find(assembly.GetTypes(), t => t.IsSubclassOf(typeof(Mod)));
+
+                if (modType == null)
+                {
+                    // MessageBox.Show("Loading error: " + assembly.GetName().Name + " This Mod need a Mod class");
+                    MessageBox.Show("加载错误: " + assembly.GetName().Name + " 此Mod需要一个Mod类");
+                    continue;
+                }
+                else
+                {
+                    if (Activator.CreateInstance(modType) is not Mod mod) continue;
+                    mod.ModFiles = f;
+                    f.Instance = mod;
 
                         ModFile? old = mods.Find(t => t.Name == f.Name);
                         if (old != null) f.Enabled = old.Enabled;
 
-                        modCaches.Add(f);
-                    }
+                    modCaches.Add(f);
+                }
             }
             mods.Clear();
             modCaches.ForEach(i => {
@@ -169,7 +164,7 @@ namespace ModShardLauncher
                 if (!mod.Enabled) continue;
                 if (!mod.Existed)
                 {
-                    MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + mod.Name);
+                    Log.Warning("The mod {0} which was located at {1} does not exist anymore.", mod.Name, mod.Path);
                     continue;
                 }
 
@@ -189,13 +184,23 @@ namespace ModShardLauncher
             Msl.ChainDisclaimerRooms(Disclaimers);
             Msl.CreateMenu(Menus);
         }
-        public static void PatchFile()
+        public static MSLDiagnostic? PatchFile()
         {
-            // add new msl log function
-            LogUtils.InjectLog();
-            PatchMods();
-            // add the new loot related functions if there is any
-            LootUtils.InjectLootScripts();
+            try
+            {
+                // add new msl log function
+                LogUtils.InjectLog();
+                PatchMods();
+                // add the new loot related functions if there is any
+                LootUtils.InjectLootScripts();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                MSLDiagnostic diag = new(ex, Main.Instance.GetFailingMod());
+                diag.ToLog();
+                return diag;
+            }
         }
     }
 }

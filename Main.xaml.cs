@@ -36,7 +36,7 @@ namespace ModShardLauncher
         public static IntPtr handle;
         public string mslVersion;
         public string utmtlibVersion;
-        //
+        public readonly string logPath = "logs";
         private const double DefaultWidth = 960;                  // Исходная ширина
         private const double DefaultHeight = 800;                 // Исходная высота
         private const double AspectRatio = DefaultWidth / DefaultHeight; // Соотношение сторон
@@ -60,7 +60,7 @@ namespace ModShardLauncher
             // create File and Console (controlledby a switch) sinks
             LoggerConfiguration logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.File(string.Format("logs/log_{0}.txt", DateTime.Now.ToString("yyyyMMdd_HHmm")))
+                .WriteTo.File(string.Format("{0}/log_{1}.txt", logPath, DateTime.Now.ToString("yyyyMMdd_HHmm")))
                 .WriteTo.Logger(log => log
                     .MinimumLevel.ControlledBy(lls)
                     .WriteTo.Console()
@@ -155,6 +155,10 @@ namespace ModShardLauncher
             }
             Log.Warning("Patching {{{2}}} for {{{0}}} {{{1}}}", modFile.Name, modFile.Version, statusMessage);
         }
+        public ModFile GetFailingMod()
+        {
+            return ModPage.Mods.Where(x => x.Enabled).First(x => x.PatchStatus == PatchStatus.Patching); ;
+        }
         private void MyToggleButton_Checked(object sender, EventArgs e)
         {
             foreach (var i in stackPanel.Children)
@@ -242,7 +246,7 @@ namespace ModShardLauncher
                 {
                     (int indexMod, ModFile? modFile) = listModFile.Enumerate().FirstOrDefault(t => t.Item2.Name == i);
                     if (modFile != null) listModFile[indexMod].Enabled = true;
-                    else Log.Warning($"Mod {i} not found");
+                    else Log.Warning("Mod {0} not found", i);
                 }
             }
         }

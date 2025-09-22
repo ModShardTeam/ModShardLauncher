@@ -6,6 +6,8 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using ModShardLauncher.Core.Errors;
+using ModShardLauncher.Core.UI;
 using ModShardLauncher.Core.Models;
 using Serilog;
 
@@ -52,38 +54,33 @@ namespace ModShardLauncher.Controls
                 return;
             }
 
-            bool patchSucess = false;
+            MSLDiagnostic? diag = ModLoader.PatchFile();
 
-            Stopwatch watch = Stopwatch.StartNew();
-            try
+            if (diag is null)
             {
-                ModLoader.PatchFile();
-                long elapsedMs = watch.ElapsedMilliseconds;
                 Main.Instance.LogModListStatus();
-                Log.Information("Patching lasts {{{0}}} ms", elapsedMs);
                 Log.Information("Successfully patch vanilla");
-                patchSucess = true;
-            }
-            catch (Exception ex)
-            {
-                Main.Instance.LogModListStatus();
-                Log.Error(ex, "Something went wrong");
-                Log.Information("Failed patching vanilla");
-                MessageBox.Show(ex.ToString(), Application.Current.FindResource("SaveDataWarning").ToString());
-            }
 
-            // attempt to save the patched data
-            if (patchSucess)
-            {
                 Task<bool> save = DataLoader.DoSaveDialog();
                 await save;
-                if (!save.Result) Log.Information("Saved cancelled.");
-                // copy the dataloot.json in the stoneshard directory
-                LootUtils.SaveLootTables(Msl.ThrowIfNull(Path.GetDirectoryName(DataLoader.savedDataPath)));
+                if (save.Result)
+                {
+                    LootUtils.SaveLootTables(Msl.ThrowIfNull(Path.GetDirectoryName(DataLoader.savedDataPath)));
+                }
+                else
+                {
+                    Log.Information("Saved cancelled.");
+                }
+            }
+            else
+            {
+                Main.Instance.LogModListStatus();
+                Log.Information("Failed patching vanilla");
+                ErrorMessageDialog.Show(diag.Title(), diag.MessageDialog(), Main.Instance.logPath);
             }
 
             // reload the data
-            await DataLoader.LoadFile(DataLoader.dataPath, true);
+            await DataLoader.LoadFile(DataLoader.dataPath);
             Main.Instance.Refresh();
         }
         private void OnPropertyRaised(string propertyname)

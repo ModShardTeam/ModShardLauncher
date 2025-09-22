@@ -66,11 +66,11 @@ public partial class Msl
         {
             table.Insert(ind + 1, newline);
             ModLoader.SetTable(table, tableName);
-            Log.Information($"Injected craft recipe {NAME} into {tableName} under {hook}");
+            Log.Information("Injected craft recipe {0} into {1} under {2}", NAME, tableName, hook);
         }
         else
         {
-            Log.Error($"Cannot find hook {hook} in table {tableName}");
+            Log.Error("Cannot find hook {0} in table {1}", hook, tableName);
             throw new Exception($"Hook {hook} not found in table {tableName}");
         }
     }

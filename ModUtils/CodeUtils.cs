@@ -87,18 +87,10 @@ namespace ModShardLauncher
         /// </summary>
         public static UndertaleCode GetUMTCodeFromFile(string fileName)
         {
-            try
-            {
-                UndertaleCode code = ModLoader.Data.Code.First(t => t.Name?.Content == fileName);
-                Log.Information(string.Format("Found function: {0}", code.ToString()));
+            UndertaleCode code = ModLoader.Data.Code.First(t => t.Name?.Content == fileName);
+            Log.Information("Found function: {0}", code);
 
-                return code;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            return code;
         }
         /// <summary>
         /// Add a new UndertaleCode named <paramref name="name"/> using the code <paramref name="codeAsString"/>. It is expected to be written in GML.
@@ -108,28 +100,21 @@ namespace ModShardLauncher
         /// <returns></returns>
         public static UndertaleCode AddCode(string codeAsString, string name)
         {
-            try
+            UndertaleCode code = new();
+            UndertaleCodeLocals locals = new();
+            code.Name = ModLoader.Data.Strings.MakeString(name);
+            locals.Name = code.Name;
+            UndertaleCodeLocals.LocalVar argsLocal = new()
             {
-                UndertaleCode code = new();
-                UndertaleCodeLocals locals = new();
-                code.Name = ModLoader.Data.Strings.MakeString(name);
-                locals.Name = code.Name;
-                UndertaleCodeLocals.LocalVar argsLocal = new()
-                {
-                    Name = ModLoader.Data.Strings.MakeString("arguments"),
-                    Index = 0
-                };
-                locals.Locals.Add(argsLocal);
-                code.LocalsCount = 1;
-                ModLoader.Data.CodeLocals.Add(locals);
-                code.ReplaceGML(codeAsString, ModLoader.Data);
-                ModLoader.Data.Code.Add(code);
-                return code;
-            }
-            catch
-            {
-                throw;
-            }
+                Name = ModLoader.Data.Strings.MakeString("arguments"),
+                Index = 0
+            };
+            locals.Locals.Add(argsLocal);
+            code.LocalsCount = 1;
+            ModLoader.Data.CodeLocals.Add(locals);
+            code.ReplaceGML(codeAsString, ModLoader.Data);
+            ModLoader.Data.Code.Add(code);
+            return code;
         }
         /// <summary>
         /// Add a new UndertaleCode named <paramref name="name"/> using the code <paramref name="codeAsString"/>. It is expected to be written in ASM abstraction.
@@ -139,31 +124,24 @@ namespace ModShardLauncher
         /// <returns></returns>
         public static UndertaleCode AddCodeAsm(string codeAsString, string name)
         {
-            try
+            UndertaleCode code = new();
+            UndertaleCodeLocals locals = new();
+            code.Name = ModLoader.Data.Strings.MakeString(name);
+            locals.Name = code.Name;
+            UndertaleCodeLocals.LocalVar argsLocal = new()
             {
-                UndertaleCode code = new();
-                UndertaleCodeLocals locals = new();
-                code.Name = ModLoader.Data.Strings.MakeString(name);
-                locals.Name = code.Name;
-                UndertaleCodeLocals.LocalVar argsLocal = new()
-                {
-                    Name = ModLoader.Data.Strings.MakeString("arguments"),
-                    Index = 0
-                };
-                locals.Locals.Add(argsLocal);
-                code.LocalsCount = 1;
-                ModLoader.Data.CodeLocals.Add(locals);
-                CheckInstructionsVariables(code, codeAsString);
-                string newLocalVarsAsString = AssemblyWrapper.CreateLocalVarAssemblyAsString(code);
-                codeAsString = codeAsString.Insert(codeAsString.IndexOf('\n') + 1, newLocalVarsAsString);
-                code.Replace(Assembler.Assemble(codeAsString, ModLoader.Data));
-                ModLoader.Data.Code.Add(code);
-                return code;
-            }
-            catch
-            {
-                throw;
-            }
+                Name = ModLoader.Data.Strings.MakeString("arguments"),
+                Index = 0
+            };
+            locals.Locals.Add(argsLocal);
+            code.LocalsCount = 1;
+            ModLoader.Data.CodeLocals.Add(locals);
+            CheckInstructionsVariables(code, codeAsString);
+            string newLocalVarsAsString = AssemblyWrapper.CreateLocalVarAssemblyAsString(code);
+            codeAsString = codeAsString.Insert(codeAsString.IndexOf('\n') + 1, newLocalVarsAsString);
+            code.Replace(Assembler.Assemble(codeAsString, ModLoader.Data));
+            ModLoader.Data.Code.Add(code);
+            return code;
         }
         /// <summary>
         /// Get code from file in this tool.
@@ -188,21 +166,14 @@ namespace ModShardLauncher
         /// <returns></returns>
         public static UndertaleCode AddFunction(string codeAsString, string name)
         {
-            try
-            {
-                Log.Information(string.Format("Trying to add the function : {0}", name.ToString()));
+            Log.Information("Trying to add the function : {0}", name);
 
-                UndertaleCode scriptCode = AddCode(codeAsString, name);
-                ModLoader.Data.Code.Add(ModLoader.Data.Code[0]);
-                ModLoader.Data.Code.RemoveAt(0);
+            UndertaleCode scriptCode = AddCode(codeAsString, name);
+            ModLoader.Data.Code.Add(ModLoader.Data.Code[0]);
+            ModLoader.Data.Code.RemoveAt(0);
 
-                Log.Information(string.Format("Successfully added the function : {0}", name.ToString()));
-                return scriptCode;
-            }
-            catch
-            {
-                throw;
-            }
+            Log.Information("Successfully added the function : {0}", name);
+            return scriptCode;
         }
         /// <summary>
         /// Add a new function from the code in this tool.
@@ -215,34 +186,18 @@ namespace ModShardLauncher
         /// </summary>
         public static string GetStringGMLFromFile(string fileName)
         {
-            try
-            {
-                UndertaleCode code = GetUMTCodeFromFile(fileName);
-                GlobalDecompileContext context = new(ModLoader.Data, false);
+            UndertaleCode code = GetUMTCodeFromFile(fileName);
+            GlobalDecompileContext context = new(ModLoader.Data, false);
 
-                return Decompiler.Decompile(code, context);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            return Decompiler.Decompile(code, context);
         }
         /// <summary>
         /// Set the UndertaleCode in <paramref name="fileName"/> as <paramref name="codeAsString"/>.
         /// </summary>
         public static void SetStringGMLInFile(string codeAsString, string fileName)
         {
-            try
-            {
-                UndertaleCode code = GetUMTCodeFromFile(fileName);
-                code.ReplaceGML(codeAsString, ModLoader.Data);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            UndertaleCode code = GetUMTCodeFromFile(fileName);
+            code.ReplaceGML(codeAsString, ModLoader.Data);
         }
         /// <summary>
         /// Insert GML <paramref name="codeAsString"/> from a string in <paramref name="fileName"/> at a given <paramref name="position"/>.
@@ -260,21 +215,13 @@ namespace ModShardLauncher
         /// <param name="position">The exact position to insert.</param>
         public static void InsertGMLString(string codeAsString, string fileName, int position)
         {
-            try
-            {
-                Log.Information(string.Format("Trying insert code in: {0}", fileName.ToString()));
+            Log.Information("Trying insert code in: {0}", fileName);
 
-                List<string>? originalCode = GetStringGMLFromFile(fileName).Split("\n").ToList();
-                originalCode.Insert(position, codeAsString);
-                SetStringGMLInFile(string.Join("\n", originalCode), fileName);
+            List<string>? originalCode = GetStringGMLFromFile(fileName).Split("\n").ToList();
+            originalCode.Insert(position, codeAsString);
+            SetStringGMLInFile(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with InsertGMLString: {0}", fileName.ToString()));
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            Log.Information("Patched function with InsertGMLString: {0}", fileName);
         }
         /// <summary>
         /// Replace an existing GML code by another <paramref name="code"/> from a string in <paramref name="file"/> at a given <paramref name="position"/>.
@@ -292,21 +239,13 @@ namespace ModShardLauncher
         /// <param name="position">The exact position to insert.</param>
         public static void ReplaceGMLString(string codeAsString, string fileName, int position)
         {
-            try
-            {
-                Log.Information(string.Format("Trying replace code in: {0}", fileName.ToString()));
+            Log.Information("Trying replace code in: {0}", fileName);
 
-                List<string>? originalCode = GetStringGMLFromFile(fileName).Split("\n").ToList();
-                originalCode[position] = codeAsString;
-                SetStringGMLInFile(string.Join("\n", originalCode), fileName);
+            List<string>? originalCode = GetStringGMLFromFile(fileName).Split("\n").ToList();
+            originalCode[position] = codeAsString;
+            SetStringGMLInFile(string.Join("\n", originalCode), fileName);
 
-                Log.Information(string.Format("Patched function with ReplaceGMLString: {0}", fileName.ToString()));
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            Log.Information("Patched function with ReplaceGMLString: {0}", fileName);
         }
         /// <summary>
         /// Replace an existing GML code by another <paramref name="code"/> from a string in <paramref name="file"/> at a given <paramref name="position"/>
@@ -326,26 +265,18 @@ namespace ModShardLauncher
         /// <param name="position">The exact position to insert.</param>
         public static void ReplaceGMLString(string codeAsString, string fileName, int start, int len)
         {
-            try
+            Log.Information("Trying replace code in: {0}", fileName);
+
+            List<string>? originalCode = GetStringGMLFromFile(fileName).Split("\n").ToList();
+            originalCode[start] = codeAsString;
+            for (int i = 1; i < Math.Min(len, originalCode.Count - start); i++)
             {
-                Log.Information(string.Format("Trying replace code in: {0}", fileName.ToString()));
-
-                List<string>? originalCode = GetStringGMLFromFile(fileName).Split("\n").ToList();
-                originalCode[start] = codeAsString;
-                for (int i = 1; i < Math.Min(len, originalCode.Count - start); i++)
-                {
-                    originalCode[start + i] = "";
-                }
-
-                SetStringGMLInFile(string.Join("\n", originalCode), fileName);
-
-                Log.Information(string.Format("Patched function with ReplaceGMLString: {0}", fileName.ToString()));
+                originalCode[start + i] = "";
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+
+            SetStringGMLInFile(string.Join("\n", originalCode), fileName);
+
+            Log.Information("Patched function with ReplaceGMLString: {0}", fileName);
         }
         /// <summary>
         /// Convert a (Match, string) IEnumerable into a string IEnumerable by selecting for all elements only the string part.
@@ -462,7 +393,10 @@ namespace ModShardLauncher
 
             if (!foundMatch)
             {
-                throw new Exception("MatchFrom: No matching lines found. Items to match: " + string.Join(", ", other));
+                throw new InvalidOperationException(string.Format(
+                    "MatchFrom: No matching lines found. Items to match:\n{0}",
+                    string.Join("\n", other))
+                );
             }
         }
 
@@ -485,7 +419,16 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<(Match, string)> MatchFrom(this FileEnumerable<string> fe, ModFile modFile, string fileName)
         {
-            return new(fe.header, fe.ienumerable.MatchFrom(modFile.GetCode(fileName).Split("\n")));
+            try
+            {
+                return new(fe.header, fe.ienumerable.MatchFrom(modFile.GetCode(fileName).Split("\n")));
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
+                throw;
+            }
         }
         /// <summary>
         /// A selector that tags the <paramref name="len"/>-th lines of code below a given list of string.
@@ -541,7 +484,10 @@ namespace ModShardLauncher
 
             if (!encounteredBlock)
             {
-                throw new Exception("MatchBelow: No matching lines found. Items to match: " + string.Join("\r\n", other));
+                throw new InvalidOperationException(
+                    string.Format("MatchBelow: No matching lines found. Items to match:\n{0}",
+                    string.Join("\n", other))
+                );
             }
         }
         /// <summary>
@@ -563,7 +509,16 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<(Match, string)> MatchBelow(this FileEnumerable<string> fe, ModFile modFile, string fileName, int len)
         {
-            return new(fe.header, fe.ienumerable.MatchBelow(modFile.GetCode(fileName).Split("\n"), len));
+            try
+            {
+                return new(fe.header, fe.ienumerable.MatchBelow(modFile.GetCode(fileName).Split("\n"), len));
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
+                throw;
+            }
         }
         /// <summary>
         /// A selector that tags the all lines of the input.
@@ -613,6 +568,7 @@ namespace ModShardLauncher
             if (otherUntilEnumerator.MoveNext())
                 otherUntilString = otherUntilEnumerator.Current;
 
+            
             foreach ((Match m, string element) in ienumerable.MatchFrom(otherfrom))
             {
                 if (m == Match.Before || m == Match.Matching)
@@ -665,7 +621,16 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<(Match, string)> MatchFromUntil(this FileEnumerable<string> fe, ModFile modFile, string filenameOther, string filenameUntil)
         {
-            return new(fe.header, fe.ienumerable.MatchFromUntil(modFile.GetCode(filenameOther).Split("\n"), modFile.GetCode(filenameUntil).Split("\n")));
+            try
+            {
+                return new(fe.header, fe.ienumerable.MatchFromUntil(modFile.GetCode(filenameOther).Split("\n"), modFile.GetCode(filenameUntil).Split("\n")));
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
+                throw;
+            }
         }
         /// <summary>
         /// An action on an IEnumerable that prints each line on the log console but does not alter the data flow.
@@ -828,7 +793,16 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<string> InsertBelow(this FileEnumerable<(Match, string)> fe, ModFile modFile, string fileName)
         {
-            return new(fe.header, fe.ienumerable.InsertBelow(modFile.GetCode(fileName).Split("\n")));
+            try
+            {
+                return new(fe.header, fe.ienumerable.InsertBelow(modFile.GetCode(fileName).Split("\n")));
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
+                throw;
+            }
         }
         /// <summary>
         /// An action on an IEnumerable that inserts lines of code above the Matching block. 
@@ -876,7 +850,16 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<string> InsertAbove(this FileEnumerable<(Match, string)> fe, ModFile modFile, string fileName)
         {
-            return new(fe.header, fe.ienumerable.InsertAbove(modFile.GetCode(fileName).Split("\n")));
+            try
+            {
+                return new(fe.header, fe.ienumerable.InsertAbove(modFile.GetCode(fileName).Split("\n")));
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
+                throw;
+            }
         }
         /// <summary>
         /// An action on an IEnumerable that replace the Matching block with the lines given. 
@@ -930,7 +913,16 @@ namespace ModShardLauncher
         /// </summary>
         public static FileEnumerable<string> ReplaceBy(this FileEnumerable<(Match, string)> fe, ModFile modFile, string fileName)
         {
-            return new(fe.header, fe.ienumerable.ReplaceBy(modFile.GetCode(fileName).Split("\n")));
+            try
+            {
+                return new(fe.header, fe.ienumerable.ReplaceBy(modFile.GetCode(fileName).Split("\n")));
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
+                throw;
+            }
         }
         /// <summary>
         /// Apply an <paramref name="iterator"/> to an <see cref="IEnumerable"/>.
@@ -976,15 +968,17 @@ namespace ModShardLauncher
                     default:
                         break;
                 }
-                Log.Information("Successfully patched function {{{0}}} with {{{1}}}", fe.header.fileName, fe.header.patchingWay.ToString());
+                Log.Information("Successfully patched function {{{0}}} with {{{1}}}", fe.header.fileName, fe.header.patchingWay);
                 return new(
                     fe.header.fileName,
                     newCode,
                     fe.header.patchingWay
                 );
             }
-            catch
+            catch (Exception ex)
             {
+                ex.Data.Add("fileName", fe.header.fileName);
+                ex.Data.Add("patchingWay", fe.header.patchingWay);
                 throw;
             }
         }

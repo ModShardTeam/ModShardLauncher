@@ -330,7 +330,7 @@ namespace ModShardLauncher
                             Source = fileChunk.name.Split("\\")[^1],
                             Data = byteFile
                         };
-                        Log.Information(string.Format("Successfully load texture {0}", fileChunk.name));
+                        Log.Information("Successfully load texture {0}", fileChunk.name);
                         SourceTextures.Add(textureInfo);
                     }
                     else

@@ -192,6 +192,6 @@ public partial class Msl
         // Add line to table
         table.Add(newline);
         ModLoader.SetTable(table, tableName);
-        Log.Information($"Injected Weapon {id} into table {tableName}");
+        Log.Information("Injected Weapon {0} into table {1}", id, tableName);
     }
 }

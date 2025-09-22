@@ -66,11 +66,11 @@ public partial class Msl
         {
             table.Insert(ind + 1, newline);
             ModLoader.SetTable(table, tableName);
-            Log.Information($"Injected contract {id} into {tableName}");
+            Log.Information("Injected contract {0} into {1}", id, tableName);
         }
         else
         {
-            Log.Error($"Hook not found in {tableName}. {id} was not injected.");
+            Log.Error("Hook not found in {0}. {1} was not injected.", tableName, id);
             throw new Exception($"Hook not found in {tableName}. {id} was not injected.");
         }
     }

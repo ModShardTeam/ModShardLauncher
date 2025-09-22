@@ -89,6 +89,6 @@ public partial class Msl
         // Add line to table
         table.Add(newline);
         ModLoader.SetTable(table, tableName);
-        Log.Information($"Injected a Spawn into table {tableName}");
+        Log.Information("Injected a Spawn into table {0}", tableName);
     }
 }
