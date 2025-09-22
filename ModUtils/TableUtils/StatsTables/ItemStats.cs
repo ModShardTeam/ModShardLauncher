@@ -177,6 +177,7 @@ public partial class Msl
         ushort? Fresh = null,
         ushort? Duration = null,
         ushort? Stacks = null,
+        bool Diet = false,
         short? Hunger = null,
         float? Hunger_Change = null,
         short? Hunger_Resistance = null,
@@ -191,13 +192,16 @@ public partial class Msl
         float? Pain_Change = null,
         short? Pain_Resistance = null, // Could be ushort ?
         short? Pain_Limit = null,
-        short? Morale = null,
+        short? MoraleSituational = null,
         float? Morale_Change = null,
-        short? Sanity = null,
+        short? MoraleTemporary = null,
+        float? MoraleDiet = null,
+        short? SanitySituational = null,
         float? Sanity_Change = null,
         short? Condition = null,
         short? max_hp = null, // Could be ushort ?
         short? max_hp_res = null, // Could be ushort ?
+        short? HP_Turn = null,
         short? Health_Restoration = null, // Could be float ?
         short? Healing_Received = null,
         short? max_mp = null, // Could be ushort ?
@@ -210,6 +214,7 @@ public partial class Msl
         short? Received_XP = null,
         short? Cooldown_Reduction = null,
         short? Weapon_Damage = null,
+        short? Magic_Power = null,
         short? Hit_Chance = null, // type unknown, assuming short
         short? FMB = null,
         short? CRTD = null, // Could be ushort ?
@@ -254,7 +259,7 @@ public partial class Msl
         List<string> table = ThrowIfNull(ModLoader.GetTable(tableName));
         
         // Prepare line
-        string newline = $"{id};;{Price};{EffPrice};{GetEnumMemberValue(tier)};{GetEnumMemberValue(Cat)};{GetEnumMemberValue(Subcat)};{GetEnumMemberValue(Material)};{GetEnumMemberValue(Weight)};;{Fresh};{Duration};{Stacks};;{Hunger};{Hunger_Change};{Hunger_Resistance};;{Thirsty};{Thirst_Change};;{Immunity};{Immunity_Change};;{Intoxication};{Toxicity_Change};{Toxicity_Resistance};;{Pain};{Pain_Change};{Pain_Resistance};{Pain_Limit};;{Morale};{Morale_Change};{Sanity};{Sanity_Change};;{Condition};{max_hp};{max_hp_res};{Health_Restoration};{Healing_Received};;{max_mp};{max_mp_res};{MP_Restoration};{MP_turn};;{Fatigue};{Fatigue_Change};{Fatigue_Gain};;{Received_XP};{Cooldown_Reduction};{Weapon_Damage};{Hit_Chance};{FMB};{CRTD};{Fortitude};{VSN};;{Bleeding_Resistance};{Knockback_Resistance};{Stun_Resistance};;{Physical_Resistance};{Nature_Resistance};{Magic_Resistance};{Slashing_Resistance};{Piercing_Resistance};{Blunt_Resistance};{Rending_Resistance};{Fire_Resistance};{Shock_Resistance};{Poison_Resistance};{Caustic_Resistance};{Frost_Resistance};{Arcane_Resistance};{Unholy_Resistance};{Sacred_Resistance};{Psionic_Resistance};;{Nausea_Chance};{Poisoning_Chance};{Poisoning_Duration};;{(purse ? "1" : "")};{(bottle ? "1" : "")};{upgrade};{fodder};{stack};{(fireproof ? "1" : "")};{(dropsOnce ? "1" : "")};{GetEnumMemberValue(tags)};";
+        string newline = $"{id};;{Price};{EffPrice};{GetEnumMemberValue(tier)};{GetEnumMemberValue(Cat)};{GetEnumMemberValue(Subcat)};{Material};{GetEnumMemberValue(Weight)};;{Fresh};{Duration};{Stacks};{(Diet ? "1" : "")};;{Hunger};{Hunger_Change};{Hunger_Resistance};;{Thirsty};{Thirst_Change};;{Immunity};{Immunity_Change};;{Intoxication};{Toxicity_Change};{Toxicity_Resistance};;{Pain};{Pain_Change};{Pain_Resistance};{Pain_Limit};;{MoraleSituational};{Morale_Change};{MoraleTemporary};{MoraleDiet};{SanitySituational};{Sanity_Change};;{Condition};{max_hp};{max_hp_res};{HP_Turn};{Health_Restoration};{Healing_Received};;{max_mp};{max_mp_res};{MP_Restoration};{MP_turn};;{Fatigue};{Fatigue_Change};{Fatigue_Gain};;{Received_XP};{Cooldown_Reduction};{Weapon_Damage};{Magic_Power};{Hit_Chance};{FMB};{CRTD};{Fortitude};{VSN};;{Bleeding_Resistance};{Knockback_Resistance};{Stun_Resistance};;{Physical_Resistance};{Nature_Resistance};{Magic_Resistance};{Slashing_Resistance};{Piercing_Resistance};{Blunt_Resistance};{Rending_Resistance};{Fire_Resistance};{Shock_Resistance};{Poison_Resistance};{Caustic_Resistance};{Frost_Resistance};{Arcane_Resistance};{Unholy_Resistance};{Sacred_Resistance};{Psionic_Resistance};;{Nausea_Chance};{Poisoning_Chance};{Poisoning_Duration};;{(purse ? "1" : "")};{(bottle ? "1" : "")};{upgrade};{fodder};{stack};{(fireproof ? "1" : "")};{(dropsOnce ? "1" : "")};{GetEnumMemberValue(tags)};";
         
         // Add line to table
         table.Add(newline);
