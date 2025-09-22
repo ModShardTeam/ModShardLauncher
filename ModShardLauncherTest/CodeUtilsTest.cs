@@ -263,10 +263,10 @@ state = 25";
             IEnumerable<string> stringList = "".Split('\n');
 
             // Act
-            Exception ex = Assert.Throws<Exception>(() => stringList.MatchFrom(input).ToList());
+            InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => stringList.MatchFrom(input).ToList());
 
             // Assert
-            Assert.Contains("MatchFrom: No matching lines found", ex.Message);
+            Assert.Equal($"MatchFrom: No matching lines found. Items to match:\n{input}", ex.Message);
         }
         
         [Theory]
@@ -327,11 +327,10 @@ state = 25";
             IEnumerable<string> stringList = input.Split('\n');
 
             // Act
-             Exception ex = Assert.Throws<Exception>(() => stringList.MatchFrom(stringToMatch).ToList());
+             InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => stringList.MatchFrom(stringToMatch).ToList());
 
             // Assert
-            Assert.Contains("MatchFrom: No matching lines found", ex.Message);
-            Assert.Contains(stringToMatch, ex.Message);
+            Assert.Equal($"MatchFrom: No matching lines found. Items to match:\n{stringToMatch}", ex.Message);
         }
 
         [Theory]
@@ -422,10 +421,10 @@ state = 25";
             IEnumerable<string> stringList = "".Split('\n');
 
             // Act
-            Exception ex = Assert.Throws<Exception>(() => stringList.MatchBelow(input, 0).ToList());
+            InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => stringList.MatchBelow(input, 0).ToList());
 
             // Assert
-            Assert.Contains("MatchBelow: No matching lines found", ex.Message);
+            Assert.Equal($"MatchBelow: No matching lines found. Items to match:\n{input}", ex.Message);
         }
         
         [Theory]
@@ -502,11 +501,10 @@ state = 25";
             IEnumerable<string> stringList = input.Split('\n');
 
             // Act
-            Exception ex = Assert.Throws<Exception>(() => stringList.MatchBelow(stringToMatch, len).ToList());
+            InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => stringList.MatchBelow(stringToMatch, len).ToList());
 
             // Assert
-            Assert.Contains("MatchBelow: No matching lines found", ex.Message);
-            Assert.Contains(stringToMatch, ex.Message);
+            Assert.Equal($"MatchBelow: No matching lines found. Items to match:\n{stringToMatch}", ex.Message);
         }
 
         [Theory]
@@ -596,10 +594,10 @@ state = 25";
             IEnumerable<string> stringList = "".Split('\n');
 
             // Act
-            Exception ex = Assert.Throws<Exception>(() => stringList.MatchFromUntil(input, "").ToList());
+            InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => stringList.MatchFromUntil(input, "").ToList());
 
             // Assert
-            Assert.Contains("MatchFrom: No matching lines found", ex.Message);
+            Assert.Equal($"MatchFrom: No matching lines found. Items to match:\n{input}", ex.Message);
         }
         
         [Theory]
@@ -619,11 +617,10 @@ state = 25";
             IEnumerable<string> stringList = input.Split('\n');
 
             // Act
-            Exception ex = Assert.Throws<Exception>(() => stringList.MatchFromUntil(from, "").ToList());
+            InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => stringList.MatchFromUntil(from, "").ToList());
 
             // Assert
-            Assert.Contains("MatchFrom: No matching lines found", ex.Message);
-            Assert.Contains(from, ex.Message);
+            Assert.Equal($"MatchFrom: No matching lines found. Items to match:\n{from}", ex.Message);
         }
 
         [Theory]

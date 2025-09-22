@@ -19,6 +19,6 @@ public partial class Msl
         // Add line to table
         table.Add(newline);
         ModLoader.SetTable(table, tableName);
-        Log.Information($"Injected {name}:{nickname} into {tableName} table.");
+        Log.Information("Injected {0}:{1} into {2} table.", name, nickname, tableName);
     }
 }

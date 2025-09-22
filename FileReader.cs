@@ -14,9 +14,9 @@ using System.Windows;
 
 namespace ModShardLauncher
 {
-    public class FileChunk 
+    public class FileChunk
     {
-        public string name;
+        public string name = string.Empty;
         public int offset;
         public int length;
     }
@@ -58,7 +58,7 @@ namespace ModShardLauncher
         {
             if(!Existed)
             {
-                MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + Name);
+                Log.Error("The mod {0} which was located at {1} does not exist anymore.", Name, Path);
                 ModLoader.LoadFiles();
                 return Array.Empty<byte>();
             }
@@ -79,41 +79,27 @@ namespace ModShardLauncher
         }
         public string GetCode(string fileName)
         {
-            try
+            byte[] data = GetFile(fileName);
+            if (data.Length == 0) 
             {
-                byte[] data = GetFile(fileName);
-                if (data.Length == 0) 
-                {
-                    Log.Warning($"{fileName} is empty.");
-                    return "";
-                }
-                // if a BOM is found aka: 0xEF 0xBB 0xBF at the beginning of the file, remove it since UTMT will not understand these characters.
-                // BOM are produced if a script is made through Visual Studio
-                if (data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF) data = data.Skip(3).ToArray();
+                Log.Warning("{0} is empty.", fileName);
+                return "";
+            }
+            // if a BOM is found aka: 0xEF 0xBB 0xBF at the beginning of the file, remove it since UTMT will not understand these characters.
+            // BOM are produced if a script is made through Visual Studio
+            if (data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF) data = data.Skip(3).ToArray();
 
-                string text = Encoding.UTF8.GetString(data);
-                if(text.Length == 0)
-                {
-                    MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + fileName);
-                    throw new ArgumentException("String cannot be of length zero");
-                }
-                return text;
-            }
-            catch
+            string text = Encoding.UTF8.GetString(data);
+            if(text.Length == 0)
             {
-                throw;
+                Log.Error("The mod {0} which was located at {1} does not exist anymore.", Name, Path);
+                throw new ArgumentException("String cannot be of length zero");
             }
+            return text;
         }
         public bool FileExist(string fileName)
         {
-            try
-            {
-                return GetFile(fileName).Length > 0;
-            }
-            catch
-            {
-                throw;
-            }
+            return GetFile(fileName).Length > 0;
         }
     }
     public static class FileReader
@@ -165,7 +151,7 @@ namespace ModShardLauncher
             byte[] versionbytes = Read(fs, size);
 
             file.Version = reg.Replace(Encoding.UTF8.GetString(versionbytes), "$1");
-            Log.Information(string.Format("Reading {{{0}}} built with version {{{1}}}", nameMod, file.Version));
+            Log.Information("Reading {{{0}}} built with version {{{1}}}", nameMod, file.Version);
 
             // read textures
             int count = BitConverter.ToInt32(Read(fs, 4), 0);
@@ -250,7 +236,7 @@ namespace ModShardLauncher
             }
             catch
             {
-                Log.Information(string.Format("Cannot find the icon.png associated to {0}", fs.Name.Split("\\")[^1]));
+                Log.Information("Cannot find the icon.png associated to {0}", fs.Name.Split("\\")[^1]);
             }
 
             fs.Close();
@@ -263,7 +249,7 @@ namespace ModShardLauncher
             if(fs.Length - fs.Position < length)
             {
                 fs.Close();
-                throw new Exception(string.Format("In FileReader.Read cannot read {0} bytes in the mod {1} ",  length, fs.Name.Split("\\")[^1]));
+                throw new Exception($"In FileReader.Read cannot read {length} bytes in the mod {fs.Name.Split("\\")[^1]}");
             }
             fs.Read(bytes, 0, length);
             return bytes;

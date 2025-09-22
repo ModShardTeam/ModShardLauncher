@@ -101,7 +101,7 @@ namespace ModShardLauncher
                 UndertaleGameObject? existingObj = ModLoader.Data.GameObjects.FirstOrDefault(t => t.Name.Content == name);
                 if(existingObj != null)
                 {
-                    Log.Information(string.Format("Cannot create the GameObject since it already exists: {0}", name.ToString()));
+                    Log.Information("Cannot create the GameObject since it already exists: {0}", name);
                     return existingObj;
                 }
 
@@ -123,7 +123,7 @@ namespace ModShardLauncher
                     Awake = isAwake,
                 };
                 ModLoader.Data.GameObjects.Add(obj);
-                Log.Information(string.Format("Successfully created gameObject: {0}", name.ToString()));
+                Log.Information("Successfully created gameObject: {0}", name);
                 return obj;
             }
             catch 
@@ -138,16 +138,9 @@ namespace ModShardLauncher
         /// <returns></returns>
         public static UndertaleGameObject GetObject(string name)
         {
-            try
-            {
-                UndertaleGameObject gameObject = ModLoader.Data.GameObjects.First(t => t.Name.Content == name);
-                Log.Information(string.Format("Found gameObject: {0}", name.ToString()));
-                return gameObject;
-            }
-            catch
-            {
-                throw;
-            }
+            UndertaleGameObject gameObject = ModLoader.Data.GameObjects.First(t => t.Name.Content == name);
+            Log.Information("Found gameObject: {0}", name);
+            return gameObject;
         }
         /// <summary>
         /// Replace the <see cref="UndertaleGameObject"/> named <paramref name="name"/> by <paramref name="o"/>. 
@@ -157,17 +150,9 @@ namespace ModShardLauncher
         /// <returns></returns>
         public static void SetObject(string name, UndertaleGameObject o)
         {
-            try
-            {
-                (int indexObj, _) = ModLoader.Data.GameObjects.Enumerate().First(t => t.Item2.Name.Content == name);
-                ModLoader.Data.GameObjects[indexObj] = o;
-                Log.Information(string.Format("Successfully replaced gameObject: {0}", name.ToString()));
-            }
-            catch(Exception ex) 
-            {
-                Log.Error(ex, "Something went wrong");
-                throw;
-            }
+            (int indexObj, _) = ModLoader.Data.GameObjects.Enumerate().First(t => t.Item2.Name.Content == name);
+            ModLoader.Data.GameObjects[indexObj] = o;
+            Log.Information("Successfully replaced gameObject: {0}", name);
         }
     }
 }
