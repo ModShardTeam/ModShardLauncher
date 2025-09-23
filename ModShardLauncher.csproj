@@ -22,6 +22,7 @@
     <Compile Include="Controls/*.cs" />
     <Compile Include="ModUtils/*.cs" />
     <Compile Include="Core/**/*.cs" />
+    <Compile Include="ViewModels/**/*.cs" />
   </ItemGroup>
 
   <ItemGroup>

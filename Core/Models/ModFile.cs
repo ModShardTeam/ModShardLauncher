@@ -10,50 +10,67 @@ using Serilog;
 
 namespace ModShardLauncher.Core.Models
 {
-    public class FileChunk 
-    {
-        public string name = string.Empty;
-        public int offset;
-        public int length;
-    }
     public class ModFile
     {
-        public string Name = string.Empty;
-        public string Version { get; set; } = string.Empty;
-        public List<FileChunk> Files = new();
-        public Assembly Assembly;
-        public int FileOffset;
-        public FileStream Stream;
-        public string Path = string.Empty;
-        public Mod Instance { get; set; }
-        public bool Enabled { get; set; }
-        public PatchStatus PatchStatus { get; set; } = PatchStatus.None;
-        public bool Existed => File.Exists(Path);
+        public string Name { get; set; }
+        public string Version { get; set; }
+        public List<FileChunk> Files { get; set; }
+        public Assembly Assembly { get; set; }
         public byte[] Icon { get; set; } = Array.Empty<byte>();
+        public int FileOffset { get; set; }
+        public string Path { get; set; }
+        public bool Existed => File.Exists(Path);
+        public Mod Instance { get; set; }
+        public PatchStatus PatchStatus { get; set; } = PatchStatus.None;
+        public bool Enabled { get; set; } = false;
+        public ModFile() { }
+        public ModFile(string name, string version, Assembly assembly, string path, List<FileChunk> files, int fileOffset, Mod instance)
+        {
+            Name = name;
+            Version = version;
+            Assembly = assembly;
+            Path = path;
+            Files = files;
+            FileOffset = fileOffset;
+
+            Instance = instance;
+            instance.ModFiles = this;
+        }
+        public bool FileExist(string fileName)
+        {
+            return GetFile(fileName).Length > 0;
+        }
         public override string ToString()
         {
             return Instance.ToString();
         }
         public byte[] GetFile(string fileName)
         {
+            using FileStream stream = new(Path, FileMode.Open);
+
+            byte[] read = GetFile(stream, fileName);
+            stream.Close();
+            
+            return read;
+        }
+        public byte[] GetFile(FileStream fileStream, string fileName)
+        {
             if (!Existed)
             {
+                // TODO make a throw instead
                 MessageBox.Show(Application.Current.FindResource("ModLostWarning").ToString() + " : " + Name);
                 ModLoader.LoadFiles();
                 return Array.Empty<byte>();
             }
 
-            // https://sonarsource.github.io/rspec/#/rspec/S6602/csharp
-            // for list, Find should be used instead of FirstOrDefault
             FileChunk? file = Files.Find(t => System.IO.Path.GetFileName(t.name) == System.IO.Path.GetFileName(fileName));
             if (file != null)
             {
-                if (!Stream.CanRead) Stream = new FileStream(Path, FileMode.Open);
-                Stream.Position = FileOffset;
-                FileReader.Read(Stream, file.offset);
-                byte[] fileStream = FileReader.Read(Stream, file.length);
-                Stream.Close();
-                return fileStream;
+                fileStream.Position = FileOffset;
+                FileReader.ReadStream(fileStream, file.offset);
+
+                byte[] read = FileReader.ReadStream(fileStream, file.length);
+                return read;
             }
             throw new FileNotFoundException(string.Format("File {0} not found in the packed sml.", fileName));
         }
@@ -77,9 +94,13 @@ namespace ModShardLauncher.Core.Models
             }
             return text;
         }
-        public bool FileExist(string fileName)
+        public byte[] GetIcon()
         {
-            return GetFile(fileName).Length > 0;
+            return GetFile(Name + "\\icon.png");
+        }
+        public byte[] GetIcon(FileStream fileStream)
+        {
+            return GetFile(fileStream, Name + "\\icon.png");
         }
     }
 }

@@ -106,91 +106,16 @@ namespace ModShardLauncher
                 modSources.Add(info);
             }
         }
-        private static bool GetConcreteType(Type typeToGet, Type t)
-        {
-            // expect a non interface, non abstract typeToGet and with a constructor without any parameter
-            return typeToGet.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract && t.GetConstructor(Type.EmptyTypes) != null;
-        }
-        private static ModFile? LoadModFile(string file)
-        {
-            ModFile? f = null;
-
-            // read the file
-            try
-            {
-                f = FileReader.Read(file);
-            }
-            catch (Exception ex)
-            {
-                Log.Information(ex, "Cannot read the mod {0}", file);
-            }
-            if (f == null) return null;
-
-            Assembly assembly = f.Assembly;
-            Type[] types;
-
-            // load all types in the assembly
-            try
-            {
-                types = assembly.GetTypes();
-            }
-            catch (ReflectionTypeLoadException ex)
-            {
-                Log.Error("Failed to load types from assembly {0}: {1}", assembly.GetName().Name, ex.Message);
-                foreach (Exception? loaderEx in ex.LoaderExceptions.Where(e => e != null))
-                {
-                    Log.Warning("Loader exception: {LoaderError}", loaderEx!.Message);
-                }
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Unexpected error loading types from {0}: {1}", assembly.GetName().Name, ex.Message);
-                return null;
-            }
-
-            // capture the Mod type if it exists
-            Type? modType = Array.Find(types, t => GetConcreteType(typeof(Mod), t));
-
-            // check if Mod was correctly found
-            if (modType == null)
-            {
-                Log.Warning(
-                    "No valid Mod class found in assembly {0}. Expected a non-abstract class inheriting from Mod with parameterless constructor.",
-                    assembly.GetName().Name
-                );
-                return null;
-            }
-
-            try
-            {
-                if (Activator.CreateInstance(modType) is not Mod mod)
-                {
-                    Log.Error("Created instance of {0} is not assignable to Mod (this should not happen)", modType.Name);
-                    return null;
-                }
-                mod.ModFiles = f;
-                f.Instance = mod;
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Failed to create instance of mod type {0}: {1}", modType.Name, ex.Message);
-                return null;
-            }
-
-            return f;
-        }
         private static void LoadModFiles()
         {
             List<ModFile> mods = Main.Instance.ModPage.Mods;
-            foreach (ModFile mod in mods) mod.Stream?.Close();
             List<ModFile> modCaches = new();
 
             string[] files = Directory.GetFiles(ModPath, "*.sml");
 
             foreach (string file in files)
             {
-                ModFile? f = LoadModFile(file);
+                ModFile? f = FileReader.Read(file);
                 if (f == null) continue;
                 ModFile? old = mods.Find(t => t.Name == f.Name);
                 if (old != null) f.Enabled = old.Enabled;
