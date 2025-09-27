@@ -93,6 +93,6 @@ public static partial class Msl
     }
     public static void InjectTableWeaponTextsLocalization(params LocalizationWeaponText[] weaponTexts)
     {
-        Localization.InjectTable("gml_GlobalScript_table_weapons_text", CreateInjectionWeaponTextsLocalization(weaponTexts));
+        Localization.InjectTable("gml_GlobalScript_table_equipment", CreateInjectionWeaponTextsLocalization(weaponTexts));
     }
 }

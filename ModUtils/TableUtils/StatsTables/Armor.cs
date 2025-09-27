@@ -120,6 +120,7 @@ public partial class Msl
         short? Fortitude = null,
         short? MP = null,
         short? MP_Restoration = null,
+        short? Abilities_Energy_Cost = null,
         short? Skills_Energy_Cost = null,
         short? Spells_Energy_Cost = null,
         short? Magic_Power = null,
@@ -180,8 +181,7 @@ public partial class Msl
         byte? fragment_metal02 = null,
         byte? fragment_metal03 = null,
         byte? fragment_metal04 = null,
-        byte? fragment_gold = null,
-        short? dur_per_frag = null
+        byte? fragment_gold = null
         )
     {
         // Table filename
@@ -191,7 +191,7 @@ public partial class Msl
         List<string> table = ThrowIfNull(ModLoader.GetTable(tableName));
         
         // Prepare line
-        string newline = $"{name};{GetEnumMemberValue(Tier)};{id};{Slot};{Class};{rarity};{Mat};{Price};{Markup};{MaxDuration};{DEF};;{PRR};{Block_Power};{Block_Recovery};{EVS};{Crit_Avoid};{FMB};{Hit_Chance};{Weapon_Damage};{Armor_Piercing};{Armor_Damage};{CRT};{CRTD};{CTA};{Damage_Received};{Fortitude};;{MP};{MP_Restoration};{Skills_Energy_Cost};{Spells_Energy_Cost};{Magic_Power};{Miscast_Chance};{Miracle_Chance};{Miracle_Power};{Cooldown_Reduction};;{VSN};{max_hp};{Health_Restoration};{Healing_Received};{Lifesteal};{Manasteal};{Bonus_Range};{Received_XP};{Damage_Returned};;{Bleeding_Resistance};{Knockback_Resistance};{Stun_Resistance};{Pain_Resistance};{Fatigue_Gain};;{Physical_Resistance};{Nature_Resistance};{Magic_Resistance};;{Slashing_Resistance};{Piercing_Resistance};{Blunt_Resistance};{Rending_Resistance};{Fire_Resistance};{Shock_Resistance};{Poison_Resistance};{Caustic_Resistance};{Frost_Resistance};{Arcane_Resistance};{Unholy_Resistance};{Sacred_Resistance};{Psionic_Resistance};;{Pyromantic_Power};{Geomantic_Power};{Venomantic_Power};{Electromantic_Power};{Cryomantic_Power};{Arcanistic_Power};{Astromantic_Power};{Psimantic_Power};;{GetEnumMemberValue(tags)};{(fireproof ? "1" : "")};{(IsOpen ? "1" : "")};{(NoDrop ? "1" : "")};{fragment_cloth01};{fragment_cloth02};{fragment_cloth03};{fragment_cloth04};{fragment_leather01};{fragment_leather02};{fragment_leather03};{fragment_leather04};{fragment_metal01};{fragment_metal02};{fragment_metal03};{fragment_metal04};{fragment_gold};{dur_per_frag};";
+        string newline = $"{name};{GetEnumMemberValue(Tier)};{id};{Slot};{Class};{rarity};{Mat};{Price};{Markup};{MaxDuration};{DEF};;{PRR};{Block_Power};{Block_Recovery};{EVS};{Crit_Avoid};{FMB};{Hit_Chance};{Weapon_Damage};{Armor_Piercing};{Armor_Damage};{CRT};{CRTD};{CTA};{Damage_Received};{Fortitude};;{MP};{MP_Restoration};{Abilities_Energy_Cost};{Skills_Energy_Cost};{Spells_Energy_Cost};{Magic_Power};{Miscast_Chance};{Miracle_Chance};{Miracle_Power};{Cooldown_Reduction};;{VSN};{max_hp};{Health_Restoration};{Healing_Received};{Lifesteal};{Manasteal};{Bonus_Range};{Received_XP};{Damage_Returned};;{Bleeding_Resistance};{Knockback_Resistance};{Stun_Resistance};{Pain_Resistance};{Fatigue_Gain};;{Physical_Resistance};{Nature_Resistance};{Magic_Resistance};;{Slashing_Resistance};{Piercing_Resistance};{Blunt_Resistance};{Rending_Resistance};{Fire_Resistance};{Shock_Resistance};{Poison_Resistance};{Caustic_Resistance};{Frost_Resistance};{Arcane_Resistance};{Unholy_Resistance};{Sacred_Resistance};{Psionic_Resistance};;{Pyromantic_Power};{Geomantic_Power};{Venomantic_Power};{Electromantic_Power};{Cryomantic_Power};{Arcanistic_Power};{Astromantic_Power};{Psimantic_Power};;{GetEnumMemberValue(tags)};{(fireproof ? "1" : "")};{(IsOpen ? "1" : "")};{(NoDrop ? "1" : "")};{fragment_cloth01};{fragment_cloth02};{fragment_cloth03};{fragment_cloth04};{fragment_leather01};{fragment_leather02};{fragment_leather03};{fragment_leather04};{fragment_metal01};{fragment_metal02};{fragment_metal03};{fragment_metal04};{fragment_gold};";
         
         // Find Meta Category in table
         string hookStr = "";
