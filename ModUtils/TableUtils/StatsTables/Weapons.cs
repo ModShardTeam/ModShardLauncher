@@ -151,6 +151,7 @@ public partial class Msl
         short? MP = null,
         short? MP_Restoration = null,
         short? Cooldown_Reduction = null,
+        short? Abilities_Energy_Cost = null,
         short? Skills_Energy_Cost = null,
         short? Spells_Energy_Cost = null,
         short? Magic_Power = null,
@@ -187,7 +188,7 @@ public partial class Msl
         List<string> table = ThrowIfNull(ModLoader.GetTable(tableName));
         
         // Prepare line
-        string newline = $"{name};{GetEnumMemberValue(Tier)};{id};{GetEnumMemberValue(Slot)};{rarity};{Mat};{Price};{Markup};{MaxDuration};{Rng};;{Armor_Piercing};{Armor_Damage};{Bodypart_Damage};;{Slashing_Damage};{Piercing_Damage};{Blunt_Damage};{Rending_Damage};{Fire_Damage};{Shock_Damage};{Poison_Damage};{Caustic_Damage};{Frost_Damage};{Arcane_Damage};{Unholy_Damage};{Sacred_Damage};{Psionic_Damage};;{FMB};{Hit_Chance};{CRT};{CRTD};{CTA};{PRR};{Block_Power};{Block_Recovery};;{Bleeding_Chance};{Daze_Chance};{Stun_Chance};{Knockback_Chance};{Immob_Chance};{Stagger_Chance};;{MP};{MP_Restoration};{Cooldown_Reduction};{Skills_Energy_Cost};{Spells_Energy_Cost};{Magic_Power};{Miscast_Chance};{Miracle_Chance};{Miracle_Power};{Bonus_Range};;{max_hp};{Health_Restoration};{Healing_Received};{Crit_Avoid};{Fatigue_Gain};{Lifesteal};{Manasteal};{Damage_Received};;{Pyromantic_Power};{Geomantic_Power};{Venomantic_Power};{Electroantic_Power};{Cryomantic_Power};{Arcanistic_Power};{Astromantic_Power};{Psimantic_Power};;{Balance};{GetEnumMemberValue(tags)};{upgrade};{(fireproof ? 1 : "")};{(NoDrop ? 1 : "")};";
+        string newline = $"{name};{GetEnumMemberValue(Tier)};{id};{GetEnumMemberValue(Slot)};{rarity};{Mat};{Price};{Markup};{MaxDuration};{Rng};;{Armor_Piercing};{Armor_Damage};{Bodypart_Damage};;{Slashing_Damage};{Piercing_Damage};{Blunt_Damage};{Rending_Damage};{Fire_Damage};{Shock_Damage};{Poison_Damage};{Caustic_Damage};{Frost_Damage};{Arcane_Damage};{Unholy_Damage};{Sacred_Damage};{Psionic_Damage};;{FMB};{Hit_Chance};{CRT};{CRTD};{CTA};{PRR};{Block_Power};{Block_Recovery};;{Bleeding_Chance};{Daze_Chance};{Stun_Chance};{Knockback_Chance};{Immob_Chance};{Stagger_Chance};;{MP};{MP_Restoration};{Cooldown_Reduction};{Abilities_Energy_Cost};{Skills_Energy_Cost};{Spells_Energy_Cost};{Magic_Power};{Miscast_Chance};{Miracle_Chance};{Miracle_Power};{Bonus_Range};;{max_hp};{Health_Restoration};{Healing_Received};{Crit_Avoid};{Fatigue_Gain};{Lifesteal};{Manasteal};{Damage_Received};;{Pyromantic_Power};{Geomantic_Power};{Venomantic_Power};{Electroantic_Power};{Cryomantic_Power};{Arcanistic_Power};{Astromantic_Power};{Psimantic_Power};;{Balance};{GetEnumMemberValue(tags)};{upgrade};{(fireproof ? 1 : "")};{(NoDrop ? 1 : "")};";
         
         // Add line to table
         table.Add(newline);
