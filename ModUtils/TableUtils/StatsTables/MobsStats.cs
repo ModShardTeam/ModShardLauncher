@@ -176,6 +176,10 @@ public partial class Msl
         short? Knockback_Resistance = null,
         short? Stun_Resistance = null,
         short? Pain_Resistance = null,
+        short? Bleeding_Immunity = null,
+        short? Move_Immunity = null,
+        short? Control_Immunity = null,
+        short? Effect_Immunity = null,
         short? Bleeding_Chance = null,
         short? Daze_Chance = null,
         short? Stun_Chance = null,
@@ -232,11 +236,20 @@ public partial class Msl
         short? Unholy_Resistance = null,
         short? Sacred_Resistance = null,
         short? Psionic_Resistance = null,
+        short? Pyromantic_Power = null,
+        short? Geomantic_Power = null,
+        short? Venomantic_Power = null,
+        short? Electromantic_Power = null,
+        short? Cryomantic_Power = null,
+        short? Arcanistic_Power = null,
+        short? Astromantic_Power = null,
+        short? Psimantic_Power = null,
         bool canBlock = false,
         bool canDisarm = false,
         bool canSwim = false,
         byte Swimming_Cost = 1,
-        byte? achievement = null
+        byte? achievement = null,
+        string? trophy = null
         )
     {
         // Table filename
@@ -246,7 +259,7 @@ public partial class Msl
         List<string> table = ThrowIfNull(ModLoader.GetTable(tableName));
         
         // Prepare line
-        string newline = $"{name};{GetEnumMemberValue(tier)};{ID};{type};{faction};{pattern};;{GetEnumMemberValue(category1)};{GetEnumMemberValue(category2)};{GetEnumMemberValue(weapon)};{armor};{size};{matter};{VIS};;{XP};{HP};{MP};{Head_DEF};{Body_DEF};{Arms_DEF};{Legs_DEF};;{Hit_Chance};{EVS};{PRR};{Block_Power};{Block_Recovery};{Crit_Avoid};{CRT};{CRTD};{CTA};{FMB};;{Magic_Power};{Miscast_Chance};{Miracle_Chance};{Miracle_Power};;{MP_Restoration};{Cooldown_Reduction};{Fortitude};{Health_Restoration};{Healing_Received};{Lifesteal};{Manasteal};;{Bleeding_Resistance};{Knockback_Resistance};{Stun_Resistance};{Pain_Resistance};;{Bleeding_Chance};{Daze_Chance};{Stun_Chance};{Knockback_Chance};{Immob_Chance};{Stagger_Chance};;{STRk};{AGLk};{Vitalityk};{PRCk};{WILk};{Checksum};;{STR};{AGL};{Vitality};{PRC};{WIL};;{Bonus_Range};{Avoiding_Chance};{Damage_Returned};{Damage_Received};;{Head};{Torso};{Left_Leg};{Right_Leg};{Left_Hand};{Right_Hand};;{IP};{Morale};{Threat_Time};;{Bodypart_Damage};{Armor_Piercing};{DMG_Sum};{Slashing_Damage};{Piercing_Damage};{Blunt_Damage};{Rending_Damage};{Fire_Damage};{Shock_Damage};{Poison_Damage};{Caustic_Damage};{Frost_Damage};{Arcane_Damage};{Unholy_Damage};{Sacred_Damage};{Psionic_Damage};;{Physical_Resistance};{Natural_Resistance};{Magical_Resistance};;{Slashing_Resistance};{Piercing_Resistance};{Blunt_Resistance};{Rending_Resistance};{Fire_Resistance};{Shock_Resistance};{Poison_Resistance};{Frost_Resistance};{Caustic_Resistance};{Arcane_Resistance};{Unholy_Resistance};{Sacred_Resistance};{Psionic_Resistance};;{(canBlock ? "1": "")};{(canDisarm ? "1": "")};{(canSwim ? "1": "")};{Swimming_Cost};{achievement};";
+        string newline = $"{name};{GetEnumMemberValue(tier)};{ID};{type};{faction};{pattern};;{GetEnumMemberValue(category1)};{GetEnumMemberValue(category2)};{GetEnumMemberValue(weapon)};{armor};{size};{matter};{VIS};;{XP};{HP};{MP};{Head_DEF};{Body_DEF};{Arms_DEF};{Legs_DEF};;{Hit_Chance};{EVS};{PRR};{Block_Power};{Block_Recovery};{Crit_Avoid};{CRT};{CRTD};{CTA};{FMB};;{Magic_Power};{Miscast_Chance};{Miracle_Chance};{Miracle_Power};;{MP_Restoration};{Cooldown_Reduction};{Fortitude};{Health_Restoration};{Healing_Received};{Lifesteal};{Manasteal};;{Bleeding_Resistance};{Knockback_Resistance};{Stun_Resistance};{Pain_Resistance};{Bleeding_Immunity};{Move_Immunity};{Control_Immunity};{Effect_Immunity};;{Bleeding_Chance};{Daze_Chance};{Stun_Chance};{Knockback_Chance};{Immob_Chance};{Stagger_Chance};;{STRk};{AGLk};{Vitalityk};{PRCk};{WILk};{Checksum};;{STR};{AGL};{Vitality};{PRC};{WIL};;{Bonus_Range};{Avoiding_Chance};{Damage_Returned};{Damage_Received};;{Head};{Torso};{Left_Leg};{Right_Leg};{Left_Hand};{Right_Hand};;{IP};{Morale};{Threat_Time};;{Bodypart_Damage};{Armor_Piercing};{DMG_Sum};{Slashing_Damage};{Piercing_Damage};{Blunt_Damage};{Rending_Damage};{Fire_Damage};{Shock_Damage};{Poison_Damage};{Caustic_Damage};{Frost_Damage};{Arcane_Damage};{Unholy_Damage};{Sacred_Damage};{Psionic_Damage};;{Physical_Resistance};{Natural_Resistance};{Magical_Resistance};;{Slashing_Resistance};{Piercing_Resistance};{Blunt_Resistance};{Rending_Resistance};{Fire_Resistance};{Shock_Resistance};{Poison_Resistance};{Frost_Resistance};{Caustic_Resistance};{Arcane_Resistance};{Unholy_Resistance};{Sacred_Resistance};{Psionic_Resistance};;{Pyromantic_Power};{Geomantic_Power};{Venomantic_Power};{Electromantic_Power};{Cryomantic_Power};{Arcanistic_Power};{Astromantic_Power};{Psimantic_Power};;{(canBlock ? "1": "")};{(canDisarm ? "1": "")};{noTP};{(canSwim ? "1": "")};{Swimming_Cost};{achievement};{trophy};";
         
         // Add line to table
         table.Add(newline);
