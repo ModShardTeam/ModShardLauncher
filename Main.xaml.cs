@@ -282,11 +282,19 @@ namespace ModShardLauncher
                     Application.Current.Resources.MergedDictionaries.Add(resDict);
                     Main.Settings.Language = "English";
                     break;
+                    #if false
                 case 2:
                     resDict = Application.Current.Resources.MergedDictionaries.First(t => t.Source.OriginalString == @"Language/ru-ru.xaml");
                     Application.Current.Resources.MergedDictionaries.Remove(resDict);
                     Application.Current.Resources.MergedDictionaries.Add(resDict);
                     Main.Settings.Language = "Русский";
+                    break;
+                    #endif // false
+                case 2:
+                    resDict = Application.Current.Resources.MergedDictionaries.First(t => t.Source.OriginalString == @"Language/ko-kr.xaml");
+                    Application.Current.Resources.MergedDictionaries.Remove(resDict);
+                    Application.Current.Resources.MergedDictionaries.Add(resDict);
+                    Main.Settings.Language = "Korean";
                     break;
             }
         }

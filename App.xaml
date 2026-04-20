@@ -363,6 +363,7 @@
                 <ResourceDictionary Source="Language/zh-cn.xaml"/>
                 <ResourceDictionary Source="Language/ru-ru.xaml"/>
                 <ResourceDictionary Source="Language/en-us.xaml"/>
+				<ResourceDictionary Source="Language/ko-kr.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
         

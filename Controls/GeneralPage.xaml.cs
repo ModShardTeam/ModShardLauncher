@@ -25,6 +25,7 @@ namespace ModShardLauncher.Controls
             Languages.Add("中文");
             Languages.Add("English");
             //Languages.Add("Русский");
+            Languages.Add("한국어");
 
             switch (Main.Settings.Language)
             {
@@ -36,7 +37,13 @@ namespace ModShardLauncher.Controls
                     LangSelector.SelectedIndex = 1;
                     UserSettings.ChangeLanguage(1);
                     break;
+                    #if false
                 case "Russian":
+                    LangSelector.SelectedIndex = 2;
+                    UserSettings.ChangeLanguage(2);
+                    break;
+                    #endif // false
+                case "Korean":
                     LangSelector.SelectedIndex = 2;
                     UserSettings.ChangeLanguage(2);
                     break;
